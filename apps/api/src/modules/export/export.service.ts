@@ -34,8 +34,8 @@ interface FoundationAuditRecord {
   action: string;
   entityType: string;
   entityId: string;
-  beforeState?: unknown;
-  afterState?: unknown;
+  beforeState?: object | null;
+  afterState?: object | null;
   createdAt: string;
 }
 
@@ -272,20 +272,8 @@ export class ExportService {
     };
   }
 
-  private toAuditRecord(value: unknown): Record<string, unknown> | null | undefined {
-    if (value === undefined) {
-      return undefined;
-    }
-
-    if (value === null) {
-      return null;
-    }
-
-    if (typeof value === "object" && !Array.isArray(value)) {
-      return value as Record<string, unknown>;
-    }
-
-    return { value };
+  private toAuditRecord(value: object | null | undefined): object | null | undefined {
+    return value;
   }
 
   private mapProjectStatus(status: Project["status"]): JsonMasterStatus {

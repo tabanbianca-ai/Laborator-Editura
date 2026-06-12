@@ -119,8 +119,8 @@ export class AuthService {
     actor: AuthActor,
     entityType: AuthAuditEntityType,
     entityId: string,
-    beforeState: Record<string, unknown> | undefined,
-    afterState: Record<string, unknown>
+    beforeState: object | undefined,
+    afterState: object
   ): Promise<void> {
     await this.repository.appendAuditEvent({
       id: randomUUID(),

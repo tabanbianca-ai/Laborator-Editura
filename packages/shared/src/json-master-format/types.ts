@@ -235,7 +235,7 @@ export interface JsonMasterWorkflowEvent {
   type: string;
   actorId?: string;
   createdAt: string;
-  payload?: Record<string, unknown>;
+  payload?: object;
 }
 
 export interface JsonMasterAudit {
@@ -248,8 +248,8 @@ export interface JsonMasterAuditEvent {
   action: string;
   entityType?: string;
   entityId?: string;
-  before?: Record<string, unknown> | null;
-  after?: Record<string, unknown> | null;
+  before?: object | null;
+  after?: object | null;
   timestamp: string;
 }
 

@@ -43,8 +43,8 @@ export interface AuthAuditEvent {
   action: AuthAuditAction;
   entityType: AuthAuditEntityType;
   entityId: string;
-  beforeState?: Record<string, unknown> | null;
-  afterState?: Record<string, unknown> | null;
+  beforeState?: object | null;
+  afterState?: object | null;
   createdAt: string;
 }
 

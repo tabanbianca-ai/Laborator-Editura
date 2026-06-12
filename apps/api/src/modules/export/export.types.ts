@@ -1,3 +1,4 @@
+import { type JsonMasterFormatV1 } from "@laborator/shared";
 import { type WorkflowActor } from "../workflow/workflow.types";
 
 export type ExportActor = WorkflowActor;
@@ -15,7 +16,7 @@ export interface ExportArtifact {
   projectId: string;
   documentId: string;
   format: "JSON_MASTER";
-  artifact: Record<string, unknown>;
+  artifact: JsonMasterFormatV1;
   createdBy: string;
   createdAt: string;
 }
@@ -27,7 +28,7 @@ export interface ExportAuditEvent {
   action: ExportAuditAction;
   entityType: "EXPORT_ARTIFACT";
   entityId: string;
-  beforeState?: Record<string, unknown> | null;
-  afterState?: Record<string, unknown> | null;
+  beforeState?: object | null;
+  afterState?: object | null;
   createdAt: string;
 }
