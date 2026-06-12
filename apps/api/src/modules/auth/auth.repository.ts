@@ -46,7 +46,7 @@ export class DatabaseAuthRepository {
       organizationId,
       (row) => row.userId === userId
     );
-    const existingRoles = new Set(existingRows.map((row) => row.role));
+    const existingRoles = new Set<MvpRole>(existingRows.map((row: UserRoleRow) => row.role));
 
     for (const role of roles) {
       if (!existingRoles.has(role)) {
@@ -61,7 +61,7 @@ export class DatabaseAuthRepository {
       }
     }
 
-    return [...existingRoles];
+    return Array.from(existingRoles);
   }
 
   async createSession(session: AuthSession): Promise<AuthSession> {

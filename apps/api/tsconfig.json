@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "module": "CommonJS",
@@ -8,7 +9,9 @@
     "noEmit": true,
     "paths": {
       "@laborator/db": ["../../packages/db/src"],
-      "@laborator/shared": ["../../packages/shared/src"]
+      "@laborator/db/*": ["../../packages/db/src/*"],
+      "@laborator/shared": ["../../packages/shared/src"],
+      "@laborator/shared/*": ["../../packages/shared/src/*"]
     },
     "sourceMap": true
   },

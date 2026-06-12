@@ -1,5 +1,6 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/common";
 import { AuthService } from "./auth.service";
+import { type AuthActor } from "./auth.types";
 import { permissionsForRoles, type RequestWithAuthContext } from "./request-context.types";
 
 @Injectable()
@@ -31,14 +32,15 @@ export class RequestContextMiddleware implements NestMiddleware {
   private isPublicRoute(request: RequestWithAuthContext): boolean {
     const method = (request.method ?? "").toUpperCase();
     const path = request.path ?? request.url ?? "";
+    const routePath = path.split("?")[0] ?? "";
 
-    return method === "POST" && path.split("?")[0].endsWith("/auth/login");
+    return method === "POST" && routePath.endsWith("/auth/login");
   }
 
   private readAccessToken(request: RequestWithAuthContext): string | undefined {
     const authorization = this.firstHeader(request.headers?.authorization);
 
-    if (authorization?.toLocaleLowerCase().startsWith("bearer ")) {
+    if (authorization !== undefined && authorization.toLocaleLowerCase().startsWith("bearer ")) {
       return authorization.slice("bearer ".length).trim();
     }
 
@@ -49,7 +51,7 @@ export class RequestContextMiddleware implements NestMiddleware {
     return Array.isArray(value) ? value[0] : value;
   }
 
-  private async resolveActor(token: string) {
+  private async resolveActor(token: string): Promise<AuthActor> {
     try {
       return await this.authService.getCurrentActor(token);
     } catch {

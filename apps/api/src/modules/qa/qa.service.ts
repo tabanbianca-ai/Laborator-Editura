@@ -109,6 +109,7 @@ export class QaService {
             segmentId: segment.segmentId,
             sourceText: segment.sourceText,
             targetText: segment.targetText,
+            targetLanguage: segment.targetLanguage ?? input.targetLanguage,
             message: "Repeated source segment detected.",
             createdAt
           })
@@ -211,8 +212,9 @@ export class QaService {
     const issues: QaIssue[] = [];
     const source = normalizeQaText(segment.sourceText);
     const target = normalizeQaText(segment.targetText);
+    const targetText = segment.targetText;
 
-    if (!segment.targetText || target.length === 0) {
+    if (targetText === undefined || target.length === 0) {
       issues.push(
         this.createIssue(actor, reportId, "MISSING_TARGET_TRANSLATION", {
           ...segment,
@@ -284,7 +286,7 @@ export class QaService {
       language: segment.targetLanguage,
       domain: segment.domain,
       sourceText: segment.sourceText,
-      targetText: segment.targetText
+      targetText
     });
 
     for (const violation of terminologyResult.violations) {
