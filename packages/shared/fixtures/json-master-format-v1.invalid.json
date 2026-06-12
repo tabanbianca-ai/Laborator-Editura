@@ -1,0 +1,51 @@
+{
+  "formatVersion": "0.9",
+  "project": {
+    "id": "",
+    "name": "Invalid Translation Project",
+    "sourceLanguage": "es",
+    "targetLanguages": "ro",
+    "status": "active",
+    "createdAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-06-11T00:00:00.000Z"
+  },
+  "documents": [
+    {
+      "id": "document-1",
+      "projectId": "project-1",
+      "title": "Invalid Source Document",
+      "sourceLanguage": "es",
+      "segments": [
+        {
+          "id": "segment-1",
+          "order": -1,
+          "source": {},
+          "translations": [],
+          "status": "translated"
+        }
+      ]
+    }
+  ],
+  "terminology": {
+    "terms": []
+  },
+  "translationMemory": {
+    "entries": []
+  },
+  "qa": {
+    "checks": [],
+    "scores": {
+      "overall": 120
+    }
+  },
+  "workflow": {
+    "state": "translation",
+    "events": []
+  },
+  "audit": {
+    "events": []
+  },
+  "versionHistory": {
+    "versions": []
+  }
+}

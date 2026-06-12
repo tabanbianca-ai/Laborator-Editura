@@ -1,0 +1,19 @@
+{
+  "status": "OPERATIONAL",
+  "validatedWorkflow": [
+    "Authentication",
+    "Project",
+    "Document",
+    "Segments",
+    "Translation",
+    "Translation Memory",
+    "Terminology Validation",
+    "QA Validation",
+    "Semantic Fidelity Validation",
+    "Workflow Review",
+    "Approval",
+    "Ready for Export",
+    "Export"
+  ],
+  "blockingGaps": []
+}

@@ -1,0 +1,185 @@
+from pathlib import Path
+
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Inches, Pt, RGBColor
+
+
+OUT = Path("Traducere_romana_verificata_Divaldo_Franco.docx")
+
+
+sections = [
+    (
+        "00:00-02:28",
+        "Introducerea și criza fiului adoptiv",
+        [
+            "Mi-ar plăcea să mă refer la un fapt pe care l-am povestit aici acum mai bine de zece ani și care s-a petrecut la Mansión del Camino, cu unul dintre fiii mei adoptivi. În anul 1978 mă pregăteam pentru o călătorie în Europa. În timp ce îmi făceam valiza, unul dintre fiii mei, în vârstă de 16 ani, a venit la mine și mi-a spus: „Tio, am o melancolie pe care nici nu ți-o poți imagina, o tristețe, o angoasă pe care nu mai reușesc să o suport.”",
+            "I-am răspuns: „De ce vii la mine abia acum? Este ora 23:00, iar mâine la 5:00 plec în călătorie.” El mi-a spus: „Tio, am avut un vis. Noaptea trecută am avut un vis îngrozitor: un monstru, un animal biped, se apropia de mine și mă strangula. Când m-am trezit, imaginea acelui monstru teribil mi-a rămas în minte și am căzut într-o stare depresivă. Nu știu ce voi face.”",
+            "I-am cerut să aștepte până terminam pregătirile, ca să putem vorbi puțin. A așteptat. Era acolo și un medic clinician, unul dintre fiii mei, iar noi doi am stat de vorbă cu el pe îndelete. După aceea am citit Evanghelia și, în timp ce o citeam, am văzut spiritul care îl chinuia. După câteva minute, poate câteva ore, i-am aplicat un pase și i-am spus: „Fiule, este vorba despre un spirit agresor. Trebuie să schimbi orientarea minții: să te gândești la lucruri plăcute, să te eliberezi de acest conflict, pentru că spiritul te-a atacat într-o stare de dedublare a personalității.”",
+            "L-am liniștit, iar fiul meu medic mi-a spus: „Se va agrava. Când se va agrava, va trebui internat, ca să îl împiedicăm să se sinucidă. Spiritul acesta este un dușman teribil al lui. Îl găsește la 16 ani, lipsit încă de valori etice și morale consolidate, fără rezistență în perioada de trecere a adolescenței și pubertății. De aceea este necesară internarea, altfel se va sinucide.” Am plecat în călătorie foarte îngrijorat.",
+        ],
+    ),
+    (
+        "02:28-04:12",
+        "Internarea și terapia de dezobsedare",
+        [
+            "Pe atunci era foarte dificil să faci un apel internațional. Totuși, în prima duminică, aflându-mă la Roma, am sunat la Mansión del Camino. Mi s-a răspuns că situația era foarte gravă: fusese nevoie să îl interneze de urgență, pentru că încercase să se sinucidă chiar în acea zi. Psihiatrul, care era materialist, îi administra barbiturice foarte puternice, iar băiatul era într-o stare de toropeală.",
+            "Eu am continuat să întreb despre el din țară în țară. Era o călătorie de 40 de zile prin douăsprezece țări. Când m-am întors la Salvador, am telefonat la spital și l-am întrebat pe director dacă îl puteam vizita. Directorul, care mă cunoștea, mi-a spus: „Nu merită acum, Divaldo. Aplicăm terapia prin somn. El este adormit, nu poate reacționa, iar tabloul este foarte dureros. Ar fi mai bine să nu îl vedeți în această stare. Este foarte slab și foarte epuizat. Așteptați să terminăm această terapie a somnului și atunci îl veți putea vizita.”",
+            "Noi, spiritiștii, avem terapia dezobsedării: ședințe specializate, făcute cu mediumi pregătiți, disciplinați, moralizați și conștienți de răspunderea lor. Nu sunt ședințe pentru mediumi frivoli sau iresponsabili, care încă nu se controlează pe ei înșiși și care, prin urmare, nu pot sluji drept instrument potrivit pentru spiritele nefericite.",
+        ],
+    ),
+    (
+        "04:12-07:06",
+        "Cum se desfășura ședința mediumică",
+        [
+            "Câteva zile mai târziu era ziua ședinței noastre mediumice de dezobsedare. Ne-am dus la reuniune și ne-am gândit la fiul meu. O reuniune mediumică este ceva foarte serios în spiritism. Nu trebuie făcută niciodată pentru persoane care nu cunosc spiritismul. Nu este o plimbare printre fenomene ridicole și spirite glumețe. Este ceva asemănător unei intervenții chirurgicale, care trebuie făcută într-un loc potrivit, adecvat, cu persoane capabile să știe ce au de făcut în anumite momente.",
+            "Grupul nostru era redus. La reuniunile publice, numărul participanților trecea de o mie, de trei ori pe săptămână. Sala noastră era de două ori mai mare decât aceasta și avea și mezanin; la ora șase seara era deja plină pentru conferința de la ora opt. Însă reuniunea mediumică avea doar douăsprezece persoane. Era o formă de a-i selecta pe cei care se angajau și care nu lipseau niciodată. În ziua în care a murit mama mea, sicriul a rămas într-o sală, iar ședința mediumică a avut loc în alta, din respect pentru spiritele nobile.",
+            "Pentru cel care nu cunoaște o ședință mediumică, nu se întâmplă nimic spectaculos: se citește Evanghelia, se comentează, se face o rugăciune, se diminuează puțin luminile. Nu este un ritual, ci doar o ambianță mai comodă; penumbra ne lasă mai liniștiți, mai în largul nostru. Apoi, invariabil, vine un spirit prieten care dictează un mesaj scurt, ca o introducere la ceea ce va fi reuniunea. După aceea, mediumii intră în transă, iar psihoterapeutul celor desencarnați începe să lucreze. Există întotdeauna un colaborator care aplică pase și mai mult de doi îndrumători spirituali.",
+            "În acel moment eu primisem mesajul ghidului spiritual. Reuniunile noastre erau înregistrate ca să putem studia ceea ce s-a petrecut și să evaluăm mai târziu dacă informațiile sunt adevărate sau nu. Nu vrem să fim înșelați și nu vrem să înșelăm pe nimeni. Pentru noi, spiritismul este viață, este o formă de viață, o filosofie de viață, nu o distracție sau ceva ocazional. De aceea avem peste 5.000 de înregistrări, adunate în aproape 30 de ani, și le verificăm periodic, ca să nu fim victimele spiritelor perverse și mistificatoare.",
+        ],
+    ),
+    (
+        "07:06-10:08",
+        "Mărturia spiritului care îl urmărea",
+        [
+            "Am instalat două aparate de înregistrare, care pe atunci erau magnetofoane obișnuite, cu bandă. Am intrat în transă și s-a produs un fenomen: spiritul care îl chinuia pe fiul meu s-a comunicat prin intermediul meu și a povestit o istorie pe care am ascultat-o mai târziu pe înregistrare. Era o istorie foarte aparte. Spunea că îl ura, că îl ura pe acest băiat.",
+            "El povestea că, în ziua de 31 decembrie 1899, în ajunul anului 1900, era proprietar de pământuri în anumite orașe din statul São Paulo. În acea noapte, pregătindu-se pentru slujba de la miezul nopții, pentru tradiționala binecuvântare a bisericii, i-a cerut soției să îi dea un ceai calmant. Nu își putea imagina că aceea avea să fie ultima zi a vieții lui, pentru că soția, împreună cu fiul, hotărâse să otrăvească ceaiul. Mai întâi puseseră un narcotic. După ce a băut, l-a cuprins un somn cumplit.",
+            "Deodată s-a trezit cu femeia ținându-i picioarele, iar fiul stând deasupra lui, cu o pernă de pene, sufocându-l. El se zbătea, iar cei doi spuneau: „Mori, nenorocitule! Acum vom intra în stăpânirea averii. Mori!” Și l-au omorât. Nu au lăsat urme. Pe atunci nu se făceau necropsii în interiorul Braziliei, iar el a fost îngropat ca și cum ar fi murit de stop cardiac.",
+            "Nu știa să spună cum s-a trezit după moarte. Realitatea este că părea să fi ieșit disperat, halucinat, alergând ca un nebun, complet rătăcit. Într-o zi s-a trezit în propria casă și și-a dat seama că totul era schimbat. Acolo erau oameni care nu erau familia lui, iar el nu înțelegea. Alte spirite l-au informat că trecuseră deja peste 20 de ani de la desencarnarea sa.",
+            "Allan Kardec studiază acest fenomen ca tulburare spirituală, începând cu întrebarea 156 din Cartea Spiritelor: perturbarea care poate dura zile, luni, ani și chiar secole. Atunci el a aflat că fusese asasinat. Era un omor produs de soție, o crimă săvârșită împreună cu fiul. A plecat să îi caute pe amândoi și nu i-a găsit niciodată. Abia acum, după mai bine de 70 de ani de la moartea sa, îl găsise pe fiu și voia să îl omoare. Nimeni, spunea el, nu va reuși să împiedice săvârșirea crimei.",
+        ],
+    ),
+    (
+        "10:08-12:14",
+        "Dialogul cu spiritul și începutul iertării",
+        [
+            "Îndrumătorul spiritual a dialogat cu el. A fost o terapie verbală. I-a spus că, da, are dreptate să simtă durere; este firesc să aibă ranchiună și resentiment. Dar nu avea dreptul să se răzbune. Chiar dacă s-ar fi răzbunat și l-ar fi omorât pe băiat, acesta ar fi mers în lumea spirituală, pentru că nu există moarte. Și, probabil, când s-ar fi reîncarnat, l-ar fi omorât la rândul lui. Așa ceva nu s-ar fi terminat niciodată.",
+            "Îndrumătorul i-a vorbit cu argumente foarte fericite, pe îndelete, aproape douăzeci de minute. Spiritul a spus că se va întoarce mai târziu. În săptămâna următoare a revenit și a spus că își menține hotărârea. Îndrumătorul i-a vorbit cu blândețe: „Privește, și eu mă compătimesc de suferința ta. Dar acest băiat nu este al lui Divaldo și nici al meu. Nu știm de unde a venit. Este un copil care a fost încredințat Mansión del Camino, iar noi îl iubim. Îl iubim pentru că iubim umanitatea. Nu ai acest drept.”",
+            "I-a explicat că băiatul se afla acolo pentru că avea nevoie de sprijin. Spiritul a răspuns: „Nu, tu ești de acord cu criminalul.” Îndrumătorul i-a spus: „În niciun fel. El va plăti, pentru că legea divină nu poate fi înșelată de nimeni. Rămâi cu noi o săptămână. Observă această instituție. Ne dedicăm viața îngrijirii celor nefericiți și nu câștigăm nimic din asta. Muncim ca toți cetățenii, avem salariile noastre, iar în orele în care alții își cumpără plăceri, noi ne dedicăm acestei slujiri.”",
+            "Spiritul a spus: „Voi observa.” La a treia reuniune a spus: „Sunt convins de bunătatea umană și voi încerca să îl iert. Nu știu dacă voi reuși, dar voi încerca să îl iert și nu îl voi mai tulbura. Mărturisesc că sunt căit pentru acest rău. Rugați-vă pentru mine.” Apoi și-a luat rămas-bun. Era o miercuri.",
+        ],
+    ),
+    (
+        "12:14-14:36",
+        "Însănătoșirea băiatului și întâlnirea cu psihiatrul",
+        [
+            "A doua zi, joi, eram ca de obicei la Mansión del Camino, când a sunat telefonul. Era de la spital, la ora șapte dimineața. Asistenta socială mi-a spus: „Domnule Divaldo, băiatul dumneavoastră și-a recăpătat rațiunea, și-a recăpătat luciditatea. Totuși, este încă sub terapia somnului și a cerut să veniți să îl vedeți. Vrea să iasă, este disperat.” I-am spus: „Spuneți-i să se liniștească. La ora zece, când este ora de vizită, voi veni.”",
+            "Am mers împreună cu fiul meu medic, ca să avem acces mai ușor, și l-am vizitat. Era o ruină omenească. Din acel tânăr sănătos, plin de viață, după două luni rămăsese un băiat slăbit, fragil, suferind. M-a privit și m-a întrebat: „Tio, de ce sunt aici?” I-am spus: „Din cauza obsesiei, fiule. Este normal; terapia medicală este foarte severă, dar vei ieși de aici.” El m-a rugat: „Ia-mă acum, că nu mai pot.” I-am spus că trebuie să vorbesc cu psihiatrul, că voi cere să îi dea externarea și că îl vom duce acasă chiar în acea zi.",
+            "I-am promis și am ieșit, așteptând să vină psihiatrul responsabil de caz. Era un materialist. Dialogul a fost interesant, pentru că era un materialist înrăit și vanitos. I-am spus: „Doctore, vreau să vă cer externarea pacientului.” El m-a întrebat: „De ce?” I-am răspuns: „Pentru că este vindecat.” „Cum adică vindecat? Are o depresie profundă și o fixație suicidară. Se va omorî.” I-am spus: „Nu cred, doctore. Eu cred că, începând de astăzi, această fixație va dispărea.”",
+            "El m-a întrebat: „Sunteți medic?” I-am spus: „Nu, domnule.” „Și atunci ce sunteți, medium?” Am răspuns: „Da, sunt medium.” El m-a privit și m-a întrebat ce înseamnă asta. I-am spus intenționat: „Eu văd spiritele, vorbesc cu spiritele și conviețuiesc cu spiritele.” El a spus: „Încă un schizofrenic.” I-am răspuns: „Nu, nu. Mai degrabă un terapeut al schizofrenicilor.”",
+        ],
+    ),
+    (
+        "14:36-18:38",
+        "Disputa pentru externare",
+        [
+            "M-a întrebat care este religia mea. I-am spus: „Sunt spiritist.” El a răspuns: „Este o religie de psihopați.” I-am spus: „Nu știam că și dumneavoastră sunteți spiritist.” A întrebat ce vreau să spun. I-am răspuns: „Vă răspund, pentru că eu vin aici ca cetățean care are dreptul să ceară eliberarea unui pacient aflat în grija dumneavoastră. Dumneavoastră spuneți că religia mea este de psihopați. Oare a dumneavoastră nu este la fel? Vă cer să mă respectați, vă rog.”",
+            "Atunci a încercat să se impună dur, dar eu nu mă tem. I-am vorbit liniștit. El mi-a spus: „Eu sunt autoritatea aici.” I-am răspuns: „Eu sunt tatăl pacientului dumneavoastră. Dacă îmi refuzați dreptul, voi merge la autorități, pentru că el este minor. Voi depune o acțiune de protecție, iar dumneavoastră mi-l veți preda în 24 de ore. Altfel vă voi denunța pentru sechestrarea unui tânăr sănătos, căruia îi puneți un diagnostic pe care nu îl puteți dovedi.”",
+            "El m-a întrebat de unde știu că băiatul fusese victima unui spirit. I-am spus: „Doctore, dumneavoastră în domeniul dumneavoastră, iar eu în al meu. Vă respect domeniul, dar el avea un spirit care îl înnebunea, iar acum este eliberat. De unde știu? L-am văzut. Spiritul mi-a spus că îl va lăsa. Este suficient să vă ridicați din orgoliu și să mergeți să îl priviți. Este sănătos, lucid, având nevoie, firește, de însoțire terapeutică și psihologică.”",
+            "El mi-a spus: „Întotdeauna am știut că toți spiritiștii sunt foarte îndrăzneți.” I-am răspuns calm: „Și eu am știut că unii psihiatri sunt foarte psihopați. Unii, pentru că alții sunt extraordinari. Nu vom discuta acum ofensă contra ofensă. Eu vreau externarea fiului meu, iar dumneavoastră mi-o veți da.” I-am spus că voi chema imediat un avocat și voi merge la autorități, pentru că băiatul se afla în grija mea prin judecătorul pentru minori, iar el era sănătos.",
+            "Medicul a spus multe absurdități. I-am spus: „Doctore, vorbiți despre ceea ce nu cunoașteți. Persoane mai importante decât dumneavoastră au cercetat aceste lucruri: William Crookes, mare autoritate a fizicii din Anglia secolului al XIX-lea, și mulți alți oameni de știință internaționali și brazilieni au demonstrat că poziția dumneavoastră este greșită. Conceptul dumneavoastră este arhaic, este o prejudecată, o preconcepție.”",
+            "Atunci mi-a spus: „Aici este diploma mea.” I-am răspuns: „Da, domnule. Eu nu am diplomă de nimic. Sunt doar diplomat în dactilografie, o diplomă cam de mărimea aceasta.” El mi-a spus: „Dacă în 15 zile nu se omoară, îmi mănânc diploma.” I-am răspuns: „Puneți-i puțină lucernă, ca să o mâncați mai bine.” Atunci a luat o hârtie, a scris externarea și a aruncat-o pe jos. Asta nu m-a umilit. M-am aplecat, am luat hârtia, i-am mulțumit și am mers să îl iau pe fiul meu de la spital.",
+            "L-am dus la Mansión del Camino. A continuat tratamentul medical cu fiul meu ca medic clinician și cu un psiholog, un psihoterapeut. A început să se îmbunătățească treptat.",
+        ],
+    ),
+    (
+        "18:38-21:54",
+        "Apariția mamei biologice",
+        [
+            "La aproximativ 30 de zile după aceea eram la Mansión del Camino când portarul m-a chemat să primesc o doamnă care avea nevoie să vorbească cu mine. Am mers la intrarea instituției, care este o proprietate de 78.000 de metri pătrați, așa cum am văzut, și acolo era acea doamnă. Când am privit-o, am avut un șoc: chipul ei era ca o copie a chipului fiului meu.",
+            "Ea mi-a spus: „Divaldo...” Toți îmi spuneau „tio” încă de când eram tânăr. „Tio Divaldo, îmi caut un fiu.” Am întrebat-o: „Cum adică vă căutați un fiu?” Ea mi-a spus: „Am fost nebună. Am stat 18 ani internată într-un sanatoriu psihiatric, complet nebună. Acolo am fost violată, am conceput, am născut copilul și mi l-au luat. Eu nu îmi cunosc fiul. Am aflat de la o asistentă că acel copil fusese dat unei instituții pentru copii. Am mers la prima instituție, iar de acolo m-au trimis la dumneavoastră.”",
+            "Atunci mi-am amintit de fiul meu. Copilul acela îmi fusese încredințat de o asistentă care lucra la spitalul psihiatric și la instituția guvernamentală unde lucram eu. Ea mi-a spus atunci: „Divaldo, s-a născut un copil. Are două zile. Nu poate rămâne în curte, printre psihopați violenți. Te-ai putea ocupa de el?” L-am primit, i-am pus un nume și am creat o istorie pentru el, pentru că se știa cine era mama, dar nu se știa cine era tatăl. Timp de 16 ani nu am mai avut nicio veste. Iar acum, în fața mea, se afla o femeie cu chipul fiului meu, căutându-și fiul.",
+            "Am invitat-o să intre și să îmi povestească mai mult. În sala de la Mansión del Camino, ea mi-a spus: „Am înnebunit subit. Am visat un monstru care mă urmărea și am început să halucinez. Atunci m-au aruncat într-un sanatoriu psihiatric public, într-o promiscuitate cumplită. Acolo s-a născut acest fiu. Și, deodată, acum cinci zile, m-am trezit vindecată.”",
+            "Asistenta a întrebat-o: „Mi se pare că ești vindecată.” Ea a răspuns: „Da, sunt vindecată.” Au dus-o la medic, iar medicul a confirmat că era vindecată. Au externat-o, dar ea nu avea familie, nu își amintea unde să meargă și era pe stradă. Asistenta i-a spus: „Caută-ți fiul. Trebuie să aibă 16 sau 17 ani și el te va putea sprijini.” De aceea venise la mine: „Domnule Divaldo, Tio Divaldo, pot să vă spun așa?” I-am spus că da, că este normal.",
+            "Am întrebat-o cum îl cheamă pe fiul ei. Mi-a răspuns că nu știe. Atunci i-am spus: „Facem așa: vei rămâne cu noi. Eu am câțiva fii de 14 și 16 ani. Îi voi aduce pe toți copiii, iar tu îmi vei spune care este fiul tău.” Ea mi-a spus: „Dar, Tio Divaldo, eu nu îl cunosc.” Însă eu știam deja cine era fiul ei. Aici se întrerupe audio-ul.",
+        ],
+    ),
+]
+
+
+def set_font(run, size=None, bold=None, color=None):
+    run.font.name = "Arial"
+    if size is not None:
+        run.font.size = Pt(size)
+    if bold is not None:
+        run.font.bold = bold
+    if color is not None:
+        run.font.color.rgb = RGBColor.from_string(color)
+
+
+doc = Document()
+section = doc.sections[0]
+section.top_margin = Inches(1)
+section.bottom_margin = Inches(1)
+section.left_margin = Inches(1)
+section.right_margin = Inches(1)
+section.header_distance = Inches(0.492)
+section.footer_distance = Inches(0.492)
+
+styles = doc.styles
+normal = styles["Normal"]
+normal.font.name = "Arial"
+normal.font.size = Pt(11)
+normal.paragraph_format.space_before = Pt(0)
+normal.paragraph_format.space_after = Pt(8)
+normal.paragraph_format.line_spacing = 1.15
+
+for name, size, before, after, color in [
+    ("Heading 1", 20, 20, 6, "000000"),
+    ("Heading 2", 16, 18, 6, "000000"),
+    ("Heading 3", 14, 16, 4, "434343"),
+]:
+    style = styles[name]
+    style.font.name = "Arial"
+    style.font.size = Pt(size)
+    style.font.bold = False
+    style.font.color.rgb = RGBColor.from_string(color)
+    style.paragraph_format.space_before = Pt(before)
+    style.paragraph_format.space_after = Pt(after)
+    style.paragraph_format.line_spacing = 1.15
+
+timestamp_style = styles.add_style("Timestamp", 1)
+timestamp_style.font.name = "Arial"
+timestamp_style.font.size = Pt(10)
+timestamp_style.font.bold = True
+timestamp_style.font.color.rgb = RGBColor.from_string("555555")
+timestamp_style.paragraph_format.space_before = Pt(10)
+timestamp_style.paragraph_format.space_after = Pt(2)
+timestamp_style.paragraph_format.line_spacing = 1.15
+
+note_style = styles.add_style("Note", 1)
+note_style.font.name = "Arial"
+note_style.font.size = Pt(10)
+note_style.font.color.rgb = RGBColor.from_string("555555")
+note_style.paragraph_format.space_before = Pt(0)
+note_style.paragraph_format.space_after = Pt(8)
+note_style.paragraph_format.line_spacing = 1.15
+
+title = doc.add_paragraph()
+title.paragraph_format.space_before = Pt(0)
+title.paragraph_format.space_after = Pt(3)
+title.alignment = WD_ALIGN_PARAGRAPH.LEFT
+run = title.add_run("Traducere în română - Divaldo Franco")
+set_font(run, size=26, bold=False, color="000000")
+
+subtitle = doc.add_paragraph(style="Note")
+subtitle.add_run("Verificată după audio-ul video (21:53). Traducere din spaniolă în română, cu normalizarea termenilor spiritiști și a numelor proprii.")
+
+doc.add_heading("Notă de lucru", level=2)
+for text in [
+    "Documentul Word inițial conținea numeroase erori de transcriere. Am folosit audio-ul ca sursă principală și am refăcut sensul în română pe baza unei transcrieri locale Whisper, apoi am corectat prin context pasajele deformate automat.",
+    "Vorbitorul folosește spaniolă cu accent și interferențe portugheze. Am păstrat termeni specifici, acolo unde sunt importanți: Mansión del Camino, pase, medium, spiritism, dezobsedare, dedublare, desencarnare.",
+]:
+    doc.add_paragraph(text)
+
+doc.add_heading("Traducere", level=1)
+
+for timestamp, heading, paragraphs in sections:
+    p = doc.add_paragraph(style="Timestamp")
+    p.add_run(timestamp)
+    doc.add_heading(heading, level=2)
+    for paragraph in paragraphs:
+        doc.add_paragraph(paragraph)
+
+doc.save(OUT)
+print(OUT)

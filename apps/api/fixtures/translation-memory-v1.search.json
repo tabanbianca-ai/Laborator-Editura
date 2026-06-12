@@ -1,0 +1,8 @@
+{
+  "sourceText": "El espíritu es eterno.",
+  "sourceLanguage": "es",
+  "targetLanguage": "ro",
+  "domain": "spiritism",
+  "limit": 5,
+  "similarityThreshold": 0.2
+}

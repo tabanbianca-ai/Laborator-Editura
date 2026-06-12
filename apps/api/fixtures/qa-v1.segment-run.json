@@ -1,0 +1,10 @@
+{
+  "projectId": "project-1",
+  "documentId": "document-1",
+  "segmentId": "segment-1",
+  "sourceText": "El espíritu sobrevive a la muerte del cuerpo el 12/05/2026.",
+  "targetText": "Sufletul supraviețuiește morții corpului.",
+  "sourceLanguage": "es",
+  "targetLanguage": "ro",
+  "domain": "spiritism"
+}

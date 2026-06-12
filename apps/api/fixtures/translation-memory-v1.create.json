@@ -1,0 +1,16 @@
+{
+  "projectId": "project-1",
+  "documentId": "document-1",
+  "sourceSegmentId": "segment-1",
+  "sourceText": "El espíritu es inmortal.",
+  "targetText": "Spiritul este nemuritor.",
+  "sourceLanguage": "es",
+  "targetLanguage": "ro",
+  "domain": "spiritism",
+  "confidenceScore": 0.98,
+  "approvalStatus": "PENDING",
+  "origin": "HUMAN",
+  "metadata": {
+    "source": "human_translation"
+  }
+}

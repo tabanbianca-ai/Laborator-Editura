@@ -1,0 +1,24 @@
+{
+  "projectId": "project-1",
+  "documentId": "document-1",
+  "targetLanguage": "ro",
+  "domain": "spiritism",
+  "segments": [
+    {
+      "segmentId": "segment-1",
+      "sourceText": "El espíritu es inmortal.",
+      "targetText": "Spiritul este nemuritor.",
+      "sourceLanguage": "es",
+      "targetLanguage": "ro",
+      "domain": "spiritism"
+    },
+    {
+      "segmentId": "segment-2",
+      "sourceText": "El espíritu es inmortal.",
+      "targetText": "",
+      "sourceLanguage": "es",
+      "targetLanguage": "ro",
+      "domain": "spiritism"
+    }
+  ]
+}

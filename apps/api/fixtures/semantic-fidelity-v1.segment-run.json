@@ -1,0 +1,10 @@
+{
+  "projectId": "project-1",
+  "documentId": "document-1",
+  "segmentId": "segment-1",
+  "sourceText": "El espíritu sobrevive a la muerte del cuerpo.",
+  "targetText": "Sufletul devine nemuritor după moarte, în mod simbolic.",
+  "sourceLanguage": "es",
+  "targetLanguage": "ro",
+  "domain": "spiritism"
+}

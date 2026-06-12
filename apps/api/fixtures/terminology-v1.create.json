@@ -1,0 +1,15 @@
+{
+  "language": "ro",
+  "domain": "spiritism",
+  "source": "GLOSSARY",
+  "term": "espíritu",
+  "definition": "Principiul inteligent al ființei.",
+  "approvedTranslation": "spirit",
+  "forbiddenVariants": ["suflet"],
+  "preferredVariants": ["spirit", "spiritul"],
+  "notes": "Termen specializat validat pentru texte spiritiste.",
+  "status": "PROPOSED",
+  "metadata": {
+    "sourceDocument": "glossary-core"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "projectId": "project-1",
+  "documentId": "document-1",
+  "sourceLanguage": "es",
+  "targetLanguage": "ro",
+  "domain": "spiritism",
+  "segments": [
+    {
+      "segmentId": "segment-1",
+      "sourceText": "El espíritu sobrevive a la muerte del cuerpo.",
+      "targetText": "Spiritul supraviețuiește morții corpului.",
+      "sourceLanguage": "es",
+      "targetLanguage": "ro",
+      "domain": "spiritism"
+    },
+    {
+      "segmentId": "segment-2",
+      "sourceText": "La reencarnación explica la continuidad de la vida.",
+      "targetText": "Viața continuă.",
+      "sourceLanguage": "es",
+      "targetLanguage": "ro",
+      "domain": "spiritism"
+    }
+  ]
+}

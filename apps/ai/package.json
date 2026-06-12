@@ -1,0 +1,12 @@
+{
+  "name": "@laborator/ai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "python -m compileall app",
+    "dev": "uvicorn app.main:app --reload --port 8000",
+    "lint": "python -m compileall app",
+    "test": "echo \"No ai tests yet\"",
+    "typecheck": "python -m compileall app"
+  }
+}

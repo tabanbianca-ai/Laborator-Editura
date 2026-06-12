@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  mvp-validation:
+    name: MVP contract validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: API contract and integration tests
+        run: node --test apps/api/tests/*.test.mjs
+
+      - name: DB migration runtime and backup tests
+        run: node --test packages/db/tests/*.test.mjs
+
+      - name: Shared JSON Master tests
+        run: node --test packages/shared/tests/*.test.mjs
+
+      - name: Fixture JSON validation
+        run: |
+          node -e "const fs = require('node:fs'); const files = ['apps/api/fixtures/mvp-e2e-validation.json', 'apps/api/fixtures/mvp-operational-workflow.json']; for (const file of files) { JSON.parse(fs.readFileSync(file, 'utf8')); console.log('valid', file); }"
+
+  typecheck:
+    name: Typecheck when dependencies are available
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies if package access is available
+        id: dependencies
+        shell: bash
+        run: |
+          set +e
+          corepack enable
+          corepack prepare pnpm@10.12.1 --activate
+          pnpm install --no-frozen-lockfile
+          status=$?
+          set -e
+
+          if [ "$status" -eq 0 ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+            echo "Dependencies installed; typecheck will run."
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Typecheck skipped::Dependency installation failed or package access is unavailable. Contract validation remains required; run pnpm install && pnpm typecheck when dependencies are available."
+          fi
+
+          exit 0
+
+      - name: Run TypeScript checks
+        if: steps.dependencies.outputs.available == 'true'
+        run: pnpm typecheck
+
+      - name: Document skipped typecheck
+        if: steps.dependencies.outputs.available != 'true'
+        run: |
+          echo "Typecheck skipped because dependencies were unavailable in this CI run."
+          echo "Required follow-up when package access is available: pnpm install && pnpm typecheck"

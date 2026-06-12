@@ -1,0 +1,6 @@
+{
+  "projectId": "project-1",
+  "documentId": "document-1",
+  "toStatus": "IN_TRANSLATION",
+  "reason": "Begin document translation"
+}

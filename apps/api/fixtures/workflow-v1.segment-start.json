@@ -1,0 +1,9 @@
+{
+  "projectId": "project-1",
+  "documentId": "document-1",
+  "segmentId": "segment-1",
+  "scope": "SEGMENT",
+  "metadata": {
+    "source": "mvp-contract-fixture"
+  }
+}

@@ -1,0 +1,8 @@
+node_modules
+dist
+.next
+coverage
+render_translation
+render_translation_final
+render_translation_mac
+work_audio

@@ -1,0 +1,78 @@
+{
+  "formatVersion": "1.0",
+  "project": {
+    "id": "project-1",
+    "name": "Minimal Translation Project",
+    "sourceLanguage": "es",
+    "targetLanguages": ["ro"],
+    "status": "active",
+    "createdAt": "2026-06-11T00:00:00.000Z",
+    "updatedAt": "2026-06-11T00:00:00.000Z"
+  },
+  "documents": [
+    {
+      "id": "document-1",
+      "projectId": "project-1",
+      "title": "Source Document",
+      "sourceLanguage": "es",
+      "documentType": "article",
+      "segments": [
+        {
+          "id": "segment-1",
+          "order": 0,
+          "source": {
+            "text": "El espíritu es inmortal."
+          },
+          "translations": [
+            {
+              "id": "translation-1",
+              "language": "ro",
+              "text": "Spiritul este nemuritor.",
+              "status": "human_edited",
+              "provenance": {
+                "source": "human",
+                "confidence": 1
+              },
+              "createdAt": "2026-06-11T00:00:00.000Z",
+              "updatedAt": "2026-06-11T00:00:00.000Z"
+            }
+          ],
+          "status": "translated"
+        }
+      ]
+    }
+  ],
+  "terminology": {
+    "terms": []
+  },
+  "translationMemory": {
+    "entries": []
+  },
+  "qa": {
+    "checks": [],
+    "scores": {
+      "semanticFidelity": 100,
+      "terminology": 100,
+      "consistency": 100,
+      "fluency": 95,
+      "overall": 99
+    }
+  },
+  "workflow": {
+    "state": "translation",
+    "events": []
+  },
+  "audit": {
+    "events": []
+  },
+  "versionHistory": {
+    "versions": []
+  },
+  "mediaLocalization": {
+    "mediaAssets": [],
+    "subtitleTracks": [],
+    "voiceOverTracks": [],
+    "dubbingTracks": [],
+    "localizedVideoExports": []
+  }
+}
