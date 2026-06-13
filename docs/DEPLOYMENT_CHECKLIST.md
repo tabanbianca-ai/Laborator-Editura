@@ -7,6 +7,9 @@ Last Release Preparation update: 2026-06-12
 Purpose: define the required operational steps for deploying the MVP.
 
 For closed beta staging validation, follow `docs/STAGING_VALIDATION_PLAN.md`.
+For the exact staging environment configuration, role bootstrap procedure,
+smoke script, and backup/restore commands, follow
+`docs/STAGING_DEPLOYMENT_PREPARATION.md`.
 
 ## Pre-Deployment
 

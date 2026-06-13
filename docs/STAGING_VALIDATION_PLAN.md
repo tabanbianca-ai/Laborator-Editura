@@ -11,6 +11,10 @@ Scope:
 - No architecture changes.
 - Documentation and operational validation only.
 
+The exact staging deployment configuration, server-side ADMIN/REVIEWER
+bootstrap procedure, smoke test script, and backup/restore validation commands
+are defined in `docs/STAGING_DEPLOYMENT_PREPARATION.md`.
+
 ## 1. Staging Environment Instructions
 
 Use a staging environment that is separate from production and local development.
