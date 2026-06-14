@@ -1,35 +1,25 @@
-"use client";
-
-import { type ComponentProps, useState } from "react";
+import type { ComponentProps } from "react";
 
 import {
-  activeSegment,
-  editorQaIssues,
-  editorSemanticIssues,
-  editorTerminologyMatches,
-  editorSegments,
-  editorSuggestions,
-  editorTmSuggestions
-} from "../editor/editor-mock-data";
-import { EditorToolbar } from "../editor/editor-toolbar";
+  listSegments,
+  listTranslations,
+  type SegmentRecord,
+  type SegmentTranslationRecord
+} from "../../lib/editor-api";
+import type { EditorSegment } from "../editor/editor-types";
 import { RightPanelContainer } from "../editor/right-panel-container";
-import { SegmentList } from "../editor/segment-list";
-import { SourceSegmentPanel } from "../editor/source-segment-panel";
-import { TargetTranslationEditor } from "../editor/target-translation-editor";
+import { TranslationEditorWorkbench } from "../editor/translation-editor-workbench";
+import { EmptyState, ErrorState } from "../ui";
 
-type MobileEditorTab = "segments" | "translation" | "context";
-
-const mobileTabs: Array<{ id: MobileEditorTab; label: string }> = [
-  { id: "segments", label: "Segments" },
-  { id: "translation", label: "Translation" },
-  { id: "context", label: "Context" }
-];
+interface TranslationEditorPageProps {
+  documentId?: string;
+}
 
 const editorWorkflowSignals = [
   {
     label: "Current status",
-    status: "IN_REVIEW",
-    tone: "warning"
+    status: "Loaded from document segments",
+    tone: "info"
   },
   {
     label: "Approval authority",
@@ -37,93 +27,137 @@ const editorWorkflowSignals = [
     tone: "info"
   },
   {
-    label: "Blocked by QA",
-    status: "Yes",
-    tone: "danger"
+    label: "Blocking checks",
+    status: "Not connected in this phase",
+    tone: "neutral"
   }
 ] satisfies ComponentProps<typeof RightPanelContainer>["workflowSignals"];
 
 const editorExportReadiness = [
   {
     label: "JSON Master",
-    status: "Ready",
-    tone: "success"
+    status: "Not connected in this phase",
+    tone: "neutral"
   },
   {
     label: "PDF",
-    status: "Blocked",
-    tone: "warning"
+    status: "Not connected in this phase",
+    tone: "neutral"
   },
   {
     label: "DOCX",
-    status: "Waiting approval",
-    tone: "info"
+    status: "Not connected in this phase",
+    tone: "neutral"
   }
 ] satisfies ComponentProps<typeof RightPanelContainer>["exportReadiness"];
 
-export function TranslationEditorPage() {
-  const [activeTab, setActiveTab] = useState<MobileEditorTab>("translation");
+function mapSegmentStatus(status: SegmentRecord["status"]): string {
+  switch (status) {
+    case "APPROVED":
+      return "Approved";
+    case "IN_REVIEW":
+      return "In Review";
+    case "IN_TRANSLATION":
+      return "In Translation";
+    case "TRANSLATED":
+      return "Translated";
+    case "NEW":
+    default:
+      return "New";
+  }
+}
+
+function findLatestTranslation(
+  segment: SegmentRecord,
+  translations: SegmentTranslationRecord[]
+): SegmentTranslationRecord | undefined {
+  const latestById = segment.latestTranslationId
+    ? translations.find((translation) => translation.id === segment.latestTranslationId)
+    : undefined;
+
+  if (latestById) {
+    return latestById;
+  }
+
+  return translations
+    .filter((translation) => translation.segmentId === segment.id)
+    .sort(
+      (left, right) =>
+        new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()
+    )[0];
+}
+
+function toEditorSegment(
+  segment: SegmentRecord,
+  translations: SegmentTranslationRecord[]
+): EditorSegment {
+  const latestTranslation = findLatestTranslation(segment, translations);
+
+  return {
+    documentId: segment.documentId,
+    id: segment.id,
+    latestTranslationId: latestTranslation?.id ?? segment.latestTranslationId,
+    number: segment.order,
+    projectId: segment.projectId,
+    source: segment.sourceText,
+    sourceLanguage: segment.sourceLanguage,
+    status: mapSegmentStatus(segment.status),
+    target: latestTranslation?.targetText ?? segment.latestTargetText ?? "",
+    targetLanguage: segment.targetLanguage
+  };
+}
+
+export async function TranslationEditorPage({
+  documentId
+}: TranslationEditorPageProps) {
+  if (!documentId) {
+    return (
+      <section className="content-panel">
+        <EmptyState
+          description="Open the editor with a documentId query parameter to load document segments."
+          title="No document selected"
+        />
+      </section>
+    );
+  }
+
+  const [segmentsResult, translationsResult] = await Promise.all([
+    listSegments(documentId),
+    listTranslations(documentId)
+  ]);
+  const error = segmentsResult.error ?? translationsResult.error;
+
+  if (error) {
+    return (
+      <section className="content-panel">
+        <ErrorState message={`Editor data could not be loaded. ${error}`} />
+      </section>
+    );
+  }
+
+  const segments = segmentsResult.data ?? [];
+  const translations = translationsResult.data ?? [];
+
+  if (segments.length === 0) {
+    return (
+      <section className="content-panel">
+        <EmptyState
+          description="This document has no persisted segments yet."
+          title="No segments available"
+        />
+      </section>
+    );
+  }
+
+  const editorSegments = [...segments]
+    .sort((left, right) => left.order - right.order)
+    .map((segment) => toEditorSegment(segment, translations));
 
   return (
-    <div className="editor-page">
-      <EditorToolbar saveStatus="Saved" workflowStatus={activeSegment.status} />
-
-      <div className="editor-mobile-tabs" aria-label="Editor mobile sections">
-        {mobileTabs.map((tab) => (
-          <button
-            aria-pressed={activeTab === tab.id}
-            className={
-              activeTab === tab.id ? "editor-tab editor-tab-active" : "editor-tab"
-            }
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            type="button"
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="editor-workbench">
-        <div
-          className={
-            activeTab === "segments"
-              ? "editor-column editor-column-visible"
-              : "editor-column editor-column-segments"
-          }
-        >
-          <SegmentList activeSegmentId={activeSegment.id} segments={editorSegments} />
-        </div>
-
-        <div
-          className={
-            activeTab === "translation"
-              ? "editor-column editor-column-center editor-column-visible"
-              : "editor-column editor-column-center"
-          }
-        >
-          <SourceSegmentPanel segment={activeSegment} />
-          <TargetTranslationEditor segment={activeSegment} />
-        </div>
-
-        <div
-          className={
-            activeTab === "context"
-              ? "editor-column editor-column-visible"
-              : "editor-column editor-column-context"
-          }
-        >
-          <RightPanelContainer
-            exportReadiness={editorExportReadiness}
-            qaIssues={editorQaIssues}
-            semanticIssues={editorSemanticIssues}
-            suggestions={editorSuggestions}
-            terminologyMatches={editorTerminologyMatches}
-            tmSuggestions={editorTmSuggestions}
-            workflowSignals={editorWorkflowSignals}
-          />
-        </div>
-      </div>
-    </div>
+    <TranslationEditorWorkbench
+      exportReadiness={editorExportReadiness}
+      segments={editorSegments}
+      workflowSignals={editorWorkflowSignals}
+    />
   );
 }
