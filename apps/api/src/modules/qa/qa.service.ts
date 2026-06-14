@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import { TerminologyService } from "../terminology/terminology.service";
+import { type TerminologyViolation } from "../terminology/terminology.types";
 import { InMemoryQaRepository } from "./qa.repository";
 import {
   type ListQaIssuesInput,
@@ -294,16 +295,14 @@ export class QaService {
         this.createIssue(
           actor,
           reportId,
-          violation.type === "FORBIDDEN_VARIANT"
-            ? "FORBIDDEN_TERMINOLOGY_VARIANT"
-            : "TERMINOLOGY_VIOLATION",
+          this.issueTypeForTerminologyViolation(violation.type),
           {
             ...segment,
             message: `${violation.message} Validated terminology has priority over Translation Memory and AI suggestions.`,
             terminologyTermId: violation.termId,
             createdAt,
             metadata: {
-              terminologyPriority: TERMINOLOGY_VALIDATED_PRIORITY,
+              terminologyPriority: violation.priority ?? TERMINOLOGY_VALIDATED_PRIORITY,
               authoritative: violation.authoritative
             }
           }
@@ -312,6 +311,22 @@ export class QaService {
     }
 
     return issues;
+  }
+
+  private issueTypeForTerminologyViolation(
+    violationType: TerminologyViolation["type"]
+  ): QaIssueType {
+    switch (violationType) {
+      case "FORBIDDEN_VARIANT":
+        return "FORBIDDEN_TERMINOLOGY_VARIANT";
+      case "MISSING_OR_INCORRECT_DIACRITICS":
+        return "TERMINOLOGY_DIACRITICS";
+      case "REJECTED_TERM":
+        return "REJECTED_TERMINOLOGY";
+      case "MISSING_APPROVED_TRANSLATION":
+      case "PREFERRED_VARIANT_AVAILABLE":
+        return "TERMINOLOGY_VIOLATION";
+    }
   }
 
   private createIssue(
