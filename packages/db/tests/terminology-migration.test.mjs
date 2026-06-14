@@ -9,6 +9,10 @@ const migration = readFileSync(
   join(__dirname, "..", "migrations", "0002_terminology_glossary_v1.sql"),
   "utf8"
 );
+const governanceMigration = readFileSync(
+  join(__dirname, "..", "migrations", "0006_terminology_governance_v2.sql"),
+  "utf8"
+);
 
 test("terminology migration defines required table columns", () => {
   for (const column of [
@@ -53,4 +57,39 @@ test("terminology migration includes audit events", () => {
   for (const action of ["CREATE", "UPDATE", "VALIDATE", "SUSPEND", "ARCHIVE"]) {
     assert.match(migration, new RegExp(`'${action}'`));
   }
+});
+
+test("terminology governance v2 migration adds quality and validation fields", () => {
+  for (const column of [
+    "quality_score numeric(5, 2)",
+    "quality_level text",
+    "orthographic_validation_status text",
+    "diacritics_validation_status text",
+    "source_validation_status text",
+    "governance_decision_status text",
+    "reference_sources text[]",
+    "glossary_present boolean",
+    "editorial_approval boolean",
+    "historical_usage_count integer",
+    "rejected_by uuid",
+    "rejected_at timestamptz"
+  ]) {
+    assert.match(governanceMigration, new RegExp(column.replace(/[()[\]]/g, "\\$&")));
+  }
+});
+
+test("terminology governance v2 migration adds statuses actions and QA blockers", () => {
+  for (const value of [
+    "REJECTED",
+    "EVALUATE",
+    "MARK_UNDER_REVIEW",
+    "REJECT",
+    "TERMINOLOGY_DIACRITICS",
+    "REJECTED_TERMINOLOGY"
+  ]) {
+    assert.match(governanceMigration, new RegExp(`'${value}'`));
+  }
+
+  assert.match(governanceMigration, /terminology_governance_review_idx/);
+  assert.match(governanceMigration, /qa_issues_terminology_blockers_idx/);
 });
