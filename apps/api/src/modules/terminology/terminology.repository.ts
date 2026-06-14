@@ -70,6 +70,42 @@ export class InMemoryTerminologyRepository implements TerminologyRepository {
     );
   }
 
+  async listTermsRequiringReview(organizationId: string): Promise<TerminologyTerm[]> {
+    return sortTermsByAuthority(
+      [...this.terms.values()].filter((term) => {
+        return (
+          term.organizationId === organizationId &&
+          (term.status === "UNDER_REVIEW" ||
+            term.status === "REJECTED" ||
+            term.governanceDecisionStatus === "UNDER_REVIEW" ||
+            term.governanceDecisionStatus === "REJECTED" ||
+            term.qualityLevel === "REVIEW_REQUIRED" ||
+            term.qualityLevel === "REJECTED" ||
+            term.orthographicValidationStatus === "FAILED" ||
+            term.diacriticsValidationStatus === "FAILED" ||
+            term.sourceValidationStatus === "MISSING_APPROVED_SOURCE")
+        );
+      })
+    );
+  }
+
+  async listTermsForGovernanceCheck(input: {
+    organizationId: string;
+    language: string;
+    domain?: string;
+  }): Promise<TerminologyTerm[]> {
+    return sortTermsByAuthority(
+      [...this.terms.values()].filter((term) => {
+        return (
+          term.organizationId === input.organizationId &&
+          term.language === input.language &&
+          ["REJECTED", "VALIDATED"].includes(term.status) &&
+          (input.domain === undefined || term.domain === input.domain)
+        );
+      })
+    );
+  }
+
   async appendAuditEvent(event: TerminologyAuditEvent): Promise<void> {
     this.auditEvents.push(event);
   }
