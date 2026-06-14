@@ -1,6 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import { QaService } from "../qa/qa.service";
+import { type QaIssueType } from "../qa/qa.types";
 import { SemanticFidelityService } from "../semantic-fidelity/semantic-fidelity.service";
 import { InMemoryWorkflowRepository } from "./workflow.repository";
 import {
@@ -28,6 +29,12 @@ const NEXT_STATUS: Partial<Record<WorkflowStatus, WorkflowStatus>> = {
 };
 
 const HUMAN_APPROVAL_ROLES = new Set(["ADMIN", "REVIEWER"]);
+const TERMINOLOGY_BLOCKING_ISSUE_TYPES = new Set<QaIssueType>([
+  "FORBIDDEN_TERMINOLOGY_VARIANT",
+  "REJECTED_TERMINOLOGY",
+  "TERMINOLOGY_DIACRITICS",
+  "TERMINOLOGY_VIOLATION"
+]);
 
 const HUMAN_FINAL_AUTHORITY_RULE =
   "AI may suggest and validation engines may check, but only authorized human roles can approve.";
@@ -210,6 +217,8 @@ export class WorkflowService {
       throw new BadRequestException("Cannot move to READY_FOR_EXPORT unless document is APPROVED.");
     }
 
+    await this.assertNoBlockingTerminologyIssues(actor, existing);
+
     const updated = this.applyStatus(actor, existing, "READY_FOR_EXPORT");
     const saved = await this.repository.updateState(updated);
     await this.recordTransition(actor, existing, saved, "READY_FOR_EXPORT");
@@ -228,6 +237,8 @@ export class WorkflowService {
     if (existing.status !== "READY_FOR_EXPORT") {
       throw new BadRequestException("Cannot export unless status is READY_FOR_EXPORT.");
     }
+
+    await this.assertNoBlockingTerminologyIssues(actor, existing);
 
     const updated = this.applyStatus(actor, existing, "EXPORTED");
     const saved = await this.repository.updateState(updated);
@@ -257,6 +268,7 @@ export class WorkflowService {
     if (toStatus === "READY_FOR_EXPORT") {
       this.assertDocumentWorkflow(state);
       this.assertAuthorizedHuman(actor);
+      await this.assertNoBlockingTerminologyIssues(actor, state);
     }
 
     if (toStatus === "EXPORTED" && state.status !== "READY_FOR_EXPORT") {
@@ -266,6 +278,7 @@ export class WorkflowService {
     if (toStatus === "EXPORTED") {
       this.assertDocumentWorkflow(state);
       this.assertAuthorizedHuman(actor);
+      await this.assertNoBlockingTerminologyIssues(actor, state);
     }
   }
 
@@ -301,6 +314,28 @@ export class WorkflowService {
     if (blocker) {
       throw new BadRequestException(
         "Cannot move to APPROVED if Semantic Fidelity has unresolved HIGH or CRITICAL issues."
+      );
+    }
+  }
+
+  private async assertNoBlockingTerminologyIssues(
+    actor: WorkflowActor,
+    state: WorkflowState
+  ): Promise<void> {
+    const issues = await this.qaService.listIssues(actor, {
+      documentId: state.documentId,
+      segmentId: state.segmentId,
+      status: "OPEN"
+    });
+    const blocker = issues.find(
+      (issue) =>
+        ["HIGH", "CRITICAL"].includes(issue.severity) &&
+        TERMINOLOGY_BLOCKING_ISSUE_TYPES.has(issue.type)
+    );
+
+    if (blocker) {
+      throw new BadRequestException(
+        "Cannot move to READY_FOR_EXPORT or EXPORTED with unresolved rejected terminology or HIGH/CRITICAL terminology issues."
       );
     }
   }
