@@ -1,4 +1,4 @@
-import type { EditorSegment } from "./editor-mock-data";
+import type { EditorSegment } from "./editor-types";
 
 interface SourceSegmentPanelProps {
   segment: EditorSegment;
@@ -15,15 +15,15 @@ export function SourceSegmentPanel({ segment }: SourceSegmentPanelProps) {
       <dl className="segment-metadata">
         <div>
           <dt>Source</dt>
-          <dd>ES</dd>
+          <dd>{segment.sourceLanguage.toUpperCase()}</dd>
         </div>
         <div>
           <dt>Target</dt>
-          <dd>RO</dd>
+          <dd>{segment.targetLanguage.toUpperCase()}</dd>
         </div>
         <div>
-          <dt>Domain</dt>
-          <dd>Spiritism</dd>
+          <dt>Document</dt>
+          <dd>{segment.documentId}</dd>
         </div>
       </dl>
     </section>
