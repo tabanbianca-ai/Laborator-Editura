@@ -34,6 +34,33 @@ Rules:
 - Prioritize implementation over new design work.
 - Roadmap expansion may resume only after MVP validation.
 
+### Terminology Governance v2 Directive
+
+Purpose:
+
+- Protect terminology, Translation Memory, QA, Semantic Fidelity, workflow, and
+  export from incorrect, invented, misspelled, or non-diacritic terms.
+
+Rules:
+
+- Treat Terminology Governance v2 as an approved stabilization enhancement of
+  the existing Terminology & Glossary System, not as a new major module.
+- AI must never automatically create `VALIDATED` terminology.
+- New terminology entries must start as `PROPOSED`.
+- Terms not found in approved sources must become `UNDER_REVIEW`.
+- Romanian terms must pass diacritics and orthographic validation.
+- Missing or incorrect Romanian diacritics must create High severity
+  terminology issues.
+- Rejected terms must create Critical terminology issues.
+- Only authorized human users may validate, suspend, archive, or reject
+  terminology.
+- Repeated usage must not auto-promote terminology.
+- `VALIDATED` terminology remains authoritative over Translation Memory and AI
+  suggestions.
+- Documents with rejected terminology or unresolved High/Critical terminology
+  issues must not move to `READY_FOR_EXPORT` or `EXPORTED`.
+- Every terminology governance action must be audited.
+
 ### ChatGPT
 
 Role: System Architect.
