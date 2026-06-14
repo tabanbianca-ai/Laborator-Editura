@@ -26,6 +26,8 @@ Do not add major features outside this scope during MVP implementation.
 
 1. Translation Memory.
 2. Terminology & Glossary System.
+   - Terminology Governance v2 is approved as an MVP stabilization enhancement
+     inside the existing Terminology & Glossary System.
 3. QA Engine.
 4. Semantic Fidelity Engine.
 5. Workflow Engine.
@@ -64,6 +66,10 @@ Roadmap expansion may resume only after MVP validation.
 - Segments: segment editor, translation state, workflow state, and QA hooks.
 - QA: basic semantic, terminology, formatting, and consistency checks.
 - TM: basic Translation Memory storage and reuse suggestions.
+- Terminology Governance v2: terminology quality score, Romanian diacritics and
+  orthographic validation, source validation, rejection/under-review decisions,
+  audit coverage, QA blocking, and workflow export gates for rejected or
+  unresolved High/Critical terminology issues.
 - TCPS/TLCG: minimal competency profile, training challenge, scoring, and
   progression support.
 - AI: suggestion and explanation integrations that remain under human final
