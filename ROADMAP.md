@@ -70,6 +70,19 @@ Roadmap expansion may resume only after MVP validation.
   orthographic validation, source validation, rejection/under-review decisions,
   audit coverage, QA blocking, and workflow export gates for rejected or
   unresolved High/Critical terminology issues.
+- Translation Rules Versioning & Impact Analysis: translation rules are
+  immutable and versioned, manuscripts and exports record rule versions used,
+  rule changes require impact analysis across books, manuscripts, languages,
+  chapters, segments, terminology entries, and exports, and changes affecting
+  existing publications require authorized approval.
+- Rule Source Authority: translation rules, terminology rules, editorial rules,
+  semantic fidelity rules, and exceptions require immutable, auditable,
+  non-AI source authority references before validation.
+- Authority Confidence Levels: source authorities are ranked as
+  `PRIMARY_AUTHORITY`, `SECONDARY_AUTHORITY`, `EDITORIAL_AUTHORITY`, or
+  `TEMPORARY_AUTHORITY`; conflicts require human review, AI cannot be an
+  authority confidence source, and impact analysis records affected confidence
+  levels.
 - TCPS/TLCG: minimal competency profile, training challenge, scoring, and
   progression support.
 - AI: suggestion and explanation integrations that remain under human final
@@ -109,3 +122,16 @@ This phase should start only after the core translation workflow is stable:
 No implementation is authorized at this stage. This roadmap entry is included so
 the architecture reserves space for future multimedia localization without
 disrupting the current MVP.
+
+## Documentation-Only Governance Requirements
+
+The following requirements are approved for specification and JSON Master Format
+documentation, but are not authorized for implementation until explicitly
+scheduled:
+
+- Translation Rules Versioning.
+- Translation Rule Impact Analysis.
+- Rule change approval for existing publications.
+- Identification of publications translated under older rule versions.
+- Rule Source Authority for rules and exceptions.
+- Authority Confidence Levels for conflicting source authorities.
