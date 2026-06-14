@@ -32,7 +32,7 @@ interface SemanticIssue {
   risk: string;
 }
 
-interface StatusSignal {
+export interface StatusSignal {
   label: string;
   status: string;
   tone: "danger" | "info" | "neutral" | "success" | "warning";
