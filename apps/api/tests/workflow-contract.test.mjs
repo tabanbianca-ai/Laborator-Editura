@@ -83,6 +83,16 @@ test("workflow service enforces export gates", () => {
   assert.match(source, /assertDocumentWorkflow/);
 });
 
+test("workflow service blocks export for unresolved terminology governance issues", () => {
+  const source = readSource("workflow.service.ts");
+
+  assert.match(source, /TERMINOLOGY_BLOCKING_ISSUE_TYPES/);
+  assert.match(source, /REJECTED_TERMINOLOGY/);
+  assert.match(source, /TERMINOLOGY_DIACRITICS/);
+  assert.match(source, /assertNoBlockingTerminologyIssues/);
+  assert.match(source, /Cannot move to READY_FOR_EXPORT or EXPORTED with unresolved rejected terminology/);
+});
+
 test("workflow service preserves human final authority", () => {
   const source = readSource("workflow.service.ts");
 
