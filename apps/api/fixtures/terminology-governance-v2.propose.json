@@ -1,0 +1,16 @@
+{
+  "language": "ro",
+  "domain": "spiritism",
+  "source": "GLOSSARY",
+  "term": "conștiință",
+  "definition": "Capacitatea de a percepe, înțelege și evalua propria existență morală.",
+  "approvedTranslation": "conștiință",
+  "preferredVariants": ["conștiință morală"],
+  "forbiddenVariants": ["constiinta", "conştiinţă"],
+  "referenceSources": ["glossary:spiritism:v1"],
+  "glossaryPresent": true,
+  "editorialApproval": false,
+  "historicalUsageCount": 3,
+  "status": "PROPOSED",
+  "notes": "Must preserve Romanian diacritics."
+}
