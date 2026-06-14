@@ -1,12 +1,17 @@
-import type { EditorSegment } from "./editor-mock-data";
+import type { EditorSegment } from "./editor-types";
 import { WorkflowStatusIndicator } from "./workflow-status-indicator";
 
 interface SegmentListProps {
   activeSegmentId: string;
+  onSegmentSelect?: (segmentId: string) => void;
   segments: EditorSegment[];
 }
 
-export function SegmentList({ activeSegmentId, segments }: SegmentListProps) {
+export function SegmentList({
+  activeSegmentId,
+  onSegmentSelect,
+  segments
+}: SegmentListProps) {
   return (
     <section className="editor-panel segment-list" aria-label="Segment list">
       <div className="editor-panel-header">
@@ -19,10 +24,12 @@ export function SegmentList({ activeSegmentId, segments }: SegmentListProps) {
           const isActive = segment.id === activeSegmentId;
 
           return (
-            <article
+            <button
               aria-current={isActive ? "step" : undefined}
               className={isActive ? "segment-item segment-item-active" : "segment-item"}
               key={segment.id}
+              onClick={() => onSegmentSelect?.(segment.id)}
+              type="button"
             >
               <div className="segment-item-topline">
                 <strong>{segment.number.toString().padStart(2, "0")}</strong>
@@ -30,10 +37,10 @@ export function SegmentList({ activeSegmentId, segments }: SegmentListProps) {
               </div>
               <p>{segment.source}</p>
               <div className="segment-score-row">
-                <span>Fidelity {segment.fidelityScore}%</span>
-                <span>Terminology {segment.terminologyScore}%</span>
+                <span>Source {segment.sourceLanguage.toUpperCase()}</span>
+                <span>Target {segment.targetLanguage.toUpperCase()}</span>
               </div>
-            </article>
+            </button>
           );
         })}
       </div>
