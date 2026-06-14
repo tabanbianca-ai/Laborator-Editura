@@ -36,6 +36,8 @@ test("qa service includes all required checks", () => {
     "REPEATED_SEGMENT",
     "TERMINOLOGY_VIOLATION",
     "FORBIDDEN_TERMINOLOGY_VARIANT",
+    "TERMINOLOGY_DIACRITICS",
+    "REJECTED_TERMINOLOGY",
     "EMPTY_TRANSLATION",
     "TOO_SHORT_TRANSLATION"
   ]) {
@@ -49,6 +51,18 @@ test("qa service respects validated terminology priority over TM and AI", () => 
   assert.match(source, /terminologyService\.checkSegmentText/);
   assert.match(source, /Validated terminology has priority over Translation Memory and AI suggestions/);
   assert.match(source, /TERMINOLOGY_VALIDATED/);
+});
+
+test("qa service maps terminology governance v2 issues to blocking severities", () => {
+  const source = readSource("qa.service.ts");
+  const utils = readSource("qa.utils.ts");
+
+  assert.match(source, /MISSING_OR_INCORRECT_DIACRITICS/);
+  assert.match(source, /REJECTED_TERM/);
+  assert.match(source, /TERMINOLOGY_DIACRITICS/);
+  assert.match(source, /REJECTED_TERMINOLOGY/);
+  assert.match(utils, /case "TERMINOLOGY_DIACRITICS":\s*return "HIGH"/s);
+  assert.match(utils, /case "REJECTED_TERMINOLOGY":\s*return "CRITICAL"/s);
 });
 
 test("qa service records audit events for run issue creation resolution and score recalculation", () => {
