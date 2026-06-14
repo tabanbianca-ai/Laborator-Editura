@@ -88,6 +88,7 @@ feature expansion.
 JSON Master Format is the canonical structure for:
 
 - Projects.
+- Language-specific manuscripts.
 - Documents.
 - Segments.
 - Metadata.
@@ -99,6 +100,155 @@ JSON Master Format is the canonical structure for:
 
 All platform data that must survive export, backup, audit, migration, or
 publishing must be representable in JSON Master Format.
+
+### Manuscript Language Organization
+
+A book or project may contain multiple language-specific manuscripts linked to
+the same original work.
+
+Example:
+
+- Book project: one original work.
+- Original manuscript: French.
+- Romanian manuscript.
+- Spanish manuscript.
+
+Rules:
+
+- Each language manuscript must have a stable `manuscriptId`.
+- Each manuscript must declare its `language`.
+- A translated manuscript must store `sourceManuscriptId` pointing to the
+  manuscript from which it was translated.
+- The original manuscript must not require `sourceManuscriptId`.
+- Each manuscript must include its own `title`, `chapters`, `segments`,
+  translation status, workflow status, and language-specific export artifacts.
+- Each language manuscript must be exportable separately.
+- All language manuscripts must remain linked to the same original work and
+  project.
+- Translation alignment between source and target segments must be preserved
+  through stable source segment references or alignment keys.
+- Export artifacts must be tracked per manuscript language.
+- This requirement is documentation-only until explicitly scheduled for
+  implementation.
+
+### Translation Rules Versioning & Impact Analysis
+
+Every translation rule must be versioned and auditable.
+
+Rules:
+
+- Translation rules cannot be overwritten.
+- Every rule change must create a new rule version.
+- Previous rule versions must remain auditable.
+- Each manuscript must record the translation rule version or versions used.
+- Each export artifact must record the translation rule version or versions used
+  at export time.
+- The system must be able to identify publications, manuscripts, and exports
+  translated under older rule versions.
+
+Before approving a rule change, the system must calculate an impact report
+covering:
+
+- Affected books.
+- Affected manuscripts.
+- Affected languages.
+- Affected chapters.
+- Affected segments.
+- Affected terminology entries.
+- Affected exports.
+
+Change approval rules:
+
+- Rule changes affecting existing publications must require authorized human
+  approval.
+- Rule change audit records must store the previous rule version, new rule
+  version, approver, date/time, and impact report.
+- Impact analysis and approval records must be preserved in JSON Master Format.
+- This requirement is documentation-only until explicitly scheduled for
+  implementation.
+
+### Rule Source Authority
+
+Every translation rule, terminology rule, editorial rule, semantic fidelity
+rule, and exception must have at least one documented authority source.
+
+Required source authority fields:
+
+- `ruleId`.
+- `ruleVersion`.
+- `sourceType`.
+- `sourceReference`.
+- `sourceDetails`.
+- `sourceLanguage`.
+- `sourcePublicationYear`.
+- `sourcePageOrSection`.
+- `approvalAuthority`.
+- `approvalDate`.
+- `authorityConfidenceLevel`.
+
+Allowed source types:
+
+- `Original Author`.
+- `Original Publication`.
+- `Editorial Board Decision`.
+- `Approved Editorial Glossary`.
+- `Approved Specialized Glossary`.
+- `Academic Reference`.
+- `Historical Reference`.
+- `Regulatory Reference`.
+- `Internal Editorial Standard`.
+
+Rules:
+
+- A rule cannot become `VALIDATED` without a source authority.
+- Exceptions must also contain a source authority.
+- Rule version history must preserve source authority references.
+- Impact analysis reports must include affected source authorities.
+- AI-generated rules cannot be treated as source authority.
+- Source authority references must be auditable and immutable.
+
+Example:
+
+- Rule: `Esprit -> Spirit`.
+- Source type: `Original Author`.
+- Source reference: `Allan Kardec`.
+- Source details: `Le Livre des Esprits, 1860 edition`.
+- Source language: `French`.
+- Source page or section: `Chapter I`.
+
+This requirement is documentation-only until explicitly scheduled for
+implementation.
+
+### Authority Confidence Levels
+
+Authority confidence levels allow the platform to rank source authorities when
+translation rules, terminology rules, editorial rules, semantic fidelity rules,
+or exceptions have conflicting sources.
+
+Levels:
+
+- `PRIMARY_AUTHORITY`: original author, original publication, canonical edition,
+  or validated primary source.
+- `SECONDARY_AUTHORITY`: academic reference, recognized dictionary, or
+  specialized published reference.
+- `EDITORIAL_AUTHORITY`: editorial board decision, approved editorial glossary,
+  or approved internal standard.
+- `TEMPORARY_AUTHORITY`: provisional editorial decision, unresolved source
+  conflict, or temporary beta rule.
+
+Priority rules:
+
+- `PRIMARY_AUTHORITY` has priority over `SECONDARY_AUTHORITY`.
+- `SECONDARY_AUTHORITY` has priority over `EDITORIAL_AUTHORITY`.
+- `EDITORIAL_AUTHORITY` has priority over `TEMPORARY_AUTHORITY`.
+- `TEMPORARY_AUTHORITY` cannot validate a permanent rule.
+- Conflicting authorities must be flagged for authorized human review.
+- AI output cannot be a source authority or authority confidence level.
+- Authority confidence must be auditable and immutable per rule version.
+- Impact Analysis reports must include authority confidence levels.
+
+This requirement is documentation-only until explicitly scheduled for
+implementation.
 
 ### Data Governance & GDPR
 
@@ -238,9 +388,9 @@ Status: Official platform specification. Documentation only. Do not implement
 code yet.
 
 JSON Master Format v1.0 is the single source of truth for the platform. Every
-project, document, segment, translation, term, QA result, workflow event, audit
-entry, version snapshot, and future media localization asset must be representable
-from this format.
+project, language-specific manuscript, document, segment, translation, term, QA
+result, workflow event, audit entry, version snapshot, and future media
+localization asset must be representable from this format.
 
 No exported file format can become the source of truth. PDF, EPUB, HTML, print,
 subtitle files, dubbed media, voice-over tracks, and localized videos must be
@@ -251,9 +401,11 @@ generated from, or traced back to, JSON Master Format.
 JSON Master Format v1.0 supports:
 
 - Projects and project metadata.
+- Language-specific manuscripts for the same original work.
 - Documents and document metadata.
 - Segment-based source text.
 - Translations per target language.
+- Versioned translation rules and rule impact reports.
 - Terminology and glossary references.
 - Translation Memory references and matches.
 - QA results and semantic fidelity checks.
@@ -265,7 +417,23 @@ JSON Master Format v1.0 supports:
 ### Core Rules
 
 - `formatVersion` must be `1.0`.
-- `project.id`, `documents[].id`, and `segments[].id` must be stable IDs.
+- `project.id`, `manuscripts[].manuscriptId`, `documents[].id`, and
+  `segments[].id` must be stable IDs.
+- A project may contain one or more language-specific manuscripts.
+- Translated manuscripts must preserve `sourceManuscriptId`.
+- Segment alignment between source and translated manuscripts must be preserved
+  through `sourceSegmentId` or stable alignment keys.
+- Each manuscript language must be exportable independently.
+- Each manuscript and export artifact must record the translation rule version
+  or versions used.
+- Translation rules cannot be overwritten; rule changes must create new versions.
+- Rule changes affecting existing publications must include impact analysis and
+  authorized approval before activation.
+- Every rule version and exception must retain at least one non-AI source
+  authority reference.
+- Source authority references must include immutable authority confidence levels.
+- Impact reports must include affected source authorities.
+- Impact reports must include affected authority confidence levels.
 - Source content must never be overwritten by target translations.
 - Each translation must keep language, status, author, timestamps, QA, and
   provenance metadata.
@@ -283,9 +451,11 @@ Required top-level keys:
 
 - `formatVersion`
 - `project`
+- `manuscripts`
 - `documents`
 - `terminology`
 - `translationMemory`
+- `translationRules`
 - `qa`
 - `workflow`
 - `audit`
@@ -307,9 +477,11 @@ Optional top-level key reserved for future phases:
   "required": [
     "formatVersion",
     "project",
+    "manuscripts",
     "documents",
     "terminology",
     "translationMemory",
+    "translationRules",
     "qa",
     "workflow",
     "audit",
@@ -322,6 +494,13 @@ Optional top-level key reserved for future phases:
     "project": {
       "$ref": "#/$defs/project"
     },
+    "manuscripts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/manuscript"
+      },
+      "minItems": 1
+    },
     "documents": {
       "type": "array",
       "items": {
@@ -333,6 +512,9 @@ Optional top-level key reserved for future phases:
     },
     "translationMemory": {
       "$ref": "#/$defs/translationMemory"
+    },
+    "translationRules": {
+      "$ref": "#/$defs/translationRules"
     },
     "qa": {
       "$ref": "#/$defs/projectQa"
@@ -416,6 +598,222 @@ Optional top-level key reserved for future phases:
         "metadata": {
           "type": "object",
           "additionalProperties": true
+        }
+      }
+    },
+    "manuscript": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manuscriptId",
+        "projectId",
+        "language",
+        "title",
+        "chapters",
+        "segments",
+        "ruleVersionRefs",
+        "translationStatus",
+        "workflowStatus",
+        "exportArtifacts"
+      ],
+      "properties": {
+        "manuscriptId": {
+          "$ref": "#/$defs/id"
+        },
+        "projectId": {
+          "$ref": "#/$defs/id"
+        },
+        "language": {
+          "$ref": "#/$defs/languageCode"
+        },
+        "sourceManuscriptId": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string"
+        },
+        "chapters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/manuscriptChapter"
+          }
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/manuscriptSegment"
+          }
+        },
+        "ruleVersionRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "translationStatus": {
+          "enum": [
+            "original",
+            "not_started",
+            "in_translation",
+            "translated",
+            "in_review",
+            "approved",
+            "ready_for_export",
+            "exported"
+          ]
+        },
+        "workflowStatus": {
+          "enum": [
+            "DRAFT",
+            "IN_TRANSLATION",
+            "IN_QA",
+            "IN_SEMANTIC_REVIEW",
+            "IN_REVIEW",
+            "APPROVED",
+            "READY_FOR_EXPORT",
+            "EXPORTED",
+            "BLOCKED"
+          ]
+        },
+        "exportArtifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/manuscriptExportArtifact"
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "manuscriptChapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "chapterId",
+        "order",
+        "title",
+        "segmentIds"
+      ],
+      "properties": {
+        "chapterId": {
+          "$ref": "#/$defs/id"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "title": {
+          "type": "string"
+        },
+        "sourceChapterId": {
+          "$ref": "#/$defs/id"
+        },
+        "segmentIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    },
+    "manuscriptSegment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "segmentId",
+        "order",
+        "text",
+        "status"
+      ],
+      "properties": {
+        "segmentId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceSegmentId": {
+          "$ref": "#/$defs/id"
+        },
+        "alignmentKey": {
+          "type": "string"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "new",
+            "in_translation",
+            "translated",
+            "in_review",
+            "approved",
+            "locked"
+          ]
+        },
+        "workflowStatus": {
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "manuscriptExportArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifactId",
+        "language",
+        "format",
+        "uri",
+        "ruleVersionRefs",
+        "createdAt"
+      ],
+      "properties": {
+        "artifactId": {
+          "$ref": "#/$defs/id"
+        },
+        "language": {
+          "$ref": "#/$defs/languageCode"
+        },
+        "format": {
+          "enum": [
+            "json_master",
+            "pdf",
+            "epub",
+            "mobi",
+            "html",
+            "docx",
+            "txt",
+            "print",
+            "srt",
+            "vtt",
+            "ass",
+            "localized_video"
+          ]
+        },
+        "uri": {
+          "type": "string"
+        },
+        "checksum": {
+          "type": "string"
+        },
+        "workflowStatusAtExport": {
+          "type": "string"
+        },
+        "ruleVersionRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "createdAt": {
+          "$ref": "#/$defs/timestamp"
         }
       }
     },
@@ -804,6 +1202,418 @@ Optional top-level key reserved for future phases:
         },
         "sourceDocumentId": {
           "$ref": "#/$defs/id"
+        }
+      }
+    },
+    "translationRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rules",
+        "sourceAuthorities",
+        "impactReports",
+        "changeApprovals",
+        "exceptions"
+      ],
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/translationRule"
+          }
+        },
+        "sourceAuthorities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ruleSourceAuthority"
+          }
+        },
+        "impactReports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/translationRuleImpactReport"
+          }
+        },
+        "changeApprovals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/translationRuleChangeApproval"
+          }
+        },
+        "exceptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ruleException"
+          }
+        }
+      }
+    },
+    "translationRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ruleId",
+        "currentVersionId",
+        "versions"
+      ],
+      "properties": {
+        "ruleId": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "global",
+            "language",
+            "domain",
+            "project",
+            "manuscript",
+            "terminology"
+          ]
+        },
+        "currentVersionId": {
+          "$ref": "#/$defs/id"
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/translationRuleVersion"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "translationRuleVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ruleVersionId",
+        "ruleId",
+        "versionNumber",
+        "status",
+        "content",
+        "sourceAuthorityRefs",
+        "createdBy",
+        "createdAt"
+      ],
+      "properties": {
+        "ruleVersionId": {
+          "$ref": "#/$defs/id"
+        },
+        "ruleId": {
+          "$ref": "#/$defs/id"
+        },
+        "previousRuleVersionId": {
+          "$ref": "#/$defs/id"
+        },
+        "versionNumber": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "pending_impact_analysis",
+            "pending_approval",
+            "approved",
+            "validated",
+            "active",
+            "superseded",
+            "rejected"
+          ]
+        },
+        "content": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "sourceAuthorityRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1
+        },
+        "createdBy": {
+          "$ref": "#/$defs/id"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "approvedBy": {
+          "$ref": "#/$defs/id"
+        },
+        "approvedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "ruleSourceAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ruleId",
+        "ruleVersion",
+        "sourceType",
+        "sourceReference",
+        "sourceDetails",
+        "sourceLanguage",
+        "sourcePublicationYear",
+        "sourcePageOrSection",
+        "approvalAuthority",
+        "approvalDate",
+        "authorityConfidenceLevel"
+      ],
+      "properties": {
+        "sourceAuthorityId": {
+          "$ref": "#/$defs/id"
+        },
+        "ruleId": {
+          "$ref": "#/$defs/id"
+        },
+        "ruleVersion": {
+          "type": "string"
+        },
+        "sourceType": {
+          "enum": [
+            "Original Author",
+            "Original Publication",
+            "Editorial Board Decision",
+            "Approved Editorial Glossary",
+            "Approved Specialized Glossary",
+            "Academic Reference",
+            "Historical Reference",
+            "Regulatory Reference",
+            "Internal Editorial Standard"
+          ]
+        },
+        "sourceReference": {
+          "type": "string"
+        },
+        "sourceDetails": {
+          "type": "string"
+        },
+        "sourceLanguage": {
+          "$ref": "#/$defs/languageCode"
+        },
+        "sourcePublicationYear": {
+          "type": "integer"
+        },
+        "sourcePageOrSection": {
+          "type": "string"
+        },
+        "approvalAuthority": {
+          "type": "string"
+        },
+        "approvalDate": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "authorityConfidenceLevel": {
+          "enum": [
+            "PRIMARY_AUTHORITY",
+            "SECONDARY_AUTHORITY",
+            "EDITORIAL_AUTHORITY",
+            "TEMPORARY_AUTHORITY"
+          ]
+        },
+        "immutable": {
+          "const": true
+        },
+        "aiGenerated": {
+          "const": false
+        }
+      }
+    },
+    "ruleException": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exceptionId",
+        "ruleId",
+        "ruleVersion",
+        "reason",
+        "sourceAuthorityRefs",
+        "status"
+      ],
+      "properties": {
+        "exceptionId": {
+          "$ref": "#/$defs/id"
+        },
+        "ruleId": {
+          "$ref": "#/$defs/id"
+        },
+        "ruleVersion": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "sourceAuthorityRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "under_review",
+            "validated",
+            "rejected",
+            "archived"
+          ]
+        },
+        "approvedBy": {
+          "$ref": "#/$defs/id"
+        },
+        "approvedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "translationRuleImpactReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "impactReportId",
+        "ruleId",
+        "newRuleVersionId",
+        "generatedAt",
+        "affectedBooks",
+        "affectedManuscripts",
+        "affectedLanguages",
+        "affectedChapters",
+        "affectedSegments",
+        "affectedTerminologyEntries",
+        "affectedSourceAuthorities",
+        "affectedAuthorityConfidenceLevels",
+        "affectedExports"
+      ],
+      "properties": {
+        "impactReportId": {
+          "$ref": "#/$defs/id"
+        },
+        "ruleId": {
+          "$ref": "#/$defs/id"
+        },
+        "previousRuleVersionId": {
+          "$ref": "#/$defs/id"
+        },
+        "newRuleVersionId": {
+          "$ref": "#/$defs/id"
+        },
+        "generatedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "affectedBooks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "affectedManuscripts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "affectedLanguages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/languageCode"
+          }
+        },
+        "affectedChapters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "affectedSegments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "affectedTerminologyEntries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "affectedSourceAuthorities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "affectedAuthorityConfidenceLevels": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "PRIMARY_AUTHORITY",
+              "SECONDARY_AUTHORITY",
+              "EDITORIAL_AUTHORITY",
+              "TEMPORARY_AUTHORITY"
+            ]
+          }
+        },
+        "affectedExports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    },
+    "translationRuleChangeApproval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approvalId",
+        "ruleId",
+        "newRuleVersionId",
+        "approverId",
+        "approvedAt",
+        "impactReportId"
+      ],
+      "properties": {
+        "approvalId": {
+          "$ref": "#/$defs/id"
+        },
+        "ruleId": {
+          "$ref": "#/$defs/id"
+        },
+        "previousRuleVersionId": {
+          "$ref": "#/$defs/id"
+        },
+        "newRuleVersionId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceAuthorityRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1
+        },
+        "approverId": {
+          "$ref": "#/$defs/id"
+        },
+        "approvedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "impactReportId": {
+          "$ref": "#/$defs/id"
+        },
+        "decision": {
+          "enum": [
+            "approved",
+            "rejected",
+            "approved_with_conditions"
+          ]
         }
       }
     },
