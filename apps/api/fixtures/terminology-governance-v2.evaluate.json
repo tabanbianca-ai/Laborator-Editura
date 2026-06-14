@@ -1,0 +1,9 @@
+{
+  "termId": "term-ro-consciousness-001",
+  "expectedQualitySignals": {
+    "orthographicValidationStatus": "PASSED",
+    "diacriticsValidationStatus": "PASSED",
+    "sourceValidationStatus": "APPROVED_SOURCE",
+    "governanceDecisionStatus": "PENDING"
+  }
+}
