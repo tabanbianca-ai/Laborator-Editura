@@ -1,3 +1,5 @@
+import type { StatusSignal } from "./right-panel-container";
+
 export type SegmentStatus = "Draft" | "In QA" | "In Review" | "Approved";
 
 export interface EditorSegment {
@@ -117,7 +119,7 @@ export const editorSemanticIssues = [
   }
 ];
 
-export const editorWorkflowSignals = [
+export const editorWorkflowSignals: StatusSignal[] = [
   {
     label: "Current status",
     status: "IN_REVIEW",
@@ -135,7 +137,7 @@ export const editorWorkflowSignals = [
   }
 ];
 
-export const editorExportReadiness = [
+export const editorExportReadiness: StatusSignal[] = [
   {
     label: "JSON Master",
     status: "Ready",
