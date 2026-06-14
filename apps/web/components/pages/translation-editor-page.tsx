@@ -1,16 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { type ComponentProps, useState } from "react";
 
 import {
   activeSegment,
-  editorExportReadiness,
   editorQaIssues,
   editorSemanticIssues,
   editorTerminologyMatches,
   editorSegments,
   editorSuggestions,
-  editorWorkflowSignals,
   editorTmSuggestions
 } from "../editor/editor-mock-data";
 import { EditorToolbar } from "../editor/editor-toolbar";
@@ -26,6 +24,42 @@ const mobileTabs: Array<{ id: MobileEditorTab; label: string }> = [
   { id: "translation", label: "Translation" },
   { id: "context", label: "Context" }
 ];
+
+const editorWorkflowSignals = [
+  {
+    label: "Current status",
+    status: "IN_REVIEW",
+    tone: "warning"
+  },
+  {
+    label: "Approval authority",
+    status: "Reviewer required",
+    tone: "info"
+  },
+  {
+    label: "Blocked by QA",
+    status: "Yes",
+    tone: "danger"
+  }
+] satisfies ComponentProps<typeof RightPanelContainer>["workflowSignals"];
+
+const editorExportReadiness = [
+  {
+    label: "JSON Master",
+    status: "Ready",
+    tone: "success"
+  },
+  {
+    label: "PDF",
+    status: "Blocked",
+    tone: "warning"
+  },
+  {
+    label: "DOCX",
+    status: "Waiting approval",
+    tone: "info"
+  }
+] satisfies ComponentProps<typeof RightPanelContainer>["exportReadiness"];
 
 export function TranslationEditorPage() {
   const [activeTab, setActiveTab] = useState<MobileEditorTab>("translation");
