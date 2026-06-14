@@ -42,10 +42,12 @@ export function severityForIssue(type: QaIssueType): QaIssueSeverity {
     case "UNTRANSLATED_SEGMENT":
     case "TERMINOLOGY_VIOLATION":
     case "FORBIDDEN_TERMINOLOGY_VARIANT":
+    case "REJECTED_TERMINOLOGY":
       return "CRITICAL";
     case "NUMBER_MISMATCH":
     case "DATE_MISMATCH":
     case "EMPTY_TRANSLATION":
+    case "TERMINOLOGY_DIACRITICS":
       return "HIGH";
     case "PUNCTUATION_MISMATCH":
     case "TOO_SHORT_TRANSLATION":
