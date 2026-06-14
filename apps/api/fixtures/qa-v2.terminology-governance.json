@@ -1,0 +1,13 @@
+{
+  "segmentId": "segment-ro-terminology-001",
+  "sourceText": "The text discusses consciousness as a moral faculty.",
+  "targetText": "Textul discută constiinta ca facultate morală.",
+  "targetLanguage": "ro",
+  "domain": "spiritism",
+  "expectedIssues": [
+    {
+      "type": "TERMINOLOGY_DIACRITICS",
+      "severity": "HIGH"
+    }
+  ]
+}
