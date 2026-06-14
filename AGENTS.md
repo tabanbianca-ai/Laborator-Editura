@@ -61,6 +61,27 @@ Rules:
   issues must not move to `READY_FOR_EXPORT` or `EXPORTED`.
 - Every terminology governance action must be audited.
 
+### Authority Confidence Level Directive
+
+Purpose:
+
+- Rank documented source authorities when translation rules, terminology rules,
+  editorial rules, semantic fidelity rules, or exceptions have conflicting
+  sources.
+
+Rules:
+
+- `PRIMARY_AUTHORITY` has priority over `SECONDARY_AUTHORITY`.
+- `SECONDARY_AUTHORITY` has priority over `EDITORIAL_AUTHORITY`.
+- `EDITORIAL_AUTHORITY` has priority over `TEMPORARY_AUTHORITY`.
+- `TEMPORARY_AUTHORITY` cannot validate a permanent rule.
+- Conflicting authorities must be flagged for authorized human review.
+- AI output cannot be a source authority or authority confidence level.
+- Authority confidence must be auditable and immutable per rule version.
+- Impact Analysis must include authority confidence level.
+- Backend implementation is not authorized until rule/source authority models
+  are explicitly scheduled.
+
 ### ChatGPT
 
 Role: System Architect.
