@@ -1,9 +1,15 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import { InMemoryTerminologyRepository } from "./terminology.repository";
 import {
   type CheckSegmentTerminologyInput,
   type CreateTerminologyTermInput,
+  type RejectTerminologyTermInput,
   type SearchTerminologyInput,
   type TerminologyActor,
   type TerminologyAuditAction,
@@ -12,22 +18,40 @@ import {
   type TerminologyViolation,
   type UpdateTerminologyTermInput
 } from "./terminology.types";
+import {
+  buildGovernanceEvaluation,
+  containsNonDiacriticVariant
+} from "./terminology-governance.utils";
 import { includesNormalized, uniqueStrings } from "./terminology.utils";
+
+const HUMAN_TERMINOLOGY_GOVERNANCE_ROLES = new Set(["ADMIN", "REVIEWER"]);
 
 @Injectable()
 export class TerminologyService {
   constructor(private readonly repository: InMemoryTerminologyRepository) {}
+
+  async proposeTerm(
+    actor: TerminologyActor,
+    input: CreateTerminologyTermInput
+  ): Promise<TerminologyTerm> {
+    return this.createTerm(actor, {
+      ...input,
+      status: "PROPOSED"
+    });
+  }
 
   async createTerm(
     actor: TerminologyActor,
     input: CreateTerminologyTermInput
   ): Promise<TerminologyTerm> {
     this.validateActor(actor);
+    if (input.status && input.status !== "PROPOSED") {
+      throw new BadRequestException("New terminology entries must start as PROPOSED.");
+    }
     this.validateCreateInput(input);
 
     const now = new Date().toISOString();
-    const status = input.status ?? "PROPOSED";
-    const term: TerminologyTerm = {
+    const baseTerm: TerminologyTerm = {
       id: randomUUID(),
       organizationId: actor.organizationId,
       language: input.language,
@@ -38,17 +62,27 @@ export class TerminologyService {
       approvedTranslation: input.approvedTranslation,
       forbiddenVariants: uniqueStrings(input.forbiddenVariants),
       preferredVariants: uniqueStrings(input.preferredVariants),
+      referenceSources: uniqueStrings(input.referenceSources),
+      glossaryPresent: input.glossaryPresent,
+      editorialApproval: input.editorialApproval,
+      historicalUsageCount: input.historicalUsageCount ?? 0,
+      qualityScore: 0,
+      qualityLevel: "REVIEW_REQUIRED",
+      orthographicValidationStatus: "NOT_APPLICABLE",
+      diacriticsValidationStatus: "NOT_APPLICABLE",
+      sourceValidationStatus: "MISSING_APPROVED_SOURCE",
+      governanceDecisionStatus: "PENDING",
       notes: input.notes,
-      status,
+      status: "PROPOSED",
       createdBy: actor.userId,
       createdAt: now,
       updatedAt: now,
       metadata: input.metadata
     };
-
-    if (status === "VALIDATED") {
-      throw new BadRequestException("Terms must be validated through validateTerm.");
-    }
+    const term: TerminologyTerm = {
+      ...baseTerm,
+      ...buildGovernanceEvaluation(baseTerm)
+    };
 
     const created = await this.repository.createTerm(term);
     await this.audit("CREATE", actor, created.id, undefined, created);
@@ -77,47 +111,145 @@ export class TerminologyService {
       preferredVariants: input.preferredVariants
         ? uniqueStrings(input.preferredVariants)
         : existing.preferredVariants,
+      referenceSources: input.referenceSources
+        ? uniqueStrings(input.referenceSources)
+        : existing.referenceSources,
+      glossaryPresent: input.glossaryPresent ?? existing.glossaryPresent,
+      editorialApproval: input.editorialApproval ?? existing.editorialApproval,
+      historicalUsageCount: input.historicalUsageCount ?? existing.historicalUsageCount,
       notes: input.notes ?? existing.notes,
       metadata: input.metadata ?? existing.metadata,
       updatedBy: actor.userId,
       updatedAt: new Date().toISOString()
     };
+    const evaluated = {
+      ...updated,
+      ...buildGovernanceEvaluation(updated)
+    };
 
-    this.validateTermAuthority(updated);
+    if (evaluated.status === "VALIDATED") {
+      this.assertGovernanceCanBeValidated(evaluated);
+    }
 
-    const saved = await this.repository.updateTerm(updated);
+    this.validateTermAuthority(evaluated);
+
+    const saved = await this.repository.updateTerm(evaluated);
     await this.audit("UPDATE", actor, saved.id, existing, saved);
 
     return saved;
   }
 
-  async validateTerm(actor: TerminologyActor, termId: string): Promise<TerminologyTerm> {
+  async evaluateTerm(actor: TerminologyActor, termId: string): Promise<TerminologyTerm> {
     this.validateActor(actor);
 
     const existing = await this.getTermOrThrow(actor, termId);
-    const now = new Date().toISOString();
-    const validated: TerminologyTerm = {
+    const evaluated = {
       ...existing,
+      ...buildGovernanceEvaluation(existing),
+      evaluatedBy: actor.userId,
+      evaluatedAt: new Date().toISOString(),
+      updatedBy: actor.userId,
+      updatedAt: new Date().toISOString()
+    };
+    const shouldReview =
+      evaluated.sourceValidationStatus === "MISSING_APPROVED_SOURCE" ||
+      evaluated.orthographicValidationStatus === "FAILED" ||
+      evaluated.diacriticsValidationStatus === "FAILED";
+    const saved = await this.repository.updateTerm({
+      ...evaluated,
+      status: shouldReview ? "UNDER_REVIEW" : evaluated.status,
+      governanceDecisionStatus: shouldReview
+        ? "UNDER_REVIEW"
+        : evaluated.governanceDecisionStatus
+    });
+
+    await this.audit("EVALUATE", actor, saved.id, existing, saved);
+
+    return saved;
+  }
+
+  async markUnderReview(actor: TerminologyActor, termId: string): Promise<TerminologyTerm> {
+    return this.transitionTerm(actor, termId, "UNDER_REVIEW", "MARK_UNDER_REVIEW");
+  }
+
+  async validateTerm(actor: TerminologyActor, termId: string): Promise<TerminologyTerm> {
+    this.validateActor(actor);
+    this.assertAuthorizedHuman(actor);
+
+    const existing = await this.getTermOrThrow(actor, termId);
+    const now = new Date().toISOString();
+    const evaluated = {
+      ...existing,
+      ...buildGovernanceEvaluation(existing)
+    };
+    const validated: TerminologyTerm = {
+      ...evaluated,
       status: "VALIDATED",
+      governanceDecisionStatus: "VALIDATED",
+      editorialApproval: true,
       validatedBy: actor.userId,
       validatedAt: now,
       updatedBy: actor.userId,
       updatedAt: now
     };
+    const scored = {
+      ...validated,
+      ...buildGovernanceEvaluation(validated),
+      governanceDecisionStatus: "VALIDATED"
+    };
 
-    this.validateTermAuthority(validated);
+    this.assertGovernanceCanBeValidated(scored);
+    this.validateTermAuthority(scored);
 
-    const saved = await this.repository.updateTerm(validated);
+    const saved = await this.repository.updateTerm(scored);
     await this.audit("VALIDATE", actor, saved.id, existing, saved);
 
     return saved;
   }
 
+  async rejectTerm(
+    actor: TerminologyActor,
+    termId: string,
+    input: RejectTerminologyTermInput = {}
+  ): Promise<TerminologyTerm> {
+    this.validateActor(actor);
+    this.assertAuthorizedHuman(actor);
+
+    const existing = await this.getTermOrThrow(actor, termId);
+    const now = new Date().toISOString();
+    const rejected: TerminologyTerm = {
+      ...existing,
+      status: "REJECTED",
+      governanceDecisionStatus: "REJECTED",
+      rejectedBy: actor.userId,
+      rejectedAt: now,
+      rejectionReason: input.reason,
+      updatedBy: actor.userId,
+      updatedAt: now
+    };
+    const evaluated = buildGovernanceEvaluation(rejected);
+    const saved = await this.repository.updateTerm({
+      ...rejected,
+      ...evaluated,
+      governanceDecisionStatus: "REJECTED",
+      qualityScore: Math.min(evaluated.qualityScore, 49),
+      qualityLevel: "REJECTED"
+    });
+
+    await this.audit("REJECT", actor, saved.id, existing, saved);
+
+    return saved;
+  }
+
   async suspendTerm(actor: TerminologyActor, termId: string): Promise<TerminologyTerm> {
+    this.validateActor(actor);
+    this.assertAuthorizedHuman(actor);
     return this.transitionTerm(actor, termId, "SUSPENDED", "SUSPEND");
   }
 
   async archiveTerm(actor: TerminologyActor, termId: string): Promise<TerminologyTerm> {
+    this.validateActor(actor);
+    this.assertAuthorizedHuman(actor);
     return this.transitionTerm(actor, termId, "ARCHIVED", "ARCHIVE");
   }
 
@@ -141,6 +273,12 @@ export class TerminologyService {
     });
   }
 
+  async listTermsRequiringReview(actor: TerminologyActor): Promise<TerminologyTerm[]> {
+    this.validateActor(actor);
+
+    return this.repository.listTermsRequiringReview(actor.organizationId);
+  }
+
   async checkSegmentText(
     actor: TerminologyActor,
     input: CheckSegmentTerminologyInput
@@ -151,7 +289,7 @@ export class TerminologyService {
       throw new BadRequestException("language, sourceText and targetText are required.");
     }
 
-    const terms = await this.repository.listValidatedTerms({
+    const terms = await this.repository.listTermsForGovernanceCheck({
       organizationId: actor.organizationId,
       language: input.language,
       domain: input.domain
@@ -160,6 +298,32 @@ export class TerminologyService {
     const violations: TerminologyViolation[] = [];
 
     for (const term of terms) {
+      if (term.status === "REJECTED" || term.governanceDecisionStatus === "REJECTED") {
+        const rejectedValues = [
+          term.term,
+          term.approvedTranslation,
+          ...term.preferredVariants,
+          ...term.forbiddenVariants
+        ].filter((value): value is string => Boolean(value));
+        const targetUsesRejectedTerm = rejectedValues.some((value) =>
+          includesNormalized(input.targetText, value)
+        );
+
+        if (targetUsesRejectedTerm) {
+          violations.push({
+            termId: term.id,
+            term: term.term,
+            type: "REJECTED_TERM",
+            message: `Rejected terminology "${term.term}" was used.`,
+            authoritative: true,
+            severity: "CRITICAL",
+            priority: "TERMINOLOGY_GOVERNANCE"
+          });
+        }
+
+        continue;
+      }
+
       const sourceMentionsTerm = includesNormalized(input.sourceText, term.term);
 
       if (!sourceMentionsTerm) {
@@ -170,12 +334,26 @@ export class TerminologyService {
         term.approvedTranslation &&
         !includesNormalized(input.targetText, term.approvedTranslation)
       ) {
+        if (containsNonDiacriticVariant(input.targetText, term.approvedTranslation)) {
+          violations.push({
+            termId: term.id,
+            term: term.term,
+            type: "MISSING_OR_INCORRECT_DIACRITICS",
+            message: `Romanian terminology "${term.approvedTranslation}" is missing or has incorrect diacritics.`,
+            authoritative: true,
+            severity: "HIGH",
+            priority: "TERMINOLOGY_GOVERNANCE"
+          });
+          continue;
+        }
+
         violations.push({
           termId: term.id,
           term: term.term,
           type: "MISSING_APPROVED_TRANSLATION",
           message: `Validated term "${term.term}" requires approved translation "${term.approvedTranslation}".`,
           authoritative: true,
+          severity: "CRITICAL",
           priority: "TERMINOLOGY_VALIDATED"
         });
       }
@@ -188,6 +366,7 @@ export class TerminologyService {
             type: "FORBIDDEN_VARIANT",
             message: `Forbidden terminology variant "${forbidden}" was used.`,
             authoritative: true,
+            severity: "CRITICAL",
             priority: "TERMINOLOGY_VALIDATED"
           });
         }
@@ -203,6 +382,7 @@ export class TerminologyService {
           type: "PREFERRED_VARIANT_AVAILABLE",
           message: `Validated terminology has preferred variants: ${term.preferredVariants.join(", ")}.`,
           authoritative: true,
+          severity: "HIGH",
           priority: "TERMINOLOGY_VALIDATED"
         });
       }
@@ -217,8 +397,8 @@ export class TerminologyService {
   private async transitionTerm(
     actor: TerminologyActor,
     termId: string,
-    status: "SUSPENDED" | "ARCHIVED",
-    action: "SUSPEND" | "ARCHIVE"
+    status: "ARCHIVED" | "SUSPENDED" | "UNDER_REVIEW",
+    action: "ARCHIVE" | "MARK_UNDER_REVIEW" | "SUSPEND"
   ): Promise<TerminologyTerm> {
     this.validateActor(actor);
 
@@ -227,6 +407,8 @@ export class TerminologyService {
     const changed: TerminologyTerm = {
       ...existing,
       status,
+      governanceDecisionStatus:
+        status === "UNDER_REVIEW" ? "UNDER_REVIEW" : status,
       updatedBy: actor.userId,
       updatedAt: now,
       suspendedBy: status === "SUSPENDED" ? actor.userId : existing.suspendedBy,
@@ -299,7 +481,17 @@ export class TerminologyService {
       status: input.status ?? "PROPOSED",
       createdBy: "validation-only",
       createdAt: new Date(0).toISOString(),
-      updatedAt: new Date(0).toISOString()
+      updatedAt: new Date(0).toISOString(),
+      referenceSources: uniqueStrings(input.referenceSources),
+      glossaryPresent: input.glossaryPresent,
+      editorialApproval: input.editorialApproval,
+      historicalUsageCount: input.historicalUsageCount ?? 0,
+      qualityScore: 0,
+      qualityLevel: "REVIEW_REQUIRED",
+      orthographicValidationStatus: "NOT_APPLICABLE",
+      diacriticsValidationStatus: "NOT_APPLICABLE",
+      sourceValidationStatus: "MISSING_APPROVED_SOURCE",
+      governanceDecisionStatus: "PENDING"
     });
   }
 
@@ -311,6 +503,33 @@ export class TerminologyService {
     ) {
       throw new BadRequestException(
         "VALIDATED terms require an approved translation or preferred variant."
+      );
+    }
+  }
+
+  private assertGovernanceCanBeValidated(term: TerminologyTerm): void {
+    if (
+      term.orthographicValidationStatus === "FAILED" ||
+      term.diacriticsValidationStatus === "FAILED"
+    ) {
+      throw new BadRequestException(
+        "Terminology cannot be validated while orthographic or diacritics validation fails."
+      );
+    }
+
+    if (term.sourceValidationStatus === "MISSING_APPROVED_SOURCE") {
+      throw new BadRequestException(
+        "Terminology cannot be validated without an approved source or reference source."
+      );
+    }
+  }
+
+  private assertAuthorizedHuman(actor: TerminologyActor): void {
+    const roles = new Set((actor.roles ?? []).map((role) => role.toUpperCase()));
+
+    if (![...HUMAN_TERMINOLOGY_GOVERNANCE_ROLES].some((role) => roles.has(role))) {
+      throw new ForbiddenException(
+        "Only authorized human users may validate, suspend, archive, or reject terminology."
       );
     }
   }
