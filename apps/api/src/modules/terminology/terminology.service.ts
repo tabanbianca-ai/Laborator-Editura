@@ -122,7 +122,7 @@ export class TerminologyService {
       updatedBy: actor.userId,
       updatedAt: new Date().toISOString()
     };
-    const evaluated = {
+    const evaluated: TerminologyTerm = {
       ...updated,
       ...buildGovernanceEvaluation(updated)
     };
@@ -143,7 +143,7 @@ export class TerminologyService {
     this.validateActor(actor);
 
     const existing = await this.getTermOrThrow(actor, termId);
-    const evaluated = {
+    const evaluated: TerminologyTerm = {
       ...existing,
       ...buildGovernanceEvaluation(existing),
       evaluatedBy: actor.userId,
@@ -155,13 +155,17 @@ export class TerminologyService {
       evaluated.sourceValidationStatus === "MISSING_APPROVED_SOURCE" ||
       evaluated.orthographicValidationStatus === "FAILED" ||
       evaluated.diacriticsValidationStatus === "FAILED";
-    const saved = await this.repository.updateTerm({
+    const status: TerminologyTerm["status"] = shouldReview
+      ? "UNDER_REVIEW"
+      : evaluated.status;
+    const governanceDecisionStatus: TerminologyTerm["governanceDecisionStatus"] =
+      shouldReview ? "UNDER_REVIEW" : evaluated.governanceDecisionStatus;
+    const governanceEvaluated: TerminologyTerm = {
       ...evaluated,
-      status: shouldReview ? "UNDER_REVIEW" : evaluated.status,
-      governanceDecisionStatus: shouldReview
-        ? "UNDER_REVIEW"
-        : evaluated.governanceDecisionStatus
-    });
+      status,
+      governanceDecisionStatus
+    };
+    const saved = await this.repository.updateTerm(governanceEvaluated);
 
     await this.audit("EVALUATE", actor, saved.id, existing, saved);
 
@@ -178,7 +182,7 @@ export class TerminologyService {
 
     const existing = await this.getTermOrThrow(actor, termId);
     const now = new Date().toISOString();
-    const evaluated = {
+    const evaluated: TerminologyTerm = {
       ...existing,
       ...buildGovernanceEvaluation(existing)
     };
@@ -192,7 +196,7 @@ export class TerminologyService {
       updatedBy: actor.userId,
       updatedAt: now
     };
-    const scored = {
+    const scored: TerminologyTerm = {
       ...validated,
       ...buildGovernanceEvaluation(validated),
       governanceDecisionStatus: "VALIDATED"
@@ -228,13 +232,14 @@ export class TerminologyService {
       updatedAt: now
     };
     const evaluated = buildGovernanceEvaluation(rejected);
-    const saved = await this.repository.updateTerm({
+    const governanceRejected: TerminologyTerm = {
       ...rejected,
       ...evaluated,
       governanceDecisionStatus: "REJECTED",
       qualityScore: Math.min(evaluated.qualityScore, 49),
       qualityLevel: "REJECTED"
-    });
+    };
+    const saved = await this.repository.updateTerm(governanceRejected);
 
     await this.audit("REJECT", actor, saved.id, existing, saved);
 
