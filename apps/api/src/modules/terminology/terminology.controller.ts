@@ -5,6 +5,7 @@ import { TerminologyService } from "./terminology.service";
 import {
   type CheckSegmentTerminologyInput,
   type CreateTerminologyTermInput,
+  type RejectTerminologyTermInput,
   type SearchTerminologyInput,
   type TerminologyTermStatus,
   type UpdateTerminologyTermInput
@@ -22,6 +23,14 @@ export class TerminologyController {
     return this.terminologyService.createTerm(actor, input);
   }
 
+  @Post("terms/propose")
+  proposeTerm(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: CreateTerminologyTermInput
+  ) {
+    return this.terminologyService.proposeTerm(actor, input);
+  }
+
   @Patch("terms/:id")
   updateTerm(
     @CurrentActor() actor: AuthenticatedRequestContext,
@@ -31,12 +40,37 @@ export class TerminologyController {
     return this.terminologyService.updateTerm(actor, id, input);
   }
 
+  @Post("terms/:id/evaluate")
+  evaluateTerm(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string
+  ) {
+    return this.terminologyService.evaluateTerm(actor, id);
+  }
+
+  @Post("terms/:id/under-review")
+  markUnderReview(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string
+  ) {
+    return this.terminologyService.markUnderReview(actor, id);
+  }
+
   @Post("terms/:id/validate")
   validateTerm(
     @CurrentActor() actor: AuthenticatedRequestContext,
     @Param("id") id: string
   ) {
     return this.terminologyService.validateTerm(actor, id);
+  }
+
+  @Post("terms/:id/reject")
+  rejectTerm(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string,
+    @Body() input: RejectTerminologyTermInput
+  ) {
+    return this.terminologyService.rejectTerm(actor, id, input);
   }
 
   @Post("terms/:id/suspend")
@@ -69,6 +103,11 @@ export class TerminologyController {
     };
 
     return this.terminologyService.searchTerms(actor, input);
+  }
+
+  @Get("terms/requiring-review")
+  listTermsRequiringReview(@CurrentActor() actor: AuthenticatedRequestContext) {
+    return this.terminologyService.listTermsRequiringReview(actor);
   }
 
   @Post("check-segment")
