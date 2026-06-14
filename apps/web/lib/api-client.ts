@@ -45,6 +45,49 @@ export async function apiGet<T>(path: string): Promise<ApiResult<T>> {
   }
 }
 
+export async function apiPost<T, TBody extends object>(
+  path: string,
+  body: TBody
+): Promise<ApiResult<T>> {
+  const token = await getSessionToken();
+
+  if (!token) {
+    return {
+      data: null,
+      error: "Authenticated session required."
+    };
+  }
+
+  try {
+    const response = await fetch(toApiUrl(path), {
+      body: JSON.stringify(body),
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      method: "POST"
+    });
+
+    if (!response.ok) {
+      return {
+        data: null,
+        error: `API request failed with status ${response.status}.`
+      };
+    }
+
+    return {
+      data: (await response.json()) as T,
+      error: null
+    };
+  } catch {
+    return {
+      data: null,
+      error: "API request could not be completed."
+    };
+  }
+}
+
 async function getSessionToken(): Promise<string | undefined> {
   const cookieStore = await cookies();
 
