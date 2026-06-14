@@ -16,6 +16,7 @@ import { RightPanelContainer } from "./right-panel-container";
 import { SegmentList } from "./segment-list";
 import { SourceSegmentPanel } from "./source-segment-panel";
 import { TargetTranslationEditor } from "./target-translation-editor";
+import { EmptyState } from "../ui";
 
 type RightPanelSignals = ComponentProps<
   typeof RightPanelContainer
@@ -76,11 +77,16 @@ export function TranslationEditorWorkbench({
   }, [activeSegment]);
 
   if (!activeSegment) {
-    return null;
+    return (
+      <section className="content-panel">
+        <EmptyState title="No active segment" />
+      </section>
+    );
   }
 
+  const selectedSegment = activeSegment;
   const displayedSaveStatus = isPending ? "Saving" : saveStatus;
-  const hasUnsavedChanges = targetText !== activeSegment.target;
+  const hasUnsavedChanges = targetText !== selectedSegment.target;
   const saveDisabled =
     displayedSaveStatus === "Saving" ||
     (!hasUnsavedChanges && displayedSaveStatus !== "Failed");
@@ -88,7 +94,9 @@ export function TranslationEditorWorkbench({
   function handleTargetChange(value: string) {
     setTargetText(value);
     setSaveError(null);
-    setSaveStatus(value === activeSegment.target ? getInitialSaveStatus(activeSegment) : "Unsaved");
+    setSaveStatus(
+      value === selectedSegment.target ? getInitialSaveStatus(selectedSegment) : "Unsaved"
+    );
   }
 
   function handleSave() {
@@ -99,7 +107,7 @@ export function TranslationEditorWorkbench({
 
     startTransition(() => {
       void saveEditorTranslation({
-        segmentId: activeSegment.id,
+        segmentId: selectedSegment.id,
         targetText: nextTargetText
       }).then((result) => {
         if (result.error) {
@@ -110,7 +118,7 @@ export function TranslationEditorWorkbench({
 
         setSegments((currentSegments) =>
           currentSegments.map((segment) =>
-            segment.id === activeSegment.id
+            segment.id === selectedSegment.id
               ? {
                   ...segment,
                   latestTranslationId:
@@ -133,7 +141,7 @@ export function TranslationEditorWorkbench({
         onSave={handleSave}
         saveDisabled={saveDisabled}
         saveStatus={displayedSaveStatus}
-        workflowStatus={activeSegment.status}
+        workflowStatus={selectedSegment.status}
       />
 
       <div className="editor-mobile-tabs" aria-label="Editor mobile sections">
@@ -161,7 +169,7 @@ export function TranslationEditorWorkbench({
           }
         >
           <SegmentList
-            activeSegmentId={activeSegment.id}
+            activeSegmentId={selectedSegment.id}
             onSegmentSelect={setActiveSegmentId}
             segments={segments}
           />
@@ -174,12 +182,12 @@ export function TranslationEditorWorkbench({
               : "editor-column editor-column-center"
           }
         >
-          <SourceSegmentPanel segment={activeSegment} />
+          <SourceSegmentPanel segment={selectedSegment} />
           <TargetTranslationEditor
             onTargetChange={handleTargetChange}
             saveError={saveError}
             saveStatus={displayedSaveStatus}
-            segment={activeSegment}
+            segment={selectedSegment}
             targetText={targetText}
           />
         </div>
