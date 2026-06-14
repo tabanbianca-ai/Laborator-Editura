@@ -163,7 +163,7 @@ export function RightPanelContainer({
               <article className="terminology-match-card" key={match.source}>
                 <div className="signal-row">
                   <span>
-                    {match.source} -> {match.target}
+                    {match.source} -&gt; {match.target}
                   </span>
                   <Badge tone={match.status === "VALIDATED" ? "success" : "warning"}>
                     {match.status}

@@ -74,7 +74,7 @@ export async function DocumentsPage() {
                   <td>{document.title}</td>
                   <td>{getProjectName(projects, document.projectId)}</td>
                   <td>
-                    {document.sourceLanguage.toUpperCase()} ->{" "}
+                    {document.sourceLanguage.toUpperCase()} -&gt;{" "}
                     {document.targetLanguage.toUpperCase()}
                   </td>
                   <td>{document.documentType}</td>
