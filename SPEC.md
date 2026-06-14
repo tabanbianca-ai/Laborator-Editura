@@ -154,6 +154,53 @@ Rules:
 - AI cannot publish documents or localized media.
 - Authorized human reviewers remain responsible for final editorial approval.
 
+### Terminology Governance v2
+
+Status: Approved MVP stabilization enhancement for the existing Terminology &
+Glossary System. This is not a new major module.
+
+Purpose: prevent incorrect, invented, misspelled, or non-diacritic terms from
+contaminating terminology, Translation Memory, QA, Semantic Fidelity, workflow
+approval, exports, and future translations.
+
+Rules:
+
+- AI must never automatically create `VALIDATED` terminology.
+- New terminology entries must start as `PROPOSED`.
+- Terms not found in approved sources must become `UNDER_REVIEW`.
+- Romanian terms must pass diacritics and orthographic validation.
+- Terms with missing or incorrect Romanian diacritics must be flagged as High
+  severity terminology issues.
+- Rejected terms must be treated as Critical terminology issues.
+- Terminology Quality Score must be calculated from:
+  - spelling correctness.
+  - diacritics correctness.
+  - approved source presence.
+  - glossary presence.
+  - reference sources.
+  - editorial approval.
+  - historical usage.
+- Terminology Quality Score levels:
+  - `90-100 TRUSTED`.
+  - `75-89 ACCEPTABLE`.
+  - `50-74 REVIEW_REQUIRED`.
+  - `0-49 REJECTED`.
+- Only authorized human users may validate, suspend, archive, or reject
+  terminology.
+- Documents with rejected terms or unresolved High/Critical terminology issues
+  cannot move to `READY_FOR_EXPORT` or `EXPORTED`.
+- Every terminology governance action must be audited.
+
+Authority rules:
+
+- `VALIDATED` terminology remains authoritative over Translation Memory and AI
+  suggestions.
+- AI suggestions may be evaluated, explained, or proposed, but they cannot
+  validate terminology.
+- Repeated usage cannot auto-promote a term to `VALIDATED`.
+- Human final authority remains mandatory for validation, suspension, archival,
+  and rejection.
+
 ### Benchmark & Evaluation Protocol
 
 The platform must define and preserve measurement rules for:
