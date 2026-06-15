@@ -11,13 +11,19 @@ const organizationName = requiredEnv("STAGING_ORGANIZATION_NAME");
 const sourceText = "El espiritu conserva su identidad moral.";
 const targetText = "Spiritul conserva identitatea morala.";
 const domain = "spiritism";
+const loginBody = {
+  displayName,
+  email,
+  organizationName
+};
+const loginSecret = process.env.LABORATOR_AUTH_LOGIN_SECRET;
+
+if (loginSecret) {
+  loginBody.loginSecret = loginSecret;
+}
 
 const login = await requestJson(apiBase, "/auth/login", {
-  body: {
-    displayName,
-    email,
-    organizationName
-  },
+  body: loginBody,
   method: "POST"
 });
 const token = login.session.token;
