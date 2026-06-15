@@ -89,23 +89,54 @@ Roadmap expansion may resume only after MVP validation.
   authority.
 - Publishing: export from JSON Master Format.
 
-## Future Phase - Video Localization & Media Studio
+## Future Phase - Media Localization Studio
 
-Status: Future Phase. Not scheduled for implementation yet.
+Status: Future/Post-Beta Phase. Not scheduled for implementation yet.
 
 ### Scope
 
-This future phase will add video and media localization capabilities:
+This future phase will add basic editorial media localization capabilities. It
+is not a full Adobe Premiere replacement and is not intended to provide
+professional non-linear video editing, compositing, advanced transitions, or
+color grading.
 
-- Automatic Speech-to-Text.
-- Subtitle Management for SRT, VTT, and ASS.
-- Subtitle Translation.
-- AI Voice-Over.
-- AI Dubbing.
-- Audio-Video Synchronization.
-- Localized Video Export.
+- Video and audio upload.
+- Automatic transcript generation.
+- Transcript correction.
+- Transcript translation.
+- Subtitle generation.
+- Subtitle formats: SRT, VTT, and ASS.
+- Multilingual subtitles.
+- Multilingual voice-over.
+- Simple AI dubbing.
+- Audio export.
+- Transcript export.
+- Localized video export.
+- Text, audio, and video synchronization.
+- Links from media assets to the original manuscript, article, book, or project.
+- Language-specific media versions.
 - Media Localization QA.
 - Workflow Integration.
+
+Excluded capabilities:
+
+- Advanced video editing.
+- Color grading.
+- Complex timeline editing.
+- Visual effects.
+- Advanced transitions.
+- Professional compositing.
+
+Architectural rules:
+
+- Original language must be configurable and never hard-coded.
+- Every transcript, subtitle, audio version, dubbing version, and localized
+  video export must remain linked to the original media asset.
+- Media assets must remain linked to the original manuscript, article, book, or
+  project when applicable.
+- Media translations must follow terminology, QA, Semantic Fidelity, and global
+  translation rules.
+- Human final authority remains required for release approval.
 
 ### Roadmap Position
 
@@ -123,6 +154,109 @@ No implementation is authorized at this stage. This roadmap entry is included so
 the architecture reserves space for future multimedia localization without
 disrupting the current MVP.
 
+## Future Phase - Magazine Platform Vision
+
+Status: Planned future publication platform. Not scheduled for implementation
+yet.
+
+### Architectural Rules
+
+Original language must be configurable per publication.
+
+Supported original languages include, but are not limited to:
+
+- English.
+- Romanian.
+- Spanish.
+- French.
+- Italian.
+- Portuguese.
+- German.
+- Any supported language.
+
+Rules:
+
+- Original language is never hard-coded.
+- Every translation must remain linked to the original publication.
+- Audio versions remain linked to the same original publication.
+- Translation alignment must remain auditable through JSON Master references.
+
+### M1 - Digital Magazine MVP
+
+Status: `PLANNED`.
+
+Priority: `POST-BETA`.
+
+Features:
+
+- Flipbook reader.
+- Interactive table of contents.
+- Fullscreen mode.
+- Zoom controls.
+- Full-text search.
+- Responsive desktop, tablet, and mobile reading.
+- Multi-language reading.
+- Language switcher.
+- Audio per article.
+- PDF export.
+- HTML export.
+- Link to original article or manuscript.
+- Accessibility baseline.
+
+### M2 - Advanced Reading
+
+Status: `PLANNED`.
+
+Priority: `POST-BETA`.
+
+Features:
+
+- Bookmarks.
+- Reading history.
+- Favorites.
+- Text highlighting.
+- Personal notes.
+- Offline PWA support.
+- Reading progress tracking.
+
+### M3 - Interactive Magazine
+
+Status: `PLANNED`.
+
+Priority: `FUTURE`.
+
+Features:
+
+- Text/audio synchronization.
+- Embedded video.
+- Image galleries.
+- Podcasts.
+- Interactive editorial content.
+- Rich media articles.
+
+### M4 - Enterprise Magazine
+
+Status: `FUTURE`.
+
+Priority: `LONG_TERM`.
+
+Features:
+
+- Original vs translation comparison.
+- Edition comparison.
+- Semantic analysis.
+- AI recommendations.
+- Advanced analytics.
+- Mobile applications.
+- Cross-publication knowledge linking.
+
+### Implementation Status
+
+No implementation is authorized at this stage. This roadmap entry is included so
+the architecture reserves space for future magazine publishing, reading, audio,
+and cross-publication workflows without disrupting the current MVP or closed
+beta preparation.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
@@ -135,3 +269,8 @@ scheduled:
 - Identification of publications translated under older rule versions.
 - Rule Source Authority for rules and exceptions.
 - Authority Confidence Levels for conflicting source authorities.
+- Magazine Platform Vision original-language flexibility and future publication
+  alignment requirements.
+- Media Localization Studio as a Future/Post-Beta basic editorial media
+  localization module, explicitly excluding advanced video editing and
+  professional compositing.
