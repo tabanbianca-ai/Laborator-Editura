@@ -39,7 +39,7 @@ test("rate limiting covers auth and sensitive API endpoints with safe errors", (
   assert.match(source, /routePath\.startsWith\("\/auth"\)/);
   assert.match(source, /routePath\.startsWith\("\/export"\)/);
   assert.match(source, /routePath\.startsWith\("\/workflow"\)/);
-  assert.match(source, /TooManyRequestsException\(SAFE_RATE_LIMIT_MESSAGE\)/);
+  assert.match(source, /HttpException\(SAFE_RATE_LIMIT_MESSAGE, HttpStatus\.TOO_MANY_REQUESTS\)/);
   assert.match(source, /Too many requests\. Try again later\./);
 });
 
