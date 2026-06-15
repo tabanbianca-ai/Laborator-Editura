@@ -35,7 +35,22 @@ Required environment items:
 - Runtime database path.
 - Backup output path.
 - Authentication/session secret if required by the deployment target.
+- `LABORATOR_SESSION_SECRET` with a strong non-default value.
+- `LABORATOR_AUTH_LOGIN_SECRET` with a strong non-default value.
 - Any production-only service credentials.
+
+## Staging Server Security
+
+Before closed beta staging access is opened:
+
+- Firewall allows inbound `22`, `80`, and `443` only.
+- SSH operator access uses SSH keys.
+- Root password login is disabled after SSH key setup is verified.
+- Public web and API endpoints use HTTPS/SSL.
+- Runtime secrets are stored outside source control and are not printed in logs.
+- Backup files or backup storage are encrypted at rest.
+- API/web logs, security events, health checks, and backup logs have an assigned
+  daily review owner during closed beta.
 
 ## Staging Readiness For Closed Beta
 
