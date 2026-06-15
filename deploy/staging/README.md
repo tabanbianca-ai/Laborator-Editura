@@ -22,6 +22,16 @@ cp deploy/staging/.env.staging.example deploy/staging/.env.staging
 Edit `deploy/staging/.env.staging` with real staging values. Do not commit the
 real `.env.staging` file.
 
+Required security values:
+
+- `LABORATOR_SESSION_SECRET`: high-entropy session secret, at least 32
+  characters.
+- `LABORATOR_AUTH_LOGIN_SECRET`: high-entropy staging login secret, at least 32
+  characters.
+
+Do not use demo, default, example, test, password, secret, changeme, or
+placeholder values. Do not print these values in logs or support messages.
+
 ## Validate Environment
 
 ```bash
@@ -110,3 +120,17 @@ pnpm staging:validate
 
 The full sequence validates environment configuration, health, server-side role
 bootstrap, MVP smoke flow, and monitoring hook output.
+
+## Staging Server Hardening
+
+Before closed beta:
+
+- Firewall: expose only ports `22`, `80`, and `443` at the host boundary.
+- SSH: use SSH keys for operator access.
+- Disable root password login after SSH key access is verified.
+- HTTPS/SSL: public web and API endpoints must be served over HTTPS.
+- Backups: store backups outside the repository and encrypt backup storage or
+  backup files at rest.
+- Monitoring: review API/web logs, health checks, backup results, and security
+  events daily during closed beta, and immediately after any failed smoke test
+  or suspicious authentication activity.
