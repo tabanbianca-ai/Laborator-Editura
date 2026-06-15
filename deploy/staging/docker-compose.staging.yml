@@ -3,7 +3,7 @@ services:
     build:
       context: ../..
       dockerfile: deploy/staging/Dockerfile.api
-    command: ["node", "apps/api/dist/main.js"]
+    command: ["node", "apps/api/dist/apps/api/src/main.js"]
     env_file:
       - .env.staging
     environment:
