@@ -62,6 +62,8 @@ Application runtime variables:
 export PORT=3001
 export WEB_ORIGIN="https://staging.example.com"
 export LABORATOR_RUNTIME_DB_PATH="/var/lib/laborator/staging/runtime-db.json"
+export LABORATOR_SESSION_SECRET="<strong-random-session-secret>"
+export LABORATOR_AUTH_LOGIN_SECRET="<strong-random-login-secret>"
 ```
 
 Operator validation variables:
@@ -81,9 +83,28 @@ Rules:
 
 - Do not commit real environment values to source control.
 - Do not store secrets in documentation.
+- Use strong, non-default values for `LABORATOR_SESSION_SECRET` and
+  `LABORATOR_AUTH_LOGIN_SECRET`.
+- Never print secrets in logs, screenshots, support messages, or monitoring
+  output.
 - Keep runtime database and backup paths outside the repository.
 - Use staging-only users and organizations.
 - Do not use production data for closed beta validation.
+
+## 2.1 Staging Server Hardening
+
+Before opening closed beta access:
+
+- Firewall rules must allow inbound `22`, `80`, and `443` only.
+- SSH access must use SSH keys.
+- Root password login must be disabled after SSH key access is verified.
+- HTTPS/SSL is required for public web and API endpoints.
+- Backup storage or backup files should be encrypted at rest.
+- Operators must review API logs, web logs, security events, health checks, and
+  backup logs daily during closed beta.
+- Suspicious authentication activity, repeated lockouts, failed backups, failed
+  health checks, or unexpected 5xx spikes must be escalated before beta access
+  expands.
 
 ## 3. Dependency And Build Preparation
 
