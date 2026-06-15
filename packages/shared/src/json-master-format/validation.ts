@@ -1,7 +1,7 @@
 import {
   JSON_MASTER_FORMAT_VERSION,
   type JsonMasterFormatV1
-} from "./types";
+} from "./types.js";
 
 export type JsonMasterValidationSeverity = "error" | "warning";
 
