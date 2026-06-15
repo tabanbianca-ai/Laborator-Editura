@@ -24,7 +24,7 @@ COPY . .
 RUN pnpm --filter @laborator/shared build \
   && pnpm --filter @laborator/db build \
   && pnpm --filter @laborator/api build \
-  && test -f apps/api/dist/main.js
+  && test -f apps/api/dist/apps/api/src/main.js
 
 RUN mkdir -p /var/lib/laborator /var/backups/laborator/staging
 
@@ -33,4 +33,4 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
   CMD node -e "const port=process.env.PORT||3001; fetch('http://127.0.0.1:'+port+'/health').then((res)=>process.exit(res.ok?0:1)).catch(()=>process.exit(1));"
 
-CMD ["node", "apps/api/dist/main.js"]
+CMD ["node", "apps/api/dist/apps/api/src/main.js"]
