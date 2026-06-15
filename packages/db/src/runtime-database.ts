@@ -10,6 +10,10 @@ export type RuntimeDatabaseTableName =
   | "users"
   | "user_roles"
   | "auth_sessions"
+  | "auth_login_attempts"
+  | "auth_security_events"
+  | "organization_founder_protection"
+  | "founder_ownership_transfers"
   | "projects"
   | "documents"
   | "document_segments"
@@ -60,6 +64,10 @@ const TABLE_NAMES: RuntimeDatabaseTableName[] = [
   "users",
   "user_roles",
   "auth_sessions",
+  "auth_login_attempts",
+  "auth_security_events",
+  "organization_founder_protection",
+  "founder_ownership_transfers",
   "projects",
   "documents",
   "document_segments",
@@ -84,6 +92,8 @@ const TABLE_NAMES: RuntimeDatabaseTableName[] = [
 const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "user_roles",
   "auth_sessions",
+  "organization_founder_protection",
+  "founder_ownership_transfers",
   "projects",
   "documents",
   "document_segments",
