@@ -53,12 +53,19 @@ console.log(JSON.stringify({
 }, null, 2));
 
 async function login() {
+  const body = {
+    displayName,
+    email,
+    organizationName
+  };
+  const loginSecret = process.env.LABORATOR_AUTH_LOGIN_SECRET;
+
+  if (loginSecret) {
+    body.loginSecret = loginSecret;
+  }
+
   return requestJson(apiBase, "/auth/login", {
-    body: {
-      displayName,
-      email,
-      organizationName
-    },
+    body,
     method: "POST"
   });
 }
