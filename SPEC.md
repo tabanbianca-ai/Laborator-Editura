@@ -97,6 +97,7 @@ JSON Master Format is the canonical structure for:
 - Workflow.
 - Versions.
 - Future media localization.
+- Future digital magazine publications and reading experiences.
 
 All platform data that must survive export, backup, audit, migration, or
 publishing must be representable in JSON Master Format.
@@ -130,6 +131,111 @@ Rules:
 - Export artifacts must be tracked per manuscript language.
 - This requirement is documentation-only until explicitly scheduled for
   implementation.
+
+### Magazine Platform Vision
+
+Status: Future platform vision. Documentation only. Do not implement now.
+
+The platform reserves a future magazine publishing and reading experience for
+multilingual digital publications. This vision extends the publishing layer
+after beta without changing the current MVP implementation scope.
+
+#### Original Language Flexibility
+
+Original language must be configurable per publication.
+
+Examples:
+
+- English.
+- Romanian.
+- Spanish.
+- French.
+- Italian.
+- Portuguese.
+- German.
+- Any supported language.
+
+Rules:
+
+- Original language is never hard-coded.
+- Every translation must remain linked to the original publication.
+- Audio versions remain linked to the same original publication.
+- Translation alignment must remain auditable through JSON Master references.
+
+#### M1 - Digital Magazine MVP
+
+Status: `PLANNED`.
+
+Priority: `POST-BETA`.
+
+Features:
+
+- Flipbook reader.
+- Interactive table of contents.
+- Fullscreen mode.
+- Zoom controls.
+- Full-text search.
+- Responsive desktop, tablet, and mobile layout.
+- Multi-language reading.
+- Language switcher.
+- Audio per article.
+- PDF export.
+- HTML export.
+- Link to original article or manuscript.
+- Accessibility baseline.
+
+#### M2 - Advanced Reading
+
+Status: `PLANNED`.
+
+Priority: `POST-BETA`.
+
+Features:
+
+- Bookmarks.
+- Reading history.
+- Favorites.
+- Text highlighting.
+- Personal notes.
+- Offline PWA support.
+- Reading progress tracking.
+
+#### M3 - Interactive Magazine
+
+Status: `PLANNED`.
+
+Priority: `FUTURE`.
+
+Features:
+
+- Text/audio synchronization.
+- Embedded video.
+- Image galleries.
+- Podcasts.
+- Interactive editorial content.
+- Rich media articles.
+
+#### M4 - Enterprise Magazine
+
+Status: `FUTURE`.
+
+Priority: `LONG_TERM`.
+
+Features:
+
+- Original vs translation comparison.
+- Edition comparison.
+- Semantic analysis.
+- AI recommendations.
+- Advanced analytics.
+- Mobile applications.
+- Cross-publication knowledge linking.
+
+#### Non-Implementation Rule
+
+Magazine Platform Vision is specification-only until explicitly scheduled. No
+application code, UI creation, database schema changes, API changes, migrations,
+AI endpoints, or infrastructure changes are authorized by this section.
 
 ### Translation Rules Versioning & Impact Analysis
 
@@ -412,7 +518,11 @@ JSON Master Format v1.0 supports:
 - Workflow state, assignments, approvals, and review status.
 - Audit logs.
 - Version history and immutable snapshots.
-- Future subtitle translation, voice-over, dubbing, and localized video exports.
+- Future basic editorial media localization for transcripts, subtitles,
+  voice-over, simple dubbing, audio export, transcript export, and localized
+  video exports.
+- Future magazine publications, article language variants, article audio assets,
+  and links to original articles or manuscripts.
 
 ### Core Rules
 
@@ -443,7 +553,21 @@ JSON Master Format v1.0 supports:
 - Workflow and audit events must be append-only.
 - Version history must preserve immutable snapshots or snapshot references.
 - Media localization data is optional in v1.0 but reserved in the schema for
-  subtitle, voice-over, dubbing, synchronization, and localized video export.
+  transcript generation/correction, transcript translation, subtitle,
+  multilingual voice-over, simple dubbing, synchronization, audio export,
+  transcript export, and localized video export.
+- Media localization is a Future/Post-Beta basic editorial localization
+  workflow, not a full professional video editor or Adobe Premiere replacement.
+- Media original language must be configurable and never hard-coded.
+- Every transcript, subtitle, audio track, dubbing track, and localized video
+  export must remain linked to the original media asset.
+- Media assets must remain linked to the original manuscript, article, book, or
+  project when applicable.
+- Media translations must follow terminology, QA, Semantic Fidelity, and global
+  translation rules.
+- Magazine publication data is optional in v1.0 but reserved conceptually for
+  future flipbook reading, article audio, language switching, search, PDF/HTML
+  magazine export, and links back to original articles or manuscripts.
 
 ### Top-Level Structure
 
@@ -1926,6 +2050,12 @@ Optional top-level key reserved for future phases:
             "$ref": "#/$defs/mediaAsset"
           }
         },
+        "transcripts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mediaTranscript"
+          }
+        },
         "subtitleTracks": {
           "type": "array",
           "items": {
@@ -1942,6 +2072,12 @@ Optional top-level key reserved for future phases:
           "type": "array",
           "items": {
             "$ref": "#/$defs/audioTrack"
+          }
+        },
+        "mediaVersions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/languageSpecificMediaVersion"
           }
         },
         "localizedVideoExports": {
@@ -1975,12 +2111,76 @@ Optional top-level key reserved for future phases:
         "uri": {
           "type": "string"
         },
+        "language": {
+          "$ref": "#/$defs/languageCode"
+        },
+        "originalLanguage": {
+          "$ref": "#/$defs/languageCode"
+        },
+        "originalMediaAssetId": {
+          "$ref": "#/$defs/id"
+        },
+        "projectId": {
+          "$ref": "#/$defs/id"
+        },
+        "bookId": {
+          "$ref": "#/$defs/id"
+        },
+        "manuscriptId": {
+          "$ref": "#/$defs/id"
+        },
+        "articleId": {
+          "$ref": "#/$defs/id"
+        },
         "durationMs": {
           "type": "integer",
           "minimum": 0
         },
         "checksum": {
           "type": "string"
+        }
+      }
+    },
+    "mediaTranscript": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "mediaAssetId",
+        "language",
+        "status",
+        "segmentRefs"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "mediaAssetId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceTranscriptId": {
+          "$ref": "#/$defs/id"
+        },
+        "originalMediaAssetId": {
+          "$ref": "#/$defs/id"
+        },
+        "language": {
+          "$ref": "#/$defs/languageCode"
+        },
+        "status": {
+          "enum": [
+            "generated",
+            "corrected",
+            "translated",
+            "approved",
+            "exported"
+          ]
+        },
+        "segmentRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
         }
       }
     },
@@ -2024,6 +2224,18 @@ Optional top-level key reserved for future phases:
             "ass"
           ]
         },
+        "mediaAssetId": {
+          "$ref": "#/$defs/id"
+        },
+        "originalMediaAssetId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceTranscriptId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceSubtitleTrackId": {
+          "$ref": "#/$defs/id"
+        },
         "segmentRefs": {
           "type": "array",
           "items": {
@@ -2057,6 +2269,15 @@ Optional top-level key reserved for future phases:
         "uri": {
           "type": "string"
         },
+        "mediaAssetId": {
+          "$ref": "#/$defs/id"
+        },
+        "originalMediaAssetId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceAudioTrackId": {
+          "$ref": "#/$defs/id"
+        },
         "sourceSegmentRefs": {
           "type": "array",
           "items": {
@@ -2067,6 +2288,48 @@ Optional top-level key reserved for future phases:
           "type": "number",
           "minimum": 0,
           "maximum": 100
+        }
+      }
+    },
+    "languageSpecificMediaVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "originalMediaAssetId",
+        "language",
+        "mediaAssetRefs"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "originalMediaAssetId": {
+          "$ref": "#/$defs/id"
+        },
+        "language": {
+          "$ref": "#/$defs/languageCode"
+        },
+        "transcriptId": {
+          "$ref": "#/$defs/id"
+        },
+        "subtitleTrackIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "audioTrackIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "mediaAssetRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
         }
       }
     },
@@ -2089,6 +2352,15 @@ Optional top-level key reserved for future phases:
         "uri": {
           "type": "string"
         },
+        "originalMediaAssetId": {
+          "$ref": "#/$defs/id"
+        },
+        "mediaVersionId": {
+          "$ref": "#/$defs/id"
+        },
+        "transcriptId": {
+          "$ref": "#/$defs/id"
+        },
         "subtitleTrackId": {
           "$ref": "#/$defs/id"
         },
@@ -2104,37 +2376,75 @@ Optional top-level key reserved for future phases:
 }
 ```
 
-## Future Phase - Video Localization & Media Studio
+## Future Phase - Media Localization Studio
 
 Status: Future Phase. Do not implement now.
 
-The platform will include a future media localization subsystem for translating,
-adapting, dubbing, subtitling, synchronizing, and exporting localized video
-content. This module extends the translation platform into multimedia workflows
-while preserving the same principles of semantic fidelity, terminology control,
-traceability, and professional review.
+The platform will include a future basic editorial media localization subsystem
+for translating, adapting, dubbing, subtitling, synchronizing, and exporting
+localized audio/video content. This module extends the translation platform into
+multimedia localization workflows while preserving the same principles of
+semantic fidelity, terminology control, traceability, and professional review.
+
+Media Localization Studio is not a full Adobe Premiere replacement and is not a
+professional non-linear video editing suite.
 
 ### Capabilities
 
-- Automatic Speech-to-Text: transcribe source audio and video into editable text.
-- Subtitle Management: create, import, edit, validate, and export subtitles in
-  SRT, VTT, and ASS formats.
-- Subtitle Translation: translate subtitle segments while preserving timing,
-  context, terminology, and reading speed.
-- AI Voice-Over: generate localized narration from translated scripts.
-- AI Dubbing: produce localized dialogue aligned with speaker timing and intent.
-- Audio-Video Synchronization: align translated audio, subtitles, timing, and
-  visual cues.
-- Localized Video Export: export localized video with selected subtitle, dubbing,
-  voice-over, and audio settings.
+- Video and audio upload: import source media for editorial localization.
+- Automatic transcript generation: transcribe source audio/video into editable
+  text.
+- Transcript correction: allow humans to correct generated transcripts before
+  translation or export.
+- Transcript translation: translate transcript segments under the same
+  terminology, QA, Semantic Fidelity, and global translation rules as document
+  translation.
+- Subtitle generation: create subtitles from transcript or translated segments.
+- Subtitle formats: export and manage SRT, VTT, and ASS.
+- Multilingual subtitles: maintain subtitle tracks per target language.
+- Multilingual voice-over: generate or manage localized narration tracks.
+- Simple AI dubbing: produce basic localized dialogue aligned with speaker timing
+  and intent.
+- Audio export: export localized voice-over or dubbing audio.
+- Transcript export: export source and translated transcripts.
+- Localized video export: export localized video with selected subtitle,
+  voice-over, dubbing, and audio settings.
+- Text/audio/video synchronization: align transcripts, subtitles, audio, timing,
+  and visual cues.
+- Source linking: link media assets to the original manuscript, article, book,
+  or project.
+- Language-specific media versions: preserve separate media versions per target
+  language while keeping alignment to the original media.
 - Media Localization QA: detect subtitle timing issues, missing subtitles,
   terminology violations, reading-speed problems, audio drift, and sync errors.
 - Workflow Integration: connect media localization tasks with projects, roles,
   review, audit, terminology, Translation Memory, and publishing workflows.
 
+### Explicit Exclusions
+
+- Advanced video editing.
+- Color grading.
+- Complex timeline editing.
+- Visual effects.
+- Advanced transitions.
+- Professional compositing.
+
+### Rules
+
+- Original language must be configurable and never hard-coded.
+- Every transcript, subtitle, audio version, dubbing version, and localized
+  video export must remain linked to the original media asset.
+- Media assets must remain linked to the original manuscript, article, book, or
+  project when applicable.
+- Language-specific media versions must preserve auditable alignment to the
+  original media and source text.
+- Transcript and subtitle translations must follow terminology, QA, Semantic
+  Fidelity, and global translation rules.
+- Human final authority remains required for release approval.
+
 ### Architectural Position
 
-Video Localization & Media Studio is a future subsystem, not part of the current
+Media Localization Studio is a future subsystem, not part of the current
 MVP. It must integrate with:
 
 - Translation Editor.
@@ -2152,3 +2462,26 @@ MVP. It must integrate with:
 This phase is specification-only until explicitly scheduled. No application code,
 database migrations, AI endpoints, UI routes, or infrastructure changes should be
 implemented for this module yet.
+
+## Future Phase - Magazine Platform Vision
+
+Status: Planned future phase. Do not implement now.
+
+Magazine Platform Vision defines a future digital magazine layer for publishing,
+reading, audio, export, and rich editorial experiences. It is downstream from
+the core translation workflow and must preserve JSON Master traceability,
+language alignment, semantic fidelity, terminology governance, workflow review,
+audit, and human final authority.
+
+### Cross-References
+
+- `ROADMAP.md`: Future Phase - Magazine Platform Vision.
+- `FUTURE_MODULES.md`: Future Phase - Magazine Platform Vision.
+- `docs/JSON_MASTER_FORMAT.md`: Magazine publication representation guidance.
+- `AGENTS.md`: Magazine Platform Vision Directive.
+
+### Non-Implementation Rule
+
+This phase is specification-only until explicitly scheduled. No application
+code, UI routes, database migrations, API endpoints, AI endpoints, or
+infrastructure changes should be implemented for this module yet.
