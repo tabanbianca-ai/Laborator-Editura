@@ -96,7 +96,10 @@ test("MVP persistence migrations cover implemented backend core modules in order
     "0002_terminology_glossary_v1.sql",
     "0003_qa_engine_v1.sql",
     "0004_semantic_fidelity_v1.sql",
-    "0005_workflow_engine_v1.sql"
+    "0005_workflow_engine_v1.sql",
+    "0006_terminology_governance_v2.sql",
+    "0007_founder_protection_v1.sql",
+    "0008_security_hardening_phase_1.sql"
   ]) {
     assert.match(source, new RegExp(migration));
   }
