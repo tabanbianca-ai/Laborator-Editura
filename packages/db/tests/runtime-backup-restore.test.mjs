@@ -62,6 +62,10 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "segment_translations",
     "export_artifacts",
     "foundation_audit_events",
+    "auth_login_attempts",
+    "auth_security_events",
+    "organization_founder_protection",
+    "founder_ownership_transfers",
     "translation_memory_entries",
     "terminology_terms",
     "qa_reports",
@@ -151,14 +155,28 @@ function sampleSnapshot() {
   );
   snapshot.users.push(
     { id: "user-a", email: "a@example.com", displayName: "User A", createdAt: "2026-01-01T00:00:02.000Z" },
-    { id: "user-b", email: "b@example.com", displayName: "User B", createdAt: "2026-01-01T00:00:03.000Z" }
+    { id: "user-b", email: "b@example.com", displayName: "User B", createdAt: "2026-01-01T00:00:03.000Z" },
+    { id: "user-c", email: "c@example.com", displayName: "User C", createdAt: "2026-01-01T00:00:03.500Z" }
   );
   snapshot.user_roles.push(
     { id: "role-a", organizationId: "org-a", userId: "user-a", role: "TRANSLATOR", createdAt: "2026-01-01T00:00:04.000Z" },
+    { id: "role-c", organizationId: "org-a", userId: "user-c", role: "TRANSLATOR", createdAt: "2026-01-01T00:00:04.500Z" },
     { id: "role-b", organizationId: "org-b", userId: "user-b", role: "REVIEWER", createdAt: "2026-01-01T00:00:05.000Z" }
   );
   snapshot.auth_sessions.push(
-    { id: "session-a", organizationId: "org-a", userId: "user-a", token: "token-a", roles: ["TRANSLATOR"], createdAt: "2026-01-01T00:00:06.000Z" }
+    { id: "session-a", organizationId: "org-a", userId: "user-a", token: "token-a", roles: ["TRANSLATOR"], createdAt: "2026-01-01T00:00:06.000Z", expiresAt: "2026-01-01T08:00:06.000Z", lastSeenAt: "2026-01-01T00:00:06.000Z" }
+  );
+  snapshot.auth_login_attempts.push(
+    { id: "login-attempt-a", email: "a@example.com", failureCount: 1, createdAt: "2026-01-01T00:00:06.100Z", updatedAt: "2026-01-01T00:00:06.100Z" }
+  );
+  snapshot.auth_security_events.push(
+    { id: "security-event-a", organizationId: "org-a", userId: "user-a", email: "a@example.com", eventType: "LOGIN_FAILED", message: "Invalid login credentials.", createdAt: "2026-01-01T00:00:06.200Z" }
+  );
+  snapshot.organization_founder_protection.push(
+    { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
+  );
+  snapshot.founder_ownership_transfers.push(
+    { id: "founder-transfer-a", organizationId: "org-a", fromFounderUserId: "user-a", toFounderUserId: "user-c", status: "PENDING", requestedBy: "user-a", createdAt: "2026-01-01T00:00:08.000Z", expiresAt: "2026-01-31T00:00:08.000Z" }
   );
   snapshot.projects.push(
     { id: "project-a", organizationId: "org-a", name: "Project A", sourceLanguage: "es", targetLanguages: ["ro"], status: "ACTIVE", createdBy: "user-a", createdAt: "2026-01-01T00:01:00.000Z", updatedAt: "2026-01-01T00:01:00.000Z" },
