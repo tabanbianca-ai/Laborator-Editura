@@ -237,7 +237,7 @@ export class AuthService {
       throw new BadRequestException("targetUserId is required.");
     }
 
-    const protection = await this.loadFounderProtection(actor.organizationId);
+    let protection = await this.loadFounderProtection(actor.organizationId);
     this.assertCurrentFounder(actor, protection);
 
     if (input.targetUserId === actor.userId) {
