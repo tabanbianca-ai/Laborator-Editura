@@ -1,4 +1,4 @@
-import { JSON_MASTER_FORMAT_VERSION } from "./types";
+import { JSON_MASTER_FORMAT_VERSION } from "./types.js";
 
 export const JSON_MASTER_FORMAT_SCHEMA_ID =
   "https://laboratorul-editurii.local/schemas/json-master-format-1.0.schema.json";
