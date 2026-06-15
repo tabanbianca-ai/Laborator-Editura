@@ -82,6 +82,31 @@ Rules:
 - Backend implementation is not authorized until rule/source authority models
   are explicitly scheduled.
 
+### Magazine Platform Vision Directive
+
+Purpose:
+
+- Reserve a future publication experience for digital magazines without
+  expanding the current MVP implementation scope.
+
+Rules:
+
+- Magazine Platform Vision is documentation-only until explicitly promoted in
+  `ROADMAP.md`.
+- Original language must remain configurable per publication and must never be
+  hard-coded.
+- Every translated article, manuscript, audio version, and future magazine
+  edition must remain linked to the same original publication.
+- Translation alignment for magazine content must remain auditable through JSON
+  Master references.
+- M1 Digital Magazine MVP is `PLANNED` with `POST-BETA` priority.
+- M2 Advanced Reading is `PLANNED` with `POST-BETA` priority.
+- M3 Interactive Magazine is `PLANNED` with `FUTURE` priority.
+- M4 Enterprise Magazine is `FUTURE` with `LONG_TERM` priority.
+- No code, UI, API, database schema, migrations, or infrastructure work is
+  authorized for Magazine Platform Vision until a later implementation phase is
+  explicitly approved.
+
 ### ChatGPT
 
 Role: System Architect.
