@@ -43,6 +43,119 @@ Each manuscript must contain:
 - Export artifacts must be tracked per manuscript language.
 - Each manuscript and export artifact must record the translation rule version
   or versions used.
+- Original language must be configurable per publication and must never be
+  hard-coded.
+- Future magazine translations, article audio, and magazine exports must remain
+  linked to the same original publication.
+- Magazine article alignment must remain auditable through source manuscript,
+  source article, source segment, or stable alignment references.
+- Future media localization must preserve configurable original language,
+  language-specific media versions, original media links, and source
+  manuscript/article/book/project links.
+
+## Magazine Publication Representation
+
+Magazine Platform Vision is a future documentation-only requirement. JSON
+Master must be able to represent future magazine publication data without making
+PDF, HTML, flipbook, audio, or mobile application outputs the source of truth.
+
+Required future representation concepts:
+
+- `publicationId`: stable magazine publication identifier.
+- `originalLanguage`: configurable original language for the publication.
+- `originalPublicationRef`: reference to the original publication or source
+  manuscript.
+- `articleId`: stable article identifier.
+- `sourceArticleId`: required when an article is translated.
+- `language`: article language.
+- `sourceManuscriptId`: manuscript source when the article derives from a
+  manuscript.
+- `sourceSegmentRefs`: segment or alignment references used for auditability.
+- `audioRefs`: article-level audio versions linked to the same original
+  publication.
+- `exportArtifacts`: language-specific PDF, HTML, and future flipbook exports.
+
+Rules:
+
+- The original language may be English, Romanian, Spanish, French, Italian,
+  Portuguese, German, or any supported language.
+- Original language is never hard-coded in JSON Master.
+- Every translated article remains linked to the original publication.
+- Every audio version remains linked to the original publication.
+- Translation alignment remains auditable across source articles, translated
+  articles, manuscripts, and segments.
+- Magazine reader features such as flipbook reading, search, language switching,
+  article audio, bookmarks, notes, and rich media are future consumers of JSON
+  Master data, not sources of truth.
+- This section does not change runtime validators, database schema, APIs, UI, or
+  migrations.
+
+## Media Localization Studio Representation
+
+Media Localization Studio is a future documentation-only requirement for basic
+editorial media localization. It is not a full Adobe Premiere replacement and is
+not a professional non-linear video editing, compositing, transition, visual
+effects, or color-grading system.
+
+Required future representation concepts:
+
+- `mediaAssetId`: stable video or audio asset identifier.
+- `originalMediaAssetId`: required for localized media derived from source
+  media.
+- `originalLanguage`: configurable original language for the media asset.
+- `language`: language of the transcript, subtitle, voice-over, dubbing track,
+  audio export, or localized video export.
+- `projectId`: project linked to the media asset.
+- `bookId`: book or original work linked to the media asset when applicable.
+- `manuscriptId`: manuscript linked to the media asset when applicable.
+- `articleId`: article linked to the media asset when applicable.
+- `transcripts`: source, corrected, translated, and approved transcript
+  references.
+- `subtitleTracks`: SRT, VTT, and ASS subtitle tracks per language.
+- `audioTracks`: multilingual voice-over and simple AI dubbing tracks.
+- `mediaVersions`: language-specific media versions linked to original media.
+- `localizedVideoExports`: generated localized video outputs.
+- `syncRefs`: text/audio/video synchronization references.
+
+Included future capabilities:
+
+- Video and audio upload.
+- Automatic transcript generation.
+- Transcript correction.
+- Transcript translation.
+- Subtitle generation.
+- Subtitle formats: SRT, VTT, and ASS.
+- Multilingual subtitles.
+- Multilingual voice-over.
+- Simple AI dubbing.
+- Audio export.
+- Transcript export.
+- Localized video export.
+- Text, audio, and video synchronization.
+
+Excluded capabilities:
+
+- Advanced video editing.
+- Color grading.
+- Complex timeline editing.
+- Visual effects.
+- Advanced transitions.
+- Professional compositing.
+
+Rules:
+
+- Original language must be configurable and never hard-coded.
+- Every transcript, subtitle, audio track, dubbing track, and localized video
+  export must remain linked to the original media asset.
+- Media assets must remain linked to the original manuscript, article, book, or
+  project when applicable.
+- Language-specific media versions must preserve auditable alignment to the
+  original media and source text.
+- Transcript and subtitle translations must follow terminology, QA, Semantic
+  Fidelity, and global translation rules.
+- Human final authority remains required for localized media release approval.
+- This section does not change runtime validators, database schema, APIs, UI, or
+  migrations.
 
 ## Translation Rules Versioning
 
@@ -298,6 +411,78 @@ Priority rules:
         "status": "validated",
         "approvedBy": "reviewer-001",
         "approvedAt": "2026-06-14T00:00:00.000Z"
+      }
+    ]
+  },
+  "mediaLocalization": {
+    "mediaAssets": [
+      {
+        "mediaAssetId": "media-fr-video-001",
+        "type": "video",
+        "originalLanguage": "fr",
+        "language": "fr",
+        "projectId": "book-project-001",
+        "bookId": "book-001",
+        "manuscriptId": "manuscript-fr-original",
+        "uri": "media/fr/original.mp4"
+      }
+    ],
+    "transcripts": [
+      {
+        "transcriptId": "transcript-fr-001",
+        "mediaAssetId": "media-fr-video-001",
+        "originalMediaAssetId": "media-fr-video-001",
+        "language": "fr",
+        "status": "corrected",
+        "segmentRefs": ["segment-fr-001"]
+      },
+      {
+        "transcriptId": "transcript-ro-001",
+        "mediaAssetId": "media-fr-video-001",
+        "originalMediaAssetId": "media-fr-video-001",
+        "sourceTranscriptId": "transcript-fr-001",
+        "language": "ro",
+        "status": "translated",
+        "segmentRefs": ["segment-ro-001"]
+      }
+    ],
+    "subtitleTracks": [
+      {
+        "subtitleTrackId": "subtitle-ro-srt-001",
+        "originalMediaAssetId": "media-fr-video-001",
+        "sourceTranscriptId": "transcript-ro-001",
+        "language": "ro",
+        "format": "srt",
+        "segmentRefs": ["segment-ro-001"]
+      }
+    ],
+    "audioTracks": [
+      {
+        "audioTrackId": "voiceover-ro-001",
+        "originalMediaAssetId": "media-fr-video-001",
+        "language": "ro",
+        "type": "voice_over",
+        "uri": "media/ro/voiceover.mp3",
+        "sourceSegmentRefs": ["segment-ro-001"]
+      }
+    ],
+    "mediaVersions": [
+      {
+        "mediaVersionId": "media-version-ro-001",
+        "originalMediaAssetId": "media-fr-video-001",
+        "language": "ro",
+        "transcriptId": "transcript-ro-001",
+        "subtitleTrackIds": ["subtitle-ro-srt-001"],
+        "audioTrackIds": ["voiceover-ro-001"]
+      }
+    ],
+    "localizedVideoExports": [
+      {
+        "exportId": "localized-video-ro-001",
+        "originalMediaAssetId": "media-fr-video-001",
+        "mediaVersionId": "media-version-ro-001",
+        "language": "ro",
+        "uri": "exports/ro/localized-video.mp4"
       }
     ]
   }
