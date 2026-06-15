@@ -1,4 +1,4 @@
-import { Injectable, type NestMiddleware, TooManyRequestsException } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, type NestMiddleware } from "@nestjs/common";
 
 type RateLimitPolicyName = "auth" | "sensitive" | "default";
 
@@ -60,7 +60,7 @@ export class RateLimitMiddleware implements NestMiddleware {
     bucket.count += 1;
 
     if (bucket.count > policy.maxRequests) {
-      throw new TooManyRequestsException(SAFE_RATE_LIMIT_MESSAGE);
+      throw new HttpException(SAFE_RATE_LIMIT_MESSAGE, HttpStatus.TOO_MANY_REQUESTS);
     }
 
     next();
