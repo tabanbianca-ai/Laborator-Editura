@@ -8,4 +8,4 @@ export interface HealthResponse {
   status: "ok";
 }
 
-export * from "./json-master-format/index.js";
+export * from "./json-master-format";
