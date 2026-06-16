@@ -42,7 +42,8 @@ test("foundation modules inject database repositories into API execution", () =>
     const serviceSource = readModule(moduleName, `${moduleName}.service.ts`);
 
     assert.match(moduleSource, new RegExp(className));
-    assert.match(moduleSource, new RegExp(`providers: \\[${className}`));
+    assert.match(moduleSource, /runtimeDatabaseProvider/);
+    assert.match(moduleSource, new RegExp(`providers: \\[runtimeDatabaseProvider, ${className}`));
     assert.match(serviceSource, new RegExp(`private readonly repository: ${className}`));
   }
 });
@@ -58,10 +59,19 @@ test("runtime database persists state across repository instances through a file
   assert.match(databaseSource, /persistSnapshot/);
   assert.match(databaseSource, /getDefaultRuntimeDatabase/);
 
+  const runtimeDatabaseProviderSource = readModule("", "runtime-database.provider.ts");
+
+  assert.match(runtimeDatabaseProviderSource, /RUNTIME_DATABASE = "RUNTIME_DATABASE"/);
+  assert.match(runtimeDatabaseProviderSource, /runtimeDatabaseProvider/);
+  assert.match(runtimeDatabaseProviderSource, /useFactory: \(\): FileBackedRuntimeDatabase => getDefaultRuntimeDatabase\(\)/);
+
   for (const [moduleName] of foundationRepositories) {
     const repositorySource = readModule(moduleName, `${moduleName}.repository.ts`);
+    const moduleSource = readModule(moduleName, `${moduleName}.module.ts`);
 
-    assert.match(repositorySource, /constructor\(private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase\(\)\)/);
+    assert.match(repositorySource, /@Inject\(RUNTIME_DATABASE\)/);
+    assert.match(repositorySource, /private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase\(\)/);
+    assert.match(moduleSource, /runtimeDatabaseProvider/);
   }
 });
 
