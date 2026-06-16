@@ -1,10 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { getDefaultRuntimeDatabase, type FileBackedRuntimeDatabase } from "@laborator/db";
+import { RUNTIME_DATABASE } from "../runtime-database.provider";
 import { type Segment, type SegmentAuditEvent } from "./segments.types";
 
 @Injectable()
 export class DatabaseSegmentsRepository {
-  constructor(private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()) {}
+  constructor(
+    @Inject(RUNTIME_DATABASE)
+    private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
+  ) {}
 
   async createSegment(segment: Segment): Promise<Segment> {
     return this.database.insert("document_segments", segment);
