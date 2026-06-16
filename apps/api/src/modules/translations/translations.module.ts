@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { QaModule } from "../qa/qa.module";
+import { runtimeDatabaseProvider } from "../runtime-database.provider";
 import { SemanticFidelityModule } from "../semantic-fidelity/semantic-fidelity.module";
 import { SegmentsModule } from "../segments/segments.module";
 import { TerminologyModule } from "../terminology/terminology.module";
@@ -17,7 +18,7 @@ import { TranslationsService } from "./translations.service";
     SemanticFidelityModule
   ],
   controllers: [TranslationsController],
-  providers: [DatabaseTranslationsRepository, TranslationsService],
+  providers: [runtimeDatabaseProvider, DatabaseTranslationsRepository, TranslationsService],
   exports: [TranslationsService]
 })
 export class TranslationsModule {}
