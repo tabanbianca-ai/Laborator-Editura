@@ -1,10 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { getDefaultRuntimeDatabase, type FileBackedRuntimeDatabase } from "@laborator/db";
+import { RUNTIME_DATABASE } from "../runtime-database.provider";
 import { type SegmentTranslation, type TranslationAuditEvent } from "./translations.types";
 
 @Injectable()
 export class DatabaseTranslationsRepository {
-  constructor(private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()) {}
+  constructor(
+    @Inject(RUNTIME_DATABASE)
+    private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
+  ) {}
 
   async createTranslation(translation: SegmentTranslation): Promise<SegmentTranslation> {
     return this.database.insert("segment_translations", translation);
