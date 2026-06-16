@@ -1,10 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { getDefaultRuntimeDatabase, type FileBackedRuntimeDatabase } from "@laborator/db";
+import { RUNTIME_DATABASE } from "../runtime-database.provider";
 import { type Project, type ProjectAuditEvent } from "./projects.types";
 
 @Injectable()
 export class DatabaseProjectsRepository {
-  constructor(private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()) {}
+  constructor(
+    @Inject(RUNTIME_DATABASE)
+    private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
+  ) {}
 
   async createProject(project: Project): Promise<Project> {
     return this.database.insert("projects", project);
