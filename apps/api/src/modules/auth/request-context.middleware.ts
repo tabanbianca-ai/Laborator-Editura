@@ -34,7 +34,8 @@ export class RequestContextMiddleware implements NestMiddleware {
     const path = request.path ?? request.url ?? "";
     const routePath = path.split("?")[0] ?? "";
 
-    return method === "POST" && routePath.endsWith("/auth/login");
+    return (method === "GET" && routePath.endsWith("/health")) ||
+      (method === "POST" && routePath.endsWith("/auth/login"));
   }
 
   private readAccessToken(request: RequestWithAuthContext): string | undefined {
