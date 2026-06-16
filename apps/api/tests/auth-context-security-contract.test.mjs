@@ -48,8 +48,13 @@ test("request context middleware derives identity from validated session or bear
 test("health endpoint remains public for container health checks", () => {
   const middleware = readSource("auth/request-context.middleware.ts");
   const controller = readSource("health.controller.ts");
+  const requestTypes = readSource("auth/request-context.types.ts");
 
-  assert.match(middleware, /method === "GET" && routePath\.endsWith\("\/health"\)/);
+  assert.match(requestTypes, /originalUrl\?: string/);
+  assert.match(middleware, /request\.originalUrl \?\? request\.path \?\? request\.url/);
+  assert.match(middleware, /replace\(\/\\\/\+\$\/u, ""\)/);
+  assert.match(middleware, /method === "GET" && this\.isHealthRoute\(routePath\)/);
+  assert.match(middleware, /return routePath === "\/health"/);
   assert.match(controller, /@Controller\("health"\)/);
   assert.match(controller, /status: "ok"/);
   assert.doesNotMatch(controller, /CurrentActor|AuthenticatedRequestContext|request|headers/i);
