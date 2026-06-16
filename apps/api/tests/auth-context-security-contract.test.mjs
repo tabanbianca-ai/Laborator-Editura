@@ -45,6 +45,16 @@ test("request context middleware derives identity from validated session or bear
   assert.match(source, /catch\s*\{/);
 });
 
+test("health endpoint remains public for container health checks", () => {
+  const middleware = readSource("auth/request-context.middleware.ts");
+  const controller = readSource("health.controller.ts");
+
+  assert.match(middleware, /method === "GET" && routePath\.endsWith\("\/health"\)/);
+  assert.match(controller, /@Controller\("health"\)/);
+  assert.match(controller, /status: "ok"/);
+  assert.doesNotMatch(controller, /CurrentActor|AuthenticatedRequestContext|request|headers/i);
+});
+
 test("spoofed user organization and role headers are not trusted by controllers", () => {
   for (const { fileName, source } of controllerSources()) {
     assert.doesNotMatch(source, /x-user-id/, `${fileName} must not read x-user-id`);
