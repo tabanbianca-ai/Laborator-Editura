@@ -31,11 +31,21 @@ export class RequestContextMiddleware implements NestMiddleware {
 
   private isPublicRoute(request: RequestWithAuthContext): boolean {
     const method = (request.method ?? "").toUpperCase();
-    const path = request.path ?? request.url ?? "";
-    const routePath = path.split("?")[0] ?? "";
+    const routePath = this.routePath(request);
 
-    return (method === "GET" && routePath.endsWith("/health")) ||
+    return (method === "GET" && this.isHealthRoute(routePath)) ||
       (method === "POST" && routePath.endsWith("/auth/login"));
+  }
+
+  private routePath(request: RequestWithAuthContext): string {
+    const rawPath = request.originalUrl ?? request.path ?? request.url ?? "/";
+    const pathWithoutQuery = rawPath.split("?")[0] ?? "/";
+
+    return pathWithoutQuery.length > 1 ? pathWithoutQuery.replace(/\/+$/u, "") : pathWithoutQuery;
+  }
+
+  private isHealthRoute(routePath: string): boolean {
+    return routePath === "/health";
   }
 
   private readAccessToken(request: RequestWithAuthContext): string | undefined {
