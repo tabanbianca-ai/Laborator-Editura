@@ -1,10 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { getDefaultRuntimeDatabase, type FileBackedRuntimeDatabase } from "@laborator/db";
+import { RUNTIME_DATABASE } from "../runtime-database.provider";
 import { type ExportArtifact, type ExportAuditEvent } from "./export.types";
 
 @Injectable()
 export class DatabaseExportRepository {
-  constructor(private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()) {}
+  constructor(
+    @Inject(RUNTIME_DATABASE)
+    private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
+  ) {}
 
   async createArtifact(artifact: ExportArtifact): Promise<ExportArtifact> {
     return this.database.insert("export_artifacts", artifact);
