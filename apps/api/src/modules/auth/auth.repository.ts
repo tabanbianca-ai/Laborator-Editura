@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { getDefaultRuntimeDatabase, type FileBackedRuntimeDatabase } from "@laborator/db";
 import { randomUUID } from "node:crypto";
+import { RUNTIME_DATABASE } from "../runtime-database.provider";
 import {
   type AuthAuditEvent,
   type AuthLoginAttempt,
@@ -23,7 +24,10 @@ interface UserRoleRow {
 
 @Injectable()
 export class DatabaseAuthRepository {
-  constructor(private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()) {}
+  constructor(
+    @Inject(RUNTIME_DATABASE)
+    private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
+  ) {}
 
   async createOrganization(organization: AuthOrganization): Promise<AuthOrganization> {
     return this.database.insert("organizations", organization);
