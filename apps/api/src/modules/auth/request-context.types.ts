@@ -17,6 +17,7 @@ export interface RequestWithAuthContext {
   authContext?: AuthenticatedRequestContext;
   headers?: Record<string, string | string[] | undefined>;
   method?: string;
+  originalUrl?: string;
   path?: string;
   url?: string;
 }
