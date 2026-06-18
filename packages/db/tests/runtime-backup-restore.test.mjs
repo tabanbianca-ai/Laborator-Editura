@@ -72,7 +72,11 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "qa_issues",
     "semantic_fidelity_reports",
     "semantic_fidelity_issues",
-    "workflow_states"
+    "workflow_states",
+    "lexicographic_sources",
+    "lexicographic_entries",
+    "lexicographic_decisions",
+    "lexicographic_audit_events"
   ]) {
     assert.ok(restored[tableName].length > 0, `${tableName} should be restored`);
   }
@@ -237,6 +241,18 @@ function sampleSnapshot() {
   );
   snapshot.workflow_audit_events.push(
     { id: "workflow-audit-a", organizationId: "org-a", workflowStateId: "workflow-a", action: "READY_FOR_EXPORT", actorId: "user-a", createdAt: "2026-01-01T00:11:02.000Z" }
+  );
+  snapshot.lexicographic_sources.push(
+    { id: "lex-source-a", organizationId: "org-a", type: "BILINGUAL_DICTIONARY", title: "Dicționar spaniol-român și român-spaniol", authors: ["Alexandru Calciu", "Zaira Samharadze"], sourceLanguages: ["es"], targetLanguages: ["ro"], authority: "ACADEMIC_DICTIONARY", createdBy: "user-a", createdAt: "2026-01-01T00:12:00.000Z" }
+  );
+  snapshot.lexicographic_entries.push(
+    { id: "lex-entry-a", organizationId: "org-a", sourceId: "lex-source-a", term: "espíritu", normalizedTerm: "espiritu", sourceLanguage: "es", targetLanguage: "ro", senses: [], citations: [], createdBy: "user-a", createdAt: "2026-01-01T00:12:01.000Z" }
+  );
+  snapshot.lexicographic_decisions.push(
+    { id: "lex-decision-a", organizationId: "org-a", term: "espíritu", sourceLanguage: "es", targetLanguage: "ro", selectedAuthority: "ACADEMIC_DICTIONARY", decision: "Use as supporting evidence only.", rationale: "Dictionary evidence is non-authoritative.", priorityRule: ["VALIDATED_PLATFORM_GLOSSARY", "DOCUMENTED_EDITORIAL_DECISION", "SPECIALIZED_DICTIONARY", "ACADEMIC_DICTIONARY", "AI_SUGGESTION"], status: "PENDING_HUMAN_APPROVAL", humanFinalAuthority: true, decidedBy: "user-a", decidedAt: "2026-01-01T00:12:02.000Z" }
+  );
+  snapshot.lexicographic_audit_events.push(
+    { id: "lex-audit-a", organizationId: "org-a", action: "CREATE_ENTRY", actorId: "user-a", entityType: "dictionary_entry", entityId: "lex-entry-a", createdAt: "2026-01-01T00:12:03.000Z" }
   );
 
   return snapshot;
