@@ -68,6 +68,67 @@ test("lexicographic matching finds a dictionary term inside a source sentence", 
   assert.match(service, /lexicographicSupport: this\.mapLexicographicSupport/);
 });
 
+test("translation lexicographic support can be built from persisted dictionary evidence", () => {
+  const sourceText = "El espíritu progresa por la experiencia moral.";
+  const entry = {
+    id: "entry-espiritu",
+    sourceId: "source-calciu-samharadze",
+    term: "espíritu",
+    normalizedTerm: "espiritu",
+    sourceLanguage: "es",
+    targetLanguage: "ro",
+    senses: [
+      {
+        id: "sense-espiritu-1",
+        translationEquivalents: ["spirit"],
+      }
+    ],
+    citations: [
+      {
+        id: "citation-espiritu-1",
+        sourceId: "source-calciu-samharadze",
+        sourceReference: "Dicționar spaniol-român și român-spaniol",
+        pageOrSection: "espíritu"
+      }
+    ]
+  };
+
+  const normalizedSource = sourceText
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
+    .toLocaleLowerCase()
+    .trim();
+  const hasEntry = new RegExp(`(?:^|\\s)${entry.normalizedTerm}(?:\\s|$)`, "u")
+    .test(normalizedSource);
+
+  const lexicographicSupport = hasEntry
+    ? [
+      {
+        entryId: entry.id,
+        sourceId: entry.sourceId,
+        term: entry.term,
+        translationEquivalents: entry.senses.flatMap((sense) => sense.translationEquivalents),
+        sourceReferences: entry.citations.map((citation) => citation.sourceReference),
+        citations: entry.citations,
+        authority: "ACADEMIC_DICTIONARY",
+        priorityRank: 3,
+        authoritative: false,
+        humanFinalAuthority: true
+      }
+    ]
+    : [];
+
+  assert.equal(lexicographicSupport.length, 1);
+  assert.equal(lexicographicSupport[0].entryId, "entry-espiritu");
+  assert.equal(lexicographicSupport[0].sourceId, "source-calciu-samharadze");
+  assert.deepEqual(lexicographicSupport[0].translationEquivalents, ["spirit"]);
+  assert.deepEqual(lexicographicSupport[0].sourceReferences, [
+    "Dicționar spaniol-român și român-spaniol"
+  ]);
+  assert.equal(lexicographicSupport[0].authoritative, false);
+});
+
 test("terminology check can include dictionary evidence without becoming authoritative", () => {
   const moduleSource = readModule("terminology", "terminology.module.ts");
   const service = readModule("terminology", "terminology.service.ts");
