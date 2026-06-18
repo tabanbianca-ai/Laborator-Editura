@@ -31,7 +31,11 @@ export const TABLE_NAMES = [
   "semantic_fidelity_audit_events",
   "workflow_states",
   "workflow_transitions",
-  "workflow_audit_events"
+  "workflow_audit_events",
+  "lexicographic_sources",
+  "lexicographic_entries",
+  "lexicographic_decisions",
+  "lexicographic_audit_events"
 ];
 
 const TENANT_SCOPED_TABLES = new Set([
@@ -57,7 +61,11 @@ const TENANT_SCOPED_TABLES = new Set([
   "semantic_fidelity_audit_events",
   "workflow_states",
   "workflow_transitions",
-  "workflow_audit_events"
+  "workflow_audit_events",
+  "lexicographic_sources",
+  "lexicographic_entries",
+  "lexicographic_decisions",
+  "lexicographic_audit_events"
 ]);
 
 export function defaultRuntimeDbPath(cwd = process.cwd()) {
@@ -223,6 +231,7 @@ function validateTenantBoundaries(data, issues) {
   validateReferenceTenant(data, issues, "segment_translations", "segmentId", "document_segments");
   validateReferenceTenant(data, issues, "export_artifacts", "projectId", "projects");
   validateReferenceTenant(data, issues, "export_artifacts", "documentId", "documents");
+  validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
 }
 
 function validateReferenceTenant(data, issues, tableName, referenceKey, referenceTableName) {
