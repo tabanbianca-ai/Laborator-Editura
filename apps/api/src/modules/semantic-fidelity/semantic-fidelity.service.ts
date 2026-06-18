@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
+import { LexicographicService } from "../lexicographic/lexicographic.service";
+import { type DictionaryEntry } from "../lexicographic/lexicographic.types";
 import { QaService } from "../qa/qa.service";
 import { TerminologyService } from "../terminology/terminology.service";
 import { TranslationMemoryService } from "../translation-memory/translation-memory.service";
@@ -13,6 +15,7 @@ import {
   type SemanticFidelityIssue,
   type SemanticFidelityIssueType,
   type SemanticFidelityReport,
+  type SemanticLexicographicReference,
   type SemanticSegmentInput
 } from "./semantic-fidelity.types";
 import {
@@ -30,6 +33,7 @@ const TERMINOLOGY_VALIDATED_PRIORITY = "VALIDATED_TERMINOLOGY_OVER_TM_OVER_AI" a
 export class SemanticFidelityService {
   constructor(
     private readonly repository: InMemorySemanticFidelityRepository,
+    private readonly lexicographicService: LexicographicService,
     private readonly terminologyService: TerminologyService,
     private readonly translationMemoryService: TranslationMemoryService,
     private readonly qaService: QaService
@@ -45,7 +49,11 @@ export class SemanticFidelityService {
     const reportId = randomUUID();
     const createdAt = new Date().toISOString();
     const issues = await this.buildSegmentIssues(actor, reportId, input, createdAt);
-    const report = this.createReport(actor, reportId, "SEGMENT", createdAt, issues, input);
+    const lexicographicReferences = await this.collectLexicographicReferences(actor, input);
+    const report = this.createReport(actor, reportId, "SEGMENT", createdAt, issues, {
+      ...input,
+      lexicographicReferences
+    });
 
     await this.repository.createReport(report);
     await this.repository.createIssues(issues);
@@ -71,28 +79,35 @@ export class SemanticFidelityService {
     const reportId = randomUUID();
     const createdAt = new Date().toISOString();
     const issues: SemanticFidelityIssue[] = [];
+    const lexicographicReferences: SemanticLexicographicReference[] = [];
 
     for (const segment of input.segments) {
+      const normalizedSegment: SemanticSegmentInput = {
+        ...segment,
+        projectId: segment.projectId ?? input.projectId,
+        documentId: segment.documentId ?? input.documentId,
+        sourceLanguage: segment.sourceLanguage ?? input.sourceLanguage,
+        targetLanguage: segment.targetLanguage ?? input.targetLanguage,
+        domain: segment.domain ?? input.domain
+      };
+
       issues.push(
         ...(await this.buildSegmentIssues(
           actor,
           reportId,
-          {
-            ...segment,
-            projectId: segment.projectId ?? input.projectId,
-            documentId: segment.documentId ?? input.documentId,
-            sourceLanguage: segment.sourceLanguage ?? input.sourceLanguage,
-            targetLanguage: segment.targetLanguage ?? input.targetLanguage,
-            domain: segment.domain ?? input.domain
-          },
+          normalizedSegment,
           createdAt
         ))
+      );
+      lexicographicReferences.push(
+        ...(await this.collectLexicographicReferences(actor, normalizedSegment))
       );
     }
 
     const report = this.createReport(actor, reportId, "DOCUMENT", createdAt, issues, {
       projectId: input.projectId,
-      documentId: input.documentId
+      documentId: input.documentId,
+      lexicographicReferences
     });
 
     await this.repository.createReport(report);
@@ -213,6 +228,7 @@ export class SemanticFidelityService {
     }
 
     const terminologyResult = await this.terminologyService.checkSegmentText(actor, {
+      sourceLanguage: segment.sourceLanguage,
       language: segment.targetLanguage,
       domain: segment.domain,
       sourceText: segment.sourceText,
@@ -227,7 +243,8 @@ export class SemanticFidelityService {
           createdAt,
           metadata: {
             priority: TERMINOLOGY_VALIDATED_PRIORITY,
-            authoritative: violation.authoritative
+            authoritative: violation.authoritative,
+            dictionaryEvidence: terminologyResult.dictionaryEvidence ?? []
           }
         })
       );
@@ -287,6 +304,7 @@ export class SemanticFidelityService {
     createdAt: string,
     issues: SemanticFidelityIssue[],
     target: { projectId?: string; documentId?: string; segmentId?: string }
+      & { lexicographicReferences?: SemanticLexicographicReference[] }
   ): SemanticFidelityReport {
     return {
       id: reportId,
@@ -303,11 +321,42 @@ export class SemanticFidelityService {
       createdAt,
       metadata: {
         priority: TERMINOLOGY_VALIDATED_PRIORITY,
+        lexicographicReferences: target.lexicographicReferences ?? [],
         aiMayExplainButCannotOverride: true,
         finalAuthority: "AUTHORIZED_HUMAN"
       },
+      lexicographicReferences: target.lexicographicReferences,
       issues
     };
+  }
+
+  private async collectLexicographicReferences(
+    actor: SemanticFidelityActor,
+    segment: SemanticSegmentInput
+  ): Promise<SemanticLexicographicReference[]> {
+    const entries = await this.lexicographicService.searchEntries(actor, {
+      term: segment.sourceText,
+      sourceLanguage: segment.sourceLanguage,
+      targetLanguage: segment.targetLanguage,
+      limit: 5
+    });
+
+    return this.mapLexicographicReferences(entries);
+  }
+
+  private mapLexicographicReferences(
+    entries: DictionaryEntry[]
+  ): SemanticLexicographicReference[] {
+    return entries.map((entry) => ({
+      entryId: entry.id,
+      sourceId: entry.sourceId,
+      term: entry.term,
+      sourceLanguage: entry.sourceLanguage,
+      targetLanguage: entry.targetLanguage,
+      senseIds: entry.senses.map((sense) => sense.id),
+      priority: "LEXICOGRAPHIC_SUPPORT_AFTER_VALIDATED_TERMINOLOGY",
+      authoritative: false
+    }));
   }
 
   private createIssue(
