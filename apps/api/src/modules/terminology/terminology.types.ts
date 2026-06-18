@@ -156,6 +156,7 @@ export interface SearchTerminologyInput {
 
 export interface CheckSegmentTerminologyInput {
   sourceLanguage?: string;
+  targetLanguage?: string;
   language: string;
   domain?: string;
   sourceText: string;
