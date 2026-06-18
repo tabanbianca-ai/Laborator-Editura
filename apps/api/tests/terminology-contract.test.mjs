@@ -53,6 +53,10 @@ test("terminology check returns dictionaryEvidence for espíritu source text", (
   assert.match(source, /input\.sourceText/);
   assert.match(source, /for \(const queryText of queryTexts\)/);
   assert.match(source, /term: queryText/);
+  assert.match(source, /resolveLexicographicSourceLanguages/);
+  assert.match(source, /lexicographicService\.listSources/);
+  assert.match(source, /source\.targetLanguages\.includes\(targetLanguage\)/);
+  assert.match(source, /return source\.sourceLanguages/);
   assert.match(source, /lexicographicService\.searchEntries/);
   assert.match(source, /lexicographicService\.describeEntries/);
   assert.match(source, /evidenceByEntryId/);
@@ -89,6 +93,72 @@ test("terminology check returns dictionaryEvidence for espíritu source text", (
   assert.deepEqual(dictionaryEvidence[0].translationEquivalents, ["spirit"]);
   assert.equal(dictionaryEvidence[0].authoritative, false);
   assert.equal(dictionaryEvidence[0].humanFinalAuthority, true);
+});
+
+test("terminology check infers Spanish source dictionary evidence for Romanian target language", () => {
+  const source = readSource("terminology.service.ts");
+  const sourceText = "El espíritu progresa por la experiencia moral.";
+  const targetText = "Spiritul progresează prin experiența morală.";
+  const request = {
+    language: "ro",
+    domain: "spiritism",
+    sourceText,
+    targetText
+  };
+  const dictionarySources = [
+    {
+      id: "source-calciu-samharadze",
+      sourceLanguages: ["es", "ro"],
+      targetLanguages: ["ro", "es"]
+    }
+  ];
+  const entries = [
+    {
+      id: "entry-espiritu",
+      sourceId: "source-calciu-samharadze",
+      term: "espíritu",
+      normalizedTerm: "espiritu",
+      sourceLanguage: "es",
+      targetLanguage: "ro"
+    }
+  ];
+
+  function normalizeLexicalText(value) {
+    return value
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
+      .toLocaleLowerCase()
+      .trim();
+  }
+
+  function hasTokenSafeOccurrence(text, term) {
+    const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`(?:^|\\s)${escapedTerm}(?:\\s|$)`, "u").test(text);
+  }
+
+  const targetLanguage = request.language;
+  const inferredSourceLanguages = [
+    ...new Set(
+      dictionarySources
+        .filter((dictionarySource) => dictionarySource.targetLanguages.includes(targetLanguage))
+        .flatMap((dictionarySource) => dictionarySource.sourceLanguages)
+    )
+  ];
+  const normalizedSourceText = normalizeLexicalText(sourceText);
+  const dictionaryEvidence = entries.filter((entry) => {
+    return (
+      inferredSourceLanguages.includes(entry.sourceLanguage) &&
+      entry.targetLanguage === targetLanguage &&
+      hasTokenSafeOccurrence(normalizedSourceText, entry.normalizedTerm)
+    );
+  });
+
+  assert.equal(request.sourceLanguage, undefined);
+  assert.deepEqual(inferredSourceLanguages, ["es", "ro"]);
+  assert.equal(dictionaryEvidence.length, 1);
+  assert.equal(dictionaryEvidence[0].term, "espíritu");
+  assert.match(source, /sourceLanguage,\n\s+targetLanguage,/);
 });
 
 test("terminology dictionary evidence is complete and non-authoritative", () => {
