@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import { LexicographicService } from "../lexicographic/lexicographic.service";
-import { type DictionaryEntry } from "../lexicographic/lexicographic.types";
+import { type LexicographicEntryEvidence } from "../lexicographic/lexicographic.types";
 import { QaService } from "../qa/qa.service";
 import { SemanticFidelityService } from "../semantic-fidelity/semantic-fidelity.service";
 import { SegmentsService } from "../segments/segments.service";
@@ -48,6 +48,10 @@ export class TranslationsService {
       targetLanguage: segment.targetLanguage,
       limit: 5
     });
+    const lexicographicSupport = await this.lexicographicService.describeEntries(
+      actor,
+      lexicographicEntries
+    );
     const tmEntry = await this.translationMemoryService.createEntry(actor, {
       projectId: segment.projectId,
       documentId: segment.documentId,
@@ -115,7 +119,7 @@ export class TranslationsService {
       semanticReportId: semanticReport.id,
       metadata: {
         terminologyValid: terminology.valid,
-        lexicographicSupport: this.mapLexicographicSupport(lexicographicEntries),
+        lexicographicSupport: this.mapLexicographicSupport(lexicographicSupport),
         qaScore: qaReport.score,
         semanticScore: semanticReport.score,
         ...input.metadata
@@ -175,17 +179,13 @@ export class TranslationsService {
   }
 
   private mapLexicographicSupport(
-    entries: DictionaryEntry[]
+    entries: LexicographicEntryEvidence[]
   ): TranslationLexicographicSupport[] {
-    return entries.map((entry) => ({
-      entryId: entry.id,
-      sourceId: entry.sourceId,
-      term: entry.term,
-      sourceLanguage: entry.sourceLanguage,
-      targetLanguage: entry.targetLanguage,
-      senseIds: entry.senses.map((sense) => sense.id),
+    return entries.map((evidence) => ({
+      ...evidence,
       priorityRule:
         "validated platform glossary > documented editorial decision > specialized dictionary > academic dictionary > AI suggestion",
+      authoritative: false,
       humanFinalAuthority: true
     }));
   }
