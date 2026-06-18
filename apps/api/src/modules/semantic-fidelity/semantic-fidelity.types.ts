@@ -70,6 +70,17 @@ export interface SemanticFidelityIssue {
   metadata?: Record<string, unknown>;
 }
 
+export interface SemanticLexicographicReference {
+  entryId: string;
+  sourceId: string;
+  term: string;
+  sourceLanguage: string;
+  targetLanguage?: string;
+  senseIds: string[];
+  priority: "LEXICOGRAPHIC_SUPPORT_AFTER_VALIDATED_TERMINOLOGY";
+  authoritative: false;
+}
+
 export interface SemanticFidelityReport {
   id: string;
   organizationId: string;
@@ -84,6 +95,7 @@ export interface SemanticFidelityReport {
   createdBy: string;
   createdAt: string;
   metadata?: Record<string, unknown>;
+  lexicographicReferences?: SemanticLexicographicReference[];
   issues: SemanticFidelityIssue[];
 }
 
