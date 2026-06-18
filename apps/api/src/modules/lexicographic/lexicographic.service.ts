@@ -17,6 +17,7 @@ import {
   type LexicographicCitation,
   type LexicographicCompareResult,
   type LexicographicDecision,
+  type LexicographicEntryEvidence,
   type LexicographicSenseComparison,
   type SearchDictionaryEntriesInput,
   type ValidateLexicographicTermInput
@@ -134,6 +135,39 @@ export class LexicographicService {
     });
 
     return sorted;
+  }
+
+  async describeEntries(
+    actor: LexicographicActor,
+    entries: DictionaryEntry[]
+  ): Promise<LexicographicEntryEvidence[]> {
+    this.validateActor(actor);
+
+    const sources = await this.sourceMap(actor.organizationId);
+
+    return entries.map((entry) => {
+      const authority = this.authorityForEntrySource(sources.get(entry.sourceId));
+
+      return {
+        entryId: entry.id,
+        sourceId: entry.sourceId,
+        term: entry.term,
+        sourceLanguage: entry.sourceLanguage,
+        targetLanguage: entry.targetLanguage,
+        senseIds: entry.senses.map((sense) => sense.id),
+        translationEquivalents: uniqueStrings(
+          entry.senses.flatMap((sense) => sense.translationEquivalents)
+        ),
+        sourceReferences: uniqueStrings(
+          entry.citations.map((citation) => citation.sourceReference)
+        ),
+        citations: entry.citations,
+        authority,
+        priorityRank: this.priorityRank(authority),
+        authoritative: false,
+        humanFinalAuthority: true
+      };
+    });
   }
 
   async compareSenses(
