@@ -23,13 +23,13 @@ import {
   type ValidateLexicographicTermInput
 } from "./lexicographic.types";
 import {
-  InMemoryLexicographicRepository,
+  DatabaseLexicographicRepository,
   normalizeLexicalText
 } from "./lexicographic.repository";
 
 @Injectable()
 export class LexicographicService {
-  constructor(private readonly repository: InMemoryLexicographicRepository) {}
+  constructor(private readonly repository: DatabaseLexicographicRepository) {}
 
   async createSource(
     actor: LexicographicActor,
