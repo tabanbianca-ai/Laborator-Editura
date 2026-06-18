@@ -129,6 +129,22 @@ export interface LexicographicSenseComparison {
   citations: LexicographicCitation[];
 }
 
+export interface LexicographicEntryEvidence {
+  entryId: string;
+  sourceId: string;
+  term: string;
+  sourceLanguage: string;
+  targetLanguage?: string;
+  senseIds: string[];
+  translationEquivalents: string[];
+  sourceReferences: string[];
+  citations: LexicographicCitation[];
+  authority: LexicographicAuthority;
+  priorityRank: number;
+  authoritative: false;
+  humanFinalAuthority: true;
+}
+
 export interface LexicographicCompareResult {
   term: string;
   sourceLanguage: string;
