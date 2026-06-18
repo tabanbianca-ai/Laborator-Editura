@@ -1,3 +1,5 @@
+import { type LexicographicCitation } from "../lexicographic/lexicographic.types";
+
 export interface TranslationActor {
   userId: string;
   organizationId: string;
@@ -32,7 +34,13 @@ export interface TranslationLexicographicSupport {
   sourceLanguage: string;
   targetLanguage?: string;
   senseIds: string[];
+  translationEquivalents: string[];
+  sourceReferences: string[];
+  citations: LexicographicCitation[];
+  authority: string;
+  priorityRank: number;
   priorityRule: string;
+  authoritative: false;
   humanFinalAuthority: true;
 }
 
