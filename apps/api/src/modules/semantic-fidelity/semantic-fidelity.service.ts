@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import { LexicographicService } from "../lexicographic/lexicographic.service";
-import { type DictionaryEntry } from "../lexicographic/lexicographic.types";
+import { type LexicographicEntryEvidence } from "../lexicographic/lexicographic.types";
 import { QaService } from "../qa/qa.service";
 import { TerminologyService } from "../terminology/terminology.service";
 import { TranslationMemoryService } from "../translation-memory/translation-memory.service";
@@ -340,22 +340,31 @@ export class SemanticFidelityService {
       targetLanguage: segment.targetLanguage,
       limit: 5
     });
+    const describedEntries = await this.lexicographicService.describeEntries(actor, entries);
 
-    return this.mapLexicographicReferences(entries);
+    return this.mapLexicographicReferences(describedEntries);
   }
 
   private mapLexicographicReferences(
-    entries: DictionaryEntry[]
+    entries: LexicographicEntryEvidence[]
   ): SemanticLexicographicReference[] {
     return entries.map((entry) => ({
-      entryId: entry.id,
+      entryId: entry.entryId,
       sourceId: entry.sourceId,
       term: entry.term,
       sourceLanguage: entry.sourceLanguage,
       targetLanguage: entry.targetLanguage,
-      senseIds: entry.senses.map((sense) => sense.id),
+      senseIds: entry.senseIds,
+      translationEquivalents: entry.translationEquivalents,
+      sourceReferences: entry.sourceReferences,
+      citations: entry.citations,
+      authority: entry.authority,
+      priorityRank: entry.priorityRank,
       priority: "LEXICOGRAPHIC_SUPPORT_AFTER_VALIDATED_TERMINOLOGY",
-      authoritative: false
+      priorityRule:
+        "validated platform glossary > documented editorial decision > specialized dictionary > academic dictionary > AI suggestion",
+      authoritative: false,
+      humanFinalAuthority: true
     }));
   }
 
