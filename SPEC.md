@@ -237,6 +237,150 @@ Magazine Platform Vision is specification-only until explicitly scheduled. No
 application code, UI creation, database schema changes, API changes, migrations,
 AI endpoints, or infrastructure changes are authorized by this section.
 
+### Phase 2 Planning Foundation - Editorial Intelligence & Production Agents
+
+Status: Planned post-MVP architecture foundation. Documentation and
+architecture scaffolding only. Do not implement now.
+
+Phase 2 reserves the next layer of specialized editorial agents for
+lexicographic intelligence, production layout, visual creation, audio
+narration, platform coordination, and AI orchestration. These agents extend the
+approved platform direction after the operational MVP and closed beta are
+stable.
+
+#### Governance Rules
+
+- Phase 2 does not change current Phase 1 behavior.
+- Phase 2 does not authorize runtime API changes, database schema changes,
+  migrations, UI work, staging Docker changes, or modifications to Auth,
+  Projects, Documents, Segments, Translations, QA, Semantic Fidelity, Workflow,
+  or Export logic.
+- AI may suggest, automate drafts, prepare artifacts, and coordinate work, but
+  authorized human roles keep final approval authority.
+- Every Phase 2 agent action must be auditable, including input references,
+  output references, dependencies, execution order, cost metadata when
+  available, approval status, rejection status, and artifact links.
+- Phase 2 outputs must remain traceable through JSON Master Format.
+- Validated platform glossary decisions remain authoritative over documented
+  editorial decisions, dictionaries, and AI suggestions according to glossary
+  priority rules.
+
+#### Lexicographic Intelligence Agent
+
+Purpose: provide structured dictionary and lexical-source intelligence for
+terminology, translation decisions, semantic fidelity, QA, and editorial review.
+
+Planned source coverage:
+
+- Dictionary sources.
+- Bilingual dictionaries.
+- Monolingual dictionaries.
+- DEX, DOOM, and DLR.
+- Spanish-Romanian and Romanian-Spanish dictionary by Alexandru Calciu and
+  Zaira Samharadze.
+- Specialized spiritist dictionaries.
+- Dictionary entries, lexical senses, examples, sources, and citations.
+
+Glossary priority rules:
+
+1. Validated platform glossary.
+2. Documented editorial decision.
+3. Specialized dictionary.
+4. Academic dictionary.
+5. AI suggestion.
+
+AI suggestions cannot become source authority or validated terminology without
+authorized human approval.
+
+#### Layout & Editorial Production Agent
+
+Purpose: reserve professional editorial production support for print and
+digital outputs.
+
+Planned capabilities:
+
+- Book layout.
+- Magazine layout.
+- Print finishing.
+- PDF/X, EPUB, MOBI, and flipbook production guidance.
+- European formats by default.
+- American formats as optional production profiles.
+- Bleed, crop marks, margins, widows and orphans, and typography checks.
+
+Layout production must remain downstream from approved manuscripts, workflow
+state, export readiness, terminology governance, QA, and semantic fidelity.
+
+#### AI Video & Visual Creation Agent
+
+Purpose: reserve AI-assisted visual production for editorial assets and future
+media localization.
+
+Planned capabilities:
+
+- Image generation.
+- Cover generation.
+- Illustration generation.
+- Image editing.
+- Text-to-video.
+- Image-to-video.
+- Trailer generation.
+- Subtitle and visual localization.
+
+Generated or edited visual assets must preserve source links, rights metadata,
+human approval status, and audit references.
+
+#### Audio Narration Agent
+
+Purpose: reserve multilingual narration and audiobook production support.
+
+Planned capabilities:
+
+- Audiobook generation by chapters.
+- Text-to-speech.
+- Voice profiles.
+- MP3, WAV, and FLAC export.
+- Multilingual narration.
+
+Narration outputs must remain linked to source manuscripts, chapters, segments,
+language versions, voice profiles, approval state, and audit events.
+
+#### Platform Engineering, Optimization & Coordination Agent
+
+Purpose: reserve an operational planning agent for platform maintenance and
+release discipline without granting it uncontrolled runtime authority.
+
+Planned responsibilities:
+
+- Software update and upgrade planning.
+- Dependency monitoring.
+- Docker optimization.
+- Backup and restore coordination.
+- Auto-healing planning.
+- Performance optimization.
+- AI cost coordination.
+- System maintenance audit.
+
+This agent may prepare recommendations and plans, but implementation remains
+subject to authorized engineering review and the existing governance order.
+
+#### AI Orchestrator
+
+Purpose: coordinate approved agents once Phase 2 implementation is explicitly
+scheduled.
+
+Planned responsibilities:
+
+- Coordinate all Phase 2 agents.
+- Determine execution order.
+- Track dependencies.
+- Control cost and resource usage.
+- Preserve audit trails.
+- Enforce human approval gates.
+
+The AI Orchestrator must not bypass security, tenant isolation, RBAC,
+terminology governance, workflow gates, source authority requirements, or human
+final approval.
+
 ### Translation Rules Versioning & Impact Analysis
 
 Every translation rule must be versioned and auditable.
@@ -523,6 +667,9 @@ JSON Master Format v1.0 supports:
   video exports.
 - Future magazine publications, article language variants, article audio assets,
   and links to original articles or manuscripts.
+- Future Phase 2 planning fields for dictionaries, layout production, visual
+  assets, audio narration tracks, video assets, production profiles, and agent
+  executions.
 
 ### Core Rules
 
@@ -568,6 +715,11 @@ JSON Master Format v1.0 supports:
 - Magazine publication data is optional in v1.0 but reserved conceptually for
   future flipbook reading, article audio, language switching, search, PDF/HTML
   magazine export, and links back to original articles or manuscripts.
+- Phase 2 planning data is optional in v1.0 and reserved conceptually for
+  dictionary intelligence, editorial layout, visual creation, audio narration,
+  video assets, production profiles, and auditable agent execution records.
+- Phase 2 agent execution records must preserve human approval gates and audit
+  references.
 
 ### Top-Level Structure
 
@@ -588,6 +740,13 @@ Required top-level keys:
 Optional top-level key reserved for future phases:
 
 - `mediaLocalization`
+- `dictionaries`
+- `layout`
+- `visualAssets`
+- `audioTracks`
+- `videoAssets`
+- `productionProfiles`
+- `agentExecutions`
 
 ### JSON Schema
 
@@ -654,12 +813,44 @@ Optional top-level key reserved for future phases:
     },
     "mediaLocalization": {
       "$ref": "#/$defs/mediaLocalization"
+    },
+    "dictionaries": {
+      "$ref": "#/$defs/futurePhaseObject"
+    },
+    "layout": {
+      "$ref": "#/$defs/futurePhaseObject"
+    },
+    "visualAssets": {
+      "$ref": "#/$defs/futurePhaseArray"
+    },
+    "audioTracks": {
+      "$ref": "#/$defs/futurePhaseArray"
+    },
+    "videoAssets": {
+      "$ref": "#/$defs/futurePhaseArray"
+    },
+    "productionProfiles": {
+      "$ref": "#/$defs/futurePhaseArray"
+    },
+    "agentExecutions": {
+      "$ref": "#/$defs/futurePhaseArray"
     }
   },
   "$defs": {
     "id": {
       "type": "string",
       "minLength": 1
+    },
+    "futurePhaseObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "futurePhaseArray": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     },
     "timestamp": {
       "type": "string",
