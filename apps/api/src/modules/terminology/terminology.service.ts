@@ -5,6 +5,8 @@ import {
   NotFoundException
 } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
+import { LexicographicService } from "../lexicographic/lexicographic.service";
+import { type DictionaryEntry } from "../lexicographic/lexicographic.types";
 import { InMemoryTerminologyRepository } from "./terminology.repository";
 import {
   type CheckSegmentTerminologyInput,
@@ -14,6 +16,7 @@ import {
   type TerminologyActor,
   type TerminologyAuditAction,
   type TerminologyCheckResult,
+  type TerminologyDictionaryEvidence,
   type TerminologyTerm,
   type TerminologyViolation,
   type UpdateTerminologyTermInput
@@ -28,7 +31,10 @@ const HUMAN_TERMINOLOGY_GOVERNANCE_ROLES = new Set(["ADMIN", "REVIEWER"]);
 
 @Injectable()
 export class TerminologyService {
-  constructor(private readonly repository: InMemoryTerminologyRepository) {}
+  constructor(
+    private readonly repository: InMemoryTerminologyRepository,
+    private readonly lexicographicService: LexicographicService
+  ) {}
 
   async proposeTerm(
     actor: TerminologyActor,
@@ -299,6 +305,7 @@ export class TerminologyService {
       language: input.language,
       domain: input.domain
     });
+    const dictionaryEvidence = await this.collectDictionaryEvidence(actor, input, terms);
 
     const violations: TerminologyViolation[] = [];
 
@@ -395,8 +402,55 @@ export class TerminologyService {
 
     return {
       valid: violations.length === 0,
-      violations
+      violations,
+      dictionaryEvidence
     };
+  }
+
+  private async collectDictionaryEvidence(
+    actor: TerminologyActor,
+    input: CheckSegmentTerminologyInput,
+    terms: TerminologyTerm[]
+  ): Promise<TerminologyDictionaryEvidence[]> {
+    const queryTerms = uniqueStrings(
+      terms
+        .filter((term) => {
+          return (
+            includesNormalized(input.sourceText, term.term) ||
+            includesNormalized(input.targetText, term.term) ||
+            (term.approvedTranslation !== undefined &&
+              includesNormalized(input.targetText, term.approvedTranslation))
+          );
+        })
+        .map((term) => term.term)
+    ).slice(0, 5);
+    const evidence: TerminologyDictionaryEvidence[] = [];
+
+    for (const term of queryTerms) {
+      const entries = await this.lexicographicService.searchEntries(actor, {
+        term,
+        sourceLanguage: input.sourceLanguage ?? input.language,
+        targetLanguage: input.language,
+        limit: 3
+      });
+
+      evidence.push(...this.mapDictionaryEvidence(entries));
+    }
+
+    return evidence;
+  }
+
+  private mapDictionaryEvidence(entries: DictionaryEntry[]): TerminologyDictionaryEvidence[] {
+    return entries.map((entry) => ({
+      entryId: entry.id,
+      sourceId: entry.sourceId,
+      term: entry.term,
+      sourceLanguage: entry.sourceLanguage,
+      targetLanguage: entry.targetLanguage,
+      senseIds: entry.senses.map((sense) => sense.id),
+      priority: "DICTIONARY_EVIDENCE_AFTER_VALIDATED_GLOSSARY",
+      authoritative: false
+    }));
   }
 
   private async transitionTerm(
