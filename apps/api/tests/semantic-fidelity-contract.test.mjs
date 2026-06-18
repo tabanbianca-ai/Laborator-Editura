@@ -59,6 +59,129 @@ test("semantic fidelity service preserves authority order and human final author
   assert.match(source, /AUTHORIZED_HUMAN/);
 });
 
+test("semantic fidelity report returns lexicographicReferences for espíritu", () => {
+  const source = readSource("semantic-fidelity.service.ts");
+  const types = readSource("semantic-fidelity.types.ts");
+  const sourceText = "El espíritu progresa por la experiencia moral.";
+  const entry = {
+    entryId: "entry-espiritu",
+    sourceId: "source-calciu-samharadze",
+    term: "espíritu",
+    sourceLanguage: "es",
+    targetLanguage: "ro",
+    senseIds: ["sense-espiritu-1"],
+    translationEquivalents: ["spirit"],
+    sourceReferences: ["Dicționar spaniol-român și român-spaniol"],
+    citations: [
+      {
+        id: "citation-espiritu",
+        sourceId: "source-calciu-samharadze",
+        sourceReference: "Dicționar spaniol-român și român-spaniol",
+        pageOrSection: "espíritu",
+        createdAt: "2026-01-01T00:00:00.000Z"
+      }
+    ],
+    authority: "ACADEMIC_DICTIONARY",
+    priorityRank: 3,
+    authoritative: false,
+    humanFinalAuthority: true
+  };
+
+  function normalizeLexicalText(value) {
+    return value
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
+      .toLocaleLowerCase()
+      .trim();
+  }
+
+  const normalizedSource = normalizeLexicalText(sourceText);
+  const hasReference = new RegExp(`(?:^|\\s)espiritu(?:\\s|$)`, "u")
+    .test(normalizedSource);
+  const lexicographicReferences = hasReference
+    ? [
+      {
+        ...entry,
+        priority: "LEXICOGRAPHIC_SUPPORT_AFTER_VALIDATED_TERMINOLOGY",
+        priorityRule:
+          "validated platform glossary > documented editorial decision > specialized dictionary > academic dictionary > AI suggestion"
+      }
+    ]
+    : [];
+
+  assert.match(source, /term: segment\.sourceText/);
+  assert.match(source, /lexicographicService\.describeEntries/);
+  assert.match(types, /lexicographicReferences\?: SemanticLexicographicReference\[]/);
+  assert.equal(lexicographicReferences.length, 1);
+  assert.equal(lexicographicReferences[0].term, "espíritu");
+  assert.deepEqual(lexicographicReferences[0].translationEquivalents, ["spirit"]);
+  assert.deepEqual(lexicographicReferences[0].sourceReferences, [
+    "Dicționar spaniol-român și român-spaniol"
+  ]);
+});
+
+test("semantic lexicographic references are non-authoritative with human final authority", () => {
+  const source = readSource("semantic-fidelity.service.ts");
+  const types = readSource("semantic-fidelity.types.ts");
+
+  for (const field of [
+    "entryId",
+    "sourceId",
+    "term",
+    "sourceLanguage",
+    "targetLanguage",
+    "translationEquivalents",
+    "sourceReferences",
+    "citations",
+    "authority",
+    "priorityRank",
+    "priorityRule",
+    "authoritative",
+    "humanFinalAuthority"
+  ]) {
+    assert.match(types, new RegExp(`${field}\\??:`));
+  }
+
+  assert.match(source, /translationEquivalents: entry\.translationEquivalents/);
+  assert.match(source, /sourceReferences: entry\.sourceReferences/);
+  assert.match(source, /citations: entry\.citations/);
+  assert.match(source, /authority: entry\.authority/);
+  assert.match(source, /priorityRank: entry\.priorityRank/);
+  assert.match(source, /authoritative: false/);
+  assert.match(source, /humanFinalAuthority: true/);
+});
+
+test("semantic lexicographic references preserve token-safe matching and reject substrings", () => {
+  const repository = readFileSync(
+    join(dirname(moduleDir), "lexicographic", "lexicographic.repository.ts"),
+    "utf8"
+  );
+  const source = readSource("semantic-fidelity.service.ts");
+
+  function normalizeLexicalText(value) {
+    return value
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
+      .toLocaleLowerCase()
+      .trim();
+  }
+
+  function hasTokenSafeOccurrence(text, term) {
+    const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`(?:^|\\s)${escapedTerm}(?:\\s|$)`, "u").test(text);
+  }
+
+  const normalizedSource = normalizeLexicalText("El espíritu progresa por la experiencia moral.");
+
+  assert.equal(hasTokenSafeOccurrence(normalizedSource, "espiritu"), true);
+  assert.equal(hasTokenSafeOccurrence(normalizedSource, "rit"), false);
+  assert.match(repository, /matchesLexicalTerm\(entry\.normalizedTerm, normalizedQuery\)/);
+  assert.match(repository, /hasTokenSafeOccurrence/);
+  assert.match(source, /lexicographicService\.searchEntries/);
+});
+
 test("semantic fidelity service records audit events", () => {
   const source = readSource("semantic-fidelity.service.ts");
 
