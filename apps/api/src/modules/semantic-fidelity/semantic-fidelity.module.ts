@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { LexicographicModule } from "../lexicographic/lexicographic.module";
 import { QaModule } from "../qa/qa.module";
 import { TerminologyModule } from "../terminology/terminology.module";
 import { TranslationMemoryModule } from "../translation-memory/translation-memory.module";
@@ -7,7 +8,7 @@ import { SemanticFidelityController } from "./semantic-fidelity.controller";
 import { SemanticFidelityService } from "./semantic-fidelity.service";
 
 @Module({
-  imports: [TerminologyModule, TranslationMemoryModule, QaModule],
+  imports: [TerminologyModule, TranslationMemoryModule, QaModule, LexicographicModule],
   controllers: [SemanticFidelityController],
   providers: [InMemorySemanticFidelityRepository, SemanticFidelityService],
   exports: [SemanticFidelityService]
