@@ -107,6 +107,41 @@ Rules:
   authorized for Magazine Platform Vision until a later implementation phase is
   explicitly approved.
 
+### Phase 2 Planning Foundation Directive
+
+Purpose:
+
+- Reserve the next editorial intelligence, production, media, narration, and
+  platform coordination capabilities without changing Phase 1 runtime behavior.
+
+Rules:
+
+- Phase 2 Planning Foundation is documentation and architecture scaffolding
+  only until individual modules are explicitly scheduled in `ROADMAP.md`.
+- No runtime API, database schema, migration, UI, staging Docker, Auth,
+  Projects, Documents, Segments, Translations, QA, Semantic Fidelity, Workflow,
+  or Export logic changes are authorized by this directive.
+- The approved Phase 2 planning modules are:
+  - Lexicographic Intelligence Agent.
+  - Layout & Editorial Production Agent.
+  - AI Video & Visual Creation Agent.
+  - Audio Narration Agent.
+  - Platform Engineering, Optimization & Coordination Agent.
+  - AI Orchestrator.
+- AI may suggest, automate drafts, coordinate tasks, and prepare outputs, but
+  authorized human roles keep final approval authority.
+- Every Phase 2 agent action must be auditable, including inputs, outputs,
+  dependencies, cost metadata when available, approvals, rejections, and
+  generated artifacts.
+- The AI Orchestrator may coordinate execution order, dependencies, cost
+  controls, audit trails, and human approval gates, but it must not bypass
+  security, tenant isolation, workflow gates, terminology governance, or human
+  final authority.
+- JSON Master Format may reserve future fields for dictionaries, layout,
+  visual assets, audio tracks, video assets, production profiles, and agent
+  executions, but those fields do not authorize runtime implementation by
+  themselves.
+
 ### ChatGPT
 
 Role: System Architect.
