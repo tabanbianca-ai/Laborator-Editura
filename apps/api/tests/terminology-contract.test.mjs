@@ -45,6 +45,93 @@ test("terminology service enforces validated term authority over TM and AI", () 
   assert.match(source, /VALIDATED terms require an approved translation or preferred variant/);
 });
 
+test("terminology check returns dictionaryEvidence for espíritu source text", () => {
+  const source = readSource("terminology.service.ts");
+  const types = readSource("terminology.types.ts");
+
+  assert.match(source, /const queryTexts = uniqueStrings\(\[/);
+  assert.match(source, /input\.sourceText/);
+  assert.match(source, /for \(const queryText of queryTexts\)/);
+  assert.match(source, /term: queryText/);
+  assert.match(source, /lexicographicService\.searchEntries/);
+  assert.match(source, /lexicographicService\.describeEntries/);
+  assert.match(source, /evidenceByEntryId/);
+  assert.match(types, /dictionaryEvidence\?: TerminologyDictionaryEvidence\[]/);
+
+  const dictionaryEvidence = [
+    {
+      entryId: "entry-espiritu",
+      sourceId: "source-calciu-samharadze",
+      term: "espíritu",
+      sourceLanguage: "es",
+      targetLanguage: "ro",
+      translationEquivalents: ["spirit"],
+      sourceReferences: ["Dicționar spaniol-român și român-spaniol"],
+      citations: [
+        {
+          id: "citation-espiritu",
+          sourceId: "source-calciu-samharadze",
+          sourceReference: "Dicționar spaniol-român și român-spaniol",
+          pageOrSection: "espíritu",
+          createdAt: "2026-01-01T00:00:00.000Z"
+        }
+      ],
+      authority: "ACADEMIC_DICTIONARY",
+      priorityRank: 3,
+      authoritative: false,
+      humanFinalAuthority: true
+    }
+  ];
+
+  assert.equal(dictionaryEvidence[0].term, "espíritu");
+  assert.equal(dictionaryEvidence[0].sourceLanguage, "es");
+  assert.equal(dictionaryEvidence[0].targetLanguage, "ro");
+  assert.deepEqual(dictionaryEvidence[0].translationEquivalents, ["spirit"]);
+  assert.equal(dictionaryEvidence[0].authoritative, false);
+  assert.equal(dictionaryEvidence[0].humanFinalAuthority, true);
+});
+
+test("terminology dictionary evidence is complete and non-authoritative", () => {
+  const source = readSource("terminology.service.ts");
+  const types = readSource("terminology.types.ts");
+
+  for (const field of [
+    "entryId",
+    "sourceId",
+    "term",
+    "sourceLanguage",
+    "targetLanguage",
+    "translationEquivalents",
+    "sourceReferences",
+    "citations",
+    "authority",
+    "priorityRank",
+    "authoritative",
+    "humanFinalAuthority"
+  ]) {
+    assert.match(types, new RegExp(`${field}\\??:`));
+  }
+
+  assert.match(source, /translationEquivalents: entry\.translationEquivalents/);
+  assert.match(source, /sourceReferences: entry\.sourceReferences/);
+  assert.match(source, /citations: entry\.citations/);
+  assert.match(source, /authority: entry\.authority/);
+  assert.match(source, /priorityRank: entry\.priorityRank/);
+  assert.match(source, /authoritative: false/);
+  assert.match(source, /humanFinalAuthority: true/);
+});
+
+test("validated glossary remains authoritative above dictionary evidence", () => {
+  const source = readSource("terminology.service.ts");
+  const types = readSource("terminology.types.ts");
+
+  assert.match(source, /priority: "TERMINOLOGY_VALIDATED"/);
+  assert.match(source, /authoritative: true/);
+  assert.match(source, /priority: "DICTIONARY_EVIDENCE_AFTER_VALIDATED_GLOSSARY"/);
+  assert.match(types, /authoritative: false/);
+  assert.match(types, /humanFinalAuthority: true/);
+});
+
 test("terminology repository prioritizes validated terms", () => {
   const source = readSource("terminology.utils.ts");
 
