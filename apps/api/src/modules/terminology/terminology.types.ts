@@ -1,3 +1,8 @@
+import {
+  type LexicographicAuthority,
+  type LexicographicCitation
+} from "../lexicographic/lexicographic.types";
+
 export type TerminologyTermStatus =
   | "PROPOSED"
   | "UNDER_REVIEW"
@@ -164,8 +169,14 @@ export interface TerminologyDictionaryEvidence {
   sourceLanguage: string;
   targetLanguage?: string;
   senseIds: string[];
+  translationEquivalents: string[];
+  sourceReferences: string[];
+  citations: LexicographicCitation[];
+  authority: LexicographicAuthority;
+  priorityRank: number;
   priority: "DICTIONARY_EVIDENCE_AFTER_VALIDATED_GLOSSARY";
   authoritative: false;
+  humanFinalAuthority: true;
 }
 
 export interface TerminologyViolation {
