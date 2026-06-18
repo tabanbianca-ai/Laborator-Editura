@@ -412,6 +412,12 @@ export class TerminologyService {
     input: CheckSegmentTerminologyInput,
     terms: TerminologyTerm[]
   ): Promise<TerminologyDictionaryEvidence[]> {
+    const targetLanguage = input.targetLanguage ?? input.language;
+    const sourceLanguages = await this.resolveLexicographicSourceLanguages(
+      actor,
+      input.sourceLanguage,
+      targetLanguage
+    );
     const queryTexts = uniqueStrings([
       input.sourceText,
       ...terms
@@ -428,20 +434,43 @@ export class TerminologyService {
     const evidenceByEntryId = new Map<string, TerminologyDictionaryEvidence>();
 
     for (const queryText of queryTexts) {
-      const entries = await this.lexicographicService.searchEntries(actor, {
-        term: queryText,
-        sourceLanguage: input.sourceLanguage ?? input.language,
-        targetLanguage: input.language,
-        limit: 3
-      });
-      const describedEntries = await this.lexicographicService.describeEntries(actor, entries);
+      for (const sourceLanguage of sourceLanguages) {
+        const entries = await this.lexicographicService.searchEntries(actor, {
+          term: queryText,
+          sourceLanguage,
+          targetLanguage,
+          limit: 3
+        });
+        const describedEntries = await this.lexicographicService.describeEntries(actor, entries);
 
-      for (const evidence of describedEntries.map((entry) => this.mapDictionaryEvidence(entry))) {
-        evidenceByEntryId.set(evidence.entryId, evidence);
+        for (const evidence of describedEntries.map((entry) => this.mapDictionaryEvidence(entry))) {
+          evidenceByEntryId.set(evidence.entryId, evidence);
+        }
       }
     }
 
     return [...evidenceByEntryId.values()];
+  }
+
+  private async resolveLexicographicSourceLanguages(
+    actor: TerminologyActor,
+    sourceLanguage: string | undefined,
+    targetLanguage: string
+  ): Promise<string[]> {
+    if (sourceLanguage) {
+      return [sourceLanguage];
+    }
+
+    const sources = await this.lexicographicService.listSources(actor);
+    const inferredLanguages = sources.flatMap((source) => {
+      if (!source.targetLanguages.includes(targetLanguage)) {
+        return [];
+      }
+
+      return source.sourceLanguages;
+    });
+
+    return uniqueStrings([...inferredLanguages, targetLanguage]);
   }
 
   private mapDictionaryEvidence(entry: LexicographicEntryEvidence): TerminologyDictionaryEvidence {
