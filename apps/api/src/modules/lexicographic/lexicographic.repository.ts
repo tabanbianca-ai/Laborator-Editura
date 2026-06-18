@@ -49,8 +49,12 @@ export class InMemoryLexicographicRepository implements LexicographicRepository 
         return (
           entry.organizationId === input.organizationId &&
           entry.sourceLanguage === input.sourceLanguage &&
-          (input.targetLanguage === undefined || entry.targetLanguage === input.targetLanguage) &&
-          includesLexicalText(entry.normalizedTerm, normalizedQuery)
+          (
+            input.targetLanguage === undefined ||
+            entry.targetLanguage === undefined ||
+            entry.targetLanguage === input.targetLanguage
+          ) &&
+          matchesLexicalTerm(entry.normalizedTerm, normalizedQuery)
         );
       })
       .slice(0, input.limit ?? 50);
@@ -82,10 +86,25 @@ export function normalizeLexicalText(value: string): string {
   return value
     .normalize("NFD")
     .replace(/\p{Diacritic}/gu, "")
+    .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
     .toLocaleLowerCase()
     .trim();
 }
 
-function includesLexicalText(value: string, query: string): boolean {
-  return value.includes(query) || query.includes(value);
+export function matchesLexicalTerm(entryTerm: string, queryText: string): boolean {
+  const normalizedTerm = normalizeLexicalText(entryTerm);
+  const normalizedQuery = normalizeLexicalText(queryText);
+
+  if (!normalizedTerm || !normalizedQuery) {
+    return false;
+  }
+
+  return normalizedTerm === normalizedQuery ||
+    hasTokenSafeOccurrence(normalizedQuery, normalizedTerm) ||
+    hasTokenSafeOccurrence(normalizedTerm, normalizedQuery);
+}
+
+function hasTokenSafeOccurrence(text: string, term: string): boolean {
+  const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?:^|\\s)${escapedTerm}(?:\\s|$)`, "u").test(text);
 }
