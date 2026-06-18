@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
+import { LexicographicService } from "../lexicographic/lexicographic.service";
+import { type DictionaryEntry } from "../lexicographic/lexicographic.types";
 import { QaService } from "../qa/qa.service";
 import { SemanticFidelityService } from "../semantic-fidelity/semantic-fidelity.service";
 import { SegmentsService } from "../segments/segments.service";
@@ -11,7 +13,8 @@ import {
   type SubmitTranslationInput,
   type TranslationActor,
   type TranslationAuditAction,
-  type TranslationAuditEvent
+  type TranslationAuditEvent,
+  type TranslationLexicographicSupport
 } from "./translations.types";
 
 @Injectable()
@@ -19,6 +22,7 @@ export class TranslationsService {
   constructor(
     private readonly repository: DatabaseTranslationsRepository,
     private readonly segmentsService: SegmentsService,
+    private readonly lexicographicService: LexicographicService,
     private readonly translationMemoryService: TranslationMemoryService,
     private readonly terminologyService: TerminologyService,
     private readonly qaService: QaService,
@@ -38,6 +42,12 @@ export class TranslationsService {
     const segment = await this.segmentsService.getSegment(actor, input.segmentId);
     const now = new Date().toISOString();
     const translationId = randomUUID();
+    const lexicographicEntries = await this.lexicographicService.searchEntries(actor, {
+      term: segment.sourceText,
+      sourceLanguage: segment.sourceLanguage,
+      targetLanguage: segment.targetLanguage,
+      limit: 5
+    });
     const tmEntry = await this.translationMemoryService.createEntry(actor, {
       projectId: segment.projectId,
       documentId: segment.documentId,
@@ -55,6 +65,7 @@ export class TranslationsService {
       }
     });
     const terminology = await this.terminologyService.checkSegmentText(actor, {
+      sourceLanguage: segment.sourceLanguage,
       language: segment.targetLanguage,
       domain: input.domain,
       sourceText: segment.sourceText,
@@ -104,6 +115,7 @@ export class TranslationsService {
       semanticReportId: semanticReport.id,
       metadata: {
         terminologyValid: terminology.valid,
+        lexicographicSupport: this.mapLexicographicSupport(lexicographicEntries),
         qaScore: qaReport.score,
         semanticScore: semanticReport.score,
         ...input.metadata
@@ -160,6 +172,22 @@ export class TranslationsService {
       afterState,
       createdAt: new Date().toISOString()
     });
+  }
+
+  private mapLexicographicSupport(
+    entries: DictionaryEntry[]
+  ): TranslationLexicographicSupport[] {
+    return entries.map((entry) => ({
+      entryId: entry.id,
+      sourceId: entry.sourceId,
+      term: entry.term,
+      sourceLanguage: entry.sourceLanguage,
+      targetLanguage: entry.targetLanguage,
+      senseIds: entry.senses.map((sense) => sense.id),
+      priorityRule:
+        "validated platform glossary > documented editorial decision > specialized dictionary > academic dictionary > AI suggestion",
+      humanFinalAuthority: true
+    }));
   }
 
   private validateActor(actor: TranslationActor): void {
