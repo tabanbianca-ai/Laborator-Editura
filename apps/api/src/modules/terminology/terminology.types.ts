@@ -150,10 +150,22 @@ export interface SearchTerminologyInput {
 }
 
 export interface CheckSegmentTerminologyInput {
+  sourceLanguage?: string;
   language: string;
   domain?: string;
   sourceText: string;
   targetText: string;
+}
+
+export interface TerminologyDictionaryEvidence {
+  entryId: string;
+  sourceId: string;
+  term: string;
+  sourceLanguage: string;
+  targetLanguage?: string;
+  senseIds: string[];
+  priority: "DICTIONARY_EVIDENCE_AFTER_VALIDATED_GLOSSARY";
+  authoritative: false;
 }
 
 export interface TerminologyViolation {
@@ -174,6 +186,7 @@ export interface TerminologyViolation {
 export interface TerminologyCheckResult {
   valid: boolean;
   violations: TerminologyViolation[];
+  dictionaryEvidence?: TerminologyDictionaryEvidence[];
 }
 
 export interface TerminologyRepository {
