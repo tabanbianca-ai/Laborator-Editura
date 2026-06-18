@@ -1,5 +1,157 @@
 # Future Modules
 
+## Phase 2 Planning Foundation - Editorial Intelligence & Production Agents
+
+Status: Planned future foundation. Not implemented.
+
+Priority: `POST-MVP` / after closed beta readiness.
+
+### Purpose
+
+Reserve the next layer of specialized editorial agents for lexicographic
+intelligence, production layout, visual creation, audio narration, platform
+engineering coordination, and AI orchestration. This section is documentation
+and architecture scaffolding only.
+
+### Governance Rules
+
+- No Phase 1 runtime behavior is changed by this section.
+- No API, database, migration, UI, staging Docker, Auth, Projects, Documents,
+  Segments, Translations, QA, Semantic Fidelity, Workflow, or Export changes
+  are authorized.
+- AI may suggest, automate drafts, and coordinate work, but authorized human
+  roles keep final approval authority.
+- Every Phase 2 agent action must be auditable.
+- Phase 2 outputs must remain traceable through JSON Master Format.
+
+### Lexicographic Intelligence Agent
+
+Planned purpose:
+
+- Provide dictionary-backed lexical intelligence for terminology, translation
+  decisions, QA, Semantic Fidelity, editorial review, and future training.
+
+Planned coverage:
+
+- Dictionary sources.
+- Bilingual dictionaries.
+- Monolingual dictionaries.
+- DEX, DOOM, and DLR.
+- Spanish-Romanian and Romanian-Spanish dictionary by Alexandru Calciu and
+  Zaira Samharadze.
+- Specialized spiritist dictionaries.
+- Dictionary entries.
+- Lexical senses.
+- Examples.
+- Sources.
+- Citations.
+
+Glossary priority rules:
+
+1. Validated platform glossary.
+2. Documented editorial decision.
+3. Specialized dictionary.
+4. Academic dictionary.
+5. AI suggestion.
+
+AI suggestions cannot override validated glossary entries or authorized
+editorial decisions.
+
+### Layout & Editorial Production Agent
+
+Planned purpose:
+
+- Support professional editorial production for books, magazines, print, and
+  digital publication outputs.
+
+Planned coverage:
+
+- Book layout.
+- Magazine layout.
+- Print finishing.
+- PDF/X.
+- EPUB.
+- MOBI.
+- Flipbook.
+- European formats by default.
+- American formats optional.
+- Bleed.
+- Crop marks.
+- Margins.
+- Widows and orphans.
+- Typography checks.
+
+### AI Video & Visual Creation Agent
+
+Planned purpose:
+
+- Support future editorial visual generation, adaptation, and localization.
+
+Planned coverage:
+
+- Image generation.
+- Cover generation.
+- Illustration generation.
+- Image editing.
+- Text-to-video.
+- Image-to-video.
+- Trailer generation.
+- Subtitle and visual localization.
+
+### Audio Narration Agent
+
+Planned purpose:
+
+- Support future multilingual narration and audiobook production.
+
+Planned coverage:
+
+- Audiobook by chapters.
+- Text-to-speech.
+- Voice profiles.
+- MP3 export.
+- WAV export.
+- FLAC export.
+- Multilingual narration.
+
+### Platform Engineering, Optimization & Coordination Agent
+
+Planned purpose:
+
+- Support operational planning, maintenance coordination, and cost-aware
+  platform optimization under human engineering approval.
+
+Planned coverage:
+
+- Software update and upgrade planning.
+- Dependency monitoring.
+- Docker optimization.
+- Backup and restore coordination.
+- Auto-healing planning.
+- Performance optimization.
+- AI cost coordination.
+- System maintenance audit.
+
+### AI Orchestrator
+
+Planned purpose:
+
+- Coordinate approved agents once Phase 2 implementation is explicitly
+  scheduled.
+
+Planned coverage:
+
+- Coordinates all agents.
+- Execution order.
+- Dependencies.
+- Cost control.
+- Audit trail.
+- Human approval gates.
+
+The AI Orchestrator cannot bypass security, tenant isolation, RBAC, workflow
+gates, terminology governance, source authority requirements, or human final
+approval.
+
 ## Future Phase - Media Localization Studio
 
 Status: Proposed future phase. Not implemented.
