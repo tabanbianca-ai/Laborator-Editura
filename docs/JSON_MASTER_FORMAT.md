@@ -157,6 +157,67 @@ Rules:
 - This section does not change runtime validators, database schema, APIs, UI, or
   migrations.
 
+## Phase 2 Future Agent Representation
+
+Phase 2 Planning Foundation is a future documentation-only requirement for
+editorial intelligence, layout production, visual creation, audio narration,
+platform coordination, and AI orchestration.
+
+Reserved future top-level fields:
+
+- `dictionaries`: dictionary sources, bilingual dictionaries, monolingual
+  dictionaries, DEX, DOOM, DLR, the Spanish-Romanian and Romanian-Spanish
+  dictionary by Alexandru Calciu and Zaira Samharadze, specialized spiritist
+  dictionaries, dictionary entries, lexical senses, examples, sources, and
+  citations.
+- `layout`: book layout, magazine layout, print finishing, typography checks,
+  page geometry, margins, bleed, crop marks, widows and orphans, PDF/X, EPUB,
+  MOBI, and flipbook production references.
+- `visualAssets`: generated or edited images, covers, illustrations, trailers,
+  visual localization assets, source references, rights metadata, approval
+  state, and audit references.
+- `audioTracks`: audiobook chapters, text-to-speech outputs, voice profiles,
+  multilingual narration, MP3, WAV, and FLAC export references.
+- `videoAssets`: text-to-video outputs, image-to-video outputs, trailer
+  outputs, subtitle-linked video assets, and visual localization outputs.
+- `productionProfiles`: European default production formats, optional American
+  formats, print profiles, digital profiles, PDF/X profiles, EPUB, MOBI, and
+  flipbook profiles.
+- `agentExecutions`: AI Orchestrator and agent execution records, including
+  agent type, input refs, output refs, dependencies, execution order, cost
+  metadata when available, status, human approval state, and audit refs.
+
+Reserved Phase 2 agent types:
+
+- Lexicographic Intelligence Agent.
+- Layout & Editorial Production Agent.
+- AI Video & Visual Creation Agent.
+- Audio Narration Agent.
+- Platform Engineering, Optimization & Coordination Agent.
+- AI Orchestrator.
+
+Glossary priority rules for dictionary intelligence:
+
+1. Validated platform glossary.
+2. Documented editorial decision.
+3. Specialized dictionary.
+4. Academic dictionary.
+5. AI suggestion.
+
+Rules:
+
+- AI may suggest and automate drafts, but authorized human roles keep final
+  approval authority.
+- Every Phase 2 agent action must be auditable.
+- Agent outputs must remain linked to source manuscripts, articles, books,
+  projects, media assets, language versions, production profiles, or dictionary
+  sources as applicable.
+- The AI Orchestrator must preserve execution order, dependencies, cost
+  metadata when available, audit trails, and human approval gates.
+- Phase 2 data is optional future JSON Master data and does not authorize
+  runtime validators, database schema, APIs, UI, migrations, or staging
+  infrastructure changes.
+
 ## Translation Rules Versioning
 
 Every translation rule must be versioned.
@@ -485,7 +546,95 @@ Priority rules:
         "uri": "exports/ro/localized-video.mp4"
       }
     ]
-  }
+  },
+  "dictionaries": {
+    "sources": [
+      {
+        "dictionarySourceId": "dict-calciu-samharadze-es-ro",
+        "type": "bilingual_dictionary",
+        "title": "Spanish-Romanian / Romanian-Spanish Dictionary",
+        "authors": ["Alexandru Calciu", "Zaira Samharadze"],
+        "sourceLanguages": ["es", "ro"],
+        "citationRequired": true
+      }
+    ],
+    "entries": [
+      {
+        "entryId": "dict-entry-es-ro-001",
+        "dictionarySourceId": "dict-calciu-samharadze-es-ro",
+        "term": "espiritu",
+        "language": "es",
+        "lexicalSenses": [],
+        "examples": [],
+        "citations": []
+      }
+    ]
+  },
+  "layout": {
+    "layoutJobs": [
+      {
+        "layoutJobId": "layout-ro-print-001",
+        "manuscriptId": "manuscript-ro",
+        "productionProfileId": "profile-eu-book-print",
+        "status": "planned",
+        "auditRefs": []
+      }
+    ]
+  },
+  "visualAssets": [
+    {
+      "visualAssetId": "cover-ro-draft-001",
+      "type": "cover",
+      "sourceManuscriptId": "manuscript-ro",
+      "status": "draft",
+      "humanApprovalStatus": "pending"
+    }
+  ],
+  "audioTracks": [
+    {
+      "audioTrackId": "audiobook-ro-chapter-001",
+      "type": "audiobook_chapter",
+      "language": "ro",
+      "manuscriptId": "manuscript-ro",
+      "chapterId": "chapter-ro-001",
+      "voiceProfileId": "voice-profile-ro-001",
+      "exportFormats": ["mp3", "wav", "flac"],
+      "humanApprovalStatus": "pending"
+    }
+  ],
+  "videoAssets": [
+    {
+      "videoAssetId": "trailer-ro-draft-001",
+      "type": "trailer",
+      "language": "ro",
+      "sourceManuscriptId": "manuscript-ro",
+      "subtitleTrackRefs": ["subtitle-ro-srt-001"],
+      "humanApprovalStatus": "pending"
+    }
+  ],
+  "productionProfiles": [
+    {
+      "productionProfileId": "profile-eu-book-print",
+      "region": "europe",
+      "format": "book_print",
+      "outputFormats": ["pdfx", "epub", "mobi", "flipbook"],
+      "bleedRequired": true,
+      "cropMarksRequired": true
+    }
+  ],
+  "agentExecutions": [
+    {
+      "agentExecutionId": "agent-execution-001",
+      "agentType": "Lexicographic Intelligence Agent",
+      "inputRefs": ["segment-ro-001"],
+      "outputRefs": ["dict-entry-es-ro-001"],
+      "dependencyRefs": [],
+      "executionOrder": 1,
+      "status": "planned",
+      "humanApprovalStatus": "pending",
+      "auditRefs": []
+    }
+  ]
 }
 ```
 
