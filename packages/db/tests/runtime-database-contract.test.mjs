@@ -37,7 +37,11 @@ test("runtime database includes all MVP persistence and validation tables", () =
     "semantic_fidelity_audit_events",
     "workflow_states",
     "workflow_transitions",
-    "workflow_audit_events"
+    "workflow_audit_events",
+    "lexicographic_sources",
+    "lexicographic_entries",
+    "lexicographic_decisions",
+    "lexicographic_audit_events"
   ]) {
     assert.match(source, new RegExp(`"${table}"`));
   }
