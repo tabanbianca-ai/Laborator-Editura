@@ -17,9 +17,40 @@ test("lexicographic module is registered as a Phase 2 backend foundation", () =>
   const appModule = readFileSync(appModulePath, "utf8");
 
   assert.match(moduleSource, /controllers: \[LexicographicController\]/);
-  assert.match(moduleSource, /InMemoryLexicographicRepository/);
+  assert.match(moduleSource, /runtimeDatabaseProvider/);
+  assert.match(moduleSource, /DatabaseLexicographicRepository/);
   assert.match(moduleSource, /LexicographicService/);
   assert.match(appModule, /LexicographicModule/);
+});
+
+test("lexicographic repository uses runtime database persistence", () => {
+  const repository = readSource("lexicographic.repository.ts");
+  const service = readSource("lexicographic.service.ts");
+
+  assert.match(repository, /export class DatabaseLexicographicRepository/);
+  assert.match(repository, /getDefaultRuntimeDatabase/);
+  assert.match(repository, /FileBackedRuntimeDatabase/);
+  assert.match(repository, /@Inject\(RUNTIME_DATABASE\)/);
+  assert.match(repository, /lexicographic_sources/);
+  assert.match(repository, /lexicographic_entries/);
+  assert.match(repository, /lexicographic_decisions/);
+  assert.match(repository, /lexicographic_audit_events/);
+  assert.match(repository, /selectForTenant<DictionaryEntry>/);
+  assert.doesNotMatch(repository, /new Map|private readonly .* = new Map|private readonly .*\\[\\] = \\[\\]/);
+  assert.match(service, /private readonly repository: DatabaseLexicographicRepository/);
+});
+
+test("lexicographic persistence survives repository and service re-instantiation", () => {
+  const repository = readSource("lexicographic.repository.ts");
+  const moduleSource = readSource("lexicographic.module.ts");
+
+  assert.match(repository, /private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase\(\)/);
+  assert.match(repository, /this\.database\.insert\("lexicographic_sources"/);
+  assert.match(repository, /this\.database\.insert\("lexicographic_entries"/);
+  assert.match(repository, /this\.database\.insert\("lexicographic_decisions"/);
+  assert.match(repository, /this\.database\.insert\("lexicographic_audit_events"/);
+  assert.match(repository, /selectForTenant<DictionaryEntry>\(\s*"lexicographic_entries"/);
+  assert.match(moduleSource, /providers: \[runtimeDatabaseProvider, DatabaseLexicographicRepository, LexicographicService\]/);
 });
 
 test("lexicographic controller exposes required authenticated endpoints", () => {
