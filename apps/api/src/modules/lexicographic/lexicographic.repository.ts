@@ -1,4 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { getDefaultRuntimeDatabase, type FileBackedRuntimeDatabase } from "@laborator/db";
+import { RUNTIME_DATABASE } from "../runtime-database.provider";
 import {
   type DictionaryEntry,
   type DictionarySource,
@@ -9,34 +11,30 @@ import {
 } from "./lexicographic.types";
 
 @Injectable()
-export class InMemoryLexicographicRepository implements LexicographicRepository {
-  private readonly sources = new Map<string, DictionarySource>();
-  private readonly entries = new Map<string, DictionaryEntry>();
-  private readonly decisions = new Map<string, LexicographicDecision>();
-  private readonly auditEvents: LexicographicAuditEvent[] = [];
+export class DatabaseLexicographicRepository implements LexicographicRepository {
+  constructor(
+    @Inject(RUNTIME_DATABASE)
+    private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
+  ) {}
 
   async createSource(source: DictionarySource): Promise<DictionarySource> {
-    this.sources.set(source.id, source);
-    return source;
+    return this.database.insert("lexicographic_sources", source);
   }
 
   async listSources(organizationId: string): Promise<DictionarySource[]> {
-    return [...this.sources.values()].filter((source) => source.organizationId === organizationId);
+    return this.database.selectForTenant<DictionarySource>("lexicographic_sources", organizationId);
   }
 
   async findSourceById(id: string, organizationId: string): Promise<DictionarySource | null> {
-    const source = this.sources.get(id);
-
-    if (!source || source.organizationId !== organizationId) {
-      return null;
-    }
-
-    return source;
+    return this.database.findByIdForTenant<DictionarySource>(
+      "lexicographic_sources",
+      id,
+      organizationId
+    );
   }
 
   async createEntry(entry: DictionaryEntry): Promise<DictionaryEntry> {
-    this.entries.set(entry.id, entry);
-    return entry;
+    return this.database.insert("lexicographic_entries", entry);
   }
 
   async searchEntries(
@@ -44,10 +42,10 @@ export class InMemoryLexicographicRepository implements LexicographicRepository 
   ): Promise<DictionaryEntry[]> {
     const normalizedQuery = normalizeLexicalText(input.term);
 
-    return [...this.entries.values()]
+    return this.database
+      .selectForTenant<DictionaryEntry>("lexicographic_entries", input.organizationId)
       .filter((entry) => {
         return (
-          entry.organizationId === input.organizationId &&
           entry.sourceLanguage === input.sourceLanguage &&
           (
             input.targetLanguage === undefined ||
@@ -63,22 +61,30 @@ export class InMemoryLexicographicRepository implements LexicographicRepository 
   async findEntriesByIds(ids: string[], organizationId: string): Promise<DictionaryEntry[]> {
     const requestedIds = new Set(ids);
 
-    return [...this.entries.values()].filter((entry) => {
-      return entry.organizationId === organizationId && requestedIds.has(entry.id);
-    });
+    return this.database.selectForTenant<DictionaryEntry>(
+      "lexicographic_entries",
+      organizationId,
+      (entry) => requestedIds.has(entry.id)
+    );
   }
 
   async createDecision(decision: LexicographicDecision): Promise<LexicographicDecision> {
-    this.decisions.set(decision.id, decision);
-    return decision;
+    return this.database.insert("lexicographic_decisions", decision);
   }
 
   async appendAuditEvent(event: LexicographicAuditEvent): Promise<void> {
-    this.auditEvents.push(event);
+    this.database.insert("lexicographic_audit_events", event);
   }
 
-  getAuditEvents(): LexicographicAuditEvent[] {
-    return [...this.auditEvents];
+  getAuditEvents(organizationId?: string): LexicographicAuditEvent[] {
+    if (organizationId) {
+      return this.database.selectForTenant<LexicographicAuditEvent>(
+        "lexicographic_audit_events",
+        organizationId
+      );
+    }
+
+    return this.database.select<LexicographicAuditEvent>("lexicographic_audit_events");
   }
 }
 
