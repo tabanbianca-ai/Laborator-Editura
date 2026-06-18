@@ -19,9 +19,53 @@ test("translation flow can include lexicographic support metadata", () => {
   assert.match(moduleSource, /LexicographicModule/);
   assert.match(service, /LexicographicService/);
   assert.match(service, /lexicographicService\.searchEntries/);
+  assert.match(service, /lexicographicService\.describeEntries/);
   assert.match(service, /lexicographicSupport: this\.mapLexicographicSupport/);
   assert.match(types, /TranslationLexicographicSupport/);
+  assert.match(types, /translationEquivalents/);
+  assert.match(types, /sourceReferences/);
+  assert.match(types, /citations/);
+  assert.match(types, /authority/);
+  assert.match(types, /priorityRank/);
   assert.match(service, /humanFinalAuthority: true/);
+});
+
+test("lexicographic matching finds a dictionary term inside a source sentence", () => {
+  const repository = readModule("lexicographic", "lexicographic.repository.ts");
+  const service = readModule("translations", "translations.service.ts");
+
+  function normalizeLexicalText(value) {
+    return value
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
+      .toLocaleLowerCase()
+      .trim();
+  }
+
+  function hasTokenSafeOccurrence(text, term) {
+    const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`(?:^|\\s)${escapedTerm}(?:\\s|$)`, "u").test(text);
+  }
+
+  function matchesLexicalTerm(entryTerm, queryText) {
+    const normalizedTerm = normalizeLexicalText(entryTerm);
+    const normalizedQuery = normalizeLexicalText(queryText);
+
+    return normalizedTerm === normalizedQuery ||
+      hasTokenSafeOccurrence(normalizedQuery, normalizedTerm) ||
+      hasTokenSafeOccurrence(normalizedTerm, normalizedQuery);
+  }
+
+  assert.equal(
+    matchesLexicalTerm("espíritu", "El espíritu progresa por la experiencia."),
+    true
+  );
+  assert.equal(matchesLexicalTerm("rit", "El espíritu progresa por la experiencia."), false);
+  assert.match(repository, /matchesLexicalTerm\(entry\.normalizedTerm, normalizedQuery\)/);
+  assert.match(repository, /hasTokenSafeOccurrence/);
+  assert.match(service, /term: segment\.sourceText/);
+  assert.match(service, /lexicographicSupport: this\.mapLexicographicSupport/);
 });
 
 test("terminology check can include dictionary evidence without becoming authoritative", () => {
