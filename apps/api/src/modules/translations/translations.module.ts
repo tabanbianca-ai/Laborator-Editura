@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { LexicographicModule } from "../lexicographic/lexicographic.module";
 import { QaModule } from "../qa/qa.module";
 import { runtimeDatabaseProvider } from "../runtime-database.provider";
 import { SemanticFidelityModule } from "../semantic-fidelity/semantic-fidelity.module";
@@ -12,6 +13,7 @@ import { TranslationsService } from "./translations.service";
 @Module({
   imports: [
     SegmentsModule,
+    LexicographicModule,
     TranslationMemoryModule,
     TerminologyModule,
     QaModule,
