@@ -25,6 +25,17 @@ export interface SegmentTranslation {
   metadata?: Record<string, unknown>;
 }
 
+export interface TranslationLexicographicSupport {
+  entryId: string;
+  sourceId: string;
+  term: string;
+  sourceLanguage: string;
+  targetLanguage?: string;
+  senseIds: string[];
+  priorityRule: string;
+  humanFinalAuthority: true;
+}
+
 export interface SubmitTranslationInput {
   segmentId: string;
   targetText: string;
