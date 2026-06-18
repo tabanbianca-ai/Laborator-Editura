@@ -89,6 +89,110 @@ Roadmap expansion may resume only after MVP validation.
   authority.
 - Publishing: export from JSON Master Format.
 
+## Phase 2 Planning Foundation - Editorial Intelligence & Production Agents
+
+Status: Planned post-MVP architecture foundation. Documentation and
+architecture scaffolding only.
+
+Priority: `POST-MVP` / after closed beta readiness.
+
+### Scope
+
+Phase 2 reserves specialized editorial, production, media, narration, platform
+coordination, and orchestration agents. This roadmap entry does not authorize
+implementation yet and must not change the current MVP or staging behavior.
+
+Governance rules:
+
+- Do not change Phase 1 runtime behavior from this phase entry.
+- Do not change Auth, Projects, Documents, Segments, Translations, QA, Semantic
+  Fidelity, Workflow, Export, staging Docker, API contracts, or database schema.
+- AI may suggest and automate drafts, but authorized human roles keep final
+  approval authority.
+- Every Phase 2 agent action must be auditable.
+- JSON Master Format may reserve future fields for dictionaries, layout,
+  visual assets, audio tracks, video assets, production profiles, and agent
+  executions.
+
+### Milestones
+
+#### P2.1 - AI Orchestrator Planning
+
+- Define execution order coordination.
+- Define dependency tracking.
+- Define cost-control metadata.
+- Define audit trail requirements.
+- Define human approval gates.
+
+#### P2.2 - Lexicographic Intelligence Agent Planning
+
+- Dictionary sources.
+- Bilingual dictionaries.
+- Monolingual dictionaries.
+- DEX, DOOM, and DLR.
+- Spanish-Romanian and Romanian-Spanish dictionary by Alexandru Calciu and
+  Zaira Samharadze.
+- Specialized spiritist dictionaries.
+- Dictionary entries, lexical senses, examples, sources, and citations.
+- Glossary priority:
+  `validated platform glossary > documented editorial decision > specialized dictionary > academic dictionary > AI suggestion`.
+
+#### P2.3 - Layout & Editorial Production Agent Planning
+
+- Book layout.
+- Magazine layout.
+- Print finishing.
+- PDF/X, EPUB, MOBI, and flipbook planning.
+- European formats by default.
+- American formats optional.
+- Bleed, crop marks, margins, widows and orphans, and typography checks.
+
+#### P2.4 - AI Video & Visual Creation Agent Planning
+
+- Image generation.
+- Cover generation.
+- Illustration generation.
+- Image editing.
+- Text-to-video.
+- Image-to-video.
+- Trailer generation.
+- Subtitle and visual localization.
+
+#### P2.5 - Audio Narration Agent Planning
+
+- Audiobook by chapters.
+- Text-to-speech.
+- Voice profiles.
+- MP3, WAV, and FLAC export.
+- Multilingual narration.
+
+#### P2.6 - Platform Engineering, Optimization & Coordination Agent Planning
+
+- Software update and upgrade planning.
+- Dependency monitoring.
+- Docker optimization.
+- Backup and restore coordination.
+- Auto-healing planning.
+- Performance optimization.
+- AI cost coordination.
+- System maintenance audit.
+
+#### P2.7 - JSON Master Phase 2 Extension Planning
+
+- Reserve `dictionaries`.
+- Reserve `layout`.
+- Reserve `visualAssets`.
+- Reserve `audioTracks`.
+- Reserve `videoAssets`.
+- Reserve `productionProfiles`.
+- Reserve `agentExecutions`.
+
+### Implementation Status
+
+No implementation is authorized at this stage. This roadmap entry exists to
+prepare Phase 2 architecture while keeping MVP stabilization and closed beta
+preparation controlled.
+
 ## Future Phase - Media Localization Studio
 
 Status: Future/Post-Beta Phase. Not scheduled for implementation yet.
@@ -274,3 +378,6 @@ scheduled:
 - Media Localization Studio as a Future/Post-Beta basic editorial media
   localization module, explicitly excluding advanced video editing and
   professional compositing.
+- Phase 2 Planning Foundation for Lexicographic Intelligence, Layout &
+  Editorial Production, AI Video & Visual Creation, Audio Narration, Platform
+  Engineering Coordination, AI Orchestration, and JSON Master future fields.
