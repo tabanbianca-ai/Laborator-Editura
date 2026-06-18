@@ -4,6 +4,7 @@ import { RequestContextMiddleware } from "./auth/request-context.middleware";
 import { DocumentsModule } from "./documents/documents.module";
 import { ExportModule } from "./export/export.module";
 import { HealthController } from "./health.controller";
+import { LexicographicModule } from "./lexicographic/lexicographic.module";
 import { ProjectsModule } from "./projects/projects.module";
 import { QaModule } from "./qa/qa.module";
 import { RateLimitMiddleware } from "./security/rate-limit.middleware";
@@ -22,6 +23,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     DocumentsModule,
     SegmentsModule,
     TranslationsModule,
+    LexicographicModule,
     TranslationMemoryModule,
     TerminologyModule,
     QaModule,
