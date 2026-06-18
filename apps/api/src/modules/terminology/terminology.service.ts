@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
 import { LexicographicService } from "../lexicographic/lexicographic.service";
-import { type DictionaryEntry } from "../lexicographic/lexicographic.types";
+import { type LexicographicEntryEvidence } from "../lexicographic/lexicographic.types";
 import { InMemoryTerminologyRepository } from "./terminology.repository";
 import {
   type CheckSegmentTerminologyInput,
@@ -412,8 +412,9 @@ export class TerminologyService {
     input: CheckSegmentTerminologyInput,
     terms: TerminologyTerm[]
   ): Promise<TerminologyDictionaryEvidence[]> {
-    const queryTerms = uniqueStrings(
-      terms
+    const queryTexts = uniqueStrings([
+      input.sourceText,
+      ...terms
         .filter((term) => {
           return (
             includesNormalized(input.sourceText, term.term) ||
@@ -423,34 +424,43 @@ export class TerminologyService {
           );
         })
         .map((term) => term.term)
-    ).slice(0, 5);
-    const evidence: TerminologyDictionaryEvidence[] = [];
+    ]).slice(0, 6);
+    const evidenceByEntryId = new Map<string, TerminologyDictionaryEvidence>();
 
-    for (const term of queryTerms) {
+    for (const queryText of queryTexts) {
       const entries = await this.lexicographicService.searchEntries(actor, {
-        term,
+        term: queryText,
         sourceLanguage: input.sourceLanguage ?? input.language,
         targetLanguage: input.language,
         limit: 3
       });
+      const describedEntries = await this.lexicographicService.describeEntries(actor, entries);
 
-      evidence.push(...this.mapDictionaryEvidence(entries));
+      for (const evidence of describedEntries.map((entry) => this.mapDictionaryEvidence(entry))) {
+        evidenceByEntryId.set(evidence.entryId, evidence);
+      }
     }
 
-    return evidence;
+    return [...evidenceByEntryId.values()];
   }
 
-  private mapDictionaryEvidence(entries: DictionaryEntry[]): TerminologyDictionaryEvidence[] {
-    return entries.map((entry) => ({
-      entryId: entry.id,
+  private mapDictionaryEvidence(entry: LexicographicEntryEvidence): TerminologyDictionaryEvidence {
+    return {
+      entryId: entry.entryId,
       sourceId: entry.sourceId,
       term: entry.term,
       sourceLanguage: entry.sourceLanguage,
       targetLanguage: entry.targetLanguage,
-      senseIds: entry.senses.map((sense) => sense.id),
+      senseIds: entry.senseIds,
+      translationEquivalents: entry.translationEquivalents,
+      sourceReferences: entry.sourceReferences,
+      citations: entry.citations,
+      authority: entry.authority,
+      priorityRank: entry.priorityRank,
       priority: "DICTIONARY_EVIDENCE_AFTER_VALIDATED_GLOSSARY",
-      authoritative: false
-    }));
+      authoritative: false,
+      humanFinalAuthority: true
+    };
   }
 
   private async transitionTerm(
