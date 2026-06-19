@@ -75,6 +75,7 @@ export function validateJsonMasterFormatV1(value: unknown): JsonMasterValidation
   validateAudit(value.audit, issues);
   validateVersionHistory(value.versionHistory, issues);
   validateMediaLocalization(value.mediaLocalization, issues);
+  validateLayoutPublishing(value, issues);
 
   return toResult(issues);
 }
@@ -281,6 +282,40 @@ function validateMediaLocalization(
   ]) {
     if (value[key] !== undefined && !Array.isArray(value[key])) {
       addIssue(issues, `$.mediaLocalization.${key}`, "media localization field must be an array.");
+    }
+  }
+}
+
+function validateLayoutPublishing(
+  value: Record<string, unknown>,
+  issues: JsonMasterValidationIssue[]
+): void {
+  if (value.layout !== undefined) {
+    if (!isRecord(value.layout)) {
+      addIssue(issues, "$.layout", "layout must be an object.");
+    } else {
+      requireNonEmptyString(value.layout, "id", "$.layout.id", issues);
+      if (!Number.isInteger(value.layout.layoutVersion) || Number(value.layout.layoutVersion) < 1) {
+        addIssue(issues, "$.layout.layoutVersion", "layoutVersion must be a positive integer.");
+      }
+      if (!Number.isInteger(value.layout.styleRevision) || Number(value.layout.styleRevision) < 1) {
+        addIssue(issues, "$.layout.styleRevision", "styleRevision must be a positive integer.");
+      }
+      requireNonEmptyString(value.layout, "publicationKind", "$.layout.publicationKind", issues);
+      requireNonEmptyString(value.layout, "approvalStatus", "$.layout.approvalStatus", issues);
+    }
+  }
+
+  for (const key of [
+    "pageTemplates",
+    "printProfiles",
+    "illustrations",
+    "audioTracks",
+    "videoAssets",
+    "publicationProfiles"
+  ]) {
+    if (value[key] !== undefined && !Array.isArray(value[key])) {
+      addIssue(issues, `$.${key}`, `${key} must be an array.`);
     }
   }
 }
