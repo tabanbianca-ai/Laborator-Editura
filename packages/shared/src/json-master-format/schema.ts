@@ -53,6 +53,45 @@ export const jsonMasterFormatV1Schema = {
     },
     mediaLocalization: {
       $ref: "#/$defs/mediaLocalization"
+    },
+    layout: {
+      $ref: "#/$defs/layout"
+    },
+    pageTemplates: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/pageTemplate"
+      }
+    },
+    printProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/printProfile"
+      }
+    },
+    illustrations: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/illustration"
+      }
+    },
+    audioTracks: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/productionAudioTrack"
+      }
+    },
+    videoAssets: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/productionVideoAsset"
+      }
+    },
+    publicationProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publicationProfile"
+      }
     }
   },
   $defs: {
@@ -827,6 +866,216 @@ export const jsonMasterFormatV1Schema = {
           $ref: "#/$defs/id"
         },
         createdAt: {
+          $ref: "#/$defs/timestamp"
+        }
+      }
+    },
+    layout: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "layoutVersion", "styleRevision", "publicationKind", "approvalStatus"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        layoutVersion: {
+          type: "integer",
+          minimum: 1
+        },
+        styleRevision: {
+          type: "integer",
+          minimum: 1
+        },
+        publicationKind: {
+          enum: ["book", "magazine"]
+        },
+        documentRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        pageTemplateRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        printProfileRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        publicationProfileRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        approvedBy: {
+          $ref: "#/$defs/id"
+        },
+        approvedAt: {
+          $ref: "#/$defs/timestamp"
+        },
+        approvalStatus: {
+          enum: ["pending_human_approval", "approved", "rejected"]
+        }
+      }
+    },
+    pageTemplate: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "name"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        name: {
+          type: "string"
+        },
+        pageSize: {
+          type: "string"
+        },
+        margins: {
+          type: "string"
+        },
+        columns: {
+          type: "integer",
+          minimum: 1
+        },
+        bleed: {
+          type: "string"
+        }
+      }
+    },
+    printProfile: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "name", "format"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        name: {
+          type: "string"
+        },
+        format: {
+          enum: ["pdf_x", "hardcover", "paperback", "print_on_demand"]
+        },
+        colorProfile: {
+          type: "string"
+        },
+        bleed: {
+          type: "string"
+        },
+        cropMarks: {
+          type: "boolean"
+        }
+      }
+    },
+    illustration: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "uri"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        uri: {
+          type: "string"
+        },
+        caption: {
+          type: "string"
+        },
+        altText: {
+          type: "string"
+        },
+        documentRef: {
+          $ref: "#/$defs/id"
+        },
+        segmentRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        }
+      }
+    },
+    productionAudioTrack: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "language", "uri", "type"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        uri: {
+          type: "string"
+        },
+        type: {
+          enum: ["audio_chapter", "synchronized_narration"]
+        },
+        chapterRef: {
+          $ref: "#/$defs/id"
+        },
+        syncQualityScore: {
+          type: "number",
+          minimum: 0,
+          maximum: 100
+        }
+      }
+    },
+    productionVideoAsset: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "uri", "type"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        uri: {
+          type: "string"
+        },
+        type: {
+          enum: ["video_asset", "trailer", "gallery_video"]
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        documentRef: {
+          $ref: "#/$defs/id"
+        }
+      }
+    },
+    publicationProfile: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "name", "formats", "humanApprovalRequired"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        name: {
+          type: "string"
+        },
+        formats: {
+          type: "array",
+          items: {
+            enum: ["json_master", "pdf", "epub", "mobi", "hardcover", "paperback", "print_on_demand"]
+          }
+        },
+        humanApprovalRequired: {
+          const: true
+        },
+        approvedBy: {
+          $ref: "#/$defs/id"
+        },
+        approvedAt: {
           $ref: "#/$defs/timestamp"
         }
       }
