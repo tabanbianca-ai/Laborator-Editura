@@ -35,7 +35,11 @@ export const TABLE_NAMES = [
   "lexicographic_sources",
   "lexicographic_entries",
   "lexicographic_decisions",
-  "lexicographic_audit_events"
+  "lexicographic_audit_events",
+  "editorial_decisions",
+  "editorial_decision_audit_events",
+  "layout_publication_plans",
+  "layout_publication_audit_events"
 ];
 
 const TENANT_SCOPED_TABLES = new Set([
@@ -65,7 +69,11 @@ const TENANT_SCOPED_TABLES = new Set([
   "lexicographic_sources",
   "lexicographic_entries",
   "lexicographic_decisions",
-  "lexicographic_audit_events"
+  "lexicographic_audit_events",
+  "editorial_decisions",
+  "editorial_decision_audit_events",
+  "layout_publication_plans",
+  "layout_publication_audit_events"
 ]);
 
 export function defaultRuntimeDbPath(cwd = process.cwd()) {
@@ -232,6 +240,20 @@ function validateTenantBoundaries(data, issues) {
   validateReferenceTenant(data, issues, "export_artifacts", "projectId", "projects");
   validateReferenceTenant(data, issues, "export_artifacts", "documentId", "documents");
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
+  validateReferenceTenant(
+    data,
+    issues,
+    "editorial_decision_audit_events",
+    "editorialDecisionId",
+    "editorial_decisions"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "layout_publication_audit_events",
+    "layoutPublicationPlanId",
+    "layout_publication_plans"
+  );
 }
 
 function validateReferenceTenant(data, issues, tableName, referenceKey, referenceTableName) {
