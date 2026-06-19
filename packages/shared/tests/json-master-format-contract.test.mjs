@@ -76,6 +76,52 @@ test("minimal JSON Master Format v1 fixture follows the MVP contract", () => {
   assert.deepEqual(validateContract(fixture), []);
 });
 
+test("JSON Master Format v1 supports layout and publication production fields", () => {
+  const types = readFileSync(
+    join(__dirname, "..", "src", "json-master-format", "types.ts"),
+    "utf8"
+  );
+  const schema = readFileSync(
+    join(__dirname, "..", "src", "json-master-format", "schema.ts"),
+    "utf8"
+  );
+  const validation = readFileSync(
+    join(__dirname, "..", "src", "json-master-format", "validation.ts"),
+    "utf8"
+  );
+
+  for (const field of [
+    "layout",
+    "pageTemplates",
+    "printProfiles",
+    "illustrations",
+    "audioTracks",
+    "videoAssets",
+    "publicationProfiles"
+  ]) {
+    assert.match(types, new RegExp(`${field}\\??:`));
+    assert.match(schema, new RegExp(`${field}:`));
+  }
+
+  assert.match(validation, /value\.layout/);
+
+  for (const field of [
+    "pageTemplates",
+    "printProfiles",
+    "illustrations",
+    "audioTracks",
+    "videoAssets",
+    "publicationProfiles"
+  ]) {
+    assert.match(validation, new RegExp(`"${field}"`));
+  }
+
+  assert.match(types, /JsonMasterPublicationProfile/);
+  assert.match(types, /humanApprovalRequired: true/);
+  assert.match(schema, /pending_human_approval/);
+  assert.match(schema, /print_on_demand/);
+});
+
 test("invalid JSON Master Format v1 fixture fails the MVP contract", () => {
   const fixture = readFixture("json-master-format-v1.invalid.json");
   assert.match(validateContract(fixture).join("\n"), /formatVersion must be 1\.0/);
