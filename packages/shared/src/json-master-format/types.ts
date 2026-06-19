@@ -57,6 +57,13 @@ export interface JsonMasterFormatV1 {
   audit: JsonMasterAudit;
   versionHistory: JsonMasterVersionHistory;
   mediaLocalization?: JsonMasterMediaLocalization;
+  layout?: JsonMasterLayout;
+  pageTemplates?: JsonMasterPageTemplate[];
+  printProfiles?: JsonMasterPrintProfile[];
+  illustrations?: JsonMasterIllustration[];
+  audioTracks?: JsonMasterProductionAudioTrack[];
+  videoAssets?: JsonMasterProductionVideoAsset[];
+  publicationProfiles?: JsonMasterPublicationProfile[];
 }
 
 export interface JsonMasterProject {
@@ -311,4 +318,71 @@ export interface JsonMasterLocalizedVideoExport {
   subtitleTrackId?: string;
   audioTrackId?: string;
   createdAt: string;
+}
+
+export interface JsonMasterLayout {
+  id: string;
+  layoutVersion: number;
+  styleRevision: number;
+  publicationKind: "book" | "magazine";
+  documentRefs?: string[];
+  pageTemplateRefs?: string[];
+  printProfileRefs?: string[];
+  publicationProfileRefs?: string[];
+  approvedBy?: string;
+  approvedAt?: string;
+  approvalStatus: "pending_human_approval" | "approved" | "rejected";
+}
+
+export interface JsonMasterPageTemplate {
+  id: string;
+  name: string;
+  pageSize?: string;
+  margins?: string;
+  columns?: number;
+  bleed?: string;
+}
+
+export interface JsonMasterPrintProfile {
+  id: string;
+  name: string;
+  format: "pdf_x" | "hardcover" | "paperback" | "print_on_demand";
+  colorProfile?: string;
+  bleed?: string;
+  cropMarks?: boolean;
+}
+
+export interface JsonMasterIllustration {
+  id: string;
+  uri: string;
+  caption?: string;
+  altText?: string;
+  documentRef?: string;
+  segmentRefs?: string[];
+}
+
+export interface JsonMasterProductionAudioTrack {
+  id: string;
+  language: string;
+  uri: string;
+  type: "audio_chapter" | "synchronized_narration";
+  chapterRef?: string;
+  syncQualityScore?: number;
+}
+
+export interface JsonMasterProductionVideoAsset {
+  id: string;
+  uri: string;
+  type: "video_asset" | "trailer" | "gallery_video";
+  language?: string;
+  documentRef?: string;
+}
+
+export interface JsonMasterPublicationProfile {
+  id: string;
+  name: string;
+  formats: Array<"json_master" | "pdf" | "epub" | "mobi" | "hardcover" | "paperback" | "print_on_demand">;
+  humanApprovalRequired: true;
+  approvedBy?: string;
+  approvedAt?: string;
 }
