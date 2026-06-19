@@ -76,7 +76,11 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "lexicographic_sources",
     "lexicographic_entries",
     "lexicographic_decisions",
-    "lexicographic_audit_events"
+    "lexicographic_audit_events",
+    "editorial_decisions",
+    "editorial_decision_audit_events",
+    "layout_publication_plans",
+    "layout_publication_audit_events"
   ]) {
     assert.ok(restored[tableName].length > 0, `${tableName} should be restored`);
   }
@@ -253,6 +257,18 @@ function sampleSnapshot() {
   );
   snapshot.lexicographic_audit_events.push(
     { id: "lex-audit-a", organizationId: "org-a", action: "CREATE_ENTRY", actorId: "user-a", entityType: "dictionary_entry", entityId: "lex-entry-a", createdAt: "2026-01-01T00:12:03.000Z" }
+  );
+  snapshot.editorial_decisions.push(
+    { id: "editorial-a", organizationId: "org-a", editorialDecisionId: "editorial-a", sourceText: "El espíritu.", targetText: "Spiritul.", sourceLanguage: "es", targetLanguage: "ro", domain: "spiritism", recommendation: "Follow validated glossary.", alternatives: ["Spiritul."], rationale: "Validated glossary has priority.", confidenceScore: 0.91, evidenceSources: [{ sourceType: "VALIDATED_GLOSSARY", sourceId: "term-a", label: "Validated glossary", priorityRank: 1, authoritative: true, humanFinalAuthority: true }], humanApprovalRequired: true, approvalStatus: "APPROVED", approvedBy: "user-a", approvedAt: "2026-01-01T00:13:01.000Z", auditTrail: [{ action: "RECOMMENDATION_CREATED", actorId: "user-a", at: "2026-01-01T00:13:00.000Z", version: 1 }], version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:13:00.000Z", updatedAt: "2026-01-01T00:13:01.000Z" }
+  );
+  snapshot.editorial_decision_audit_events.push(
+    { id: "editorial-audit-a", organizationId: "org-a", editorialDecisionId: "editorial-a", action: "RECOMMENDATION_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:13:00.000Z" }
+  );
+  snapshot.layout_publication_plans.push(
+    { id: "layout-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", publicationKind: "BOOK", title: "Document A", language: "ro", bookLayout: { chapters: ["chapter-1"], sections: [], footnotes: [], tableOfContents: true, indexes: [], illustrations: [], captions: [], pageTemplates: ["chapter"] }, editorialFinishing: { widowOrphanControl: true, typographyValidation: true, spacing: "STANDARD", kerning: true, margins: "EUROPEAN_STANDARD", bleed: "3mm", pagination: "MANUAL_REVIEW_REQUIRED", printProfiles: ["PDF_X"] }, exportFormats: ["JSON_MASTER", "PDF", "EPUB"], multimedia: { audioChapters: [], synchronizedNarration: false, videoAssets: [], illustrations: [], galleries: [] }, layoutVersion: 1, styleRevision: 1, publicationHistory: [{ id: "layout-history-a", action: "LAYOUT_PLAN_CREATED", actorId: "user-a", at: "2026-01-01T00:14:00.000Z", layoutVersion: 1, styleRevision: 1 }], exportHistory: [], approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, createdBy: "user-a", createdAt: "2026-01-01T00:14:00.000Z", updatedAt: "2026-01-01T00:14:00.000Z" }
+  );
+  snapshot.layout_publication_audit_events.push(
+    { id: "layout-audit-a", organizationId: "org-a", layoutPublicationPlanId: "layout-a", action: "LAYOUT_PLAN_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:14:00.000Z" }
   );
 
   return snapshot;
