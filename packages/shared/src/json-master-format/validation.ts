@@ -76,6 +76,7 @@ export function validateJsonMasterFormatV1(value: unknown): JsonMasterValidation
   validateVersionHistory(value.versionHistory, issues);
   validateMediaLocalization(value.mediaLocalization, issues);
   validateLayoutPublishing(value, issues);
+  validateMultimediaCreation(value, issues);
 
   return toResult(issues);
 }
@@ -313,6 +314,24 @@ function validateLayoutPublishing(
     "audioTracks",
     "videoAssets",
     "publicationProfiles"
+  ]) {
+    if (value[key] !== undefined && !Array.isArray(value[key])) {
+      addIssue(issues, `$.${key}`, `${key} must be an array.`);
+    }
+  }
+}
+
+function validateMultimediaCreation(
+  value: Record<string, unknown>,
+  issues: JsonMasterValidationIssue[]
+): void {
+  for (const key of [
+    "mediaAssets",
+    "illustrationProjects",
+    "audioProjects",
+    "videoProjects",
+    "voiceProfiles",
+    "subtitleTracks"
   ]) {
     if (value[key] !== undefined && !Array.isArray(value[key])) {
       addIssue(issues, `$.${key}`, `${key} must be an array.`);
