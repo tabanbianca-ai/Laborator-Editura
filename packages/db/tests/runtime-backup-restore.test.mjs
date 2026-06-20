@@ -86,7 +86,12 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "multimedia_audit_events",
     "platform_engineering_plans",
     "platform_engineering_audit_events",
-    "agent_coordination_runs"
+    "agent_coordination_runs",
+    "scheduling_tasks",
+    "scheduling_events",
+    "scheduling_reminders",
+    "scheduling_agent_runs",
+    "scheduling_audit_events"
   ]) {
     assert.ok(restored[tableName].length > 0, `${tableName} should be restored`);
   }
@@ -294,6 +299,24 @@ function sampleSnapshot() {
   snapshot.platform_engineering_audit_events.push(
     { id: "platform-audit-a", organizationId: "org-a", platformEngineeringPlanId: "platform-plan-a", action: "OPTIMIZATION_PLAN_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:02.000Z" },
     { id: "platform-audit-b", organizationId: "org-a", agentCoordinationRunId: "agent-run-a", action: "AGENT_COORDINATION_RUN_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:03.000Z" }
+  );
+  snapshot.scheduling_tasks.push(
+    { id: "schedule-task-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", title: "Final review deadline", taskType: "REVIEW_DEADLINE", dueAt: "2026-02-01T10:00:00.000Z", priority: "HIGH", dependencies: ["workflow-a"], conflictDetectionStatus: "PLACEHOLDER_ONLY", conflicts: [], approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, externalCalendarIntegration: "NOT_CONFIGURED", auditTrail: [{ id: "schedule-task-trail-a", action: "SCHEDULING_TASK_CREATED", actorId: "user-a", at: "2026-01-01T00:17:00.000Z", version: 1 }], version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:17:00.000Z", updatedAt: "2026-01-01T00:17:00.000Z" }
+  );
+  snapshot.scheduling_events.push(
+    { id: "schedule-event-a", organizationId: "org-a", projectId: "project-a", title: "Publication meeting", eventType: "MEETING", startsAt: "2026-02-02T12:00:00.000Z", participants: ["user-a"], conflictDetectionStatus: "PLACEHOLDER_ONLY", conflicts: [], approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, externalCalendarIntegration: "NOT_CONFIGURED", auditTrail: [{ id: "schedule-event-trail-a", action: "SCHEDULING_EVENT_CREATED", actorId: "user-a", at: "2026-01-01T00:17:01.000Z", version: 1 }], version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:17:01.000Z", updatedAt: "2026-01-01T00:17:01.000Z" }
+  );
+  snapshot.scheduling_agent_runs.push(
+    { id: "schedule-agent-run-a", organizationId: "org-a", title: "Run editorial decision agent", agentName: "AI Editorial Decision Agent", scheduledFor: "2026-02-01T09:00:00.000Z", dependenciesBetweenAgents: ["Lexicographic Intelligence Agent"], executionOrder: ["Lexicographic Intelligence Agent", "AI Editorial Decision Agent"], workloadBalancingNotes: ["Avoid overlap with export validation"], taskPriority: "MEDIUM", conflictDetectionStatus: "PLACEHOLDER_ONLY", conflicts: [], approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, executionMode: "PLANNING_ONLY", externalCalendarIntegration: "NOT_CONFIGURED", auditTrail: [{ id: "schedule-agent-trail-a", action: "SCHEDULING_AGENT_RUN_CREATED", actorId: "user-a", at: "2026-01-01T00:17:02.000Z", version: 1 }], version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:17:02.000Z", updatedAt: "2026-01-01T00:17:02.000Z" }
+  );
+  snapshot.scheduling_reminders.push(
+    { id: "schedule-reminder-a", organizationId: "org-a", schedulingTaskId: "schedule-task-a", reminderType: "TASK_REMINDER", message: "Review deadline tomorrow.", remindAt: "2026-01-31T10:00:00.000Z", overdueAlert: false, delivered: false, externalCalendarIntegration: "NOT_CONFIGURED", auditTrail: [{ id: "schedule-reminder-trail-a", action: "SCHEDULING_REMINDER_CREATED", actorId: "user-a", at: "2026-01-01T00:17:03.000Z", version: 1 }], createdBy: "user-a", createdAt: "2026-01-01T00:17:03.000Z", updatedAt: "2026-01-01T00:17:03.000Z" }
+  );
+  snapshot.scheduling_audit_events.push(
+    { id: "schedule-audit-a", organizationId: "org-a", schedulingTaskId: "schedule-task-a", action: "SCHEDULING_TASK_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:17:04.000Z" },
+    { id: "schedule-audit-b", organizationId: "org-a", schedulingEventId: "schedule-event-a", action: "SCHEDULING_EVENT_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:17:05.000Z" },
+    { id: "schedule-audit-c", organizationId: "org-a", schedulingReminderId: "schedule-reminder-a", action: "SCHEDULING_REMINDER_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:17:06.000Z" },
+    { id: "schedule-audit-d", organizationId: "org-a", schedulingAgentRunId: "schedule-agent-run-a", action: "SCHEDULING_AGENT_RUN_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:17:07.000Z" }
   );
 
   return snapshot;
