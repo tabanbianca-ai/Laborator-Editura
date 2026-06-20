@@ -8,6 +8,7 @@ import { HealthController } from "./health.controller";
 import { LayoutPublishingModule } from "./layout-publishing/layout-publishing.module";
 import { LexicographicModule } from "./lexicographic/lexicographic.module";
 import { MultimediaCreationModule } from "./multimedia-creation/multimedia-creation.module";
+import { PlatformEngineeringModule } from "./platform-engineering/platform-engineering.module";
 import { ProjectsModule } from "./projects/projects.module";
 import { QaModule } from "./qa/qa.module";
 import { RateLimitMiddleware } from "./security/rate-limit.middleware";
@@ -34,6 +35,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     EditorialDecisionModule,
     LayoutPublishingModule,
     MultimediaCreationModule,
+    PlatformEngineeringModule,
     WorkflowModule,
     ExportModule
   ],
