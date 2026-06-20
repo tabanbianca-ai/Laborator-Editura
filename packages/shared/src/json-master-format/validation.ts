@@ -77,6 +77,7 @@ export function validateJsonMasterFormatV1(value: unknown): JsonMasterValidation
   validateMediaLocalization(value.mediaLocalization, issues);
   validateLayoutPublishing(value, issues);
   validateMultimediaCreation(value, issues);
+  validateMediaLocalizationStudio(value, issues);
 
   return toResult(issues);
 }
@@ -279,7 +280,11 @@ function validateMediaLocalization(
     "subtitleTracks",
     "voiceOverTracks",
     "dubbingTracks",
-    "localizedVideoExports"
+    "localizedVideoExports",
+    "localizedIllustrations",
+    "localizedVideos",
+    "localizedAudio",
+    "dubbingProjects"
   ]) {
     if (value[key] !== undefined && !Array.isArray(value[key])) {
       addIssue(issues, `$.mediaLocalization.${key}`, "media localization field must be an array.");
@@ -314,6 +319,23 @@ function validateLayoutPublishing(
     "audioTracks",
     "videoAssets",
     "publicationProfiles"
+  ]) {
+    if (value[key] !== undefined && !Array.isArray(value[key])) {
+      addIssue(issues, `$.${key}`, `${key} must be an array.`);
+    }
+  }
+}
+
+function validateMediaLocalizationStudio(
+  value: Record<string, unknown>,
+  issues: JsonMasterValidationIssue[]
+): void {
+  for (const key of [
+    "localizedIllustrations",
+    "localizedVideos",
+    "localizedAudio",
+    "voiceOverTracks",
+    "dubbingProjects"
   ]) {
     if (value[key] !== undefined && !Array.isArray(value[key])) {
       addIssue(issues, `$.${key}`, `${key} must be an array.`);
