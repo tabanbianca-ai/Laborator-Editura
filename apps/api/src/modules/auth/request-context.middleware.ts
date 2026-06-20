@@ -34,6 +34,7 @@ export class RequestContextMiddleware implements NestMiddleware {
     const routePath = this.routePath(request);
 
     return (method === "GET" && this.isHealthRoute(routePath)) ||
+      (method === "GET" && this.isPublicCatalogRoute(routePath)) ||
       (method === "POST" && routePath.endsWith("/auth/login"));
   }
 
@@ -46,6 +47,10 @@ export class RequestContextMiddleware implements NestMiddleware {
 
   private isHealthRoute(routePath: string): boolean {
     return routePath === "/health";
+  }
+
+  private isPublicCatalogRoute(routePath: string): boolean {
+    return routePath === "/public/catalog" || routePath.startsWith("/public/catalog/");
   }
 
   private readAccessToken(request: RequestWithAuthContext): string | undefined {
