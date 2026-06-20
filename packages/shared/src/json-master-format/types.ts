@@ -70,6 +70,11 @@ export interface JsonMasterFormatV1 {
   videoProjects?: JsonMasterVideoProject[];
   voiceProfiles?: JsonMasterVoiceProfile[];
   subtitleTracks?: JsonMasterProductionSubtitleTrack[];
+  localizedIllustrations?: JsonMasterLocalizedIllustration[];
+  localizedVideos?: JsonMasterLocalizedVideo[];
+  localizedAudio?: JsonMasterLocalizedAudio[];
+  voiceOverTracks?: JsonMasterLocalizedAudio[];
+  dubbingProjects?: JsonMasterDubbingProject[];
 }
 
 export interface JsonMasterProject {
@@ -285,6 +290,10 @@ export interface JsonMasterMediaLocalization {
   voiceOverTracks?: JsonMasterAudioTrack[];
   dubbingTracks?: JsonMasterAudioTrack[];
   localizedVideoExports?: JsonMasterLocalizedVideoExport[];
+  localizedIllustrations?: JsonMasterLocalizedIllustration[];
+  localizedVideos?: JsonMasterLocalizedVideo[];
+  localizedAudio?: JsonMasterLocalizedAudio[];
+  dubbingProjects?: JsonMasterDubbingProject[];
 }
 
 export interface JsonMasterMediaAsset {
@@ -463,4 +472,46 @@ export interface JsonMasterProductionSubtitleTrack {
   mediaAssetRef?: string;
   segmentRefs?: string[];
   syncStatus?: "draft" | "aligned" | "human_review_required" | "approved";
+}
+
+export interface JsonMasterLocalizedIllustration {
+  id: string;
+  sourceIllustrationRef?: string;
+  language: string;
+  uri?: string;
+  textRegionRefs?: string[];
+  typographyStyle?: string;
+  approvalStatus: "pending_human_approval" | "approved" | "rejected";
+}
+
+export interface JsonMasterLocalizedVideo {
+  id: string;
+  sourceVideoRef?: string;
+  language: string;
+  uri?: string;
+  subtitleTrackRefs?: string[];
+  audioTrackRefs?: string[];
+  approvalStatus: "pending_human_approval" | "approved" | "rejected";
+}
+
+export interface JsonMasterLocalizedAudio {
+  id: string;
+  sourceAudioRef?: string;
+  language: string;
+  uri?: string;
+  type: "voice_over" | "dubbing" | "localized_audio";
+  synchronizationMetadata?: Record<string, string>;
+  approvalStatus: "pending_human_approval" | "approved" | "rejected";
+}
+
+export interface JsonMasterDubbingProject {
+  id: string;
+  title: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  narratorProfileRefs?: string[];
+  voiceTrackRefs?: string[];
+  synchronizationMetadata?: Record<string, string>;
+  humanApprovalRequired: true;
+  approvalStatus: "pending_human_approval" | "approved" | "rejected";
 }
