@@ -83,7 +83,10 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "layout_publication_audit_events",
     "multimedia_projects",
     "multimedia_assets",
-    "multimedia_audit_events"
+    "multimedia_audit_events",
+    "platform_engineering_plans",
+    "platform_engineering_audit_events",
+    "agent_coordination_runs"
   ]) {
     assert.ok(restored[tableName].length > 0, `${tableName} should be restored`);
   }
@@ -281,6 +284,16 @@ function sampleSnapshot() {
   );
   snapshot.multimedia_audit_events.push(
     { id: "media-audit-a", organizationId: "org-a", multimediaProjectId: "media-project-a", multimediaAssetId: "media-asset-a", action: "MEDIA_ASSET_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:15:02.000Z" }
+  );
+  snapshot.platform_engineering_plans.push(
+    { id: "platform-plan-a", organizationId: "org-a", planKind: "OPTIMIZATION", title: "Optimize API runtime", riskLevel: "LOW", optimization: { backendOptimizationRecommendations: ["Review slow endpoints"], databaseIndexOptimizationRecommendations: ["Review project indexes"], cacheRecommendations: ["Evaluate read-through cache"], dockerResourceRecommendations: ["Review memory limits"], aiCostOptimizationRecommendations: ["Batch low-risk prompts"] }, approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, executionMode: "PLANNING_ONLY", destructiveActionsExecuted: false, auditTrail: [{ id: "platform-trail-a", action: "OPTIMIZATION_PLAN_CREATED", actorId: "user-a", at: "2026-01-01T00:16:00.000Z", version: 1 }], version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:16:00.000Z", updatedAt: "2026-01-01T00:16:00.000Z" }
+  );
+  snapshot.agent_coordination_runs.push(
+    { id: "agent-run-a", organizationId: "org-a", title: "Coordinate Phase 2 agents", agentExecutionPlans: [{ agentName: "Multimedia Creation Agent", objective: "Prepare media drafts", humanApprovalGate: true }], dependenciesBetweenAgents: ["Layout Publishing Agent before Multimedia Creation Agent"], executionOrder: ["Layout Publishing Agent", "Multimedia Creation Agent"], costEstimates: { multimediaCreation: 0 }, auditTrail: [{ id: "agent-run-trail-a", action: "AGENT_COORDINATION_RUN_CREATED", actorId: "user-a", at: "2026-01-01T00:16:01.000Z", version: 1 }], humanApprovalRequired: true, executionMode: "PLANNING_ONLY", destructiveActionsExecuted: false, createdBy: "user-a", createdAt: "2026-01-01T00:16:01.000Z", updatedAt: "2026-01-01T00:16:01.000Z" }
+  );
+  snapshot.platform_engineering_audit_events.push(
+    { id: "platform-audit-a", organizationId: "org-a", platformEngineeringPlanId: "platform-plan-a", action: "OPTIMIZATION_PLAN_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:02.000Z" },
+    { id: "platform-audit-b", organizationId: "org-a", agentCoordinationRunId: "agent-run-a", action: "AGENT_COORDINATION_RUN_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:03.000Z" }
   );
 
   return snapshot;
