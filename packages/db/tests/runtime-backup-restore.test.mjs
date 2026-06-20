@@ -80,7 +80,10 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "editorial_decisions",
     "editorial_decision_audit_events",
     "layout_publication_plans",
-    "layout_publication_audit_events"
+    "layout_publication_audit_events",
+    "multimedia_projects",
+    "multimedia_assets",
+    "multimedia_audit_events"
   ]) {
     assert.ok(restored[tableName].length > 0, `${tableName} should be restored`);
   }
@@ -269,6 +272,15 @@ function sampleSnapshot() {
   );
   snapshot.layout_publication_audit_events.push(
     { id: "layout-audit-a", organizationId: "org-a", layoutPublicationPlanId: "layout-a", action: "LAYOUT_PLAN_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:14:00.000Z" }
+  );
+  snapshot.multimedia_projects.push(
+    { id: "media-project-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", title: "Document A Trailer", language: "ro", kind: "VIDEO", videoProfile: { bookTrailers: true, educationalVideos: true, reelsShorts: true, subtitleTrackIds: [], narrationSynchronization: true, linkedAssetIds: ["media-asset-a"] }, assetIds: ["media-asset-a"], versionHistory: [{ id: "media-version-a", version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:15:00.000Z", notes: "Multimedia project created." }], exportHistory: [], auditTrail: [{ id: "media-trail-a", action: "MEDIA_PROJECT_CREATED", actorId: "user-a", at: "2026-01-01T00:15:00.000Z", version: 1 }], approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, providerIntegrationStatus: "PLACEHOLDER_ONLY", createdBy: "user-a", createdAt: "2026-01-01T00:15:00.000Z", updatedAt: "2026-01-01T00:15:00.000Z" }
+  );
+  snapshot.multimedia_assets.push(
+    { id: "media-asset-a", organizationId: "org-a", multimediaProjectId: "media-project-a", assetType: "VIDEO", title: "Trailer draft", uri: "media://trailer-draft.mp4", language: "ro", sourceReferences: ["document-a"], rights: { license: "internal-beta" }, versionHistory: [{ id: "media-asset-version-a", version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:15:01.000Z", notes: "Media asset created." }], createdBy: "user-a", createdAt: "2026-01-01T00:15:01.000Z", updatedAt: "2026-01-01T00:15:01.000Z" }
+  );
+  snapshot.multimedia_audit_events.push(
+    { id: "media-audit-a", organizationId: "org-a", multimediaProjectId: "media-project-a", multimediaAssetId: "media-asset-a", action: "MEDIA_ASSET_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:15:02.000Z" }
   );
 
   return snapshot;
