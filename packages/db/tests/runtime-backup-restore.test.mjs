@@ -81,6 +81,9 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "editorial_decision_audit_events",
     "layout_publication_plans",
     "layout_publication_audit_events",
+    "media_localization_projects",
+    "media_localization_assets",
+    "media_localization_audit_events",
     "multimedia_projects",
     "multimedia_assets",
     "multimedia_audit_events",
@@ -280,6 +283,15 @@ function sampleSnapshot() {
   );
   snapshot.layout_publication_audit_events.push(
     { id: "layout-audit-a", organizationId: "org-a", layoutPublicationPlanId: "layout-a", action: "LAYOUT_PLAN_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:14:00.000Z" }
+  );
+  snapshot.media_localization_projects.push(
+    { id: "media-localization-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", multimediaProjectId: "media-project-a", layoutPublicationPlanId: "layout-a", title: "Document A localized media", sourceLanguage: "es", targetLanguages: ["ro"], projectKind: "MIXED", imageLocalization: { translatableTextRegions: ["region-title"], translatedTextReplacement: true, preserveIllustrationLayout: true, preserveTypographyStyle: true, localizedImageVersions: ["localized-image-a"] }, subtitleLocalization: { subtitleTracks: ["subtitle-a"], multilingualSubtitles: ["ro"], timingMetadata: { fps: "25" }, captionStyles: ["default"] }, voiceOverDubbing: { voiceTracks: ["voice-a"], dubbingProjects: ["dubbing-a"], narratorProfiles: ["narrator-a"], synchronizationMetadata: { sync: "draft" } }, videoLocalization: { localizedVideos: ["localized-video-a"], localizedCaptions: ["caption-a"], multilingualAudioTracks: ["audio-a"] }, localizationQa: { terminologyValidation: true, lexicographicSupport: true, semanticFidelity: true, editorialDecisionSupport: true, glossaryPrecedence: "VALIDATED_GLOSSARY_OVER_MEDIA_AI", terminologyRefs: ["term-a"], lexicographicRefs: ["lex-entry-a"], semanticReportRefs: ["semantic-a"], editorialDecisionRefs: ["editorial-a"] }, assetIds: ["media-localization-asset-a"], versionHistory: [{ id: "media-localization-version-a", version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:14:30.000Z", notes: "Media localization project created." }], auditTrail: [{ id: "media-localization-trail-a", action: "MEDIA_LOCALIZATION_PROJECT_CREATED", actorId: "user-a", at: "2026-01-01T00:14:30.000Z", version: 1 }], approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, providerIntegrationStatus: "PLACEHOLDER_ONLY", createdBy: "user-a", createdAt: "2026-01-01T00:14:30.000Z", updatedAt: "2026-01-01T00:14:30.000Z" }
+  );
+  snapshot.media_localization_assets.push(
+    { id: "media-localization-asset-a", organizationId: "org-a", mediaLocalizationProjectId: "media-localization-a", assetType: "SUBTITLE_TRACK", title: "Romanian subtitles", language: "ro", sourceUri: "media://source.srt", localizedUri: "media://ro.srt", sourceReferences: ["document-a"], timingMetadata: { fps: "25" }, captionStyles: ["default"], synchronizationMetadata: { sync: "draft" }, qaEvidence: { terminologyValidation: true, lexicographicSupport: true, semanticFidelity: true, editorialDecisionSupport: true, glossaryPrecedence: "VALIDATED_GLOSSARY_OVER_MEDIA_AI", terminologyRefs: ["term-a"], lexicographicRefs: ["lex-entry-a"], semanticReportRefs: ["semantic-a"], editorialDecisionRefs: ["editorial-a"] }, versionHistory: [{ id: "media-localization-asset-version-a", version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:14:31.000Z", notes: "Media localization asset created." }], createdBy: "user-a", createdAt: "2026-01-01T00:14:31.000Z", updatedAt: "2026-01-01T00:14:31.000Z" }
+  );
+  snapshot.media_localization_audit_events.push(
+    { id: "media-localization-audit-a", organizationId: "org-a", mediaLocalizationProjectId: "media-localization-a", mediaLocalizationAssetId: "media-localization-asset-a", action: "MEDIA_LOCALIZATION_ASSET_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:14:32.000Z" }
   );
   snapshot.multimedia_projects.push(
     { id: "media-project-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", title: "Document A Trailer", language: "ro", kind: "VIDEO", videoProfile: { bookTrailers: true, educationalVideos: true, reelsShorts: true, subtitleTrackIds: [], narrationSynchronization: true, linkedAssetIds: ["media-asset-a"] }, assetIds: ["media-asset-a"], versionHistory: [{ id: "media-version-a", version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:15:00.000Z", notes: "Multimedia project created." }], exportHistory: [], auditTrail: [{ id: "media-trail-a", action: "MEDIA_PROJECT_CREATED", actorId: "user-a", at: "2026-01-01T00:15:00.000Z", version: 1 }], approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, providerIntegrationStatus: "PLACEHOLDER_ONLY", createdBy: "user-a", createdAt: "2026-01-01T00:15:00.000Z", updatedAt: "2026-01-01T00:15:00.000Z" }
