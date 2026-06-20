@@ -50,6 +50,10 @@ export type RuntimeDatabaseTableName =
   | "platform_engineering_plans"
   | "platform_engineering_audit_events"
   | "agent_coordination_runs"
+  | "public_catalog_items"
+  | "public_distribution_records"
+  | "public_access_records"
+  | "public_portal_audit_events"
   | "scheduling_tasks"
   | "scheduling_events"
   | "scheduling_reminders"
@@ -126,6 +130,10 @@ const TABLE_NAMES: RuntimeDatabaseTableName[] = [
   "platform_engineering_plans",
   "platform_engineering_audit_events",
   "agent_coordination_runs",
+  "public_catalog_items",
+  "public_distribution_records",
+  "public_access_records",
+  "public_portal_audit_events",
   "scheduling_tasks",
   "scheduling_events",
   "scheduling_reminders",
@@ -174,6 +182,10 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "platform_engineering_plans",
   "platform_engineering_audit_events",
   "agent_coordination_runs",
+  "public_catalog_items",
+  "public_distribution_records",
+  "public_access_records",
+  "public_portal_audit_events",
   "scheduling_tasks",
   "scheduling_events",
   "scheduling_reminders",
@@ -498,6 +510,28 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
     "platform_engineering_audit_events",
     "agentCoordinationRunId",
     "agent_coordination_runs"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "public_distribution_records",
+    "publicCatalogItemId",
+    "public_catalog_items"
+  );
+  validateReferenceTenant(data, issues, "public_access_records", "publicCatalogItemId", "public_catalog_items");
+  validateReferenceTenant(
+    data,
+    issues,
+    "public_portal_audit_events",
+    "publicCatalogItemId",
+    "public_catalog_items"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "public_portal_audit_events",
+    "publicDistributionRecordId",
+    "public_distribution_records"
   );
   validateReferenceTenant(data, issues, "scheduling_reminders", "schedulingTaskId", "scheduling_tasks");
   validateReferenceTenant(data, issues, "scheduling_reminders", "schedulingEventId", "scheduling_events");
