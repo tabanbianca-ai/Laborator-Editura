@@ -90,6 +90,10 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "platform_engineering_plans",
     "platform_engineering_audit_events",
     "agent_coordination_runs",
+    "public_catalog_items",
+    "public_distribution_records",
+    "public_access_records",
+    "public_portal_audit_events",
     "scheduling_tasks",
     "scheduling_events",
     "scheduling_reminders",
@@ -311,6 +315,19 @@ function sampleSnapshot() {
   snapshot.platform_engineering_audit_events.push(
     { id: "platform-audit-a", organizationId: "org-a", platformEngineeringPlanId: "platform-plan-a", action: "OPTIMIZATION_PLAN_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:02.000Z" },
     { id: "platform-audit-b", organizationId: "org-a", agentCoordinationRunId: "agent-run-a", action: "AGENT_COORDINATION_RUN_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:03.000Z" }
+  );
+  snapshot.public_catalog_items.push(
+    { id: "public-item-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", layoutPublicationPlanId: "layout-a", multimediaProjectId: "media-project-a", mediaLocalizationProjectId: "media-localization-a", itemType: "BOOK", metadata: { title: "Document A", authors: ["Author A"], language: "ro", edition: "Beta", keywords: ["spiritism"], originalSourceReferences: ["document-a"] }, readerAccess: { onlineReadingAvailable: true, downloadableFormats: ["PDF", "EPUB"], pdfRef: "export-a", epubRef: "export-a", audioChapterRefs: ["media-asset-a"], videoRefs: ["media-asset-a"], localizedMediaRefs: ["media-localization-asset-a"], fileHostingIntegration: "NOT_CONFIGURED" }, rights: { license: "internal-beta", sourceAttribution: "Author A", copyrightStatus: "review_required", usageRestrictions: ["closed-beta"] }, availabilityStatus: "PUBLIC", releaseApprovalStatus: "APPROVED", humanApprovalRequired: true, paymentIntegration: "NOT_CONFIGURED", cdnIntegration: "NOT_CONFIGURED", distributionRecordIds: ["public-distribution-a"], auditTrail: [{ id: "public-trail-a", action: "PUBLIC_RELEASE_APPROVED", actorId: "user-a", at: "2026-01-01T00:16:30.000Z", version: 2 }], version: 2, approvedBy: "user-a", approvedAt: "2026-01-01T00:16:30.000Z", createdBy: "user-a", createdAt: "2026-01-01T00:16:20.000Z", updatedAt: "2026-01-01T00:16:30.000Z" }
+  );
+  snapshot.public_distribution_records.push(
+    { id: "public-distribution-a", organizationId: "org-a", publicCatalogItemId: "public-item-a", publicationChannels: ["public-reader"], availabilityStatus: "PUBLIC", releaseDate: "2026-02-03T00:00:00.000Z", editionStatus: "BETA", languageVariants: ["ro"], printOnDemandMetadata: { profile: "paperback" }, paymentIntegration: "NOT_CONFIGURED", fileHostingIntegration: "NOT_CONFIGURED", createdBy: "user-a", createdAt: "2026-01-01T00:16:25.000Z", updatedAt: "2026-01-01T00:16:25.000Z" }
+  );
+  snapshot.public_access_records.push(
+    { id: "public-access-a", organizationId: "org-a", publicCatalogItemId: "public-item-a", accessType: "ONLINE_READING", format: "HTML", artifactRef: "export-a", fileHostingIntegration: "NOT_CONFIGURED", createdBy: "user-a", createdAt: "2026-01-01T00:16:21.000Z" }
+  );
+  snapshot.public_portal_audit_events.push(
+    { id: "public-audit-a", organizationId: "org-a", publicCatalogItemId: "public-item-a", action: "PUBLIC_CATALOG_ITEM_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:20.000Z" },
+    { id: "public-audit-b", organizationId: "org-a", publicCatalogItemId: "public-item-a", publicDistributionRecordId: "public-distribution-a", action: "PUBLIC_DISTRIBUTION_RECORD_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:25.000Z" }
   );
   snapshot.scheduling_tasks.push(
     { id: "schedule-task-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", title: "Final review deadline", taskType: "REVIEW_DEADLINE", dueAt: "2026-02-01T10:00:00.000Z", priority: "HIGH", dependencies: ["workflow-a"], conflictDetectionStatus: "PLACEHOLDER_ONLY", conflicts: [], approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, externalCalendarIntegration: "NOT_CONFIGURED", auditTrail: [{ id: "schedule-task-trail-a", action: "SCHEDULING_TASK_CREATED", actorId: "user-a", at: "2026-01-01T00:17:00.000Z", version: 1 }], version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:17:00.000Z", updatedAt: "2026-01-01T00:17:00.000Z" }
