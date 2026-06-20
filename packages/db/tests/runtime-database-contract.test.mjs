@@ -51,7 +51,12 @@ test("runtime database includes all MVP persistence and validation tables", () =
     "multimedia_audit_events",
     "platform_engineering_plans",
     "platform_engineering_audit_events",
-    "agent_coordination_runs"
+    "agent_coordination_runs",
+    "scheduling_tasks",
+    "scheduling_events",
+    "scheduling_reminders",
+    "scheduling_agent_runs",
+    "scheduling_audit_events"
   ]) {
     assert.match(source, new RegExp(`"${table}"`));
   }
