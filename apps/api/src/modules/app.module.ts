@@ -15,6 +15,7 @@ import { RateLimitMiddleware } from "./security/rate-limit.middleware";
 import { SecurityHeadersMiddleware } from "./security/security-headers.middleware";
 import { SemanticFidelityModule } from "./semantic-fidelity/semantic-fidelity.module";
 import { SegmentsModule } from "./segments/segments.module";
+import { SchedulingModule } from "./scheduling/scheduling.module";
 import { TerminologyModule } from "./terminology/terminology.module";
 import { TranslationMemoryModule } from "./translation-memory/translation-memory.module";
 import { TranslationsModule } from "./translations/translations.module";
@@ -36,6 +37,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     LayoutPublishingModule,
     MultimediaCreationModule,
     PlatformEngineeringModule,
+    SchedulingModule,
     WorkflowModule,
     ExportModule
   ],
