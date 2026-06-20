@@ -42,7 +42,10 @@ export const TABLE_NAMES = [
   "layout_publication_audit_events",
   "multimedia_projects",
   "multimedia_assets",
-  "multimedia_audit_events"
+  "multimedia_audit_events",
+  "platform_engineering_plans",
+  "platform_engineering_audit_events",
+  "agent_coordination_runs"
 ];
 
 const TENANT_SCOPED_TABLES = new Set([
@@ -79,7 +82,10 @@ const TENANT_SCOPED_TABLES = new Set([
   "layout_publication_audit_events",
   "multimedia_projects",
   "multimedia_assets",
-  "multimedia_audit_events"
+  "multimedia_audit_events",
+  "platform_engineering_plans",
+  "platform_engineering_audit_events",
+  "agent_coordination_runs"
 ]);
 
 export function defaultRuntimeDbPath(cwd = process.cwd()) {
@@ -274,6 +280,20 @@ function validateTenantBoundaries(data, issues) {
     "multimedia_audit_events",
     "multimediaAssetId",
     "multimedia_assets"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "platform_engineering_audit_events",
+    "platformEngineeringPlanId",
+    "platform_engineering_plans"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "platform_engineering_audit_events",
+    "agentCoordinationRunId",
+    "agent_coordination_runs"
   );
 }
 
