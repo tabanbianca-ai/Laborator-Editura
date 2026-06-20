@@ -128,6 +128,36 @@ export const jsonMasterFormatV1Schema = {
       items: {
         $ref: "#/$defs/productionSubtitleTrack"
       }
+    },
+    localizedIllustrations: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/localizedIllustration"
+      }
+    },
+    localizedVideos: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/localizedVideo"
+      }
+    },
+    localizedAudio: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/localizedAudio"
+      }
+    },
+    voiceOverTracks: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/localizedAudio"
+      }
+    },
+    dubbingProjects: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/dubbingProject"
+      }
     }
   },
   $defs: {
@@ -786,6 +816,30 @@ export const jsonMasterFormatV1Schema = {
           items: {
             $ref: "#/$defs/localizedVideoExport"
           }
+        },
+        localizedIllustrations: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/localizedIllustration"
+          }
+        },
+        localizedVideos: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/localizedVideo"
+          }
+        },
+        localizedAudio: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/localizedAudio"
+          }
+        },
+        dubbingProjects: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/dubbingProject"
+          }
         }
       }
     },
@@ -1345,6 +1399,152 @@ export const jsonMasterFormatV1Schema = {
         },
         syncStatus: {
           enum: ["draft", "aligned", "human_review_required", "approved"]
+        }
+      }
+    },
+    localizedIllustration: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "language", "approvalStatus"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        sourceIllustrationRef: {
+          $ref: "#/$defs/id"
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        uri: {
+          type: "string"
+        },
+        textRegionRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        typographyStyle: {
+          type: "string"
+        },
+        approvalStatus: {
+          enum: ["pending_human_approval", "approved", "rejected"]
+        }
+      }
+    },
+    localizedVideo: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "language", "approvalStatus"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        sourceVideoRef: {
+          $ref: "#/$defs/id"
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        uri: {
+          type: "string"
+        },
+        subtitleTrackRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        audioTrackRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        approvalStatus: {
+          enum: ["pending_human_approval", "approved", "rejected"]
+        }
+      }
+    },
+    localizedAudio: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "language", "type", "approvalStatus"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        sourceAudioRef: {
+          $ref: "#/$defs/id"
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        uri: {
+          type: "string"
+        },
+        type: {
+          enum: ["voice_over", "dubbing", "localized_audio"]
+        },
+        synchronizationMetadata: {
+          type: "object",
+          additionalProperties: {
+            type: "string"
+          }
+        },
+        approvalStatus: {
+          enum: ["pending_human_approval", "approved", "rejected"]
+        }
+      }
+    },
+    dubbingProject: {
+      type: "object",
+      additionalProperties: false,
+      required: [
+        "id",
+        "title",
+        "sourceLanguage",
+        "targetLanguage",
+        "humanApprovalRequired",
+        "approvalStatus"
+      ],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        title: {
+          type: "string"
+        },
+        sourceLanguage: {
+          $ref: "#/$defs/languageCode"
+        },
+        targetLanguage: {
+          $ref: "#/$defs/languageCode"
+        },
+        narratorProfileRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        voiceTrackRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        synchronizationMetadata: {
+          type: "object",
+          additionalProperties: {
+            type: "string"
+          }
+        },
+        humanApprovalRequired: {
+          const: true
+        },
+        approvalStatus: {
+          enum: ["pending_human_approval", "approved", "rejected"]
         }
       }
     }
