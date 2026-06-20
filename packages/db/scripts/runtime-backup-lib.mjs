@@ -40,6 +40,9 @@ export const TABLE_NAMES = [
   "editorial_decision_audit_events",
   "layout_publication_plans",
   "layout_publication_audit_events",
+  "media_localization_projects",
+  "media_localization_assets",
+  "media_localization_audit_events",
   "multimedia_projects",
   "multimedia_assets",
   "multimedia_audit_events",
@@ -85,6 +88,9 @@ const TENANT_SCOPED_TABLES = new Set([
   "editorial_decision_audit_events",
   "layout_publication_plans",
   "layout_publication_audit_events",
+  "media_localization_projects",
+  "media_localization_assets",
+  "media_localization_audit_events",
   "multimedia_projects",
   "multimedia_assets",
   "multimedia_audit_events",
@@ -275,6 +281,27 @@ function validateTenantBoundaries(data, issues) {
     "layout_publication_audit_events",
     "layoutPublicationPlanId",
     "layout_publication_plans"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "media_localization_assets",
+    "mediaLocalizationProjectId",
+    "media_localization_projects"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "media_localization_audit_events",
+    "mediaLocalizationProjectId",
+    "media_localization_projects"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "media_localization_audit_events",
+    "mediaLocalizationAssetId",
+    "media_localization_assets"
   );
   validateReferenceTenant(data, issues, "multimedia_assets", "multimediaProjectId", "multimedia_projects");
   validateReferenceTenant(
