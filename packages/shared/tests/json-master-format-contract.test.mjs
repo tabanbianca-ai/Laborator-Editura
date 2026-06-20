@@ -122,6 +122,42 @@ test("JSON Master Format v1 supports layout and publication production fields", 
   assert.match(schema, /print_on_demand/);
 });
 
+test("JSON Master Format v1 reserves multimedia creation future fields", () => {
+  const types = readFileSync(
+    join(__dirname, "..", "src", "json-master-format", "types.ts"),
+    "utf8"
+  );
+  const schema = readFileSync(
+    join(__dirname, "..", "src", "json-master-format", "schema.ts"),
+    "utf8"
+  );
+  const validation = readFileSync(
+    join(__dirname, "..", "src", "json-master-format", "validation.ts"),
+    "utf8"
+  );
+
+  for (const field of [
+    "mediaAssets",
+    "illustrationProjects",
+    "audioProjects",
+    "videoProjects",
+    "voiceProfiles",
+    "subtitleTracks"
+  ]) {
+    assert.match(types, new RegExp(`${field}\\??:`));
+    assert.match(schema, new RegExp(`${field}:`));
+    assert.match(validation, new RegExp(`"${field}"`));
+  }
+
+  assert.match(types, /JsonMasterIllustrationProject/);
+  assert.match(types, /JsonMasterAudioProject/);
+  assert.match(types, /JsonMasterVideoProject/);
+  assert.match(types, /JsonMasterVoiceProfile/);
+  assert.match(types, /humanApprovalRequired: true/);
+  assert.match(schema, /creationMediaAsset/);
+  assert.match(schema, /pending_human_approval/);
+});
+
 test("invalid JSON Master Format v1 fixture fails the MVP contract", () => {
   const fixture = readFixture("json-master-format-v1.invalid.json");
   assert.match(validateContract(fixture).join("\n"), /formatVersion must be 1\.0/);
