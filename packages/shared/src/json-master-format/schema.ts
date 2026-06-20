@@ -92,6 +92,42 @@ export const jsonMasterFormatV1Schema = {
       items: {
         $ref: "#/$defs/publicationProfile"
       }
+    },
+    mediaAssets: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/creationMediaAsset"
+      }
+    },
+    illustrationProjects: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/illustrationProject"
+      }
+    },
+    audioProjects: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/audioProject"
+      }
+    },
+    videoProjects: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/videoProject"
+      }
+    },
+    voiceProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/voiceProfile"
+      }
+    },
+    subtitleTracks: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/productionSubtitleTrack"
+      }
     }
   },
   $defs: {
@@ -1077,6 +1113,238 @@ export const jsonMasterFormatV1Schema = {
         },
         approvedAt: {
           $ref: "#/$defs/timestamp"
+        }
+      }
+    },
+    creationMediaAsset: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "type", "approvalStatus"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        type: {
+          enum: ["image", "audio", "video", "subtitle"]
+        },
+        uri: {
+          type: "string"
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        sourceRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        rights: {
+          type: "object",
+          additionalProperties: true
+        },
+        versionRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        approvalStatus: {
+          enum: ["pending_human_approval", "approved", "rejected"]
+        }
+      }
+    },
+    illustrationProject: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "title", "language", "humanApprovalRequired", "approvalStatus"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        title: {
+          type: "string"
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        projectRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        documentRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        stylePresets: {
+          type: "array",
+          items: {
+            type: "string"
+          }
+        },
+        mediaAssetRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        humanApprovalRequired: {
+          const: true
+        },
+        approvalStatus: {
+          enum: ["pending_human_approval", "approved", "rejected"]
+        }
+      }
+    },
+    audioProject: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "title", "language", "humanApprovalRequired", "approvalStatus"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        title: {
+          type: "string"
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        projectRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        documentRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        voiceProfileRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        mediaAssetRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        exportTargets: {
+          type: "array",
+          items: {
+            enum: ["mp3", "wav", "flac"]
+          }
+        },
+        humanApprovalRequired: {
+          const: true
+        },
+        approvalStatus: {
+          enum: ["pending_human_approval", "approved", "rejected"]
+        }
+      }
+    },
+    videoProject: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "title", "language", "humanApprovalRequired", "approvalStatus"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        title: {
+          type: "string"
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        projectRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        documentRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        subtitleTrackRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        mediaAssetRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        humanApprovalRequired: {
+          const: true
+        },
+        approvalStatus: {
+          enum: ["pending_human_approval", "approved", "rejected"]
+        }
+      }
+    },
+    voiceProfile: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "name", "language"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        name: {
+          type: "string"
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        profileRef: {
+          type: "string"
+        },
+        approvalStatus: {
+          enum: ["pending_human_approval", "approved", "rejected"]
+        }
+      }
+    },
+    productionSubtitleTrack: {
+      type: "object",
+      additionalProperties: false,
+      required: ["id", "language", "format"],
+      properties: {
+        id: {
+          $ref: "#/$defs/id"
+        },
+        language: {
+          $ref: "#/$defs/languageCode"
+        },
+        format: {
+          enum: ["srt", "vtt", "ass"]
+        },
+        mediaAssetRef: {
+          $ref: "#/$defs/id"
+        },
+        segmentRefs: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/id"
+          }
+        },
+        syncStatus: {
+          enum: ["draft", "aligned", "human_review_required", "approved"]
         }
       }
     }
