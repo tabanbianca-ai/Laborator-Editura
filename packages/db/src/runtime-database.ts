@@ -40,7 +40,10 @@ export type RuntimeDatabaseTableName =
   | "editorial_decisions"
   | "editorial_decision_audit_events"
   | "layout_publication_plans"
-  | "layout_publication_audit_events";
+  | "layout_publication_audit_events"
+  | "multimedia_projects"
+  | "multimedia_assets"
+  | "multimedia_audit_events";
 
 export interface RuntimeDatabaseRow {
   id: string;
@@ -102,7 +105,10 @@ const TABLE_NAMES: RuntimeDatabaseTableName[] = [
   "editorial_decisions",
   "editorial_decision_audit_events",
   "layout_publication_plans",
-  "layout_publication_audit_events"
+  "layout_publication_audit_events",
+  "multimedia_projects",
+  "multimedia_assets",
+  "multimedia_audit_events"
 ];
 
 const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
@@ -136,7 +142,10 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "editorial_decisions",
   "editorial_decision_audit_events",
   "layout_publication_plans",
-  "layout_publication_audit_events"
+  "layout_publication_audit_events",
+  "multimedia_projects",
+  "multimedia_assets",
+  "multimedia_audit_events"
 ]);
 
 export class FileBackedRuntimeDatabase {
@@ -406,6 +415,21 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
     "layout_publication_audit_events",
     "layoutPublicationPlanId",
     "layout_publication_plans"
+  );
+  validateReferenceTenant(data, issues, "multimedia_assets", "multimediaProjectId", "multimedia_projects");
+  validateReferenceTenant(
+    data,
+    issues,
+    "multimedia_audit_events",
+    "multimediaProjectId",
+    "multimedia_projects"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "multimedia_audit_events",
+    "multimediaAssetId",
+    "multimedia_assets"
   );
 }
 
