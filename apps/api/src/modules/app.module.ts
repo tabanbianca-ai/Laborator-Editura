@@ -7,6 +7,7 @@ import { ExportModule } from "./export/export.module";
 import { HealthController } from "./health.controller";
 import { LayoutPublishingModule } from "./layout-publishing/layout-publishing.module";
 import { LexicographicModule } from "./lexicographic/lexicographic.module";
+import { MediaLocalizationModule } from "./media-localization/media-localization.module";
 import { MultimediaCreationModule } from "./multimedia-creation/multimedia-creation.module";
 import { PlatformEngineeringModule } from "./platform-engineering/platform-engineering.module";
 import { ProjectsModule } from "./projects/projects.module";
@@ -35,6 +36,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     SemanticFidelityModule,
     EditorialDecisionModule,
     LayoutPublishingModule,
+    MediaLocalizationModule,
     MultimediaCreationModule,
     PlatformEngineeringModule,
     SchedulingModule,
