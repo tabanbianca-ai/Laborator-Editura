@@ -11,6 +11,7 @@ import { MediaLocalizationModule } from "./media-localization/media-localization
 import { MultimediaCreationModule } from "./multimedia-creation/multimedia-creation.module";
 import { PlatformEngineeringModule } from "./platform-engineering/platform-engineering.module";
 import { ProjectsModule } from "./projects/projects.module";
+import { PublicPortalModule } from "./public-portal/public-portal.module";
 import { QaModule } from "./qa/qa.module";
 import { RateLimitMiddleware } from "./security/rate-limit.middleware";
 import { SecurityHeadersMiddleware } from "./security/security-headers.middleware";
@@ -39,6 +40,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     MediaLocalizationModule,
     MultimediaCreationModule,
     PlatformEngineeringModule,
+    PublicPortalModule,
     SchedulingModule,
     WorkflowModule,
     ExportModule
