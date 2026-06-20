@@ -64,6 +64,12 @@ export interface JsonMasterFormatV1 {
   audioTracks?: JsonMasterProductionAudioTrack[];
   videoAssets?: JsonMasterProductionVideoAsset[];
   publicationProfiles?: JsonMasterPublicationProfile[];
+  mediaAssets?: JsonMasterCreationMediaAsset[];
+  illustrationProjects?: JsonMasterIllustrationProject[];
+  audioProjects?: JsonMasterAudioProject[];
+  videoProjects?: JsonMasterVideoProject[];
+  voiceProfiles?: JsonMasterVoiceProfile[];
+  subtitleTracks?: JsonMasterProductionSubtitleTrack[];
 }
 
 export interface JsonMasterProject {
@@ -385,4 +391,76 @@ export interface JsonMasterPublicationProfile {
   humanApprovalRequired: true;
   approvedBy?: string;
   approvedAt?: string;
+}
+
+export interface JsonMasterCreationMediaAsset {
+  id: string;
+  type: "image" | "audio" | "video" | "subtitle";
+  uri?: string;
+  language?: string;
+  sourceRefs?: string[];
+  rights?: JsonMasterMediaRights;
+  versionRefs?: string[];
+  approvalStatus: "pending_human_approval" | "approved" | "rejected";
+}
+
+export interface JsonMasterMediaRights {
+  license?: string;
+  rightsHolder?: string;
+  sourceReference?: string;
+  usageNotes?: string;
+}
+
+export interface JsonMasterIllustrationProject {
+  id: string;
+  title: string;
+  language: string;
+  projectRefs?: string[];
+  documentRefs?: string[];
+  stylePresets?: string[];
+  mediaAssetRefs?: string[];
+  humanApprovalRequired: true;
+  approvalStatus: "pending_human_approval" | "approved" | "rejected";
+}
+
+export interface JsonMasterAudioProject {
+  id: string;
+  title: string;
+  language: string;
+  projectRefs?: string[];
+  documentRefs?: string[];
+  voiceProfileRefs?: string[];
+  mediaAssetRefs?: string[];
+  exportTargets?: Array<"mp3" | "wav" | "flac">;
+  humanApprovalRequired: true;
+  approvalStatus: "pending_human_approval" | "approved" | "rejected";
+}
+
+export interface JsonMasterVideoProject {
+  id: string;
+  title: string;
+  language: string;
+  projectRefs?: string[];
+  documentRefs?: string[];
+  subtitleTrackRefs?: string[];
+  mediaAssetRefs?: string[];
+  humanApprovalRequired: true;
+  approvalStatus: "pending_human_approval" | "approved" | "rejected";
+}
+
+export interface JsonMasterVoiceProfile {
+  id: string;
+  name: string;
+  language: string;
+  profileRef?: string;
+  approvalStatus?: "pending_human_approval" | "approved" | "rejected";
+}
+
+export interface JsonMasterProductionSubtitleTrack {
+  id: string;
+  language: string;
+  format: "srt" | "vtt" | "ass";
+  mediaAssetRef?: string;
+  segmentRefs?: string[];
+  syncStatus?: "draft" | "aligned" | "human_review_required" | "approved";
 }
