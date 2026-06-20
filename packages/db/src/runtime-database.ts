@@ -46,7 +46,12 @@ export type RuntimeDatabaseTableName =
   | "multimedia_audit_events"
   | "platform_engineering_plans"
   | "platform_engineering_audit_events"
-  | "agent_coordination_runs";
+  | "agent_coordination_runs"
+  | "scheduling_tasks"
+  | "scheduling_events"
+  | "scheduling_reminders"
+  | "scheduling_agent_runs"
+  | "scheduling_audit_events";
 
 export interface RuntimeDatabaseRow {
   id: string;
@@ -114,7 +119,12 @@ const TABLE_NAMES: RuntimeDatabaseTableName[] = [
   "multimedia_audit_events",
   "platform_engineering_plans",
   "platform_engineering_audit_events",
-  "agent_coordination_runs"
+  "agent_coordination_runs",
+  "scheduling_tasks",
+  "scheduling_events",
+  "scheduling_reminders",
+  "scheduling_agent_runs",
+  "scheduling_audit_events"
 ];
 
 const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
@@ -154,7 +164,12 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "multimedia_audit_events",
   "platform_engineering_plans",
   "platform_engineering_audit_events",
-  "agent_coordination_runs"
+  "agent_coordination_runs",
+  "scheduling_tasks",
+  "scheduling_events",
+  "scheduling_reminders",
+  "scheduling_agent_runs",
+  "scheduling_audit_events"
 ]);
 
 export class FileBackedRuntimeDatabase {
@@ -453,6 +468,31 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
     "platform_engineering_audit_events",
     "agentCoordinationRunId",
     "agent_coordination_runs"
+  );
+  validateReferenceTenant(data, issues, "scheduling_reminders", "schedulingTaskId", "scheduling_tasks");
+  validateReferenceTenant(data, issues, "scheduling_reminders", "schedulingEventId", "scheduling_events");
+  validateReferenceTenant(
+    data,
+    issues,
+    "scheduling_reminders",
+    "schedulingAgentRunId",
+    "scheduling_agent_runs"
+  );
+  validateReferenceTenant(data, issues, "scheduling_audit_events", "schedulingTaskId", "scheduling_tasks");
+  validateReferenceTenant(data, issues, "scheduling_audit_events", "schedulingEventId", "scheduling_events");
+  validateReferenceTenant(
+    data,
+    issues,
+    "scheduling_audit_events",
+    "schedulingReminderId",
+    "scheduling_reminders"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "scheduling_audit_events",
+    "schedulingAgentRunId",
+    "scheduling_agent_runs"
   );
 }
 
