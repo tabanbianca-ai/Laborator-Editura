@@ -94,6 +94,13 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "commerce_distribution_channels",
     "commerce_print_profiles",
     "commerce_audit_events",
+    "library_items",
+    "library_reading_progress",
+    "library_bookmarks",
+    "library_highlights",
+    "library_notes",
+    "library_access_events",
+    "library_audit_events",
     "public_catalog_items",
     "public_distribution_records",
     "public_access_records",
@@ -345,6 +352,28 @@ function sampleSnapshot() {
   snapshot.public_portal_audit_events.push(
     { id: "public-audit-a", organizationId: "org-a", publicCatalogItemId: "public-item-a", action: "PUBLIC_CATALOG_ITEM_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:20.000Z" },
     { id: "public-audit-b", organizationId: "org-a", publicCatalogItemId: "public-item-a", publicDistributionRecordId: "public-distribution-a", action: "PUBLIC_DISTRIBUTION_RECORD_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:25.000Z" }
+  );
+  snapshot.library_items.push(
+    { id: "library-item-a", organizationId: "org-a", userId: "user-a", publicCatalogItemId: "public-item-a", commerceEditionId: "commerce-edition-a", itemType: "BOOK", title: "Document A", language: "ro", sourceReference: "public-item-a", favorite: true, savedAt: "2026-01-01T00:16:40.000Z", lastAccessedAt: "2026-01-01T00:16:45.000Z", createdAt: "2026-01-01T00:16:40.000Z", updatedAt: "2026-01-01T00:16:45.000Z", metadata: { privacy: "private_by_default" } }
+  );
+  snapshot.library_reading_progress.push(
+    { id: "library-progress-a", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", progressPercent: 42, currentChapter: "chapter-1", currentSection: "section-2", position: "page-21", readingSessionId: "session-a", updatedAt: "2026-01-01T00:16:46.000Z" }
+  );
+  snapshot.library_bookmarks.push(
+    { id: "library-bookmark-a", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", chapter: "chapter-1", section: "section-2", position: "page-21", label: "Important passage", createdAt: "2026-01-01T00:16:47.000Z" }
+  );
+  snapshot.library_highlights.push(
+    { id: "library-highlight-a", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", text: "Spiritul progresează", color: "yellow", chapter: "chapter-1", section: "section-2", position: "page-21", note: "Review later", createdAt: "2026-01-01T00:16:48.000Z" }
+  );
+  snapshot.library_notes.push(
+    { id: "library-note-a", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", content: "Personal reading note.", chapter: "chapter-1", section: "section-2", position: "page-22", createdAt: "2026-01-01T00:16:49.000Z", updatedAt: "2026-01-01T00:16:49.000Z" }
+  );
+  snapshot.library_access_events.push(
+    { id: "library-access-a", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", eventType: "OPENED", readingSessionId: "session-a", occurredAt: "2026-01-01T00:16:50.000Z", metadata: { privateReadingHistory: true } }
+  );
+  snapshot.library_audit_events.push(
+    { id: "library-audit-a", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", entityType: "library_item", entityId: "library-item-a", action: "LIBRARY_ITEM_ADDED", actorId: "user-a", createdAt: "2026-01-01T00:16:40.000Z" },
+    { id: "library-audit-b", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", entityType: "reading_progress", entityId: "library-progress-a", action: "READING_PROGRESS_UPDATED", actorId: "user-a", createdAt: "2026-01-01T00:16:46.000Z" }
   );
   snapshot.scheduling_tasks.push(
     { id: "schedule-task-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", title: "Final review deadline", taskType: "REVIEW_DEADLINE", dueAt: "2026-02-01T10:00:00.000Z", priority: "HIGH", dependencies: ["workflow-a"], conflictDetectionStatus: "PLACEHOLDER_ONLY", conflicts: [], approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, externalCalendarIntegration: "NOT_CONFIGURED", auditTrail: [{ id: "schedule-task-trail-a", action: "SCHEDULING_TASK_CREATED", actorId: "user-a", at: "2026-01-01T00:17:00.000Z", version: 1 }], version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:17:00.000Z", updatedAt: "2026-01-01T00:17:00.000Z" }
