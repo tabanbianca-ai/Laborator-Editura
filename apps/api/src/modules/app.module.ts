@@ -1,5 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AuthModule } from "./auth/auth.module";
+import { CommerceModule } from "./commerce/commerce.module";
 import { RequestContextMiddleware } from "./auth/request-context.middleware";
 import { DocumentsModule } from "./documents/documents.module";
 import { EditorialDecisionModule } from "./editorial-decisions/editorial-decisions.module";
@@ -26,6 +27,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
 @Module({
   imports: [
     AuthModule,
+    CommerceModule,
     ProjectsModule,
     DocumentsModule,
     SegmentsModule,
