@@ -87,15 +87,7 @@ export class LibraryService {
       readingSessionId: saved.readingSessionId,
       progressPercent: saved.progressPercent
     });
-    await this.audit(
-      "READING_PROGRESS_UPDATED",
-      actor,
-      item.id,
-      "reading_progress",
-      saved.id,
-      existing ?? undefined,
-      saved
-    );
+    await this.audit("READING_PROGRESS_UPDATED", actor, item.id, "reading_progress", saved.id, existing ?? undefined, saved);
 
     return saved;
   }
