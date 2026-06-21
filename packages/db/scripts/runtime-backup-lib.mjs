@@ -53,6 +53,13 @@ export const TABLE_NAMES = [
   "commerce_distribution_channels",
   "commerce_print_profiles",
   "commerce_audit_events",
+  "library_items",
+  "library_reading_progress",
+  "library_bookmarks",
+  "library_highlights",
+  "library_notes",
+  "library_access_events",
+  "library_audit_events",
   "public_catalog_items",
   "public_distribution_records",
   "public_access_records",
@@ -109,6 +116,13 @@ const TENANT_SCOPED_TABLES = new Set([
   "commerce_distribution_channels",
   "commerce_print_profiles",
   "commerce_audit_events",
+  "library_items",
+  "library_reading_progress",
+  "library_bookmarks",
+  "library_highlights",
+  "library_notes",
+  "library_access_events",
+  "library_audit_events",
   "public_catalog_items",
   "public_distribution_records",
   "public_access_records",
@@ -371,6 +385,12 @@ function validateTenantBoundaries(data, issues) {
     "commercePrintProfileId",
     "commerce_print_profiles"
   );
+  validateReferenceTenant(data, issues, "library_reading_progress", "libraryItemId", "library_items");
+  validateReferenceTenant(data, issues, "library_bookmarks", "libraryItemId", "library_items");
+  validateReferenceTenant(data, issues, "library_highlights", "libraryItemId", "library_items");
+  validateReferenceTenant(data, issues, "library_notes", "libraryItemId", "library_items");
+  validateReferenceTenant(data, issues, "library_access_events", "libraryItemId", "library_items");
+  validateReferenceTenant(data, issues, "library_audit_events", "libraryItemId", "library_items");
   validateReferenceTenant(
     data,
     issues,
