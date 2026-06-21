@@ -7,6 +7,7 @@ import { EditorialDecisionModule } from "./editorial-decisions/editorial-decisio
 import { ExportModule } from "./export/export.module";
 import { HealthController } from "./health.controller";
 import { LayoutPublishingModule } from "./layout-publishing/layout-publishing.module";
+import { LibraryModule } from "./library/library.module";
 import { LexicographicModule } from "./lexicographic/lexicographic.module";
 import { MediaLocalizationModule } from "./media-localization/media-localization.module";
 import { MultimediaCreationModule } from "./multimedia-creation/multimedia-creation.module";
@@ -39,6 +40,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     SemanticFidelityModule,
     EditorialDecisionModule,
     LayoutPublishingModule,
+    LibraryModule,
     MediaLocalizationModule,
     MultimediaCreationModule,
     PlatformEngineeringModule,
