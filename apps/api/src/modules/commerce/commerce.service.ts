@@ -8,7 +8,9 @@ import {
   type CommerceAvailabilityStatus,
   type CommerceDistributionChannel,
   type CommerceEdition,
+  type CommerceEditionMetadata,
   type CommercePrintProfile,
+  type CommercePrintOnDemandMetadata,
   type CommercePrintTrimSize,
   type CreateCommerceDistributionInput,
   type CreateCommerceEditionInput
@@ -38,7 +40,7 @@ export class CommerceService {
       title: input.title,
       language: input.language,
       editionType: input.editionType,
-      metadata: input.metadata,
+      metadata: this.buildEditionMetadata(input.metadata),
       printProfile,
       pricing: {
         price: input.pricing?.price,
@@ -48,10 +50,7 @@ export class CommerceService {
         royaltyPercentages: input.pricing?.royaltyPercentages ?? {},
         distributionChannels: input.pricing?.distributionChannels ?? []
       },
-      printOnDemand: {
-        ...input.printOnDemand,
-        printProfileId: printProfile.id
-      },
+      printOnDemand: this.buildPrintOnDemand(input.printOnDemand, printProfile.id),
       distributionChannelIds: [],
       availabilityStatus: "PENDING_COMMERCIAL_APPROVAL",
       approvalStatus: "PENDING_HUMAN_APPROVAL",
@@ -234,6 +233,28 @@ export class CommerceService {
       createdBy: actor.userId,
       createdAt,
       updatedAt: createdAt
+    };
+  }
+
+  private buildEditionMetadata(metadata: CommerceEditionMetadata): CommerceEditionMetadata {
+    return {
+      isbn: metadata.isbn,
+      editionNumber: metadata.editionNumber,
+      originalEditionReference: metadata.originalEditionReference,
+      originalLanguage: metadata.originalLanguage,
+      firstPublicationYear: metadata.firstPublicationYear
+    };
+  }
+
+  private buildPrintOnDemand(
+    input: CommercePrintOnDemandMetadata = {},
+    printProfileId: string
+  ): CommercePrintOnDemandMetadata {
+    return {
+      provider: input.provider,
+      region: input.region,
+      status: input.status ?? "METADATA_ONLY",
+      printProfileId
     };
   }
 
