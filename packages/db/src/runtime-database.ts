@@ -50,6 +50,10 @@ export type RuntimeDatabaseTableName =
   | "platform_engineering_plans"
   | "platform_engineering_audit_events"
   | "agent_coordination_runs"
+  | "commerce_editions"
+  | "commerce_distribution_channels"
+  | "commerce_print_profiles"
+  | "commerce_audit_events"
   | "public_catalog_items"
   | "public_distribution_records"
   | "public_access_records"
@@ -130,6 +134,10 @@ const TABLE_NAMES: RuntimeDatabaseTableName[] = [
   "platform_engineering_plans",
   "platform_engineering_audit_events",
   "agent_coordination_runs",
+  "commerce_editions",
+  "commerce_distribution_channels",
+  "commerce_print_profiles",
+  "commerce_audit_events",
   "public_catalog_items",
   "public_distribution_records",
   "public_access_records",
@@ -182,6 +190,10 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "platform_engineering_plans",
   "platform_engineering_audit_events",
   "agent_coordination_runs",
+  "commerce_editions",
+  "commerce_distribution_channels",
+  "commerce_print_profiles",
+  "commerce_audit_events",
   "public_catalog_items",
   "public_distribution_records",
   "public_access_records",
@@ -510,6 +522,29 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
     "platform_engineering_audit_events",
     "agentCoordinationRunId",
     "agent_coordination_runs"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "commerce_distribution_channels",
+    "commerceEditionId",
+    "commerce_editions"
+  );
+  validateReferenceTenant(data, issues, "commerce_print_profiles", "commerceEditionId", "commerce_editions");
+  validateReferenceTenant(data, issues, "commerce_audit_events", "commerceEditionId", "commerce_editions");
+  validateReferenceTenant(
+    data,
+    issues,
+    "commerce_audit_events",
+    "commerceDistributionChannelId",
+    "commerce_distribution_channels"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "commerce_audit_events",
+    "commercePrintProfileId",
+    "commerce_print_profiles"
   );
   validateReferenceTenant(
     data,
