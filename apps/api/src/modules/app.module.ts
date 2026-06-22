@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { AuthorStudioModule } from "./author-studio/author-studio.module";
 import { AuthModule } from "./auth/auth.module";
 import { CommerceModule } from "./commerce/commerce.module";
 import { CollaborationModule } from "./collaboration/collaboration.module";
@@ -29,6 +30,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
 @Module({
   imports: [
     AuthModule,
+    AuthorStudioModule,
     CommerceModule,
     CollaborationModule,
     ProjectsModule,
