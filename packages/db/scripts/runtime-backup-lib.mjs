@@ -66,6 +66,13 @@ export const TABLE_NAMES = [
   "author_notes",
   "author_submission_events",
   "author_studio_audit_events",
+  "research_sources",
+  "research_notes",
+  "research_entities",
+  "research_relationships",
+  "research_collections",
+  "research_collection_items",
+  "research_audit_events",
   "collaboration_threads",
   "collaboration_comments",
   "community_reviews",
@@ -142,6 +149,13 @@ const TENANT_SCOPED_TABLES = new Set([
   "author_notes",
   "author_submission_events",
   "author_studio_audit_events",
+  "research_sources",
+  "research_notes",
+  "research_entities",
+  "research_relationships",
+  "research_collections",
+  "research_collection_items",
+  "research_audit_events",
   "collaboration_threads",
   "collaboration_comments",
   "community_reviews",
@@ -433,6 +447,21 @@ function validateTenantBoundaries(data, issues) {
     "submissionEventId",
     "author_submission_events"
   );
+  validateReferenceTenant(data, issues, "research_notes", "sourceId", "research_sources");
+  validateReferenceTenant(data, issues, "research_notes", "entityId", "research_entities");
+  validateReferenceTenant(data, issues, "research_relationships", "fromEntityId", "research_entities");
+  validateReferenceTenant(data, issues, "research_relationships", "toEntityId", "research_entities");
+  validateReferenceTenant(data, issues, "research_collection_items", "collectionId", "research_collections");
+  validateReferenceTenant(data, issues, "research_collection_items", "sourceId", "research_sources");
+  validateReferenceTenant(data, issues, "research_collection_items", "noteId", "research_notes");
+  validateReferenceTenant(data, issues, "research_collection_items", "entityId", "research_entities");
+  validateReferenceTenant(data, issues, "research_collection_items", "relationshipId", "research_relationships");
+  validateReferenceTenant(data, issues, "research_audit_events", "sourceId", "research_sources");
+  validateReferenceTenant(data, issues, "research_audit_events", "noteId", "research_notes");
+  validateReferenceTenant(data, issues, "research_audit_events", "entityId", "research_entities");
+  validateReferenceTenant(data, issues, "research_audit_events", "relationshipId", "research_relationships");
+  validateReferenceTenant(data, issues, "research_audit_events", "collectionId", "research_collections");
+  validateReferenceTenant(data, issues, "research_audit_events", "collectionItemId", "research_collection_items");
   validateReferenceTenant(data, issues, "collaboration_comments", "threadId", "collaboration_threads");
   validateReferenceTenant(data, issues, "community_flags", "communityReviewId", "community_reviews");
   validateReferenceTenant(data, issues, "community_flags", "communityCommentId", "community_comments");
