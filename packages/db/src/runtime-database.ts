@@ -5,105 +5,7 @@ import { dirname, join } from "node:path";
 export const RUNTIME_DATABASE_BACKUP_FORMAT = "laborator-runtime-database-backup";
 export const RUNTIME_DATABASE_SCHEMA_VERSION = "1.0";
 
-export type RuntimeDatabaseTableName =
-  | "organizations"
-  | "users"
-  | "user_roles"
-  | "auth_sessions"
-  | "auth_login_attempts"
-  | "auth_security_events"
-  | "organization_founder_protection"
-  | "founder_ownership_transfers"
-  | "projects"
-  | "documents"
-  | "document_segments"
-  | "segment_translations"
-  | "export_artifacts"
-  | "foundation_audit_events"
-  | "translation_memory_entries"
-  | "translation_memory_audit_events"
-  | "terminology_terms"
-  | "terminology_audit_events"
-  | "qa_reports"
-  | "qa_issues"
-  | "qa_audit_events"
-  | "semantic_fidelity_reports"
-  | "semantic_fidelity_issues"
-  | "semantic_fidelity_audit_events"
-  | "workflow_states"
-  | "workflow_transitions"
-  | "workflow_audit_events"
-  | "lexicographic_sources"
-  | "lexicographic_entries"
-  | "lexicographic_decisions"
-  | "lexicographic_audit_events"
-  | "editorial_decisions"
-  | "editorial_decision_audit_events"
-  | "layout_publication_plans"
-  | "layout_publication_audit_events"
-  | "media_localization_projects"
-  | "media_localization_assets"
-  | "media_localization_audit_events"
-  | "multimedia_projects"
-  | "multimedia_assets"
-  | "multimedia_audit_events"
-  | "platform_engineering_plans"
-  | "platform_engineering_audit_events"
-  | "agent_coordination_runs"
-  | "commerce_editions"
-  | "commerce_distribution_channels"
-  | "commerce_print_profiles"
-  | "commerce_audit_events"
-  | "library_items"
-  | "library_reading_progress"
-  | "library_bookmarks"
-  | "library_highlights"
-  | "library_notes"
-  | "library_access_events"
-  | "library_audit_events"
-  | "collaboration_threads"
-  | "collaboration_comments"
-  | "community_reviews"
-  | "community_comments"
-  | "community_flags"
-  | "community_moderation_events"
-  | "collaboration_audit_events"
-  | "public_catalog_items"
-  | "public_distribution_records"
-  | "public_access_records"
-  | "public_portal_audit_events"
-  | "scheduling_tasks"
-  | "scheduling_events"
-  | "scheduling_reminders"
-  | "scheduling_agent_runs"
-  | "scheduling_audit_events";
-
-export interface RuntimeDatabaseRow {
-  id: string;
-}
-
-export interface TenantRuntimeDatabaseRow extends RuntimeDatabaseRow {
-  organizationId: string;
-}
-
-export type RuntimeDatabaseSnapshot = Record<RuntimeDatabaseTableName, RuntimeDatabaseRow[]>;
-
-export interface RuntimeDatabaseBackup {
-  metadata: {
-    format: typeof RUNTIME_DATABASE_BACKUP_FORMAT;
-    schemaVersion: typeof RUNTIME_DATABASE_SCHEMA_VERSION;
-    source: "runtime-database";
-    tables: RuntimeDatabaseTableName[];
-  };
-  data: RuntimeDatabaseSnapshot;
-}
-
-export interface RuntimeDatabaseBackupValidationResult {
-  valid: boolean;
-  issues: string[];
-}
-
-const TABLE_NAMES: RuntimeDatabaseTableName[] = [
+const TABLE_NAMES = [
   "organizations",
   "users",
   "user_roles",
@@ -175,7 +77,34 @@ const TABLE_NAMES: RuntimeDatabaseTableName[] = [
   "scheduling_reminders",
   "scheduling_agent_runs",
   "scheduling_audit_events"
-];
+] as const;
+
+export type RuntimeDatabaseTableName = (typeof TABLE_NAMES)[number];
+
+export interface RuntimeDatabaseRow {
+  id: string;
+}
+
+export interface TenantRuntimeDatabaseRow extends RuntimeDatabaseRow {
+  organizationId: string;
+}
+
+export type RuntimeDatabaseSnapshot = Record<RuntimeDatabaseTableName, RuntimeDatabaseRow[]>;
+
+export interface RuntimeDatabaseBackup {
+  metadata: {
+    format: typeof RUNTIME_DATABASE_BACKUP_FORMAT;
+    schemaVersion: typeof RUNTIME_DATABASE_SCHEMA_VERSION;
+    source: "runtime-database";
+    tables: RuntimeDatabaseTableName[];
+  };
+  data: RuntimeDatabaseSnapshot;
+}
+
+export interface RuntimeDatabaseBackupValidationResult {
+  valid: boolean;
+  issues: string[];
+}
 
 const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "user_roles",
