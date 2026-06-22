@@ -101,6 +101,13 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "library_notes",
     "library_access_events",
     "library_audit_events",
+    "collaboration_threads",
+    "collaboration_comments",
+    "community_reviews",
+    "community_comments",
+    "community_flags",
+    "community_moderation_events",
+    "collaboration_audit_events",
     "public_catalog_items",
     "public_distribution_records",
     "public_access_records",
@@ -374,6 +381,31 @@ function sampleSnapshot() {
   snapshot.library_audit_events.push(
     { id: "library-audit-a", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", entityType: "library_item", entityId: "library-item-a", action: "LIBRARY_ITEM_ADDED", actorId: "user-a", createdAt: "2026-01-01T00:16:40.000Z" },
     { id: "library-audit-b", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", entityType: "reading_progress", entityId: "library-progress-a", action: "READING_PROGRESS_UPDATED", actorId: "user-a", createdAt: "2026-01-01T00:16:46.000Z" }
+  );
+  snapshot.collaboration_threads.push(
+    { id: "collab-thread-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", segmentId: "segment-a", targetType: "SEGMENT", title: "Review segment terminology", visibility: "PRIVATE_EDITORIAL", status: "OPEN", mentionsPlaceholder: ["@reviewer"], createdBy: "user-a", createdAt: "2026-01-01T00:16:55.000Z", updatedAt: "2026-01-01T00:16:55.000Z" }
+  );
+  snapshot.collaboration_comments.push(
+    { id: "collab-comment-a", organizationId: "org-a", threadId: "collab-thread-a", authorUserId: "user-a", body: "Reviewer note for internal editorial review.", commentType: "REVIEWER_NOTE", privateEditorial: true, mentionsPlaceholder: ["@editor"], resolved: true, resolvedBy: "user-a", resolvedAt: "2026-01-01T00:16:57.000Z", createdAt: "2026-01-01T00:16:56.000Z", updatedAt: "2026-01-01T00:16:57.000Z" }
+  );
+  snapshot.community_reviews.push(
+    { id: "community-review-a", organizationId: "org-a", publicCatalogItemId: "public-item-a", userId: "user-a", rating: 5, title: "Excellent edition", body: "A clear and careful edition.", moderationStatus: "APPROVED", humanModerationRequired: true, aiModerationSuggestion: "No issue detected.", createdAt: "2026-01-01T00:16:58.000Z", updatedAt: "2026-01-01T00:17:00.000Z", approvedBy: "user-a", approvedAt: "2026-01-01T00:17:00.000Z" }
+  );
+  snapshot.community_comments.push(
+    { id: "community-comment-a", organizationId: "org-a", publicCatalogItemId: "public-item-a", userId: "user-a", body: "Reader discussion comment.", threadTitle: "Public discussion", moderationStatus: "APPROVED", humanModerationRequired: true, aiModerationSuggestion: "No issue detected.", createdAt: "2026-01-01T00:17:01.000Z", updatedAt: "2026-01-01T00:17:03.000Z", approvedBy: "user-a", approvedAt: "2026-01-01T00:17:03.000Z" }
+  );
+  snapshot.community_flags.push(
+    { id: "community-flag-a", organizationId: "org-a", contentType: "REVIEW", communityReviewId: "community-review-a", reason: "Verify source attribution.", reportedByUserId: "user-a", status: "OPEN", createdAt: "2026-01-01T00:17:04.000Z", updatedAt: "2026-01-01T00:17:04.000Z" }
+  );
+  snapshot.community_moderation_events.push(
+    { id: "community-moderation-a", organizationId: "org-a", contentType: "REVIEW", communityReviewId: "community-review-a", action: "CONTENT_APPROVED", actorId: "user-a", aiSuggested: false, humanFinalAuthority: true, createdAt: "2026-01-01T00:17:00.000Z" },
+    { id: "community-moderation-b", organizationId: "org-a", contentType: "REVIEW", communityReviewId: "community-review-a", communityFlagId: "community-flag-a", action: "CONTENT_FLAGGED", actorId: "user-a", aiSuggested: false, humanFinalAuthority: true, createdAt: "2026-01-01T00:17:04.000Z" }
+  );
+  snapshot.collaboration_audit_events.push(
+    { id: "collab-audit-a", organizationId: "org-a", threadId: "collab-thread-a", action: "COLLABORATION_THREAD_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:55.000Z" },
+    { id: "collab-audit-b", organizationId: "org-a", threadId: "collab-thread-a", collaborationCommentId: "collab-comment-a", action: "COLLABORATION_COMMENT_RESOLVED", actorId: "user-a", createdAt: "2026-01-01T00:16:57.000Z" },
+    { id: "collab-audit-c", organizationId: "org-a", communityReviewId: "community-review-a", action: "COMMUNITY_CONTENT_APPROVED", actorId: "user-a", createdAt: "2026-01-01T00:17:00.000Z" },
+    { id: "collab-audit-d", organizationId: "org-a", communityReviewId: "community-review-a", communityFlagId: "community-flag-a", action: "COMMUNITY_CONTENT_FLAGGED", actorId: "user-a", createdAt: "2026-01-01T00:17:04.000Z" }
   );
   snapshot.scheduling_tasks.push(
     { id: "schedule-task-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", title: "Final review deadline", taskType: "REVIEW_DEADLINE", dueAt: "2026-02-01T10:00:00.000Z", priority: "HIGH", dependencies: ["workflow-a"], conflictDetectionStatus: "PLACEHOLDER_ONLY", conflicts: [], approvalStatus: "PENDING_HUMAN_APPROVAL", humanApprovalRequired: true, externalCalendarIntegration: "NOT_CONFIGURED", auditTrail: [{ id: "schedule-task-trail-a", action: "SCHEDULING_TASK_CREATED", actorId: "user-a", at: "2026-01-01T00:17:00.000Z", version: 1 }], version: 1, createdBy: "user-a", createdAt: "2026-01-01T00:17:00.000Z", updatedAt: "2026-01-01T00:17:00.000Z" }
