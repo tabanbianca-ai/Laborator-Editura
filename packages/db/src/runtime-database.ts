@@ -61,6 +61,12 @@ const TABLE_NAMES = [
   "library_notes",
   "library_access_events",
   "library_audit_events",
+  "author_manuscripts",
+  "author_manuscript_sections",
+  "author_drafts",
+  "author_notes",
+  "author_submission_events",
+  "author_studio_audit_events",
   "collaboration_threads",
   "collaboration_comments",
   "community_reviews",
@@ -158,6 +164,12 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "library_notes",
   "library_access_events",
   "library_audit_events",
+  "author_manuscripts",
+  "author_manuscript_sections",
+  "author_drafts",
+  "author_notes",
+  "author_submission_events",
+  "author_studio_audit_events",
   "collaboration_threads",
   "collaboration_comments",
   "community_reviews",
@@ -523,6 +535,22 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
   validateReferenceTenant(data, issues, "library_notes", "libraryItemId", "library_items");
   validateReferenceTenant(data, issues, "library_access_events", "libraryItemId", "library_items");
   validateReferenceTenant(data, issues, "library_audit_events", "libraryItemId", "library_items");
+  validateReferenceTenant(data, issues, "author_manuscript_sections", "manuscriptId", "author_manuscripts");
+  validateReferenceTenant(data, issues, "author_drafts", "manuscriptId", "author_manuscripts");
+  validateReferenceTenant(data, issues, "author_drafts", "sectionId", "author_manuscript_sections");
+  validateReferenceTenant(data, issues, "author_notes", "manuscriptId", "author_manuscripts");
+  validateReferenceTenant(data, issues, "author_submission_events", "manuscriptId", "author_manuscripts");
+  validateReferenceTenant(data, issues, "author_studio_audit_events", "manuscriptId", "author_manuscripts");
+  validateReferenceTenant(data, issues, "author_studio_audit_events", "sectionId", "author_manuscript_sections");
+  validateReferenceTenant(data, issues, "author_studio_audit_events", "draftId", "author_drafts");
+  validateReferenceTenant(data, issues, "author_studio_audit_events", "noteId", "author_notes");
+  validateReferenceTenant(
+    data,
+    issues,
+    "author_studio_audit_events",
+    "submissionEventId",
+    "author_submission_events"
+  );
   validateReferenceTenant(data, issues, "collaboration_comments", "threadId", "collaboration_threads");
   validateReferenceTenant(data, issues, "community_flags", "communityReviewId", "community_reviews");
   validateReferenceTenant(data, issues, "community_flags", "communityCommentId", "community_comments");
