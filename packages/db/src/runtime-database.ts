@@ -61,6 +61,13 @@ export type RuntimeDatabaseTableName =
   | "library_notes"
   | "library_access_events"
   | "library_audit_events"
+  | "collaboration_threads"
+  | "collaboration_comments"
+  | "community_reviews"
+  | "community_comments"
+  | "community_flags"
+  | "community_moderation_events"
+  | "collaboration_audit_events"
   | "public_catalog_items"
   | "public_distribution_records"
   | "public_access_records"
@@ -152,6 +159,13 @@ const TABLE_NAMES: RuntimeDatabaseTableName[] = [
   "library_notes",
   "library_access_events",
   "library_audit_events",
+  "collaboration_threads",
+  "collaboration_comments",
+  "community_reviews",
+  "community_comments",
+  "community_flags",
+  "community_moderation_events",
+  "collaboration_audit_events",
   "public_catalog_items",
   "public_distribution_records",
   "public_access_records",
@@ -215,6 +229,13 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "library_notes",
   "library_access_events",
   "library_audit_events",
+  "collaboration_threads",
+  "collaboration_comments",
+  "community_reviews",
+  "community_comments",
+  "community_flags",
+  "community_moderation_events",
+  "collaboration_audit_events",
   "public_catalog_items",
   "public_distribution_records",
   "public_access_records",
@@ -573,6 +594,23 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
   validateReferenceTenant(data, issues, "library_notes", "libraryItemId", "library_items");
   validateReferenceTenant(data, issues, "library_access_events", "libraryItemId", "library_items");
   validateReferenceTenant(data, issues, "library_audit_events", "libraryItemId", "library_items");
+  validateReferenceTenant(data, issues, "collaboration_comments", "threadId", "collaboration_threads");
+  validateReferenceTenant(data, issues, "community_flags", "communityReviewId", "community_reviews");
+  validateReferenceTenant(data, issues, "community_flags", "communityCommentId", "community_comments");
+  validateReferenceTenant(data, issues, "community_moderation_events", "communityReviewId", "community_reviews");
+  validateReferenceTenant(data, issues, "community_moderation_events", "communityCommentId", "community_comments");
+  validateReferenceTenant(data, issues, "community_moderation_events", "communityFlagId", "community_flags");
+  validateReferenceTenant(data, issues, "collaboration_audit_events", "threadId", "collaboration_threads");
+  validateReferenceTenant(
+    data,
+    issues,
+    "collaboration_audit_events",
+    "collaborationCommentId",
+    "collaboration_comments"
+  );
+  validateReferenceTenant(data, issues, "collaboration_audit_events", "communityReviewId", "community_reviews");
+  validateReferenceTenant(data, issues, "collaboration_audit_events", "communityCommentId", "community_comments");
+  validateReferenceTenant(data, issues, "collaboration_audit_events", "communityFlagId", "community_flags");
   validateReferenceTenant(
     data,
     issues,
