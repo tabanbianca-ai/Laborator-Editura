@@ -107,6 +107,13 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "author_notes",
     "author_submission_events",
     "author_studio_audit_events",
+    "research_sources",
+    "research_notes",
+    "research_entities",
+    "research_relationships",
+    "research_collections",
+    "research_collection_items",
+    "research_audit_events",
     "collaboration_threads",
     "collaboration_comments",
     "community_reviews",
@@ -408,6 +415,31 @@ function sampleSnapshot() {
     { id: "author-audit-b", organizationId: "org-a", manuscriptId: "author-manuscript-a", sectionId: "author-section-a", draftId: "author-draft-a", action: "AUTHOR_DRAFT_SAVED", actorId: "user-a", createdAt: "2026-01-01T00:16:53.000Z" },
     { id: "author-audit-c", organizationId: "org-a", manuscriptId: "author-manuscript-a", noteId: "author-note-a", action: "AUTHOR_NOTE_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:53.500Z" },
     { id: "author-audit-d", organizationId: "org-a", manuscriptId: "author-manuscript-a", submissionEventId: "author-submission-a", action: "AUTHOR_MANUSCRIPT_SUBMITTED", actorId: "user-a", createdAt: "2026-01-01T00:16:54.000Z" }
+  );
+  snapshot.research_sources.push(
+    { id: "research-source-a", organizationId: "org-a", title: "Le Livre des Esprits", subtitle: "Edition de référence", author: "Allan Kardec", originalAuthor: "Allan Kardec", language: "fr", originalLanguage: "fr", firstPublicationYear: 1860, sourceType: "BOOK", publisher: "Didier", isbn: "optional-isbn", url: "https://example.test/kardec", citation: "Kardec, Allan. Le Livre des Esprits.", tags: ["spiritism", "primary"], notes: "Primary research source.", visibility: "ORGANIZATION", ecosystemReferences: [{ module: "AUTHOR_STUDIO", entityId: "author-manuscript-a", label: "project-a" }], aiPolicy: { summarizeSources: true, extractConcepts: true, suggestRelations: true, buildKnowledgeGraphs: true, suggestBibliography: true, mayModifyOriginalSources: false, mayDeleteValidatedResearch: false, mayApproveEditorialContent: false, mayAlterCitationsAutomatically: false }, humanFinalAuthority: true, createdBy: "user-a", createdAt: "2026-01-01T00:16:54.100Z", updatedAt: "2026-01-01T00:16:54.100Z" }
+  );
+  snapshot.research_entities.push(
+    { id: "research-entity-a", organizationId: "org-a", entityType: "SPIRITUAL_CONCEPT", name: "Spirit", description: "Core spiritist concept.", language: "en", aliases: ["Esprit", "Spiritul"], tags: ["spiritism"], sourceIds: ["research-source-a"], ecosystemReferences: [{ module: "TERMINOLOGY", entityId: "term-a" }], aiSuggested: false, humanFinalAuthority: true, createdBy: "user-a", createdAt: "2026-01-01T00:16:54.200Z", updatedAt: "2026-01-01T00:16:54.200Z" },
+    { id: "research-entity-b", organizationId: "org-a", entityType: "CONCEPT", name: "Moral progress", description: "Progress through experience.", language: "en", aliases: ["Progres moral"], tags: ["spiritism"], sourceIds: ["research-source-a"], ecosystemReferences: [{ module: "SEMANTIC_FIDELITY", entityId: "semantic-report-a" }], aiSuggested: true, humanFinalAuthority: true, createdBy: "user-a", createdAt: "2026-01-01T00:16:54.250Z", updatedAt: "2026-01-01T00:16:54.250Z" }
+  );
+  snapshot.research_notes.push(
+    { id: "research-note-a", organizationId: "org-a", sourceId: "research-source-a", projectId: "project-a", manuscriptId: "author-manuscript-a", entityId: "research-entity-a", noteType: "PRIVATE_NOTE", title: "Private reading note", content: "Private notes are never public.", visibility: "PRIVATE", privateToCreator: true, ecosystemReferences: [{ module: "AUTHOR_STUDIO", entityId: "author-manuscript-a" }], createdBy: "user-a", createdAt: "2026-01-01T00:16:54.300Z", updatedAt: "2026-01-01T00:16:54.300Z" }
+  );
+  snapshot.research_relationships.push(
+    { id: "research-relationship-a", organizationId: "org-a", fromEntityId: "research-entity-a", toEntityId: "research-entity-b", relationshipType: "RELATED_ENTITY", description: "Spirit is related to moral progress.", sourceIds: ["research-source-a"], aiSuggested: true, humanFinalAuthority: true, createdBy: "user-a", createdAt: "2026-01-01T00:16:54.400Z" }
+  );
+  snapshot.research_collections.push(
+    { id: "research-collection-a", organizationId: "org-a", name: "Spiritism sources", description: "Shared editorial collection.", visibility: "TEAM", projectId: "project-a", thematicTags: ["spiritism"], sharedEditorialCollection: true, createdBy: "user-a", createdAt: "2026-01-01T00:16:54.500Z", updatedAt: "2026-01-01T00:16:54.500Z" }
+  );
+  snapshot.research_collection_items.push(
+    { id: "research-collection-item-a", organizationId: "org-a", collectionId: "research-collection-a", itemType: "SOURCE", sourceId: "research-source-a", addedBy: "user-a", createdAt: "2026-01-01T00:16:54.600Z" }
+  );
+  snapshot.research_audit_events.push(
+    { id: "research-audit-a", organizationId: "org-a", sourceId: "research-source-a", action: "RESEARCH_SOURCE_CREATED", actorId: "user-a", humanFinalAuthority: true, aiSuggested: false, createdAt: "2026-01-01T00:16:54.100Z" },
+    { id: "research-audit-b", organizationId: "org-a", entityId: "research-entity-b", action: "RESEARCH_AI_SUGGESTION_RECORDED", actorId: "user-a", humanFinalAuthority: true, aiSuggested: true, createdAt: "2026-01-01T00:16:54.250Z" },
+    { id: "research-audit-c", organizationId: "org-a", relationshipId: "research-relationship-a", action: "RESEARCH_RELATIONSHIP_CREATED", actorId: "user-a", humanFinalAuthority: true, aiSuggested: true, createdAt: "2026-01-01T00:16:54.400Z" },
+    { id: "research-audit-d", organizationId: "org-a", collectionId: "research-collection-a", collectionItemId: "research-collection-item-a", action: "RESEARCH_COLLECTION_ITEM_ADDED", actorId: "user-a", humanFinalAuthority: true, aiSuggested: false, createdAt: "2026-01-01T00:16:54.600Z" }
   );
   snapshot.collaboration_threads.push(
     { id: "collab-thread-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", segmentId: "segment-a", targetType: "SEGMENT", title: "Review segment terminology", visibility: "PRIVATE_EDITORIAL", status: "OPEN", mentionsPlaceholder: ["@reviewer"], createdBy: "user-a", createdAt: "2026-01-01T00:16:55.000Z", updatedAt: "2026-01-01T00:16:55.000Z" }
