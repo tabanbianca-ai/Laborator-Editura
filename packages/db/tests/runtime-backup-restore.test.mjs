@@ -101,6 +101,12 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "library_notes",
     "library_access_events",
     "library_audit_events",
+    "author_manuscripts",
+    "author_manuscript_sections",
+    "author_drafts",
+    "author_notes",
+    "author_submission_events",
+    "author_studio_audit_events",
     "collaboration_threads",
     "collaboration_comments",
     "community_reviews",
@@ -381,6 +387,27 @@ function sampleSnapshot() {
   snapshot.library_audit_events.push(
     { id: "library-audit-a", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", entityType: "library_item", entityId: "library-item-a", action: "LIBRARY_ITEM_ADDED", actorId: "user-a", createdAt: "2026-01-01T00:16:40.000Z" },
     { id: "library-audit-b", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", entityType: "reading_progress", entityId: "library-progress-a", action: "READING_PROGRESS_UPDATED", actorId: "user-a", createdAt: "2026-01-01T00:16:46.000Z" }
+  );
+  snapshot.author_manuscripts.push(
+    { id: "author-manuscript-a", organizationId: "org-a", authorId: "user-a", projectId: "project-a", documentId: "document-a", title: "Author Studio Draft", subtitle: "Working manuscript", language: "ro", genre: "spiritism", manuscriptType: "BOOK", status: "SUBMITTED", synopsis: "A short manuscript synopsis.", outline: "Chapter 1 -> Chapter 2", stylePreferences: ["clear prose"], authorAttribution: { authorId: "user-a", retained: true }, aiSuggestionsAdvisoryOnly: true, publicExposure: false, humanEditorialApprovalRequired: true, createdAt: "2026-01-01T00:16:51.000Z", updatedAt: "2026-01-01T00:16:54.000Z", submittedAt: "2026-01-01T00:16:54.000Z" }
+  );
+  snapshot.author_manuscript_sections.push(
+    { id: "author-section-a", organizationId: "org-a", manuscriptId: "author-manuscript-a", sectionType: "CHAPTER", title: "Chapter 1", orderIndex: 1, synopsis: "Opening chapter.", outline: "Scene 1", notes: "Author structural note.", createdAt: "2026-01-01T00:16:52.000Z", updatedAt: "2026-01-01T00:16:52.000Z" }
+  );
+  snapshot.author_drafts.push(
+    { id: "author-draft-a", organizationId: "org-a", manuscriptId: "author-manuscript-a", sectionId: "author-section-a", content: "Spiritul progresează prin experiență.", version: 1, autosave: true, autosaveMetadata: { savedAt: "2026-01-01T00:16:53.000Z", source: "AUTOSAVE" }, wordCount: 4, characterCount: 37, aiSuggestionApplied: false, createdBy: "user-a", createdAt: "2026-01-01T00:16:53.000Z" }
+  );
+  snapshot.author_notes.push(
+    { id: "author-note-a", organizationId: "org-a", manuscriptId: "author-manuscript-a", authorId: "user-a", noteType: "PRIVATE_AUTHOR_NOTE", title: "Research", content: "Private author research note.", privateToAuthor: true, createdAt: "2026-01-01T00:16:53.500Z", updatedAt: "2026-01-01T00:16:53.500Z" }
+  );
+  snapshot.author_submission_events.push(
+    { id: "author-submission-a", organizationId: "org-a", manuscriptId: "author-manuscript-a", authorId: "user-a", projectId: "project-a", documentId: "document-a", status: "DOCUMENT_LINKED", workflowStatus: "PENDING_EDITORIAL_WORKFLOW", createOrLinkDocument: "LINK_EXISTING_DOCUMENT", humanEditorialApprovalRequired: true, aiInitiated: false, submittedAt: "2026-01-01T00:16:54.000Z" }
+  );
+  snapshot.author_studio_audit_events.push(
+    { id: "author-audit-a", organizationId: "org-a", manuscriptId: "author-manuscript-a", action: "AUTHOR_MANUSCRIPT_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:51.000Z" },
+    { id: "author-audit-b", organizationId: "org-a", manuscriptId: "author-manuscript-a", sectionId: "author-section-a", draftId: "author-draft-a", action: "AUTHOR_DRAFT_SAVED", actorId: "user-a", createdAt: "2026-01-01T00:16:53.000Z" },
+    { id: "author-audit-c", organizationId: "org-a", manuscriptId: "author-manuscript-a", noteId: "author-note-a", action: "AUTHOR_NOTE_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:53.500Z" },
+    { id: "author-audit-d", organizationId: "org-a", manuscriptId: "author-manuscript-a", submissionEventId: "author-submission-a", action: "AUTHOR_MANUSCRIPT_SUBMITTED", actorId: "user-a", createdAt: "2026-01-01T00:16:54.000Z" }
   );
   snapshot.collaboration_threads.push(
     { id: "collab-thread-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", segmentId: "segment-a", targetType: "SEGMENT", title: "Review segment terminology", visibility: "PRIVATE_EDITORIAL", status: "OPEN", mentionsPlaceholder: ["@reviewer"], createdBy: "user-a", createdAt: "2026-01-01T00:16:55.000Z", updatedAt: "2026-01-01T00:16:55.000Z" }
