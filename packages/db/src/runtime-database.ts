@@ -19,6 +19,11 @@ const TABLE_NAMES = [
   "webhooks",
   "webhook_delivery_logs",
   "gateway_audit_events",
+  "observability_metrics",
+  "observability_logs",
+  "observability_traces",
+  "observability_agent_executions",
+  "observability_audit_events",
   "organization_founder_protection",
   "founder_ownership_transfers",
   "projects",
@@ -138,6 +143,11 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "webhooks",
   "webhook_delivery_logs",
   "gateway_audit_events",
+  "observability_metrics",
+  "observability_logs",
+  "observability_traces",
+  "observability_agent_executions",
+  "observability_audit_events",
   "projects",
   "documents",
   "document_segments",
@@ -473,6 +483,16 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
   validateReferenceTenant(data, issues, "gateway_audit_events", "apiKeyId", "gateway_api_keys");
   validateReferenceTenant(data, issues, "gateway_audit_events", "webhookId", "webhooks");
   validateReferenceTenant(data, issues, "integration_audit_events", "integrationProviderId", "integration_providers");
+  validateReferenceTenant(data, issues, "observability_audit_events", "metricId", "observability_metrics");
+  validateReferenceTenant(data, issues, "observability_audit_events", "logId", "observability_logs");
+  validateReferenceTenant(data, issues, "observability_audit_events", "traceId", "observability_traces");
+  validateReferenceTenant(
+    data,
+    issues,
+    "observability_audit_events",
+    "agentExecutionId",
+    "observability_agent_executions"
+  );
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
   validateReferenceTenant(
     data,
