@@ -23,6 +23,12 @@ export const TABLE_NAMES = [
   "observability_traces",
   "observability_agent_executions",
   "observability_audit_events",
+  "security_policies",
+  "security_access_reviews",
+  "security_session_events",
+  "security_api_key_events",
+  "security_policy_violations",
+  "security_audit_events",
   "organization_founder_protection",
   "founder_ownership_transfers",
   "projects",
@@ -120,6 +126,12 @@ const TENANT_SCOPED_TABLES = new Set([
   "observability_traces",
   "observability_agent_executions",
   "observability_audit_events",
+  "security_policies",
+  "security_access_reviews",
+  "security_session_events",
+  "security_api_key_events",
+  "security_policy_violations",
+  "security_audit_events",
   "projects",
   "documents",
   "document_segments",
@@ -374,6 +386,18 @@ function validateTenantBoundaries(data, issues) {
     "observability_audit_events",
     "agentExecutionId",
     "observability_agent_executions"
+  );
+  validateReferenceTenant(data, issues, "security_policy_violations", "policyId", "security_policies");
+  validateReferenceTenant(data, issues, "security_audit_events", "policyId", "security_policies");
+  validateReferenceTenant(data, issues, "security_audit_events", "accessReviewId", "security_access_reviews");
+  validateReferenceTenant(data, issues, "security_audit_events", "sessionEventId", "security_session_events");
+  validateReferenceTenant(data, issues, "security_audit_events", "apiKeyEventId", "security_api_key_events");
+  validateReferenceTenant(
+    data,
+    issues,
+    "security_audit_events",
+    "policyViolationId",
+    "security_policy_violations"
   );
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
   validateReferenceTenant(
