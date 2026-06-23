@@ -82,6 +82,12 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "security_api_key_events",
     "security_policy_violations",
     "security_audit_events",
+    "backup_jobs",
+    "backup_restore_events",
+    "backup_retention_policies",
+    "disaster_recovery_plans",
+    "preservation_records",
+    "backup_audit_events",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -308,6 +314,28 @@ function sampleSnapshot() {
     { id: "security-audit-c", organizationId: "org-a", action: "SECURITY_SESSION_REVOCATION_RECORDED", actorId: "user-a", sessionEventId: "security-session-event-a", afterState: { id: "security-session-event-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.981Z" },
     { id: "security-audit-d", organizationId: "org-a", action: "SECURITY_API_KEY_EVENT_RECORDED", actorId: "user-a", apiKeyEventId: "security-api-key-event-a", afterState: { id: "security-api-key-event-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.991Z" },
     { id: "security-audit-e", organizationId: "org-a", action: "SECURITY_POLICY_VIOLATION_RECORDED", actorId: "user-a", policyViolationId: "security-policy-violation-a", afterState: { id: "security-policy-violation-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.001Z" }
+  );
+  snapshot.backup_jobs.push(
+    { id: "backup-job-a", organizationId: "org-a", jobType: "FULL", status: "COMPLETED", startedAt: "2026-01-01T00:00:07.010Z", completedAt: "2026-01-01T00:00:17.010Z", durationMs: 10000, sizeBytes: 2048, checksum: "sha256-demo", initiatedBy: "user-a", backupScope: ["projects", "translations", "terminology", "entire_organization"], storageProvider: "RUNTIME_METADATA_ONLY", cloudProviderIntegration: "NOT_CONFIGURED", immutable: true, noPermanentDeletion: true, humanApprovalRequired: true, aiSuggested: false, createdAt: "2026-01-01T00:00:07.010Z", updatedAt: "2026-01-01T00:00:17.010Z", metadata: { realCloudBackupProviderConnected: false } }
+  );
+  snapshot.backup_restore_events.push(
+    { id: "backup-restore-a", organizationId: "org-a", backupJobId: "backup-job-a", restoreStatus: "REQUESTED", requestedBy: "user-a", requestedAt: "2026-01-01T00:00:18.010Z", restorationProcedures: ["validate backup", "metadata-only dry run"], humanApprovalRequired: true, aiInitiated: false, realRestoreExecuted: false, metadata: { noRuntimeRestoreExecuted: true } }
+  );
+  snapshot.backup_retention_policies.push(
+    { id: "backup-retention-a", organizationId: "org-a", name: "Long-term preservation retention", retentionMode: "RETAIN_N_YEARS", retainYears: 10, archiveMetadataForever: true, immutableBackups: true, auditRetention: "PERMANENT", noPermanentDeletion: true, appliesToScopes: ["books", "author_studio", "terminology", "entire_organization"], humanApprovalRequired: true, aiSuggested: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.020Z", updatedAt: "2026-01-01T00:00:07.020Z", metadata: { permanentDeletionDisabled: true } }
+  );
+  snapshot.disaster_recovery_plans.push(
+    { id: "disaster-recovery-a", organizationId: "org-a", name: "Closed beta DR plan", recoveryPointObjective: "24h", recoveryTimeObjective: "4h", recoveryStrategy: "Restore runtime database backup after validation.", priority: "HIGH", failoverNotes: ["manual failover only"], restorationProcedures: ["verify checksum", "restore in staging first"], cloudProviderIntegration: "NOT_CONFIGURED", humanApprovalRequired: true, aiSuggested: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.030Z", updatedAt: "2026-01-01T00:00:07.030Z", metadata: { noAutomaticFailover: true } }
+  );
+  snapshot.preservation_records.push(
+    { id: "preservation-a", organizationId: "org-a", recordType: "AUDIT_PERMANENCE", entityType: "organization", entityId: "org-a", preservationScope: ["books", "entire_organization"], historicalEditions: ["edition-a"], originalSourcePreservation: true, allManuscriptVersions: true, glossaryVersions: true, auditPermanence: true, noPermanentDeletion: true, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.040Z", metadata: { archival: "permanent" } }
+  );
+  snapshot.backup_audit_events.push(
+    { id: "backup-audit-a", organizationId: "org-a", action: "BACKUP_JOB_CREATED", actorId: "user-a", backupJobId: "backup-job-a", afterState: { id: "backup-job-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.011Z" },
+    { id: "backup-audit-b", organizationId: "org-a", action: "BACKUP_RETENTION_POLICY_CREATED", actorId: "user-a", retentionPolicyId: "backup-retention-a", afterState: { id: "backup-retention-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.021Z" },
+    { id: "backup-audit-c", organizationId: "org-a", action: "DISASTER_RECOVERY_PLAN_CREATED", actorId: "user-a", disasterRecoveryPlanId: "disaster-recovery-a", afterState: { id: "disaster-recovery-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.031Z" },
+    { id: "backup-audit-d", organizationId: "org-a", action: "PRESERVATION_RECORD_CREATED", actorId: "user-a", preservationRecordId: "preservation-a", afterState: { id: "preservation-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.041Z" },
+    { id: "backup-audit-e", organizationId: "org-a", action: "BACKUP_RESTORE_EVENT_RECORDED", actorId: "user-a", backupJobId: "backup-job-a", restoreEventId: "backup-restore-a", afterState: { id: "backup-restore-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:18.011Z" }
   );
   snapshot.organization_founder_protection.push(
     { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
