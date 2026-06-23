@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { AiGovernanceModule } from "./ai-governance/ai-governance.module";
 import { AuthorStudioModule } from "./author-studio/author-studio.module";
 import { AuthModule } from "./auth/auth.module";
 import { BackupGovernanceModule } from "./backup-governance/backup-governance.module";
@@ -34,6 +35,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
 
 @Module({
   imports: [
+    AiGovernanceModule,
     AuthModule,
     AuthorStudioModule,
     BackupGovernanceModule,
