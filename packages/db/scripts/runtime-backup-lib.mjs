@@ -11,6 +11,13 @@ export const TABLE_NAMES = [
   "auth_sessions",
   "auth_login_attempts",
   "auth_security_events",
+  "gateway_api_keys",
+  "gateway_route_registry",
+  "integration_providers",
+  "integration_audit_events",
+  "webhooks",
+  "webhook_delivery_logs",
+  "gateway_audit_events",
   "organization_founder_protection",
   "founder_ownership_transfers",
   "projects",
@@ -96,6 +103,13 @@ const TENANT_SCOPED_TABLES = new Set([
   "auth_sessions",
   "organization_founder_protection",
   "founder_ownership_transfers",
+  "gateway_api_keys",
+  "gateway_route_registry",
+  "integration_providers",
+  "integration_audit_events",
+  "webhooks",
+  "webhook_delivery_logs",
+  "gateway_audit_events",
   "projects",
   "documents",
   "document_segments",
@@ -337,6 +351,10 @@ function validateTenantBoundaries(data, issues) {
   validateReferenceTenant(data, issues, "segment_translations", "segmentId", "document_segments");
   validateReferenceTenant(data, issues, "export_artifacts", "projectId", "projects");
   validateReferenceTenant(data, issues, "export_artifacts", "documentId", "documents");
+  validateReferenceTenant(data, issues, "webhook_delivery_logs", "webhookId", "webhooks");
+  validateReferenceTenant(data, issues, "gateway_audit_events", "apiKeyId", "gateway_api_keys");
+  validateReferenceTenant(data, issues, "gateway_audit_events", "webhookId", "webhooks");
+  validateReferenceTenant(data, issues, "integration_audit_events", "integrationProviderId", "integration_providers");
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
   validateReferenceTenant(
     data,
