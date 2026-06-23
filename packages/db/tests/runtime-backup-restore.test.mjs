@@ -88,6 +88,12 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "disaster_recovery_plans",
     "preservation_records",
     "backup_audit_events",
+    "ai_usage_records",
+    "ai_budgets",
+    "ai_quotas",
+    "ai_cost_policies",
+    "ai_budget_override_requests",
+    "ai_cost_audit_events",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -336,6 +342,29 @@ function sampleSnapshot() {
     { id: "backup-audit-c", organizationId: "org-a", action: "DISASTER_RECOVERY_PLAN_CREATED", actorId: "user-a", disasterRecoveryPlanId: "disaster-recovery-a", afterState: { id: "disaster-recovery-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.031Z" },
     { id: "backup-audit-d", organizationId: "org-a", action: "PRESERVATION_RECORD_CREATED", actorId: "user-a", preservationRecordId: "preservation-a", afterState: { id: "preservation-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.041Z" },
     { id: "backup-audit-e", organizationId: "org-a", action: "BACKUP_RESTORE_EVENT_RECORDED", actorId: "user-a", backupJobId: "backup-job-a", restoreEventId: "backup-restore-a", afterState: { id: "backup-restore-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:18.011Z" }
+  );
+  snapshot.ai_usage_records.push(
+    { id: "ai-usage-a", organizationId: "org-a", agentName: "Translation AI", executionType: "SEGMENT_TRANSLATION_ASSIST", projectId: "project-a", documentId: "document-a", userId: "user-a", providerMetadata: { provider: "metadata-only", model: "placeholder" }, inputTokens: 100, outputTokens: 50, totalTokens: 150, estimatedCost: 0.03, currency: "EUR", status: "SUCCEEDED", costPolicyEvaluation: { softLimitWarning: false, hardLimitReached: false, approvalRequiredOverThreshold: false }, externalBillingIntegration: "NOT_CONFIGURED", createdAt: "2026-01-01T00:00:07.050Z", metadata: { providerCostApiConnected: false } }
+  );
+  snapshot.ai_budgets.push(
+    { id: "ai-budget-a", organizationId: "org-a", budgetScope: "PROJECT", scopeRef: "project-a", agentName: "Translation AI", monthlyBudget: 100, perRunLimit: 1, amount: 100, currency: "EUR", period: "MONTHLY", startsAt: "2026-01-01T00:00:00.000Z", endsAt: "2026-01-31T23:59:59.000Z", humanApprovalRequired: true, aiSuggested: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.060Z", updatedAt: "2026-01-01T00:00:07.060Z", metadata: { budgetGovernance: "metadata-only" } }
+  );
+  snapshot.ai_quotas.push(
+    { id: "ai-quota-a", organizationId: "org-a", quotaScope: "AGENT", scopeRef: "Translation AI", agentName: "Translation AI", maxTokensPerRun: 2000, maxCostPerRun: 1, maxRunsPerDay: 100, maxRunsPerMonth: 2000, projectSpecific: false, agentSpecific: true, humanApprovalRequired: true, aiSuggested: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.070Z", updatedAt: "2026-01-01T00:00:07.070Z", metadata: { quotaGovernance: "metadata-only" } }
+  );
+  snapshot.ai_cost_policies.push(
+    { id: "ai-policy-a", organizationId: "org-a", name: "Closed beta AI cost policy", status: "ACTIVE", softLimitWarningThreshold: 0.5, hardLimitMetadata: { maxCostPerRun: 2 }, approvalRequiredOverThreshold: 1, humanOverrideAllowed: true, aiMayEstimateCost: true, aiMaySuggestOptimizations: true, aiMayWarnBudgetRisk: true, aiMayRecommendQuotaChanges: true, aiCannotApproveOwnBudgetIncrease: true, aiCannotBypassHardLimits: true, aiCannotAlterCostHistory: true, aiCannotDeleteUsageRecords: true, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.080Z", updatedAt: "2026-01-01T00:00:07.080Z", metadata: { externalBillingIntegration: "NOT_CONFIGURED" } }
+  );
+  snapshot.ai_budget_override_requests.push(
+    { id: "ai-override-a", organizationId: "org-a", requestedBy: "user-a", requestedForUserId: "user-a", budgetId: "ai-budget-a", quotaId: "ai-quota-a", agentName: "Translation AI", reason: "Closed beta evaluation burst.", requestedAmount: 25, requestedCurrency: "EUR", status: "APPROVED", aiInitiated: false, aiSelfApprovalAttempt: false, humanApprovalRequired: true, approvedBy: "user-a", approvedAt: "2026-01-01T00:00:07.100Z", createdAt: "2026-01-01T00:00:07.090Z", updatedAt: "2026-01-01T00:00:07.100Z", metadata: { finalAuthority: "AUTHORIZED_HUMAN" } }
+  );
+  snapshot.ai_cost_audit_events.push(
+    { id: "ai-audit-a", organizationId: "org-a", action: "AI_USAGE_RECORDED", actorId: "user-a", usageRecordId: "ai-usage-a", afterState: { id: "ai-usage-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.051Z" },
+    { id: "ai-audit-b", organizationId: "org-a", action: "AI_BUDGET_CREATED", actorId: "user-a", budgetId: "ai-budget-a", afterState: { id: "ai-budget-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.061Z" },
+    { id: "ai-audit-c", organizationId: "org-a", action: "AI_QUOTA_CREATED", actorId: "user-a", quotaId: "ai-quota-a", afterState: { id: "ai-quota-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.071Z" },
+    { id: "ai-audit-d", organizationId: "org-a", action: "AI_COST_POLICY_CREATED", actorId: "user-a", policyId: "ai-policy-a", afterState: { id: "ai-policy-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.081Z" },
+    { id: "ai-audit-e", organizationId: "org-a", action: "AI_BUDGET_OVERRIDE_REQUEST_CREATED", actorId: "user-a", overrideRequestId: "ai-override-a", afterState: { id: "ai-override-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.091Z" },
+    { id: "ai-audit-f", organizationId: "org-a", action: "AI_BUDGET_OVERRIDE_APPROVED", actorId: "user-a", overrideRequestId: "ai-override-a", afterState: { id: "ai-override-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.101Z" }
   );
   snapshot.organization_founder_protection.push(
     { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
