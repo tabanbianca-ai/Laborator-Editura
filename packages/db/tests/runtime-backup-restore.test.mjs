@@ -71,6 +71,11 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "webhooks",
     "webhook_delivery_logs",
     "gateway_audit_events",
+    "observability_metrics",
+    "observability_logs",
+    "observability_traces",
+    "observability_agent_executions",
+    "observability_audit_events",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -257,6 +262,24 @@ function sampleSnapshot() {
   );
   snapshot.integration_audit_events.push(
     { id: "integration-audit-a", organizationId: "org-a", integrationProviderId: "integration-a", action: "INTEGRATION_ENABLED", actorId: "user-a", humanFinalAuthority: true, afterState: { id: "integration-a" }, createdAt: "2026-01-01T00:00:06.610Z" }
+  );
+  snapshot.observability_metrics.push(
+    { id: "observability-metric-a", organizationId: "org-a", metricName: "api.uptime", metricType: "GAUGE", moduleName: "api", value: 3600, unit: "seconds", requestCount: 10, errorCount: 0, latencyMs: 42, runtimeDatabaseStatus: "AVAILABLE", backupStatus: "CONFIGURED", metadata: { moduleHealth: "READY" }, createdBy: "user-a", recordedAt: "2026-01-01T00:00:06.920Z" }
+  );
+  snapshot.observability_logs.push(
+    { id: "observability-log-a", organizationId: "org-a", severity: "INFO", moduleName: "observability", correlationId: "corr-a", actorId: "user-a", requestPath: "/observability/health", message: "Health dashboard checked.", metadata: { structured: true }, createdAt: "2026-01-01T00:00:06.930Z" }
+  );
+  snapshot.observability_traces.push(
+    { id: "observability-trace-a", organizationId: "org-a", traceId: "trace-a", correlationId: "corr-a", spanName: "observability.health", moduleName: "observability", durationMs: 7, status: "OK", parentSpanId: "parent-placeholder", metadata: { parentSpanPlaceholder: true }, createdAt: "2026-01-01T00:00:06.940Z" }
+  );
+  snapshot.observability_agent_executions.push(
+    { id: "observability-agent-a", organizationId: "org-a", agentName: "Semantic Fidelity Engine", executionType: "SEGMENT_CHECK", projectId: "project-a", documentId: "document-a", status: "SUCCEEDED", durationMs: 30, estimatedCost: 0, tokenUsageMetadata: { provider: "none", totalTokens: 0 }, dependencies: ["terminology", "lexicographic"], auditLink: "semantic-audit-a", humanFinalAuthority: true, aiMayDiagnose: true, aiMaySummarizeIncidents: true, aiMaySuggestRemediation: true, aiMayAutoExecuteInfrastructureActions: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:06.950Z", metadata: { workflowVisibility: true } }
+  );
+  snapshot.observability_audit_events.push(
+    { id: "observability-audit-a", organizationId: "org-a", action: "OBSERVABILITY_METRIC_RECORDED", actorId: "user-a", metricId: "observability-metric-a", afterState: { id: "observability-metric-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.921Z" },
+    { id: "observability-audit-b", organizationId: "org-a", action: "OBSERVABILITY_LOG_RECORDED", actorId: "user-a", logId: "observability-log-a", afterState: { id: "observability-log-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.931Z" },
+    { id: "observability-audit-c", organizationId: "org-a", action: "OBSERVABILITY_TRACE_RECORDED", actorId: "user-a", traceId: "observability-trace-a", afterState: { id: "observability-trace-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.941Z" },
+    { id: "observability-audit-d", organizationId: "org-a", action: "OBSERVABILITY_AGENT_EXECUTION_RECORDED", actorId: "user-a", agentExecutionId: "observability-agent-a", afterState: { id: "observability-agent-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.951Z" }
   );
   snapshot.organization_founder_protection.push(
     { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
