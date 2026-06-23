@@ -64,6 +64,13 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "foundation_audit_events",
     "auth_login_attempts",
     "auth_security_events",
+    "gateway_api_keys",
+    "gateway_route_registry",
+    "integration_providers",
+    "integration_audit_events",
+    "webhooks",
+    "webhook_delivery_logs",
+    "gateway_audit_events",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -228,6 +235,28 @@ function sampleSnapshot() {
   );
   snapshot.auth_security_events.push(
     { id: "security-event-a", organizationId: "org-a", userId: "user-a", email: "a@example.com", eventType: "LOGIN_FAILED", message: "Invalid login credentials.", createdAt: "2026-01-01T00:00:06.200Z" }
+  );
+  snapshot.gateway_route_registry.push(
+    { id: "gateway-route-a", organizationId: "org-a", moduleName: "Gateway", routePath: "/gateway/health", method: "GET", apiVersion: "v1", tenantAware: true, rateLimitPolicy: "standard-read", tracingEnabled: true, correlationIdRequired: true, createdAt: "2026-01-01T00:00:06.300Z" }
+  );
+  snapshot.gateway_api_keys.push(
+    { id: "gateway-key-a", organizationId: "org-a", name: "Closed beta integration key", keyPrefix: "led_preview", secretHash: "hashed-secret-placeholder", scopes: ["gateway:read", "integration:read"], expiresAt: "2026-02-01T00:00:00.000Z", status: "ACTIVE", usageMetadata: { createdFromGateway: true, lastUsedAt: "2026-01-01T00:00:06.400Z", usageCount: 1 }, humanApprovalRequired: true, aiSuggested: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:06.400Z" }
+  );
+  snapshot.integration_providers.push(
+    { id: "integration-a", organizationId: "org-a", providerType: "OPENAI", displayName: "OpenAI metadata placeholder", status: "CONFIGURED", configurationMetadata: { configuredFor: "metadata-only" }, scopes: ["model:read"], humanApprovalRequired: true, aiSuggested: false, externalConnectionEnabled: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:06.500Z", updatedAt: "2026-01-01T00:00:06.600Z", enabledBy: "user-a", enabledAt: "2026-01-01T00:00:06.600Z" }
+  );
+  snapshot.webhooks.push(
+    { id: "webhook-a", organizationId: "org-a", eventName: "document.approved", targetUrl: "https://example.test/webhook", secretHash: "hashed-webhook-secret-placeholder", enabled: true, retryPolicy: { maxAttempts: 3, backoffSeconds: 30 }, humanApprovalRequired: true, aiSuggested: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:06.700Z", updatedAt: "2026-01-01T00:00:06.800Z" }
+  );
+  snapshot.webhook_delivery_logs.push(
+    { id: "webhook-delivery-a", organizationId: "org-a", webhookId: "webhook-a", eventName: "document.approved", status: "DELIVERED", attempt: 1, responseStatus: 200, createdAt: "2026-01-01T00:00:06.900Z" }
+  );
+  snapshot.gateway_audit_events.push(
+    { id: "gateway-audit-a", organizationId: "org-a", apiKeyId: "gateway-key-a", action: "API_KEY_CREATED", actorId: "user-a", humanFinalAuthority: true, afterState: { id: "gateway-key-a" }, createdAt: "2026-01-01T00:00:06.410Z" },
+    { id: "gateway-audit-b", organizationId: "org-a", webhookId: "webhook-a", action: "WEBHOOK_DELIVERY_LOG_RECORDED", actorId: "user-a", humanFinalAuthority: true, afterState: { id: "webhook-delivery-a" }, createdAt: "2026-01-01T00:00:06.910Z" }
+  );
+  snapshot.integration_audit_events.push(
+    { id: "integration-audit-a", organizationId: "org-a", integrationProviderId: "integration-a", action: "INTEGRATION_ENABLED", actorId: "user-a", humanFinalAuthority: true, afterState: { id: "integration-a" }, createdAt: "2026-01-01T00:00:06.610Z" }
   );
   snapshot.organization_founder_protection.push(
     { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
