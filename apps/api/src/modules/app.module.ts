@@ -7,6 +7,7 @@ import { RequestContextMiddleware } from "./auth/request-context.middleware";
 import { DocumentsModule } from "./documents/documents.module";
 import { EditorialDecisionModule } from "./editorial-decisions/editorial-decisions.module";
 import { ExportModule } from "./export/export.module";
+import { GatewayModule } from "./gateway/gateway.module";
 import { HealthController } from "./health.controller";
 import { LayoutPublishingModule } from "./layout-publishing/layout-publishing.module";
 import { LibraryModule } from "./library/library.module";
@@ -44,6 +45,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     QaModule,
     SemanticFidelityModule,
     EditorialDecisionModule,
+    GatewayModule,
     LayoutPublishingModule,
     LibraryModule,
     MediaLocalizationModule,
