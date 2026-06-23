@@ -30,6 +30,12 @@ const TABLE_NAMES = [
   "security_api_key_events",
   "security_policy_violations",
   "security_audit_events",
+  "backup_jobs",
+  "backup_restore_events",
+  "backup_retention_policies",
+  "disaster_recovery_plans",
+  "preservation_records",
+  "backup_audit_events",
   "organization_founder_protection",
   "founder_ownership_transfers",
   "projects",
@@ -160,6 +166,12 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "security_api_key_events",
   "security_policy_violations",
   "security_audit_events",
+  "backup_jobs",
+  "backup_restore_events",
+  "backup_retention_policies",
+  "disaster_recovery_plans",
+  "preservation_records",
+  "backup_audit_events",
   "projects",
   "documents",
   "document_segments",
@@ -517,6 +529,18 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
     "policyViolationId",
     "security_policy_violations"
   );
+  validateReferenceTenant(data, issues, "backup_restore_events", "backupJobId", "backup_jobs");
+  validateReferenceTenant(data, issues, "backup_audit_events", "backupJobId", "backup_jobs");
+  validateReferenceTenant(data, issues, "backup_audit_events", "restoreEventId", "backup_restore_events");
+  validateReferenceTenant(data, issues, "backup_audit_events", "retentionPolicyId", "backup_retention_policies");
+  validateReferenceTenant(
+    data,
+    issues,
+    "backup_audit_events",
+    "disasterRecoveryPlanId",
+    "disaster_recovery_plans"
+  );
+  validateReferenceTenant(data, issues, "backup_audit_events", "preservationRecordId", "preservation_records");
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
   validateReferenceTenant(
     data,
