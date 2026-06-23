@@ -14,6 +14,7 @@ import { LibraryModule } from "./library/library.module";
 import { LexicographicModule } from "./lexicographic/lexicographic.module";
 import { MediaLocalizationModule } from "./media-localization/media-localization.module";
 import { MultimediaCreationModule } from "./multimedia-creation/multimedia-creation.module";
+import { ObservabilityModule } from "./observability/observability.module";
 import { PlatformEngineeringModule } from "./platform-engineering/platform-engineering.module";
 import { ProjectsModule } from "./projects/projects.module";
 import { PublicPortalModule } from "./public-portal/public-portal.module";
@@ -50,6 +51,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     LibraryModule,
     MediaLocalizationModule,
     MultimediaCreationModule,
+    ObservabilityModule,
     PlatformEngineeringModule,
     PublicPortalModule,
     ResearchModule,
