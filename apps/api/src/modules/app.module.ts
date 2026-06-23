@@ -21,6 +21,7 @@ import { PublicPortalModule } from "./public-portal/public-portal.module";
 import { QaModule } from "./qa/qa.module";
 import { RateLimitMiddleware } from "./security/rate-limit.middleware";
 import { ResearchModule } from "./research/research.module";
+import { SecurityGovernanceModule } from "./security-governance/security-governance.module";
 import { SecurityHeadersMiddleware } from "./security/security-headers.middleware";
 import { SemanticFidelityModule } from "./semantic-fidelity/semantic-fidelity.module";
 import { SegmentsModule } from "./segments/segments.module";
@@ -55,6 +56,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     PlatformEngineeringModule,
     PublicPortalModule,
     ResearchModule,
+    SecurityGovernanceModule,
     SchedulingModule,
     WorkflowModule,
     ExportModule
