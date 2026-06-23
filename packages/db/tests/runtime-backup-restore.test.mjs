@@ -76,6 +76,12 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "observability_traces",
     "observability_agent_executions",
     "observability_audit_events",
+    "security_policies",
+    "security_access_reviews",
+    "security_session_events",
+    "security_api_key_events",
+    "security_policy_violations",
+    "security_audit_events",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -280,6 +286,28 @@ function sampleSnapshot() {
     { id: "observability-audit-b", organizationId: "org-a", action: "OBSERVABILITY_LOG_RECORDED", actorId: "user-a", logId: "observability-log-a", afterState: { id: "observability-log-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.931Z" },
     { id: "observability-audit-c", organizationId: "org-a", action: "OBSERVABILITY_TRACE_RECORDED", actorId: "user-a", traceId: "observability-trace-a", afterState: { id: "observability-trace-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.941Z" },
     { id: "observability-audit-d", organizationId: "org-a", action: "OBSERVABILITY_AGENT_EXECUTION_RECORDED", actorId: "user-a", agentExecutionId: "observability-agent-a", afterState: { id: "observability-agent-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.951Z" }
+  );
+  snapshot.security_policies.push(
+    { id: "security-policy-a", organizationId: "org-a", policyType: "API_KEY", name: "Closed beta API key governance", description: "Metadata-only API key governance policy.", status: "ACTIVE", passwordLoginPolicy: { minLength: 12, requireComplexity: true, failedLoginThreshold: 5, lockoutMinutes: 15 }, sessionDurationPolicy: { maxSessionMinutes: 480, idleTimeoutMinutes: 60, refreshTokenRotation: true }, apiKeyPolicy: { maxLifetimeDays: 90, allowedScopes: ["gateway:read"], requireExpiration: true, revokeOnSuspiciousUse: true }, webhookSecurityPolicy: { requireSecretHashing: true, requireHttpsTargets: true, maxRetryAttempts: 3 }, allowedDomains: ["laborator.example"], ipAllowlist: ["203.0.113.10"], ipBlocklist: ["198.51.100.20"], mfaRequirementPlaceholder: true, rolePermissionMatrix: { ADMIN: ["security:governance"], REVIEWER: ["read"] }, organizationAccessPolicy: { adminOnly: true }, tenantIsolationChecks: ["server-derived-organization-context"], humanApprovalRequired: true, aiMayDetectRisks: true, aiMaySuggestPolicyChanges: true, aiMayChangePolicyAutomatically: false, aiSuggested: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:06.960Z", updatedAt: "2026-01-01T00:00:06.960Z", metadata: { externalSsoIntegration: "NOT_CONFIGURED" } }
+  );
+  snapshot.security_access_reviews.push(
+    { id: "security-access-review-a", organizationId: "org-a", reviewName: "Closed beta admin access review", reviewedUserId: "user-a", reviewedRoles: ["ADMIN"], reviewedPermissions: ["review:approve"], rolePermissionMatrix: { ADMIN: ["security:governance"] }, accessFindings: ["No cross-tenant access detected."], tenantIsolationChecks: ["tenant-isolation-reviewed"], status: "PENDING_HUMAN_REVIEW", humanApprovalRequired: true, aiMaySummarizeAccessReviews: true, aiMayApproveAccessReviewAutomatically: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:06.970Z", updatedAt: "2026-01-01T00:00:06.970Z", metadata: { externalSsoIntegration: "NOT_CONFIGURED" } }
+  );
+  snapshot.security_session_events.push(
+    { id: "security-session-event-a", organizationId: "org-a", sessionId: "session-a", userId: "user-a", eventType: "SESSION_REVOCATION_RECORDED", activeSessionMetadata: { ip: "203.0.113.10" }, suspiciousFlags: ["manual-review"], lastSeenAt: "2026-01-01T00:00:06.980Z", revocationRecorded: true, revocationReason: "Metadata-only revocation record.", enforcementMode: "METADATA_ONLY", message: "Metadata-only revocation record.", severity: "HIGH", createdBy: "user-a", createdAt: "2026-01-01T00:00:06.980Z", metadata: { existingAuthSessionNotModified: true } }
+  );
+  snapshot.security_api_key_events.push(
+    { id: "security-api-key-event-a", organizationId: "org-a", apiKeyId: "gateway-key-a", eventType: "API_KEY_SCOPE_DENIED", usagePolicyMetadata: { requestCount: 1 }, scopeValidationMetadata: { requestedScope: "admin:write", allowed: false }, expirationPolicyMetadata: { expiresAt: "2026-02-01T00:00:00.000Z" }, revocationAuditMetadata: { revoked: false }, message: "API key scope denied.", severity: "MEDIUM", createdBy: "user-a", createdAt: "2026-01-01T00:00:06.990Z", metadata: { enforcementMode: "METADATA_ONLY" } }
+  );
+  snapshot.security_policy_violations.push(
+    { id: "security-policy-violation-a", organizationId: "org-a", policyId: "security-policy-a", eventType: "POLICY_VIOLATION", violationType: "IP_BLOCKLIST_MATCH", message: "Request matched IP blocklist metadata.", severity: "HIGH", requestPath: "/gateway/api-keys", userId: "user-a", suspiciousActivityMetadata: { ip: "198.51.100.20" }, enforcementMode: "METADATA_ONLY", resolved: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.000Z", metadata: { noAutomaticUserBlock: true } }
+  );
+  snapshot.security_audit_events.push(
+    { id: "security-audit-a", organizationId: "org-a", action: "SECURITY_POLICY_CREATED", actorId: "user-a", policyId: "security-policy-a", afterState: { id: "security-policy-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.961Z" },
+    { id: "security-audit-b", organizationId: "org-a", action: "SECURITY_ACCESS_REVIEW_CREATED", actorId: "user-a", accessReviewId: "security-access-review-a", afterState: { id: "security-access-review-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.971Z" },
+    { id: "security-audit-c", organizationId: "org-a", action: "SECURITY_SESSION_REVOCATION_RECORDED", actorId: "user-a", sessionEventId: "security-session-event-a", afterState: { id: "security-session-event-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.981Z" },
+    { id: "security-audit-d", organizationId: "org-a", action: "SECURITY_API_KEY_EVENT_RECORDED", actorId: "user-a", apiKeyEventId: "security-api-key-event-a", afterState: { id: "security-api-key-event-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:06.991Z" },
+    { id: "security-audit-e", organizationId: "org-a", action: "SECURITY_POLICY_VIOLATION_RECORDED", actorId: "user-a", policyViolationId: "security-policy-violation-a", afterState: { id: "security-policy-violation-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.001Z" }
   );
   snapshot.organization_founder_protection.push(
     { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
