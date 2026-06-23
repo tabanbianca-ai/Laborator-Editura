@@ -35,6 +35,12 @@ export const TABLE_NAMES = [
   "disaster_recovery_plans",
   "preservation_records",
   "backup_audit_events",
+  "ai_usage_records",
+  "ai_budgets",
+  "ai_quotas",
+  "ai_cost_policies",
+  "ai_budget_override_requests",
+  "ai_cost_audit_events",
   "organization_founder_protection",
   "founder_ownership_transfers",
   "projects",
@@ -144,6 +150,12 @@ const TENANT_SCOPED_TABLES = new Set([
   "disaster_recovery_plans",
   "preservation_records",
   "backup_audit_events",
+  "ai_usage_records",
+  "ai_budgets",
+  "ai_quotas",
+  "ai_cost_policies",
+  "ai_budget_override_requests",
+  "ai_cost_audit_events",
   "projects",
   "documents",
   "document_segments",
@@ -423,6 +435,19 @@ function validateTenantBoundaries(data, issues) {
     "disaster_recovery_plans"
   );
   validateReferenceTenant(data, issues, "backup_audit_events", "preservationRecordId", "preservation_records");
+  validateReferenceTenant(data, issues, "ai_budget_override_requests", "budgetId", "ai_budgets");
+  validateReferenceTenant(data, issues, "ai_budget_override_requests", "quotaId", "ai_quotas");
+  validateReferenceTenant(data, issues, "ai_cost_audit_events", "usageRecordId", "ai_usage_records");
+  validateReferenceTenant(data, issues, "ai_cost_audit_events", "budgetId", "ai_budgets");
+  validateReferenceTenant(data, issues, "ai_cost_audit_events", "quotaId", "ai_quotas");
+  validateReferenceTenant(data, issues, "ai_cost_audit_events", "policyId", "ai_cost_policies");
+  validateReferenceTenant(
+    data,
+    issues,
+    "ai_cost_audit_events",
+    "overrideRequestId",
+    "ai_budget_override_requests"
+  );
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
   validateReferenceTenant(
     data,
