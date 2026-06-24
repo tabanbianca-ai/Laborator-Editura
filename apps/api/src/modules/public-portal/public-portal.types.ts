@@ -55,6 +55,11 @@ export interface PublicCatalogMetadata {
   subtitle?: string;
   description?: string;
   authors: string[];
+  translators?: Array<{
+    translatorId?: string;
+    translatorName?: string;
+    originalAuthorAttributionPreserved: true;
+  }>;
   language: string;
   edition?: string;
   keywords: string[];
