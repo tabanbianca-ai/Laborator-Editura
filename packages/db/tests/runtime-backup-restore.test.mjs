@@ -114,6 +114,11 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "workspace_widgets",
     "workspace_preferences",
     "workspace_audit_events",
+    "launch_mfa_records",
+    "launch_gdpr_consents",
+    "launch_gdpr_requests",
+    "launch_secret_vault_entries",
+    "launch_essentials_audit_events",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -458,6 +463,23 @@ function sampleSnapshot() {
     { id: "workspace-audit-b", organizationId: "org-a", actorId: "user-a", action: "WORKSPACE_WIDGET_CREATED", widgetId: "workspace-widget-a", afterState: { id: "workspace-widget-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.157Z" },
     { id: "workspace-audit-c", organizationId: "org-a", actorId: "user-a", action: "WORKSPACE_PREFERENCES_SAVED", preferenceId: "workspace-preferences-a", afterState: { id: "workspace-preferences-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.159Z" }
   );
+  snapshot.launch_mfa_records.push(
+    { id: "launch-mfa-a", organizationId: "org-a", userId: "user-a", role: "ADMIN", status: "ENABLED", totpSecretPlaceholder: "TOTP_SECRET_PLACEHOLDER", recoveryCodesMetadata: { generated: true, codeCount: 10, lastGeneratedAt: "2026-01-01T00:00:07.160Z", storedAsHashPlaceholder: true }, externalMfaProvider: "NOT_CONFIGURED", enabledBy: "user-a", enabledAt: "2026-01-01T00:00:07.160Z", auditRequired: true, humanFinalAuthorityRequired: true, createdAt: "2026-01-01T00:00:07.160Z", updatedAt: "2026-01-01T00:00:07.160Z" }
+  );
+  snapshot.launch_gdpr_consents.push(
+    { id: "launch-gdpr-consent-a", organizationId: "org-a", userId: "user-a", consentType: "closed_beta_terms", status: "ACCEPTED", acceptedAt: "2026-01-01T00:00:07.161Z", source: "USER_ACTION", auditRequired: true, createdAt: "2026-01-01T00:00:07.161Z", updatedAt: "2026-01-01T00:00:07.161Z" }
+  );
+  snapshot.launch_gdpr_requests.push(
+    { id: "launch-gdpr-request-a", organizationId: "org-a", userId: "user-a", requestType: "PERSONAL_DATA_EXPORT", status: "REQUESTED", requestedAt: "2026-01-01T00:00:07.162Z", exportMetadata: { metadataOnly: true }, noAdvancedRetentionEngine: true, auditRequired: true, humanFinalAuthorityRequired: true, createdAt: "2026-01-01T00:00:07.162Z", updatedAt: "2026-01-01T00:00:07.162Z" }
+  );
+  snapshot.launch_secret_vault_entries.push(
+    { id: "launch-secret-a", organizationId: "org-a", name: "JWT signing secret metadata", secretType: "JWT", encryptedValuePlaceholder: "ENCRYPTED_VALUE_PLACEHOLDER", hashedValuePlaceholder: "HASHED_VALUE_PLACEHOLDER", rotationMetadata: { rotationRequired: true, nextRotationDueAt: "2026-02-01T00:00:00.000Z" }, accessAuditMetadata: { accessCount: 0 }, externalVaultProvider: "NOT_CONFIGURED", createdBy: "user-a", createdAt: "2026-01-01T00:00:07.163Z", updatedAt: "2026-01-01T00:00:07.163Z" }
+  );
+  snapshot.launch_essentials_audit_events.push(
+    { id: "launch-audit-a", organizationId: "org-a", actorId: "user-a", action: "MFA_METADATA_ENABLED", mfaRecordId: "launch-mfa-a", afterState: { id: "launch-mfa-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.160Z" },
+    { id: "launch-audit-b", organizationId: "org-a", actorId: "user-a", action: "GDPR_CONSENT_ACCEPTED", gdprConsentId: "launch-gdpr-consent-a", afterState: { id: "launch-gdpr-consent-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.161Z" },
+    { id: "launch-audit-c", organizationId: "org-a", actorId: "user-a", action: "SECRET_METADATA_STORED", secretId: "launch-secret-a", afterState: { id: "launch-secret-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.163Z" }
+  );
   snapshot.organization_founder_protection.push(
     { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
   );
@@ -469,7 +491,7 @@ function sampleSnapshot() {
     { id: "project-b", organizationId: "org-b", name: "Project B", sourceLanguage: "en", targetLanguages: ["ro"], status: "ACTIVE", createdBy: "user-b", createdAt: "2026-01-01T00:01:01.000Z", updatedAt: "2026-01-01T00:01:01.000Z" }
   );
   snapshot.documents.push(
-    { id: "document-a", organizationId: "org-a", projectId: "project-a", title: "Document A", sourceLanguage: "es", targetLanguage: "ro", documentType: "text", status: "DRAFT", createdBy: "user-a", createdAt: "2026-01-01T00:02:00.000Z", updatedAt: "2026-01-01T00:02:00.000Z" },
+    { id: "document-a", organizationId: "org-a", projectId: "project-a", title: "Document A", sourceLanguage: "es", targetLanguage: "ro", documentType: "text", status: "DRAFT", createdBy: "user-a", createdAt: "2026-01-01T00:02:00.000Z", updatedAt: "2026-01-01T00:02:00.000Z", translatorId: "user-a", translatorName: "Translator A", originalAuthorName: "Author A", translatorAttribution: { translatorId: "user-a", translatorName: "Translator A", originalAuthorName: "Author A", originalAuthorAttributionPreserved: true, visibleInEditorialRecords: true, visibleInPublicationRecords: true } },
     { id: "document-b", organizationId: "org-b", projectId: "project-b", title: "Document B", sourceLanguage: "en", targetLanguage: "ro", documentType: "text", status: "DRAFT", createdBy: "user-b", createdAt: "2026-01-01T00:02:01.000Z", updatedAt: "2026-01-01T00:02:01.000Z" }
   );
   snapshot.document_segments.push(
@@ -477,10 +499,10 @@ function sampleSnapshot() {
     { id: "segment-b", organizationId: "org-b", projectId: "project-b", documentId: "document-b", sourceText: "The spirit.", sourceLanguage: "en", targetLanguage: "ro", order: 1, status: "NEW", createdBy: "user-b", createdAt: "2026-01-01T00:03:01.000Z", updatedAt: "2026-01-01T00:03:01.000Z" }
   );
   snapshot.segment_translations.push(
-    { id: "translation-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", segmentId: "segment-a", sourceText: "El espiritu.", targetText: "Spiritul.", sourceLanguage: "es", targetLanguage: "ro", status: "VALIDATED", createdBy: "user-a", createdAt: "2026-01-01T00:04:00.000Z", updatedAt: "2026-01-01T00:04:00.000Z" }
+    { id: "translation-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", segmentId: "segment-a", sourceText: "El espiritu.", targetText: "Spiritul.", sourceLanguage: "es", targetLanguage: "ro", status: "VALIDATED", createdBy: "user-a", translatorId: "user-a", translatorName: "Translator A", originalAuthorName: "Author A", createdAt: "2026-01-01T00:04:00.000Z", updatedAt: "2026-01-01T00:04:00.000Z" }
   );
   snapshot.export_artifacts.push(
-    { id: "export-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", format: "JSON_MASTER", artifact: { formatVersion: "1.0" }, createdBy: "user-a", createdAt: "2026-01-01T00:05:00.000Z" }
+    { id: "export-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", format: "JSON_MASTER", artifact: { formatVersion: "1.0" }, createdBy: "user-a", createdAt: "2026-01-01T00:05:00.000Z", metadata: { translatorAttribution: [{ translatorId: "user-a", translatorName: "Translator A", originalAuthorName: "Author A", originalAuthorAttributionPreserved: true, visibleInPublicationRecords: true }] } }
   );
   snapshot.foundation_audit_events.push(
     { id: "audit-a", organizationId: "org-a", actorId: "user-a", action: "CREATE", entityType: "PROJECT", entityId: "project-a", afterState: { id: "project-a" }, createdAt: "2026-01-01T00:06:00.000Z" }
@@ -590,7 +612,7 @@ function sampleSnapshot() {
     { id: "commerce-audit-b", organizationId: "org-a", commerceEditionId: "commerce-edition-a", commerceDistributionChannelId: "commerce-channel-a", action: "COMMERCE_DISTRIBUTION_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:12.000Z" }
   );
   snapshot.public_catalog_items.push(
-    { id: "public-item-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", layoutPublicationPlanId: "layout-a", multimediaProjectId: "media-project-a", mediaLocalizationProjectId: "media-localization-a", itemType: "BOOK", metadata: { title: "Document A", authors: ["Author A"], language: "ro", edition: "Beta", keywords: ["spiritism"], originalSourceReferences: ["document-a"] }, readerAccess: { onlineReadingAvailable: true, downloadableFormats: ["PDF", "EPUB"], pdfRef: "export-a", epubRef: "export-a", audioChapterRefs: ["media-asset-a"], videoRefs: ["media-asset-a"], localizedMediaRefs: ["media-localization-asset-a"], fileHostingIntegration: "NOT_CONFIGURED" }, rights: { license: "internal-beta", sourceAttribution: "Author A", copyrightStatus: "review_required", usageRestrictions: ["closed-beta"] }, availabilityStatus: "PUBLIC", releaseApprovalStatus: "APPROVED", humanApprovalRequired: true, paymentIntegration: "NOT_CONFIGURED", cdnIntegration: "NOT_CONFIGURED", distributionRecordIds: ["public-distribution-a"], auditTrail: [{ id: "public-trail-a", action: "PUBLIC_RELEASE_APPROVED", actorId: "user-a", at: "2026-01-01T00:16:30.000Z", version: 2 }], version: 2, approvedBy: "user-a", approvedAt: "2026-01-01T00:16:30.000Z", createdBy: "user-a", createdAt: "2026-01-01T00:16:20.000Z", updatedAt: "2026-01-01T00:16:30.000Z" }
+    { id: "public-item-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", layoutPublicationPlanId: "layout-a", multimediaProjectId: "media-project-a", mediaLocalizationProjectId: "media-localization-a", itemType: "BOOK", metadata: { title: "Document A", authors: ["Author A"], translators: [{ translatorId: "user-a", translatorName: "Translator A", originalAuthorAttributionPreserved: true }], language: "ro", edition: "Beta", keywords: ["spiritism"], originalSourceReferences: ["document-a"] }, readerAccess: { onlineReadingAvailable: true, downloadableFormats: ["PDF", "EPUB"], pdfRef: "export-a", epubRef: "export-a", audioChapterRefs: ["media-asset-a"], videoRefs: ["media-asset-a"], localizedMediaRefs: ["media-localization-asset-a"], fileHostingIntegration: "NOT_CONFIGURED" }, rights: { license: "internal-beta", sourceAttribution: "Author A", copyrightStatus: "review_required", usageRestrictions: ["closed-beta"] }, availabilityStatus: "PUBLIC", releaseApprovalStatus: "APPROVED", humanApprovalRequired: true, paymentIntegration: "NOT_CONFIGURED", cdnIntegration: "NOT_CONFIGURED", distributionRecordIds: ["public-distribution-a"], auditTrail: [{ id: "public-trail-a", action: "PUBLIC_RELEASE_APPROVED", actorId: "user-a", at: "2026-01-01T00:16:30.000Z", version: 2 }], version: 2, approvedBy: "user-a", approvedAt: "2026-01-01T00:16:30.000Z", createdBy: "user-a", createdAt: "2026-01-01T00:16:20.000Z", updatedAt: "2026-01-01T00:16:30.000Z" }
   );
   snapshot.public_distribution_records.push(
     { id: "public-distribution-a", organizationId: "org-a", publicCatalogItemId: "public-item-a", publicationChannels: ["public-reader"], availabilityStatus: "PUBLIC", releaseDate: "2026-02-03T00:00:00.000Z", editionStatus: "BETA", languageVariants: ["ro"], printOnDemandMetadata: { profile: "paperback" }, paymentIntegration: "NOT_CONFIGURED", fileHostingIntegration: "NOT_CONFIGURED", createdBy: "user-a", createdAt: "2026-01-01T00:16:25.000Z", updatedAt: "2026-01-01T00:16:25.000Z" }
