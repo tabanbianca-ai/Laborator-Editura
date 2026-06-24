@@ -39,6 +39,11 @@ export class DocumentsService {
       createdBy: actor.userId,
       createdAt: now,
       updatedAt: now,
+      translatorId: input.translatorId,
+      translatorName: input.translatorName,
+      originalAuthorId: input.originalAuthorId,
+      originalAuthorName: input.originalAuthorName,
+      translatorAttribution: this.buildTranslatorAttribution(input),
       metadata: input.metadata
     });
 
@@ -121,5 +126,21 @@ export class DocumentsService {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("userId and organizationId are required.");
     }
+  }
+
+  private buildTranslatorAttribution(input: CreateDocumentInput): Document["translatorAttribution"] {
+    if (!input.translatorId && !input.translatorName) {
+      return undefined;
+    }
+
+    return {
+      translatorId: input.translatorId,
+      translatorName: input.translatorName,
+      originalAuthorId: input.originalAuthorId,
+      originalAuthorName: input.originalAuthorName,
+      originalAuthorAttributionPreserved: true,
+      visibleInEditorialRecords: true,
+      visibleInPublicationRecords: true
+    };
   }
 }
