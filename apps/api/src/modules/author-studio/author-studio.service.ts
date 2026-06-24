@@ -86,6 +86,16 @@ export class AuthorStudioService {
     return this.requireManuscriptAccess(actor, manuscriptId);
   }
 
+  async listSections(
+    actor: AuthorStudioActor,
+    manuscriptId: string
+  ): Promise<AuthorManuscriptSection[]> {
+    const manuscript = await this.requireManuscriptAccess(actor, manuscriptId);
+    const sections = await this.repository.listSectionsForManuscript(manuscript.id, actor.organizationId);
+
+    return sections.sort((left, right) => left.orderIndex - right.orderIndex);
+  }
+
   async addSection(
     actor: AuthorStudioActor,
     manuscriptId: string,
@@ -165,6 +175,12 @@ export class AuthorStudioService {
     );
 
     return created;
+  }
+
+  async getLatestDraft(actor: AuthorStudioActor, sectionId: string): Promise<AuthorDraft | null> {
+    const section = await this.requireSectionAccess(actor, sectionId);
+
+    return this.repository.findLatestDraftForSection(section.id, actor.organizationId);
   }
 
   async addNote(actor: AuthorStudioActor, manuscriptId: string, input: CreateAuthorNoteInput): Promise<AuthorNote> {
