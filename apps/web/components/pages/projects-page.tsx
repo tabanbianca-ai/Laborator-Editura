@@ -1,5 +1,5 @@
 import { listProjects, type ProjectRecord } from "../../lib/projects-documents-api";
-import { Badge, Button, EmptyState, ErrorState, Input, Table } from "../ui";
+import { Badge, Button, DataTable, EmptyState, ErrorState, Input, PageHeader } from "../ui";
 
 function formatLanguagePair(project: ProjectRecord): string {
   return `${project.sourceLanguage.toUpperCase()} -> ${project.targetLanguages
@@ -17,6 +17,16 @@ export async function ProjectsPage() {
 
   return (
     <div className="page-stack">
+      <PageHeader
+        actions={
+          <Button disabled variant="secondary">
+            New project
+          </Button>
+        }
+        eyebrow="Projects"
+        title="Project registry"
+      />
+
       <section className="toolbar">
         <Input
           aria-label="Search projects"
@@ -24,9 +34,6 @@ export async function ProjectsPage() {
           placeholder="Search projects"
           type="search"
         />
-        <Button disabled variant="secondary">
-          New project
-        </Button>
       </section>
 
       <section className="content-panel">
@@ -41,32 +48,25 @@ export async function ProjectsPage() {
         {error ? <ErrorState message={`Projects could not be loaded. ${error}`} /> : null}
         {!error && projectCount === 0 ? <EmptyState title="No projects" /> : null}
         {!error && projects && projectCount > 0 ? (
-          <Table ariaLabel="Projects">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Language</th>
-                <th>Domain</th>
-                <th>Created by</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {projects.map((project) => (
-                <tr key={project.id}>
-                  <td>{project.name}</td>
-                  <td>{formatLanguagePair(project)}</td>
-                  <td>{project.domain ?? "Unassigned"}</td>
-                  <td>{project.createdBy}</td>
-                  <td>
-                    <Badge tone={getProjectStatusTone(project.status)}>
-                      {project.status}
-                    </Badge>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          <DataTable
+            ariaLabel="Projects"
+            columns={[
+              { header: "Name", render: (project) => project.name },
+              { header: "Language", render: formatLanguagePair },
+              { header: "Domain", render: (project) => project.domain ?? "Unassigned" },
+              { header: "Created by", render: (project) => project.createdBy },
+              {
+                header: "Status",
+                render: (project) => (
+                  <Badge tone={getProjectStatusTone(project.status)}>
+                    {project.status}
+                  </Badge>
+                )
+              }
+            ]}
+            getRowKey={(project) => project.id}
+            rows={projects}
+          />
         ) : null}
       </section>
     </div>
