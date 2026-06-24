@@ -13,6 +13,7 @@ import { ExportModule } from "./export/export.module";
 import { GatewayModule } from "./gateway/gateway.module";
 import { HealthController } from "./health.controller";
 import { LayoutPublishingModule } from "./layout-publishing/layout-publishing.module";
+import { LaunchEssentialsModule } from "./launch-essentials/launch-essentials.module";
 import { LibraryModule } from "./library/library.module";
 import { LexicographicModule } from "./lexicographic/lexicographic.module";
 import { MediaLocalizationModule } from "./media-localization/media-localization.module";
@@ -58,6 +59,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     EditorialDecisionModule,
     GatewayModule,
     LayoutPublishingModule,
+    LaunchEssentialsModule,
     LibraryModule,
     MediaLocalizationModule,
     MarketplaceModule,
