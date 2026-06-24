@@ -35,6 +35,14 @@ export class AuthorStudioController {
     return this.authorStudioService.getManuscript(actor, id);
   }
 
+  @Get("manuscripts/:id/sections")
+  listSections(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string
+  ) {
+    return this.authorStudioService.listSections(actor, id);
+  }
+
   @Post("manuscripts/:id/sections")
   addSection(
     @CurrentActor() actor: AuthenticatedRequestContext,
@@ -51,6 +59,14 @@ export class AuthorStudioController {
     @Body() input: SaveAuthorDraftInput
   ) {
     return this.authorStudioService.saveDraft(actor, id, input);
+  }
+
+  @Get("sections/:id/draft")
+  getLatestDraft(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string
+  ) {
+    return this.authorStudioService.getLatestDraft(actor, id);
   }
 
   @Post("manuscripts/:id/notes")
