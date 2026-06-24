@@ -1,8 +1,29 @@
-import { CoreModuleScreen } from "../../components/pages/core-module-screen";
-import { getCoreModuleShell } from "../../lib/core-module-client";
+import { TranslationWorkspacePage } from "../../components/pages/translation-workspace-page";
+import { getTranslationWorkspaceData } from "../../lib/translation-workspace-client";
 
-export default async function TranslationRoute() {
-  const result = await getCoreModuleShell("translation");
+interface TranslationRouteProps {
+  searchParams?: Promise<{
+    documentId?: string | string[];
+    error?: string | string[];
+    segmentId?: string | string[];
+  }>;
+}
 
-  return <CoreModuleScreen eyebrow="Translation" result={result} />;
+function getQueryValue(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export default async function TranslationRoute({ searchParams }: TranslationRouteProps) {
+  const params = await searchParams;
+  const workspace = await getTranslationWorkspaceData({
+    documentId: getQueryValue(params?.documentId),
+    segmentId: getQueryValue(params?.segmentId)
+  });
+
+  return (
+    <TranslationWorkspacePage
+      error={getQueryValue(params?.error)}
+      workspace={workspace}
+    />
+  );
 }
