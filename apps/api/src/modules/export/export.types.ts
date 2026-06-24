@@ -10,6 +10,15 @@ export interface ExportDocumentInput {
   documentId: string;
 }
 
+export interface ExportTranslatorAttribution {
+  translatorId?: string;
+  translatorName?: string;
+  originalAuthorId?: string;
+  originalAuthorName?: string;
+  originalAuthorAttributionPreserved: true;
+  visibleInPublicationRecords: true;
+}
+
 export interface ExportArtifact {
   id: string;
   organizationId: string;
@@ -19,6 +28,9 @@ export interface ExportArtifact {
   artifact: JsonMasterFormatV1;
   createdBy: string;
   createdAt: string;
+  metadata?: {
+    translatorAttribution?: ExportTranslatorAttribution[];
+  };
 }
 
 export interface ExportAuditEvent {
