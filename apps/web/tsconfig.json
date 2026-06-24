@@ -8,6 +8,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmit": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
     "paths": {
       "@/*": ["./*"],
       "@laborator/shared": ["../../packages/shared/src/index.ts"],
