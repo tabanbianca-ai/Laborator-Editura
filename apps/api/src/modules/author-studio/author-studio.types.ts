@@ -52,6 +52,7 @@ export interface AuthorManuscript {
   id: string;
   organizationId: string;
   authorId: string;
+  sourceManuscriptId?: string;
   projectId?: string;
   documentId?: string;
   title: string;
@@ -66,6 +67,12 @@ export interface AuthorManuscript {
   authorAttribution: {
     authorId: string;
     retained: true;
+  };
+  translatorAttribution?: {
+    translatorId?: string;
+    translatorName?: string;
+    originalAuthorAttributionPreserved: true;
+    visibleInEditorialRecords: true;
   };
   aiSuggestionsAdvisoryOnly: true;
   publicExposure: false;
@@ -159,8 +166,10 @@ export interface CreateAuthorManuscriptInput {
   language: string;
   genre?: string;
   manuscriptType: AuthorManuscriptType;
+  sourceManuscriptId?: string;
   projectId?: string;
   documentId?: string;
+  translatorName?: string;
   synopsis?: string;
   outline?: string;
   stylePreferences?: string[];
