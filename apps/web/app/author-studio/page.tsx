@@ -1,8 +1,8 @@
-import { CoreModuleScreen } from "../../components/pages/core-module-screen";
-import { getCoreModuleShell } from "../../lib/core-module-client";
+import { AuthorStudioManuscriptsPage } from "../../components/pages/author-studio-manuscripts-page";
+import { listAuthorManuscripts } from "../../lib/author-studio-client";
 
 export default async function AuthorStudioRoute() {
-  const result = await getCoreModuleShell("author-studio");
+  const result = await listAuthorManuscripts();
 
-  return <CoreModuleScreen eyebrow="Author Studio" result={result} />;
+  return <AuthorStudioManuscriptsPage result={result} />;
 }
