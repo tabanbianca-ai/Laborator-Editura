@@ -41,6 +41,11 @@ export const TABLE_NAMES = [
   "ai_cost_policies",
   "ai_budget_override_requests",
   "ai_cost_audit_events",
+  "policy_definitions",
+  "policy_evaluations",
+  "policy_exception_requests",
+  "policy_audit_events",
+  "compliance_records",
   "organization_founder_protection",
   "founder_ownership_transfers",
   "projects",
@@ -156,6 +161,11 @@ const TENANT_SCOPED_TABLES = new Set([
   "ai_cost_policies",
   "ai_budget_override_requests",
   "ai_cost_audit_events",
+  "policy_definitions",
+  "policy_evaluations",
+  "policy_exception_requests",
+  "policy_audit_events",
+  "compliance_records",
   "projects",
   "documents",
   "document_segments",
@@ -448,6 +458,21 @@ function validateTenantBoundaries(data, issues) {
     "overrideRequestId",
     "ai_budget_override_requests"
   );
+  validateReferenceTenant(data, issues, "policy_evaluations", "policyId", "policy_definitions");
+  validateReferenceTenant(data, issues, "policy_exception_requests", "policyId", "policy_definitions");
+  validateReferenceTenant(data, issues, "policy_exception_requests", "evaluationId", "policy_evaluations");
+  validateReferenceTenant(data, issues, "compliance_records", "evaluationId", "policy_evaluations");
+  validateReferenceTenant(data, issues, "compliance_records", "policyId", "policy_definitions");
+  validateReferenceTenant(data, issues, "policy_audit_events", "policyId", "policy_definitions");
+  validateReferenceTenant(data, issues, "policy_audit_events", "evaluationId", "policy_evaluations");
+  validateReferenceTenant(
+    data,
+    issues,
+    "policy_audit_events",
+    "exceptionRequestId",
+    "policy_exception_requests"
+  );
+  validateReferenceTenant(data, issues, "policy_audit_events", "complianceRecordId", "compliance_records");
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
   validateReferenceTenant(
     data,
