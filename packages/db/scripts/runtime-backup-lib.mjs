@@ -52,6 +52,10 @@ export const TABLE_NAMES = [
   "admin_memberships",
   "admin_invitations",
   "admin_audit_events",
+  "marketplace_agents",
+  "marketplace_extensions",
+  "marketplace_installs",
+  "marketplace_audit_events",
   "organization_founder_protection",
   "founder_ownership_transfers",
   "projects",
@@ -178,6 +182,10 @@ const TENANT_SCOPED_TABLES = new Set([
   "admin_memberships",
   "admin_invitations",
   "admin_audit_events",
+  "marketplace_agents",
+  "marketplace_extensions",
+  "marketplace_installs",
+  "marketplace_audit_events",
   "projects",
   "documents",
   "document_segments",
@@ -493,6 +501,11 @@ function validateTenantBoundaries(data, issues) {
   validateReferenceTenant(data, issues, "admin_audit_events", "permissionId", "admin_permissions");
   validateReferenceTenant(data, issues, "admin_audit_events", "membershipId", "admin_memberships");
   validateReferenceTenant(data, issues, "admin_audit_events", "invitationId", "admin_invitations");
+  validateReferenceTenant(data, issues, "marketplace_installs", "agentId", "marketplace_agents");
+  validateReferenceTenant(data, issues, "marketplace_installs", "extensionId", "marketplace_extensions");
+  validateReferenceTenant(data, issues, "marketplace_audit_events", "agentId", "marketplace_agents");
+  validateReferenceTenant(data, issues, "marketplace_audit_events", "extensionId", "marketplace_extensions");
+  validateReferenceTenant(data, issues, "marketplace_audit_events", "installId", "marketplace_installs");
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
   validateReferenceTenant(
     data,
