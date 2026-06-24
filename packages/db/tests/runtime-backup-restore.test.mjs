@@ -105,6 +105,10 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "admin_memberships",
     "admin_invitations",
     "admin_audit_events",
+    "marketplace_agents",
+    "marketplace_extensions",
+    "marketplace_installs",
+    "marketplace_audit_events",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -415,6 +419,20 @@ function sampleSnapshot() {
     { id: "admin-audit-b", organizationId: "org-a", actorId: "user-a", action: "ADMIN_ROLE_CREATED", roleId: "admin-role-a", afterState: { id: "admin-role-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.144Z" },
     { id: "admin-audit-c", organizationId: "org-a", actorId: "user-a", action: "ADMIN_ROLE_ASSIGNED", userId: "admin-user-a", roleId: "admin-role-a", membershipId: "admin-membership-a", afterState: { id: "admin-membership-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.146Z" },
     { id: "admin-audit-d", organizationId: "org-a", actorId: "user-a", action: "ADMIN_INVITATION_CREATED", invitationId: "admin-invitation-a", afterState: { id: "admin-invitation-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.147Z" }
+  );
+  snapshot.marketplace_agents.push(
+    { id: "marketplace-agent-a", organizationId: "org-a", agentName: "Translation AI", category: "TRANSLATION", version: "1.0.0", providerMetadata: { provider: "metadata-only" }, supportedModules: ["translations", "terminology"], permissionsRequired: ["ai:govern"], costGovernanceLink: "ai-policy-a", policyComplianceLink: "policy-a", status: "ACTIVE", visibility: "ORGANIZATION", installMetadata: { adminApprovalRequired: true }, enabledBy: "user-a", enabledAt: "2026-01-01T00:00:07.150Z", governance: { adminApprovalRequired: true, policyEngineComplianceRequired: true, costGovernanceRequired: true, auditTrailMandatory: true, humanFinalAuthorityRequired: true, aiMaySuggest: true, aiMaySummarizeCatalog: true, aiMayDetectRisk: true, aiCannotSelfEnable: true, aiCannotInstallExtensionsAutomatically: true, aiCannotBypassPolicyGovernance: true, aiCannotBypassCostGovernance: true, externalPluginExecution: "NOT_CONFIGURED", paidMarketplace: "NOT_CONFIGURED" }, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.148Z", updatedAt: "2026-01-01T00:00:07.150Z", metadata: { aiSuggested: false } }
+  );
+  snapshot.marketplace_extensions.push(
+    { id: "marketplace-extension-a", organizationId: "org-a", moduleName: "Editorial Export Extension", capabilities: ["export-metadata"], integrationType: "INTERNAL_MODULE", requiredScopes: ["export:read"], tenantAvailability: ["org-a"], status: "ACTIVE", visibility: "ORGANIZATION", installMetadata: { adminApprovalRequired: true }, enabledBy: "user-a", enabledAt: "2026-01-01T00:00:07.153Z", governance: { adminApprovalRequired: true, policyEngineComplianceRequired: true, costGovernanceRequired: true, auditTrailMandatory: true, humanFinalAuthorityRequired: true, aiMaySuggest: true, aiMaySummarizeCatalog: true, aiMayDetectRisk: true, aiCannotSelfEnable: true, aiCannotInstallExtensionsAutomatically: true, aiCannotBypassPolicyGovernance: true, aiCannotBypassCostGovernance: true, externalPluginExecution: "NOT_CONFIGURED", paidMarketplace: "NOT_CONFIGURED" }, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.151Z", updatedAt: "2026-01-01T00:00:07.153Z", metadata: { externalPluginExecution: "NOT_CONFIGURED" } }
+  );
+  snapshot.marketplace_installs.push(
+    { id: "marketplace-install-a", organizationId: "org-a", agentId: "marketplace-agent-a", catalogItemType: "AGENT", status: "ENABLED", enabledBy: "user-a", enabledAt: "2026-01-01T00:00:07.150Z", installMetadata: { policyEngineComplianceRequired: true, costGovernanceRequired: true }, adminApprovalRequired: true, humanFinalAuthorityRequired: true, policyEngineComplianceRequired: true, costGovernanceRequired: true, externalPluginExecution: "NOT_CONFIGURED", createdAt: "2026-01-01T00:00:07.150Z", updatedAt: "2026-01-01T00:00:07.150Z" },
+    { id: "marketplace-install-b", organizationId: "org-a", extensionId: "marketplace-extension-a", catalogItemType: "EXTENSION", status: "ENABLED", enabledBy: "user-a", enabledAt: "2026-01-01T00:00:07.153Z", installMetadata: { policyEngineComplianceRequired: true }, adminApprovalRequired: true, humanFinalAuthorityRequired: true, policyEngineComplianceRequired: true, costGovernanceRequired: true, externalPluginExecution: "NOT_CONFIGURED", createdAt: "2026-01-01T00:00:07.153Z", updatedAt: "2026-01-01T00:00:07.153Z" }
+  );
+  snapshot.marketplace_audit_events.push(
+    { id: "marketplace-audit-a", organizationId: "org-a", actorId: "user-a", action: "MARKETPLACE_AGENT_ENABLED", agentId: "marketplace-agent-a", installId: "marketplace-install-a", afterState: { id: "marketplace-agent-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.150Z" },
+    { id: "marketplace-audit-b", organizationId: "org-a", actorId: "user-a", action: "MARKETPLACE_EXTENSION_ENABLED", extensionId: "marketplace-extension-a", installId: "marketplace-install-b", afterState: { id: "marketplace-extension-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.153Z" }
   );
   snapshot.organization_founder_protection.push(
     { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
