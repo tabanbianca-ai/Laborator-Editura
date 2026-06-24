@@ -35,7 +35,9 @@ test("author studio module is registered with authenticated endpoints", () => {
   assert.match(controller, /@Post\("manuscripts"\)/);
   assert.match(controller, /@Get\("manuscripts"\)/);
   assert.match(controller, /@Get\("manuscripts\/:id"\)/);
+  assert.match(controller, /@Get\("manuscripts\/:id\/sections"\)/);
   assert.match(controller, /@Post\("manuscripts\/:id\/sections"\)/);
+  assert.match(controller, /@Get\("sections\/:id\/draft"\)/);
   assert.match(controller, /@Post\("sections\/:id\/drafts"\)/);
   assert.match(controller, /@Post\("manuscripts\/:id\/notes"\)/);
   assert.match(controller, /@Post\("manuscripts\/:id\/submit"\)/);
