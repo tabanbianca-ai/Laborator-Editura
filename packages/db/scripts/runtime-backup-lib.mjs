@@ -46,6 +46,12 @@ export const TABLE_NAMES = [
   "policy_exception_requests",
   "policy_audit_events",
   "compliance_records",
+  "admin_users",
+  "admin_roles",
+  "admin_permissions",
+  "admin_memberships",
+  "admin_invitations",
+  "admin_audit_events",
   "organization_founder_protection",
   "founder_ownership_transfers",
   "projects",
@@ -166,6 +172,12 @@ const TENANT_SCOPED_TABLES = new Set([
   "policy_exception_requests",
   "policy_audit_events",
   "compliance_records",
+  "admin_users",
+  "admin_roles",
+  "admin_permissions",
+  "admin_memberships",
+  "admin_invitations",
+  "admin_audit_events",
   "projects",
   "documents",
   "document_segments",
@@ -473,6 +485,14 @@ function validateTenantBoundaries(data, issues) {
     "policy_exception_requests"
   );
   validateReferenceTenant(data, issues, "policy_audit_events", "complianceRecordId", "compliance_records");
+  validateReferenceTenant(data, issues, "admin_memberships", "userId", "admin_users");
+  validateReferenceTenant(data, issues, "admin_memberships", "roleId", "admin_roles");
+  validateReferenceTenant(data, issues, "admin_invitations", "roleId", "admin_roles");
+  validateReferenceTenant(data, issues, "admin_audit_events", "userId", "admin_users");
+  validateReferenceTenant(data, issues, "admin_audit_events", "roleId", "admin_roles");
+  validateReferenceTenant(data, issues, "admin_audit_events", "permissionId", "admin_permissions");
+  validateReferenceTenant(data, issues, "admin_audit_events", "membershipId", "admin_memberships");
+  validateReferenceTenant(data, issues, "admin_audit_events", "invitationId", "admin_invitations");
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
   validateReferenceTenant(
     data,
