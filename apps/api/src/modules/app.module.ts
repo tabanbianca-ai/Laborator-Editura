@@ -34,6 +34,7 @@ import { SchedulingModule } from "./scheduling/scheduling.module";
 import { TerminologyModule } from "./terminology/terminology.module";
 import { TranslationMemoryModule } from "./translation-memory/translation-memory.module";
 import { TranslationsModule } from "./translations/translations.module";
+import { WorkspaceModule } from "./workspace/workspace.module";
 import { WorkflowModule } from "./workflow/workflow.module";
 
 @Module({
@@ -68,6 +69,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     ResearchModule,
     SecurityGovernanceModule,
     SchedulingModule,
+    WorkspaceModule,
     WorkflowModule,
     ExportModule
   ],
