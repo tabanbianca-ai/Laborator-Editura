@@ -25,7 +25,8 @@ import {
   type ExportActor,
   type ExportArtifact,
   type ExportAuditEvent,
-  type ExportDocumentInput
+  type ExportDocumentInput,
+  type ExportTranslatorAttribution
 } from "./export.types";
 
 interface FoundationAuditRecord {
@@ -105,6 +106,7 @@ export class ExportService {
       this.collectFoundationAuditEvents(actor, exportAuditEvent)
     );
     const validation = validateJsonMasterFormatV1(artifact);
+    const translatorAttribution = this.collectTranslatorAttribution(document, translations);
 
     if (!validation.valid) {
       throw new BadRequestException(
@@ -122,7 +124,8 @@ export class ExportService {
       format: "JSON_MASTER",
       artifact,
       createdBy: actor.userId,
-      createdAt: now
+      createdAt: now,
+      metadata: translatorAttribution.length > 0 ? { translatorAttribution } : undefined
     });
 
     await this.repository.appendAuditEvent(exportAuditEvent);
@@ -159,6 +162,7 @@ export class ExportService {
           title: document.title,
           sourceLanguage: document.sourceLanguage,
           documentType: this.mapDocumentType(document.documentType),
+          metadata: this.buildDocumentExportMetadata(document, translations),
           segments: segments.map((segment) => ({
             id: segment.id,
             order: segment.order,
@@ -172,7 +176,7 @@ export class ExportService {
                 language: translation.targetLanguage,
                 text: translation.targetText,
                 status: this.mapTranslationStatus(translation.status),
-                translatorId: translation.createdBy,
+                translatorId: translation.translatorId ?? translation.createdBy,
                 createdAt: translation.createdAt,
                 updatedAt: translation.updatedAt
               })),
@@ -234,6 +238,63 @@ export class ExportService {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("userId and organizationId are required.");
     }
+  }
+
+  private buildDocumentExportMetadata(
+    document: Document,
+    translations: SegmentTranslation[]
+  ): Record<string, unknown> | undefined {
+    const translatorAttribution = this.collectTranslatorAttribution(document, translations);
+    const metadata: Record<string, unknown> = {
+      ...(document.metadata ?? {})
+    };
+
+    if (translatorAttribution.length > 0) {
+      metadata.translatorAttribution = translatorAttribution;
+    }
+
+    if (document.originalAuthorId || document.originalAuthorName) {
+      metadata.originalAuthorAttributionPreserved = true;
+      metadata.originalAuthorId = document.originalAuthorId;
+      metadata.originalAuthorName = document.originalAuthorName;
+    }
+
+    return Object.keys(metadata).length > 0 ? metadata : undefined;
+  }
+
+  private collectTranslatorAttribution(
+    document: Document,
+    translations: SegmentTranslation[]
+  ): ExportTranslatorAttribution[] {
+    const byKey = new Map<string, ExportTranslatorAttribution>();
+
+    if (document.translatorId || document.translatorName) {
+      const attribution: ExportTranslatorAttribution = {
+        translatorId: document.translatorId,
+        translatorName: document.translatorName,
+        originalAuthorId: document.originalAuthorId,
+        originalAuthorName: document.originalAuthorName,
+        originalAuthorAttributionPreserved: true,
+        visibleInPublicationRecords: true
+      };
+      byKey.set(document.translatorId ?? document.translatorName ?? "document-translator", attribution);
+    }
+
+    for (const translation of translations) {
+      const translatorId = translation.translatorId ?? translation.createdBy;
+      const translatorName = translation.translatorName;
+      const attribution: ExportTranslatorAttribution = {
+        translatorId,
+        translatorName,
+        originalAuthorId: translation.originalAuthorId ?? document.originalAuthorId,
+        originalAuthorName: translation.originalAuthorName ?? document.originalAuthorName,
+        originalAuthorAttributionPreserved: true,
+        visibleInPublicationRecords: true
+      };
+      byKey.set(translatorId ?? translatorName ?? translation.id, attribution);
+    }
+
+    return [...byKey.values()];
   }
 
   private collectFoundationAuditEvents(
