@@ -5,6 +5,16 @@ export interface DocumentActor {
 
 export type DocumentAuditAction = "CREATE" | "UPDATE" | "DELETE" | "APPROVE" | "EXPORT";
 
+export interface DocumentTranslatorAttribution {
+  translatorId?: string;
+  translatorName?: string;
+  originalAuthorId?: string;
+  originalAuthorName?: string;
+  originalAuthorAttributionPreserved: true;
+  visibleInEditorialRecords: true;
+  visibleInPublicationRecords: true;
+}
+
 export interface Document {
   id: string;
   organizationId: string;
@@ -17,6 +27,11 @@ export interface Document {
   createdBy: string;
   createdAt: string;
   updatedAt: string;
+  translatorId?: string;
+  translatorName?: string;
+  originalAuthorId?: string;
+  originalAuthorName?: string;
+  translatorAttribution?: DocumentTranslatorAttribution;
   metadata?: Record<string, unknown>;
 }
 
@@ -26,6 +41,10 @@ export interface CreateDocumentInput {
   sourceLanguage: string;
   targetLanguage: string;
   documentType?: string;
+  translatorId?: string;
+  translatorName?: string;
+  originalAuthorId?: string;
+  originalAuthorName?: string;
   metadata?: Record<string, unknown>;
 }
 
