@@ -94,6 +94,11 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "ai_cost_policies",
     "ai_budget_override_requests",
     "ai_cost_audit_events",
+    "policy_definitions",
+    "policy_evaluations",
+    "policy_exception_requests",
+    "policy_audit_events",
+    "compliance_records",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -365,6 +370,24 @@ function sampleSnapshot() {
     { id: "ai-audit-d", organizationId: "org-a", action: "AI_COST_POLICY_CREATED", actorId: "user-a", policyId: "ai-policy-a", afterState: { id: "ai-policy-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.081Z" },
     { id: "ai-audit-e", organizationId: "org-a", action: "AI_BUDGET_OVERRIDE_REQUEST_CREATED", actorId: "user-a", overrideRequestId: "ai-override-a", afterState: { id: "ai-override-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.091Z" },
     { id: "ai-audit-f", organizationId: "org-a", action: "AI_BUDGET_OVERRIDE_APPROVED", actorId: "user-a", overrideRequestId: "ai-override-a", afterState: { id: "ai-override-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.101Z" }
+  );
+  snapshot.policy_definitions.push(
+    { id: "policy-a", organizationId: "org-a", name: "Human final authority baseline", category: "AI_GOVERNANCE", description: "Central compliance baseline for closed beta.", version: "1.0.0", status: "ACTIVE", effectiveFrom: "2026-01-01T00:00:07.110Z", createdBy: "user-a", approvedBy: "user-a", approvedAt: "2026-01-01T00:00:07.110Z", humanApprovalRequired: true, aiMaySuggest: true, aiMayEnforce: false, complianceRules: { humanFinalAuthorityMandatory: true, noPermanentDeletion: true, originalSourcePreservationMandatory: true, auditTrailMandatory: true, versionHistoryMandatory: true, aiCannotApprovePublications: true, aiCannotApproveBudgets: true, aiCannotRevokeUsersAutomatically: true, aiCannotAlterCitationsAutomatically: true, aiCannotModifyValidatedResearch: true }, createdAt: "2026-01-01T00:00:07.110Z", updatedAt: "2026-01-01T00:00:07.110Z", metadata: { externalComplianceProvider: "NOT_CONFIGURED" } }
+  );
+  snapshot.policy_evaluations.push(
+    { id: "policy-evaluation-a", organizationId: "org-a", policyId: "policy-a", scope: "AI_EXECUTION", aiExecutionId: "observability-agent-a", status: "COMPLIANT", findings: [], evaluatedRules: { humanFinalAuthorityMandatory: true, noPermanentDeletion: true, originalSourcePreservationMandatory: true, auditTrailMandatory: true, versionHistoryMandatory: true, aiCannotApprovePublications: true, aiCannotApproveBudgets: true, aiCannotRevokeUsersAutomatically: true, aiCannotAlterCitationsAutomatically: true, aiCannotModifyValidatedResearch: true }, humanFinalAuthorityRequired: true, aiMaySummarizeCompliance: true, aiMayDetectRisks: true, aiMayEnforce: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.120Z", metadata: { metadataOnly: true } }
+  );
+  snapshot.policy_exception_requests.push(
+    { id: "policy-exception-a", organizationId: "org-a", policyId: "policy-a", evaluationId: "policy-evaluation-a", justification: "Temporary closed beta exception for manual review.", status: "APPROVED", requestedBy: "user-a", approver: "user-a", approvedAt: "2026-01-01T00:00:07.140Z", expirationDate: "2026-02-01T00:00:00.000Z", humanApprovalRequired: true, aiRequested: false, aiApprovalAttempt: false, createdAt: "2026-01-01T00:00:07.130Z", updatedAt: "2026-01-01T00:00:07.140Z", metadata: { finalAuthority: "AUTHORIZED_HUMAN" } }
+  );
+  snapshot.compliance_records.push(
+    { id: "compliance-record-a", organizationId: "org-a", evaluationId: "policy-evaluation-a", policyId: "policy-a", scope: "AI_EXECUTION", status: "COMPLIANT", findings: [], humanFinalAuthorityRequired: true, auditTrailRequired: true, versionHistoryRequired: true, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.121Z", metadata: { externalComplianceProvider: "NOT_CONFIGURED" } }
+  );
+  snapshot.policy_audit_events.push(
+    { id: "policy-audit-a", organizationId: "org-a", action: "POLICY_ACTIVATED", actorId: "user-a", policyId: "policy-a", afterState: { id: "policy-a" }, createdAt: "2026-01-01T00:00:07.111Z" },
+    { id: "policy-audit-b", organizationId: "org-a", action: "POLICY_EVALUATED", actorId: "user-a", evaluationId: "policy-evaluation-a", afterState: { id: "policy-evaluation-a" }, createdAt: "2026-01-01T00:00:07.122Z" },
+    { id: "policy-audit-c", organizationId: "org-a", action: "COMPLIANCE_RECORD_CREATED", actorId: "user-a", evaluationId: "policy-evaluation-a", complianceRecordId: "compliance-record-a", afterState: { id: "compliance-record-a" }, createdAt: "2026-01-01T00:00:07.123Z" },
+    { id: "policy-audit-d", organizationId: "org-a", action: "POLICY_EXCEPTION_APPROVED", actorId: "user-a", exceptionRequestId: "policy-exception-a", afterState: { id: "policy-exception-a" }, createdAt: "2026-01-01T00:00:07.141Z" }
   );
   snapshot.organization_founder_protection.push(
     { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
