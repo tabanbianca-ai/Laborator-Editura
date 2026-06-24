@@ -16,6 +16,7 @@ import { LayoutPublishingModule } from "./layout-publishing/layout-publishing.mo
 import { LibraryModule } from "./library/library.module";
 import { LexicographicModule } from "./lexicographic/lexicographic.module";
 import { MediaLocalizationModule } from "./media-localization/media-localization.module";
+import { MarketplaceModule } from "./marketplace/marketplace.module";
 import { MultimediaCreationModule } from "./multimedia-creation/multimedia-creation.module";
 import { ObservabilityModule } from "./observability/observability.module";
 import { PlatformEngineeringModule } from "./platform-engineering/platform-engineering.module";
@@ -58,6 +59,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     LayoutPublishingModule,
     LibraryModule,
     MediaLocalizationModule,
+    MarketplaceModule,
     MultimediaCreationModule,
     ObservabilityModule,
     PlatformEngineeringModule,
