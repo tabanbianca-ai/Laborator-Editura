@@ -99,6 +99,12 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "policy_exception_requests",
     "policy_audit_events",
     "compliance_records",
+    "admin_users",
+    "admin_roles",
+    "admin_permissions",
+    "admin_memberships",
+    "admin_invitations",
+    "admin_audit_events",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -388,6 +394,27 @@ function sampleSnapshot() {
     { id: "policy-audit-b", organizationId: "org-a", action: "POLICY_EVALUATED", actorId: "user-a", evaluationId: "policy-evaluation-a", afterState: { id: "policy-evaluation-a" }, createdAt: "2026-01-01T00:00:07.122Z" },
     { id: "policy-audit-c", organizationId: "org-a", action: "COMPLIANCE_RECORD_CREATED", actorId: "user-a", evaluationId: "policy-evaluation-a", complianceRecordId: "compliance-record-a", afterState: { id: "compliance-record-a" }, createdAt: "2026-01-01T00:00:07.123Z" },
     { id: "policy-audit-d", organizationId: "org-a", action: "POLICY_EXCEPTION_APPROVED", actorId: "user-a", exceptionRequestId: "policy-exception-a", afterState: { id: "policy-exception-a" }, createdAt: "2026-01-01T00:00:07.141Z" }
+  );
+  snapshot.admin_users.push(
+    { id: "admin-user-a", organizationId: "org-a", email: "closed.beta.user@example.test", displayName: "Closed Beta User", status: "ACTIVE", mfaMetadata: { configured: false, provider: "NOT_CONFIGURED" }, lastLoginMetadata: { lastLoginAt: "2026-01-01T00:00:07.145Z" }, organizationMembershipIds: ["admin-membership-a"], teamMembershipIds: ["team-editorial"], createdBy: "user-a", createdAt: "2026-01-01T00:00:07.142Z", updatedAt: "2026-01-01T00:00:07.146Z", metadata: { authBehaviorPreserved: true } }
+  );
+  snapshot.admin_permissions.push(
+    { id: "admin-permission-a", organizationId: "org-a", scope: "ADMIN", key: "admin:manage-users", description: "Manage users and memberships.", moduleName: "enterprise-admin", projectScoped: false, documentScoped: false, adminScoped: true, apiScoped: false, aiScoped: false, createdAt: "2026-01-01T00:00:07.143Z" }
+  );
+  snapshot.admin_roles.push(
+    { id: "admin-role-a", organizationId: "org-a", name: "EDITOR", displayName: "Editor", description: "Editorial administrator.", builtIn: true, custom: false, permissionIds: ["admin-permission-a"], humanApprovalRequired: true, aiSuggested: false, aiMaySuggestPermissions: true, aiMayGrantAdminAutomatically: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.144Z", updatedAt: "2026-01-01T00:00:07.144Z", metadata: { roleManagement: "metadata-only" } }
+  );
+  snapshot.admin_memberships.push(
+    { id: "admin-membership-a", organizationId: "org-a", userId: "admin-user-a", roleId: "admin-role-a", roleName: "EDITOR", workspaceId: "workspace-editorial", environmentId: "staging", projectId: "project-a", teamId: "team-editorial", departmentId: "department-books", memberStatus: "ACTIVE", assignedBy: "user-a", assignedAt: "2026-01-01T00:00:07.146Z", metadata: { humanFinalAuthority: true } }
+  );
+  snapshot.admin_invitations.push(
+    { id: "admin-invitation-a", organizationId: "org-a", email: "invited.member@example.test", roleId: "admin-role-a", roleName: "EDITOR", workspaceId: "workspace-editorial", teamId: "team-editorial", departmentId: "department-books", status: "PENDING", invitedBy: "user-a", expiresAt: "2026-02-01T00:00:00.000Z", createdAt: "2026-01-01T00:00:07.147Z", metadata: { humanFinalAuthority: true } }
+  );
+  snapshot.admin_audit_events.push(
+    { id: "admin-audit-a", organizationId: "org-a", actorId: "user-a", action: "ADMIN_USER_CREATED", userId: "admin-user-a", afterState: { id: "admin-user-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.142Z" },
+    { id: "admin-audit-b", organizationId: "org-a", actorId: "user-a", action: "ADMIN_ROLE_CREATED", roleId: "admin-role-a", afterState: { id: "admin-role-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.144Z" },
+    { id: "admin-audit-c", organizationId: "org-a", actorId: "user-a", action: "ADMIN_ROLE_ASSIGNED", userId: "admin-user-a", roleId: "admin-role-a", membershipId: "admin-membership-a", afterState: { id: "admin-membership-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.146Z" },
+    { id: "admin-audit-d", organizationId: "org-a", actorId: "user-a", action: "ADMIN_INVITATION_CREATED", invitationId: "admin-invitation-a", afterState: { id: "admin-invitation-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.147Z" }
   );
   snapshot.organization_founder_protection.push(
     { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
