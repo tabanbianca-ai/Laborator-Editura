@@ -1209,6 +1209,210 @@ textarea {
   padding: 5px 8px;
 }
 
+.translation-selector-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+
+.selector-value {
+  color: #17211f;
+  font-weight: 800;
+  margin: 0 0 12px;
+}
+
+.document-link-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.document-selector-link {
+  border: 1px solid #d7ded8;
+  border-radius: 8px;
+  color: #1f2a27;
+  font-size: 0.86rem;
+  font-weight: 750;
+  padding: 8px 10px;
+}
+
+.document-selector-link:hover,
+.document-selector-link:focus-visible {
+  border-color: #1f6f62;
+  outline: 2px solid #cde7df;
+  outline-offset: 1px;
+}
+
+.document-selector-link-active {
+  background: #e8f4eb;
+  border-color: #1f6f62;
+}
+
+.translation-workspace-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(230px, 290px) minmax(0, 1fr) minmax(280px, 360px);
+}
+
+.translation-segment-rail,
+.translation-reference-panels {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.translation-segment-rail {
+  align-content: start;
+  background: #ffffff;
+  border: 1px solid #d7ded8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.translation-segment-list {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+.translation-segment-card {
+  border: 1px solid #e1e7e2;
+  border-radius: 8px;
+  color: #26312e;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+}
+
+.translation-segment-card span {
+  color: #64716b;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.translation-segment-card strong {
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.translation-segment-card:hover,
+.translation-segment-card:focus-visible {
+  border-color: #1f6f62;
+  outline: 2px solid #cde7df;
+  outline-offset: 1px;
+}
+
+.translation-segment-card-active {
+  background: #f3faf4;
+  border-color: #1f6f62;
+}
+
+.translation-editor-panel {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.source-text-block {
+  color: #18211f;
+  font-size: 1.08rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.translation-language-row {
+  align-items: center;
+  color: #64716b;
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.translation-target-textarea {
+  line-height: 1.6;
+  min-height: 300px;
+  resize: vertical;
+}
+
+.translation-save-form {
+  display: grid;
+  gap: 14px;
+}
+
+.translation-editor-footer {
+  align-items: end;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.translation-action-cluster {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.translation-attribution {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+}
+
+.translation-attribution div {
+  background: #f6f8f5;
+  border: 1px solid #e1e7e2;
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  min-width: 140px;
+  padding: 8px 10px;
+}
+
+.translation-attribution dt {
+  color: #64716b;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.translation-attribution dd {
+  color: #17211f;
+  font-size: 0.86rem;
+  font-weight: 750;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.reference-stack,
+.evidence-list {
+  display: grid;
+  gap: 10px;
+}
+
+.reference-item {
+  background: #f6f8f5;
+  border: 1px solid #e1e7e2;
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+}
+
+.reference-item strong {
+  color: #17211f;
+  font-size: 0.86rem;
+}
+
+.reference-item span {
+  color: #64716b;
+  font-size: 0.83rem;
+  line-height: 1.45;
+}
+
 .editor-mobile-tabs {
   display: none;
 }
@@ -1235,6 +1439,14 @@ textarea {
 @media (max-width: 1180px) {
   .editor-workbench {
     grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+  }
+
+  .translation-workspace-grid {
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  }
+
+  .translation-reference-panels {
+    grid-column: 2;
   }
 
   .editor-column-context {
@@ -1309,8 +1521,17 @@ textarea {
     grid-template-columns: 1fr 1fr;
   }
 
-  .manuscript-workspace {
+  .manuscript-workspace,
+  .translation-selector-grid {
     grid-template-columns: 1fr;
+  }
+
+  .translation-workspace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .translation-reference-panels {
+    grid-column: auto;
   }
 }
 
@@ -1368,6 +1589,15 @@ textarea {
   .manuscript-editor-footer {
     align-items: flex-start;
     display: grid;
+  }
+
+  .translation-editor-footer {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .translation-action-cluster {
+    justify-content: flex-start;
   }
 
   .editor-toolbar {
