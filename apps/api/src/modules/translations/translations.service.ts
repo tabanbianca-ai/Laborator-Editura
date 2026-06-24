@@ -114,6 +114,10 @@ export class TranslationsService {
       createdBy: actor.userId,
       createdAt: now,
       updatedAt: now,
+      translatorId: actor.userId,
+      translatorName: input.translatorName ?? this.readStringMetadata(input.metadata, "translatorName"),
+      originalAuthorId: this.readStringMetadata(input.metadata, "originalAuthorId"),
+      originalAuthorName: this.readStringMetadata(input.metadata, "originalAuthorName"),
       tmEntryId: tmEntry.id,
       qaReportId: qaReport.id,
       semanticReportId: semanticReport.id,
@@ -194,5 +198,13 @@ export class TranslationsService {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("userId and organizationId are required.");
     }
+  }
+
+  private readStringMetadata(
+    metadata: Record<string, unknown> | undefined,
+    key: string
+  ): string | undefined {
+    const value = metadata?.[key];
+    return typeof value === "string" ? value : undefined;
   }
 }
