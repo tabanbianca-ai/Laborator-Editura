@@ -109,6 +109,11 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "marketplace_extensions",
     "marketplace_installs",
     "marketplace_audit_events",
+    "workspace_layouts",
+    "workspace_navigation_items",
+    "workspace_widgets",
+    "workspace_preferences",
+    "workspace_audit_events",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -433,6 +438,25 @@ function sampleSnapshot() {
   snapshot.marketplace_audit_events.push(
     { id: "marketplace-audit-a", organizationId: "org-a", actorId: "user-a", action: "MARKETPLACE_AGENT_ENABLED", agentId: "marketplace-agent-a", installId: "marketplace-install-a", afterState: { id: "marketplace-agent-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.150Z" },
     { id: "marketplace-audit-b", organizationId: "org-a", actorId: "user-a", action: "MARKETPLACE_EXTENSION_ENABLED", extensionId: "marketplace-extension-a", installId: "marketplace-install-b", afterState: { id: "marketplace-extension-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.153Z" }
+  );
+  snapshot.workspace_layouts.push(
+    { id: "workspace-layout-a", organizationId: "org-a", name: "Unified Enterprise Workspace", defaultForRoles: ["ADMIN", "REVIEWER", "TRANSLATOR", "VIEWER"], dashboardRoute: "/workspace/dashboard", navigationRoute: "/workspace/navigation", visibleModules: ["DASHBOARD", "MY_PROJECTS", "AUTHOR_STUDIO", "TRANSLATION", "LEXICOGRAPHIC", "SEMANTIC_FIDELITY", "RESEARCH_HUB", "LIBRARY", "COMMERCE", "PUBLIC_PORTAL", "COLLABORATION", "MARKETPLACE", "ADMINISTRATION", "SECURITY", "OBSERVABILITY", "BACKUP", "POLICIES"], humanFinalAuthorityRequired: true, aiMaySuggestDashboardLayouts: true, aiMaySuggestWidgets: true, aiMayRecommendShortcuts: true, aiMayAlterPermissions: false, aiMayExposeHiddenModules: false, aiMayChangePolicies: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.154Z", updatedAt: "2026-01-01T00:00:07.154Z", metadata: { backendOnly: true } }
+  );
+  snapshot.workspace_navigation_items.push(
+    { id: "workspace-nav-a", organizationId: "org-a", title: "Dashboard", module: "DASHBOARD", icon: "layout-dashboard", route: "/dashboard", visible: true, order: 1, permissionsRequired: ["read"], defaultForRoles: ["ADMIN", "REVIEWER", "TRANSLATOR", "VIEWER"], organizationPolicyVisibility: "VISIBLE", moduleVisibility: "VISIBLE", createdBy: "user-a", createdAt: "2026-01-01T00:00:07.155Z", updatedAt: "2026-01-01T00:00:07.155Z", metadata: { roleBasedNavigation: true } },
+    { id: "workspace-nav-b", organizationId: "org-a", title: "Administration", module: "ADMINISTRATION", icon: "shield-user", route: "/admin", visible: true, order: 13, permissionsRequired: ["read"], defaultForRoles: ["ADMIN"], organizationPolicyVisibility: "VISIBLE", moduleVisibility: "VISIBLE", createdBy: "user-a", createdAt: "2026-01-01T00:00:07.156Z", updatedAt: "2026-01-01T00:00:07.156Z", metadata: { roleBasedNavigation: true } }
+  );
+  snapshot.workspace_widgets.push(
+    { id: "workspace-widget-a", organizationId: "org-a", widgetType: "RECENT_PROJECTS", title: "Recent projects", visible: true, order: 1, size: "MEDIUM", permissionsRequired: ["read"], defaultForRoles: ["ADMIN", "REVIEWER", "TRANSLATOR", "VIEWER"], configuration: {}, aiSuggested: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.157Z", updatedAt: "2026-01-01T00:00:07.157Z", metadata: { roleBasedDashboard: true } },
+    { id: "workspace-widget-b", organizationId: "org-a", widgetType: "AI_USAGE", title: "AI usage", visible: true, order: 5, size: "SMALL", permissionsRequired: ["read"], defaultForRoles: ["ADMIN"], configuration: {}, aiSuggested: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.158Z", updatedAt: "2026-01-01T00:00:07.158Z", metadata: { roleBasedDashboard: true } }
+  );
+  snapshot.workspace_preferences.push(
+    { id: "workspace-preferences-a", organizationId: "org-a", userId: "user-a", favoriteModules: ["DASHBOARD", "MY_PROJECTS"], dashboardLayout: { columns: 3 }, collapsedMenus: ["admin"], themeMetadata: { theme: "system" }, language: "ro", notificationPreferences: { inApp: true, email: false }, createdAt: "2026-01-01T00:00:07.159Z", updatedAt: "2026-01-01T00:00:07.159Z", metadata: { aiMayAlterPermissions: false, aiMayExposeHiddenModules: false, aiMayChangePolicies: false } }
+  );
+  snapshot.workspace_audit_events.push(
+    { id: "workspace-audit-a", organizationId: "org-a", actorId: "user-a", action: "WORKSPACE_LAYOUT_CREATED", layoutId: "workspace-layout-a", afterState: { id: "workspace-layout-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.154Z" },
+    { id: "workspace-audit-b", organizationId: "org-a", actorId: "user-a", action: "WORKSPACE_WIDGET_CREATED", widgetId: "workspace-widget-a", afterState: { id: "workspace-widget-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.157Z" },
+    { id: "workspace-audit-c", organizationId: "org-a", actorId: "user-a", action: "WORKSPACE_PREFERENCES_SAVED", preferenceId: "workspace-preferences-a", afterState: { id: "workspace-preferences-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.159Z" }
   );
   snapshot.organization_founder_protection.push(
     { id: "founder-a", organizationId: "org-a", founderUserId: "user-a", protectionStatus: "ACTIVE", recoveryEnabled: true, createdAt: "2026-01-01T00:00:07.000Z", updatedAt: "2026-01-01T00:00:07.000Z" }
