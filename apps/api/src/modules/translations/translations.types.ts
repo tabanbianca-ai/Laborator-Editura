@@ -21,6 +21,10 @@ export interface SegmentTranslation {
   createdBy: string;
   createdAt: string;
   updatedAt: string;
+  translatorId?: string;
+  translatorName?: string;
+  originalAuthorId?: string;
+  originalAuthorName?: string;
   tmEntryId?: string;
   qaReportId?: string;
   semanticReportId?: string;
@@ -48,6 +52,7 @@ export interface SubmitTranslationInput {
   segmentId: string;
   targetText: string;
   domain?: string;
+  translatorName?: string;
   metadata?: Record<string, unknown>;
 }
 
