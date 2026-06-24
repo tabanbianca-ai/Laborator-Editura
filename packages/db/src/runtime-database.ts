@@ -57,6 +57,11 @@ const TABLE_NAMES = [
   "marketplace_extensions",
   "marketplace_installs",
   "marketplace_audit_events",
+  "workspace_layouts",
+  "workspace_navigation_items",
+  "workspace_widgets",
+  "workspace_preferences",
+  "workspace_audit_events",
   "organization_founder_protection",
   "founder_ownership_transfers",
   "projects",
@@ -214,6 +219,11 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "marketplace_extensions",
   "marketplace_installs",
   "marketplace_audit_events",
+  "workspace_layouts",
+  "workspace_navigation_items",
+  "workspace_widgets",
+  "workspace_preferences",
+  "workspace_audit_events",
   "projects",
   "documents",
   "document_segments",
@@ -624,6 +634,16 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
   validateReferenceTenant(data, issues, "marketplace_audit_events", "agentId", "marketplace_agents");
   validateReferenceTenant(data, issues, "marketplace_audit_events", "extensionId", "marketplace_extensions");
   validateReferenceTenant(data, issues, "marketplace_audit_events", "installId", "marketplace_installs");
+  validateReferenceTenant(data, issues, "workspace_audit_events", "layoutId", "workspace_layouts");
+  validateReferenceTenant(
+    data,
+    issues,
+    "workspace_audit_events",
+    "navigationItemId",
+    "workspace_navigation_items"
+  );
+  validateReferenceTenant(data, issues, "workspace_audit_events", "widgetId", "workspace_widgets");
+  validateReferenceTenant(data, issues, "workspace_audit_events", "preferenceId", "workspace_preferences");
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
   validateReferenceTenant(
     data,
