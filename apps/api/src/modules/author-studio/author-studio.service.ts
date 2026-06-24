@@ -35,6 +35,7 @@ export class AuthorStudioService {
       id: randomUUID(),
       organizationId: actor.organizationId,
       authorId: actor.userId,
+      sourceManuscriptId: input.sourceManuscriptId,
       projectId: input.projectId,
       documentId: input.documentId,
       title: input.title,
@@ -50,6 +51,14 @@ export class AuthorStudioService {
         authorId: actor.userId,
         retained: true
       },
+      translatorAttribution: input.translatorName
+        ? {
+            translatorId: actor.userId,
+            translatorName: input.translatorName,
+            originalAuthorAttributionPreserved: true,
+            visibleInEditorialRecords: true
+          }
+        : undefined,
       aiSuggestionsAdvisoryOnly: true,
       publicExposure: false,
       humanEditorialApprovalRequired: true,
