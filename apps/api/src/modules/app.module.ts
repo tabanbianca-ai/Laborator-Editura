@@ -18,6 +18,7 @@ import { MediaLocalizationModule } from "./media-localization/media-localization
 import { MultimediaCreationModule } from "./multimedia-creation/multimedia-creation.module";
 import { ObservabilityModule } from "./observability/observability.module";
 import { PlatformEngineeringModule } from "./platform-engineering/platform-engineering.module";
+import { PolicyEngineModule } from "./policy-engine/policy-engine.module";
 import { ProjectsModule } from "./projects/projects.module";
 import { PublicPortalModule } from "./public-portal/public-portal.module";
 import { QaModule } from "./qa/qa.module";
@@ -58,6 +59,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     MultimediaCreationModule,
     ObservabilityModule,
     PlatformEngineeringModule,
+    PolicyEngineModule,
     PublicPortalModule,
     ResearchModule,
     SecurityGovernanceModule,
