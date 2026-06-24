@@ -7,6 +7,7 @@ import { CommerceModule } from "./commerce/commerce.module";
 import { CollaborationModule } from "./collaboration/collaboration.module";
 import { RequestContextMiddleware } from "./auth/request-context.middleware";
 import { DocumentsModule } from "./documents/documents.module";
+import { EnterpriseAdminModule } from "./enterprise-admin/enterprise-admin.module";
 import { EditorialDecisionModule } from "./editorial-decisions/editorial-decisions.module";
 import { ExportModule } from "./export/export.module";
 import { GatewayModule } from "./gateway/gateway.module";
@@ -42,6 +43,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     BackupGovernanceModule,
     CommerceModule,
     CollaborationModule,
+    EnterpriseAdminModule,
     ProjectsModule,
     DocumentsModule,
     SegmentsModule,
