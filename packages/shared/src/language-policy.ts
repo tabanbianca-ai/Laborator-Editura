@@ -62,6 +62,16 @@ export const SUPPORTED_TRANSLATION_TARGETS_V1 = [
 
 const LANGUAGE_TAG_PATTERN = /^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/;
 
+const LANGUAGE_DISPLAY_NAMES: Record<string, string> = {
+  de: "German",
+  en: "English",
+  es: "Spanish",
+  fr: "French",
+  it: "Italian",
+  pt: "Portuguese",
+  ro: "Romanian"
+};
+
 export function normalizeLanguageLocale(
   languageOrLocale: string,
   explicitLocale?: string
@@ -157,6 +167,13 @@ export function languagePolicySummaryV1(): string {
 
     return `${target.label}: ${target.language}${locales}`;
   }).join("; ");
+}
+
+export function formatLanguageLocale(language: string, locale?: string): string {
+  const normalized = normalizeLanguageLocale(language, locale);
+  const label = LANGUAGE_DISPLAY_NAMES[normalized.language] ?? normalized.language.toUpperCase();
+
+  return normalized.locale ? `${label} (${normalized.locale})` : label;
 }
 
 function normalizeLanguageTag(value: string): string {
