@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import Link from "next/link";
+import { formatLanguageLocale } from "@laborator/shared";
 import {
   createProvenanceRecordAction,
   createPublishingRightsAction,
@@ -551,5 +552,5 @@ function formatBoolean(value: boolean): string {
 }
 
 function formatLanguage(language: string, locale?: string): string {
-  return locale ? `${language.toUpperCase()} · ${locale}` : language.toUpperCase();
+  return formatLanguageLocale(language, locale);
 }
