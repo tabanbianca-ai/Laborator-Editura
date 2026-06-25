@@ -641,6 +641,80 @@ textarea {
   padding: 16px;
 }
 
+.launch-readiness-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1.35fr) minmax(240px, 0.9fr) minmax(220px, 0.75fr);
+  padding: 16px;
+}
+
+.launch-checklist {
+  display: grid;
+  gap: 8px;
+}
+
+.launch-check-item {
+  align-items: center;
+  background: #f6f8f5;
+  border: 1px solid #e1e7e2;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 9px 10px;
+}
+
+.launch-check-item span {
+  color: #17211f;
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.launch-route-list {
+  background: #f6f8f5;
+  border: 1px solid #e1e7e2;
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.launch-route-list div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.launch-navigation-order {
+  color: #26312e;
+  display: grid;
+  gap: 7px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.launch-navigation-order li {
+  align-items: center;
+  display: flex;
+  font-size: 0.86rem;
+  font-weight: 700;
+  gap: 8px;
+}
+
+.launch-navigation-order span {
+  align-items: center;
+  background: #e8f4eb;
+  border-radius: 6px;
+  color: #1f6f62;
+  display: inline-flex;
+  font-size: 0.75rem;
+  font-weight: 900;
+  height: 22px;
+  justify-content: center;
+  width: 28px;
+}
+
 .editor-page {
   display: grid;
   gap: 14px;
@@ -1438,7 +1512,7 @@ textarea {
 }
 
 .review-issue-item {
-  align-items: start;
+  align-items: flex-start;
   background: #f6f8f5;
   border: 1px solid #e1e7e2;
   border-radius: 8px;
@@ -1849,6 +1923,7 @@ textarea {
 
   .manuscript-workspace,
   .translation-selector-grid,
+  .launch-readiness-grid,
   .publishing-workspace-grid,
   .publishing-workspace-grid-wide,
   .research-workspace-grid,
@@ -1885,6 +1960,7 @@ textarea {
   .metric-grid,
   .workspace-widget-grid,
   .workspace-preference-grid,
+  .launch-readiness-grid,
   .toolbar {
     grid-template-columns: 1fr;
   }
@@ -1892,6 +1968,7 @@ textarea {
   .metric-grid,
   .workspace-widget-grid,
   .workspace-preference-grid,
+  .launch-readiness-grid,
   .toolbar,
   .section-heading {
     display: grid;
@@ -1902,7 +1979,7 @@ textarea {
   }
 
   .workspace-module-row {
-    align-items: start;
+    align-items: flex-start;
     display: grid;
   }
 
