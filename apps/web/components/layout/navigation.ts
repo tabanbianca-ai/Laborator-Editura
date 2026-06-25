@@ -31,6 +31,10 @@ export function getCurrentNavigationLabel(pathname: string, items: NavigationIte
     return "Production Pipeline";
   }
 
+  if (pathname === "/magazine" || pathname.startsWith("/magazine/")) {
+    return "Magazine";
+  }
+
   const current = items.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`));
 
   return current?.label ?? "Dashboard";
