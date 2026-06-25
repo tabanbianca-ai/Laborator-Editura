@@ -41,7 +41,7 @@ export function EditorialPipelineIndexPage({
         <Card>
           <div className="metric-card">
             <span>Production mode</span>
-            <strong>12</strong>
+            <strong>13</strong>
             <Badge tone="success">Steps</Badge>
           </div>
         </Card>
@@ -125,7 +125,7 @@ export function EditorialPipelineProjectPage({
         <div className="section-heading">
           <div>
             <p className="section-kicker">Guided workflow</p>
-            <h2>Import → Analysis → Editing → Translation → Review → Validation → Layout → Export → Approval → Publication → Audiobook</h2>
+            <h2>Import → Analysis → Editing → Translation → Review → Validation → Layout → Export → Approval → Publication → Audiobook → Video</h2>
           </div>
           <Badge tone={data.nextStep ? toneForStatus(data.nextStep.status) : "success"}>
             {data.nextStep?.title ?? "Complete"}
@@ -144,10 +144,11 @@ export function EditorialPipelineProjectPage({
           </div>
           <aside className="pipeline-side-panel" aria-label="Pipeline guidance">
             <AudiobookPanel data={data} />
+            <VideoPanel data={data} />
             <Card title="AI progress summary">
               <p className="pipeline-guidance">{data.aiRecommendation}</p>
               <p className="review-human-authority">
-                AI may summarize progress, suggest next actions, generate preview narration, suggest pronunciation, and detect blockers. It cannot approve workflow, publish, approve audiobook, or grant rights.
+                AI may summarize progress, suggest next actions, generate preview narration, suggest pronunciation, suggest video visuals, subtitles, and timing, and detect blockers. It cannot approve workflow, publish, approve audiobook or video, or grant rights.
               </p>
             </Card>
             <Card title="Warnings">
@@ -280,6 +281,87 @@ function AudiobookPanel({ data }: { data: EditorialPipelineData }) {
 
       {data.audiobook.generateHref ? null : (
         <p className="pipeline-guidance">{data.audiobook.officialLockedReason}</p>
+      )}
+    </Card>
+  );
+}
+
+function VideoPanel({ data }: { data: EditorialPipelineData }) {
+  return (
+    <Card title="Video production">
+      <div className="video-status-grid">
+        <div>
+          <span>Video Preview</span>
+          <strong>{data.video.previewAvailable ? "Available" : "Locked"}</strong>
+          <Badge tone="info">Draft only</Badge>
+        </div>
+        <div>
+          <span>Video status</span>
+          <strong>{data.video.videoStatus.replace(/_/g, " ")}</strong>
+          <Badge tone={data.video.videoStatus === "READY_FOR_GENERATION" ? "success" : "neutral"}>
+            Official
+          </Badge>
+        </div>
+        <div>
+          <span>Format</span>
+          <strong>{data.video.exportFormat}</strong>
+        </div>
+        <div>
+          <span>Voice-over source</span>
+          <strong>{data.video.voiceOverSource}</strong>
+        </div>
+        <div>
+          <span>Subtitle language/locale</span>
+          <strong>{data.video.subtitleLanguageLocale}</strong>
+        </div>
+        <div>
+          <span>Export status</span>
+          <strong>{data.video.exportStatus.replace(/_/g, " ")}</strong>
+        </div>
+        <div className="video-metadata-card">
+          <span>Thumbnail/cover metadata</span>
+          <strong>{data.video.thumbnailMetadata}</strong>
+        </div>
+      </div>
+
+      <div className="video-progress">
+        <div>
+          <span>Progress</span>
+          <strong>{data.video.progressPercent}%</strong>
+        </div>
+        <div className="pipeline-progress" aria-label={`Video progress ${data.video.progressPercent}%`}>
+          <span style={{ width: `${data.video.progressPercent}%` }} />
+        </div>
+      </div>
+
+      <p className="pipeline-guidance">
+        Preview Video can be generated from selected text, a section, a chapter, or the current manuscript draft
+        with text, images or slides, voice-over, and subtitles. It is draft-only and never public.
+      </p>
+
+      <div className="pipeline-step-actions">
+        {data.video.previewHref ? (
+          <Link className="ui-button ui-button-secondary ui-button-sm" href={data.video.previewHref}>
+            Generate Preview Video
+          </Link>
+        ) : (
+          <button className="ui-button ui-button-secondary ui-button-sm" disabled type="button">
+            Generate Preview Video
+          </button>
+        )}
+        {data.video.generateHref ? (
+          <Link className="ui-button ui-button-primary ui-button-sm" href={data.video.generateHref}>
+            Generate Official Video
+          </Link>
+        ) : (
+          <button className="ui-button ui-button-primary ui-button-sm" disabled type="button">
+            Generate Official Video
+          </button>
+        )}
+      </div>
+
+      {data.video.generateHref ? null : (
+        <p className="pipeline-guidance">{data.video.officialLockedReason}</p>
       )}
     </Card>
   );
