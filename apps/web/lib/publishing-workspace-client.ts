@@ -5,6 +5,7 @@ import {
   type DocumentRecord,
   type ProjectRecord
 } from "./projects-documents-api";
+import { getRightsWarningsForDocument, type RightsWarning } from "./rights-workspace-client";
 import type { ReviewWorkflowState } from "./review-workspace-client";
 import type { WorkspaceTranslationRecord } from "./translation-workspace-client";
 
@@ -148,6 +149,8 @@ export interface PublishingWorkspaceData {
   projectsError: string | null;
   publicCatalogItem: PublicCatalogItemRecord | null;
   publicCatalogItemError: string | null;
+  rightsError: string | null;
+  rightsWarnings: RightsWarning[];
   selectedDocument: DocumentRecord | null;
   selectedProject: ProjectRecord | null;
   translations: WorkspaceTranslationRecord[];
@@ -196,7 +199,8 @@ export async function getPublishingWorkspaceData({
     layoutPlanResult,
     artifactResult,
     publicCatalogResult,
-    commerceEditionResult
+    commerceEditionResult,
+    rightsResult
   ] = await Promise.all([
     listPublishingTranslations(selectedDocument.id),
     getWorkflowStatus({
@@ -206,7 +210,11 @@ export async function getPublishingWorkspaceData({
     layoutPlanId ? getLayoutPublicationPlan(layoutPlanId) : emptyResult<LayoutPublicationPlanRecord>(),
     exportArtifactId ? getExportArtifact(exportArtifactId) : emptyResult<ExportArtifactRecord>(),
     publicCatalogItemId ? getPublicCatalogItem(publicCatalogItemId) : emptyResult<PublicCatalogItemRecord>(),
-    commerceEditionId ? getCommerceEdition(commerceEditionId) : emptyResult<CommerceEditionRecord>()
+    commerceEditionId ? getCommerceEdition(commerceEditionId) : emptyResult<CommerceEditionRecord>(),
+    getRightsWarningsForDocument({
+      documentId: selectedDocument.id,
+      projectId: selectedDocument.projectId
+    })
   ]);
   const translations = translationsResult.data ?? [];
 
@@ -224,6 +232,8 @@ export async function getPublishingWorkspaceData({
     projectsError: projectsResult.error,
     publicCatalogItem: publicCatalogResult.data,
     publicCatalogItemError: publicCatalogResult.error,
+    rightsError: rightsResult.error,
+    rightsWarnings: rightsResult.data ?? [],
     selectedDocument,
     selectedProject,
     translations,
@@ -344,6 +354,8 @@ function emptyPublishingWorkspace(input: {
     projectsError: input.projectsError,
     publicCatalogItem: null,
     publicCatalogItemError: null,
+    rightsError: null,
+    rightsWarnings: [],
     selectedDocument: null,
     selectedProject: null,
     translations: [],
