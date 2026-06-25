@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { normalizeLanguageLocale, validateIsoCompatibleLanguageTag } from "@laborator/shared";
 import { randomUUID } from "node:crypto";
 import { DatabaseWorkspaceRepository } from "./workspace.repository";
 import {
@@ -98,7 +99,10 @@ export class WorkspaceService {
     const existing = await this.repository.findPreferencesByUser(actor.userId, actor.organizationId);
 
     if (existing) {
-      return existing;
+      return {
+        ...existing,
+        platformLanguage: existing.platformLanguage ?? existing.language ?? "ro"
+      };
     }
 
     return this.savePreferences(actor, {
@@ -107,6 +111,7 @@ export class WorkspaceService {
       collapsedMenus: [],
       themeMetadata: { theme: "system" },
       language: "ro",
+      platformLanguage: "ro",
       notificationPreferences: { email: false, inApp: true },
       metadata: { generatedDefault: true }
     });
@@ -118,6 +123,9 @@ export class WorkspaceService {
   ): Promise<WorkspacePreferences> {
     const existing = await this.repository.findPreferencesByUser(actor.userId, actor.organizationId);
     const now = new Date().toISOString();
+    const platformLanguage = this.normalizePlatformLanguage(
+      input.platformLanguage ?? input.language ?? existing?.platformLanguage ?? existing?.language ?? "ro"
+    );
     const preferences: WorkspacePreferences = {
       id: existing?.id ?? randomUUID(),
       organizationId: actor.organizationId,
@@ -126,7 +134,8 @@ export class WorkspaceService {
       dashboardLayout: input.dashboardLayout ?? existing?.dashboardLayout ?? {},
       collapsedMenus: input.collapsedMenus ?? existing?.collapsedMenus ?? [],
       themeMetadata: input.themeMetadata ?? existing?.themeMetadata ?? { theme: "system" },
-      language: input.language ?? existing?.language ?? "ro",
+      language: platformLanguage,
+      platformLanguage,
       notificationPreferences:
         input.notificationPreferences ?? existing?.notificationPreferences ?? { inApp: true },
       aiSuggestedLayout: input.aiSuggestedLayout ?? existing?.aiSuggestedLayout,
@@ -314,6 +323,16 @@ export class WorkspaceService {
   private hasPermissions(actor: WorkspaceActor, requiredPermissions: string[]): boolean {
     return requiredPermissions.length === 0 ||
       requiredPermissions.every((permission) => actor.permissions.includes(permission as never));
+  }
+
+  private normalizePlatformLanguage(language: string): string {
+    const validation = validateIsoCompatibleLanguageTag(language);
+
+    if (!validation.valid) {
+      return "ro";
+    }
+
+    return normalizeLanguageLocale(language).language;
   }
 
   private async audit(
