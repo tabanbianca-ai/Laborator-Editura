@@ -27,6 +27,10 @@ export function toNavigationItems(items: WorkspaceNavigationItem[]): NavigationI
 }
 
 export function getCurrentNavigationLabel(pathname: string, items: NavigationItem[]) {
+  if (pathname === "/pipeline" || pathname.startsWith("/pipeline/")) {
+    return "Production Pipeline";
+  }
+
   const current = items.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`));
 
   return current?.label ?? "Dashboard";
