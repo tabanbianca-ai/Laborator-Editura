@@ -107,6 +107,7 @@ export interface WorkspacePreferences {
   collapsedMenus: string[];
   themeMetadata: object;
   language: string;
+  platformLanguage: string;
   notificationPreferences: object;
   aiSuggestedLayout?: object;
   createdAt: string;
@@ -148,6 +149,7 @@ export interface SaveWorkspacePreferencesInput {
   collapsedMenus?: string[];
   themeMetadata?: object;
   language?: string;
+  platformLanguage?: string;
   notificationPreferences?: object;
   aiSuggestedLayout?: object;
   metadata?: object;
