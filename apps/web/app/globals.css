@@ -2143,6 +2143,48 @@ textarea {
   font-weight: 700;
 }
 
+.audiobook-status-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.audiobook-status-grid div,
+.audiobook-progress {
+  background: #f6f8f5;
+  border: 1px solid #e1e7e2;
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+}
+
+.audiobook-status-grid span,
+.audiobook-progress span {
+  color: #64716b;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.audiobook-status-grid strong,
+.audiobook-progress strong {
+  color: #17211f;
+  font-size: 0.9rem;
+  line-height: 1.25;
+}
+
+.audiobook-progress {
+  margin: 12px 0;
+}
+
+.audiobook-preview-controls {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+  margin: 12px 0;
+}
+
 .editor-mobile-tabs {
   display: none;
 }
@@ -2323,6 +2365,10 @@ textarea {
   }
 
   .pipeline-step {
+    grid-template-columns: 1fr;
+  }
+
+  .audiobook-status-grid {
     grid-template-columns: 1fr;
   }
 
