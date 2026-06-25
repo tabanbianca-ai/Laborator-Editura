@@ -1,4 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  normalizeLanguageLocale,
+  validateIsoCompatibleLanguageTag,
+  validateTranslationTargetV1
+} from "@laborator/shared";
 import { randomUUID } from "node:crypto";
 import { DatabaseProjectsRepository } from "./projects.repository";
 import {
@@ -20,14 +25,22 @@ export class ProjectsService {
       throw new BadRequestException("name, sourceLanguage and targetLanguages are required.");
     }
 
+    const originalLanguage = this.normalizeIsoLanguage(input.originalLanguage ?? input.sourceLanguage, input.originalLocale);
+    const targetLanguages = input.targetLanguages.map((targetLanguage, index) =>
+      this.normalizeTranslationTarget(targetLanguage, input.targetLocales?.[index])
+    );
+    const targetLocales = targetLanguages.flatMap((target) => target.locale ? [target.locale] : []);
     const now = new Date().toISOString();
     const project = await this.repository.createProject({
       id: randomUUID(),
       organizationId: actor.organizationId,
       name: input.name,
       description: input.description,
-      sourceLanguage: input.sourceLanguage,
-      targetLanguages: input.targetLanguages,
+      sourceLanguage: originalLanguage.language,
+      originalLanguage: originalLanguage.language,
+      originalLocale: originalLanguage.locale,
+      targetLanguages: targetLanguages.map((target) => target.language),
+      targetLocales: targetLocales.length > 0 ? targetLocales : undefined,
       domain: input.domain,
       status: "ACTIVE",
       createdBy: actor.userId,
@@ -86,5 +99,31 @@ export class ProjectsService {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("userId and organizationId are required.");
     }
+  }
+
+  private normalizeIsoLanguage(language: string, locale?: string) {
+    const validation = validateIsoCompatibleLanguageTag(language);
+
+    if (!validation.valid) {
+      throw new BadRequestException(validation.reason ?? "Language must be ISO-compatible.");
+    }
+
+    return normalizeLanguageLocale(language, locale);
+  }
+
+  private normalizeTranslationTarget(targetLanguage: string, targetLocale?: string) {
+    const validation = validateTranslationTargetV1({
+      targetLanguage,
+      targetLocale
+    });
+
+    if (!validation.valid) {
+      throw new BadRequestException(validation.reason ?? "Unsupported translation target.");
+    }
+
+    return {
+      language: validation.language,
+      locale: validation.locale
+    };
   }
 }
