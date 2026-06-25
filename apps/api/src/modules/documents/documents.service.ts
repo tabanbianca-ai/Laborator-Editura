@@ -1,4 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  normalizeLanguageLocale,
+  validateIsoCompatibleLanguageTag,
+  validateTranslationTargetV1
+} from "@laborator/shared";
 import { randomUUID } from "node:crypto";
 import { ProjectsService } from "../projects/projects.service";
 import { DatabaseDocumentsRepository } from "./documents.repository";
@@ -26,14 +31,25 @@ export class DocumentsService {
 
     await this.projectsService.getProject(actor, input.projectId);
 
+    const originalLanguage = this.normalizeIsoLanguage(input.originalLanguage ?? input.sourceLanguage, input.originalLocale);
+    const authoringLanguage = this.normalizeIsoLanguage(
+      input.authoringLanguage ?? input.sourceLanguage,
+      input.authoringLocale
+    );
+    const targetLanguage = this.normalizeTranslationTarget(input.targetLanguage, input.targetLocale);
     const now = new Date().toISOString();
     const document = await this.repository.createDocument({
       id: randomUUID(),
       organizationId: actor.organizationId,
       projectId: input.projectId,
       title: input.title,
-      sourceLanguage: input.sourceLanguage,
-      targetLanguage: input.targetLanguage,
+      sourceLanguage: originalLanguage.language,
+      originalLanguage: originalLanguage.language,
+      originalLocale: originalLanguage.locale,
+      authoringLanguage: authoringLanguage.language,
+      authoringLocale: authoringLanguage.locale,
+      targetLanguage: targetLanguage.language,
+      targetLocale: targetLanguage.locale,
       documentType: input.documentType ?? "text",
       status: "DRAFT",
       createdBy: actor.userId,
@@ -44,7 +60,10 @@ export class DocumentsService {
       originalAuthorId: input.originalAuthorId,
       originalAuthorName: input.originalAuthorName,
       translatorAttribution: this.buildTranslatorAttribution(input),
-      metadata: input.metadata
+      metadata: {
+        ...(input.metadata ?? {}),
+        languagePolicyVersion: "v1.0"
+      }
     });
 
     await this.audit("CREATE", actor, document.id, undefined, document);
@@ -141,6 +160,32 @@ export class DocumentsService {
       originalAuthorAttributionPreserved: true,
       visibleInEditorialRecords: true,
       visibleInPublicationRecords: true
+    };
+  }
+
+  private normalizeIsoLanguage(language: string, locale?: string) {
+    const validation = validateIsoCompatibleLanguageTag(language);
+
+    if (!validation.valid) {
+      throw new BadRequestException(validation.reason ?? "Language must be ISO-compatible.");
+    }
+
+    return normalizeLanguageLocale(language, locale);
+  }
+
+  private normalizeTranslationTarget(targetLanguage: string, targetLocale?: string) {
+    const validation = validateTranslationTargetV1({
+      targetLanguage,
+      targetLocale
+    });
+
+    if (!validation.valid) {
+      throw new BadRequestException(validation.reason ?? "Unsupported translation target.");
+    }
+
+    return {
+      language: validation.language,
+      locale: validation.locale
     };
   }
 }
