@@ -78,7 +78,49 @@ test("rights provenance screen records and displays language locale metadata", (
 
 test("top navigation exposes platform language from workspace preferences", () => {
   const topNav = readSource("components/layout/top-nav.tsx");
+  const workspaceTypes = readSource("lib/workspace-types.ts");
 
+  assert.match(topNav, /preferences\?\.platformLanguage/);
   assert.match(topNav, /preferences\?\.language/);
+  assert.match(workspaceTypes, /platformLanguage/);
   assert.match(topNav, /Badge tone="neutral"/);
+});
+
+test("research workspace displays source original authoring and target language metadata", () => {
+  const client = readSource("lib/research-workspace-client.ts");
+  const actions = readSource("lib/research-workspace-actions.ts");
+  const page = readSource("components/pages/research-workspace-page.tsx");
+
+  for (const field of [
+    "originalLanguage",
+    "originalLocale",
+    "authoringLanguage",
+    "authoringLocale",
+    "targetLanguage",
+    "targetLocale"
+  ]) {
+    assert.match(client + actions + page, new RegExp(field));
+  }
+
+  assert.match(page, /Current manuscript/);
+  assert.match(page, /Translation target/);
+});
+
+test("library workspace displays saved item language provenance metadata", () => {
+  const client = readSource("lib/library-workspace-client.ts");
+  const page = readSource("components/pages/library-workspace-page.tsx");
+
+  for (const field of [
+    "originalLanguage",
+    "originalLocale",
+    "authoringLanguage",
+    "authoringLocale",
+    "targetLanguage",
+    "targetLocale"
+  ]) {
+    assert.match(client + page, new RegExp(field));
+  }
+
+  assert.match(page, /formatOptionalLanguage/);
+  assert.match(page, /Current manuscript/);
 });
