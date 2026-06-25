@@ -58,6 +58,10 @@ export interface AuthorManuscript {
   title: string;
   subtitle?: string;
   language: string;
+  originalLanguage: string;
+  originalLocale?: string;
+  authoringLanguage: string;
+  authoringLocale?: string;
   genre?: string;
   manuscriptType: AuthorManuscriptType;
   status: AuthorManuscriptStatus;
@@ -164,6 +168,10 @@ export interface CreateAuthorManuscriptInput {
   title: string;
   subtitle?: string;
   language: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
   genre?: string;
   manuscriptType: AuthorManuscriptType;
   sourceManuscriptId?: string;
