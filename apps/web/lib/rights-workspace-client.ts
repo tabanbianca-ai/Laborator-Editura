@@ -85,6 +85,11 @@ export interface ProvenanceRecord {
   originalAuthor?: string;
   originalEdition?: string;
   originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   originalPublisher?: string;
   originalSourceReference?: string;
   originalTitle?: string;
@@ -197,6 +202,11 @@ export type CreateProvenanceRecordRequest = Pick<
   | "originalAuthor"
   | "originalEdition"
   | "originalLanguage"
+  | "originalLocale"
+  | "authoringLanguage"
+  | "authoringLocale"
+  | "targetLanguage"
+  | "targetLocale"
   | "originalPublisher"
   | "originalSourceReference"
   | "originalTitle"
