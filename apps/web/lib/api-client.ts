@@ -88,6 +88,44 @@ export async function apiPost<T, TBody extends object>(
   }
 }
 
+export async function apiDelete<T>(path: string): Promise<ApiResult<T>> {
+  const token = await getSessionToken();
+
+  if (!token) {
+    return {
+      data: null,
+      error: "Authenticated session required."
+    };
+  }
+
+  try {
+    const response = await fetch(toApiUrl(path), {
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      method: "DELETE"
+    });
+
+    if (!response.ok) {
+      return {
+        data: null,
+        error: `API request failed with status ${response.status}.`
+      };
+    }
+
+    return {
+      data: (await response.json()) as T,
+      error: null
+    };
+  } catch {
+    return {
+      data: null,
+      error: "API request could not be completed."
+    };
+  }
+}
+
 async function getSessionToken(): Promise<string | undefined> {
   const cookieStore = await cookies();
 
