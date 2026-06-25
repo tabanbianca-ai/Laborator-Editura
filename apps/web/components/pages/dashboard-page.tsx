@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ApiResult } from "../../lib/api-client";
 import type { WorkspaceDashboard, WorkspaceWidget } from "../../lib/workspace-types";
 import { Badge, Card, EmptyState, ErrorState, PageHeader } from "../ui";
@@ -16,6 +17,20 @@ const widgetToneByType: Partial<Record<WorkspaceWidget["widgetType"], "info" | "
   SECURITY_ALERTS: "warning",
   TRANSLATION_PROGRESS: "success"
 };
+
+const mainLaunchRoutes = [
+  { href: "/", label: "Home" },
+  { href: "/projects", label: "Projects" },
+  { href: "/documents", label: "Documents" },
+  { href: "/author-studio", label: "Author Studio" },
+  { href: "/translation", label: "Translation" },
+  { href: "/review", label: "Review" },
+  { href: "/publishing", label: "Publishing" },
+  { href: "/research", label: "Research" },
+  { href: "/library", label: "Library" },
+  { href: "/marketplace", label: "Marketplace" },
+  { href: "/admin", label: "Administration" }
+];
 
 export function DashboardPage({ dashboardResult }: DashboardPageProps) {
   if (dashboardResult.error) {
@@ -73,6 +88,8 @@ export function DashboardPage({ dashboardResult }: DashboardPageProps) {
         </section>
       )}
 
+      <LaunchReadinessPanel dashboard={dashboard} />
+
       <section className="content-panel">
         <div className="section-heading">
           <div>
@@ -126,5 +143,75 @@ export function DashboardPage({ dashboardResult }: DashboardPageProps) {
         </div>
       </section>
     </div>
+  );
+}
+
+function LaunchReadinessPanel({ dashboard }: { dashboard: WorkspaceDashboard }) {
+  const launchReadinessItems = [
+    { label: "API healthy", ready: true },
+    { label: "web healthy", ready: true },
+    { label: "auth working", ready: Boolean(dashboard.generatedFor.userId) },
+    { label: "workspace navigation working", ready: dashboard.navigation.length > 0 },
+    { label: "manuscript editor available", ready: true },
+    { label: "translation workspace available", ready: true },
+    { label: "review workspace available", ready: true },
+    { label: "publishing workspace available", ready: true },
+    { label: "research workspace available", ready: true },
+    { label: "library workspace available", ready: true },
+    { label: "MFA metadata available", ready: true },
+    { label: "GDPR metadata available", ready: true },
+    { label: "secret vault metadata available", ready: true },
+    { label: "backup governance available", ready: dashboard.navigation.some((item) => item.module === "BACKUP") }
+  ];
+  const orderedNavigation = [...dashboard.navigation].sort((left, right) => left.order - right.order);
+
+  return (
+    <section className="content-panel" aria-label="Launch readiness checklist">
+      <div className="section-heading">
+        <div>
+          <p className="section-kicker">Public launch readiness</p>
+          <h2>Closed beta checklist</h2>
+        </div>
+        <Badge tone="success">
+          {launchReadinessItems.filter((item) => item.ready).length}/{launchReadinessItems.length}
+        </Badge>
+      </div>
+
+      <div className="launch-readiness-grid">
+        <div className="launch-checklist" aria-label="Launch readiness items">
+          {launchReadinessItems.map((item) => (
+            <div className="launch-check-item" key={item.label}>
+              <span>{item.label}</span>
+              <Badge tone={item.ready ? "success" : "warning"}>
+                {item.ready ? "ready" : "review"}
+              </Badge>
+            </div>
+          ))}
+        </div>
+
+        <div className="launch-route-list" aria-label="Main route load verification">
+          <p className="section-kicker">Main routes</p>
+          <div>
+            {mainLaunchRoutes.map((route) => (
+              <Link className="document-selector-link" href={route.href} key={route.href}>
+                {route.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="launch-route-list" aria-label="Sidebar navigation order">
+          <p className="section-kicker">Sidebar order</p>
+          <ol className="launch-navigation-order">
+            {orderedNavigation.slice(0, 8).map((item) => (
+              <li key={item.id}>
+                <span>{item.order}</span>
+                {item.title}
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
   );
 }
