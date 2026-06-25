@@ -353,6 +353,11 @@ function ProvenanceTab({
           <HiddenScope documentId={documentId} projectId={projectId} />
           <Input label="Original title" name="originalTitle" />
           <Input label="Original language" name="originalLanguage" />
+          <Input label="Original locale" name="originalLocale" />
+          <Input label="Authoring language" name="authoringLanguage" />
+          <Input label="Authoring locale" name="authoringLocale" />
+          <Input label="Target language" name="targetLanguage" />
+          <Input label="Target locale" name="targetLocale" />
           <Input label="First publication year" name="firstPublicationYear" type="number" />
           <Input label="Original edition" name="originalEdition" />
           <Input label="Original publisher" name="originalPublisher" />
@@ -458,7 +463,9 @@ function ProvenanceSummary({ record }: { record: ProvenanceRecord }) {
         <Detail label="Reviewer" value={record.reviewer ?? "Not recorded"} />
         <Detail label="Rights holder" value={record.publisher ?? "Publication metadata pending"} />
         <Detail label="Original edition" value={record.originalEdition ?? "Not recorded"} />
-        <Detail label="Original language" value={record.originalLanguage ?? "Not recorded"} />
+        <Detail label="Original language" value={record.originalLanguage ? formatLanguage(record.originalLanguage, record.originalLocale) : "Not recorded"} />
+        <Detail label="Authoring language" value={record.authoringLanguage ? formatLanguage(record.authoringLanguage, record.authoringLocale) : "Not recorded"} />
+        <Detail label="Target language" value={record.targetLanguage ? formatLanguage(record.targetLanguage, record.targetLocale) : "Not recorded"} />
         <Detail label="First publication year" value={record.firstPublicationYear?.toString() ?? "Not recorded"} />
         <Detail label="Original source" value={record.originalSourceReference ?? "Not recorded"} />
       </dl>
@@ -541,4 +548,8 @@ function formatList(value: string[]): string {
 
 function formatBoolean(value: boolean): string {
   return value ? "Allowed" : "Not allowed";
+}
+
+function formatLanguage(language: string, locale?: string): string {
+  return locale ? `${language.toUpperCase()} · ${locale}` : language.toUpperCase();
 }
