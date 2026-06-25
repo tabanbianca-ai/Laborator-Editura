@@ -50,8 +50,22 @@ export interface EditorialPipelineStep {
   warnings: string[];
 }
 
+export interface AudiobookPipelineState {
+  audiobookStatus: "PREVIEW_AVAILABLE" | "LOCKED" | "READY_FOR_GENERATION";
+  exportFormats: ["MP3", "M4B"];
+  generateHref?: string;
+  language: string;
+  narrator: string;
+  officialLockedReason?: string;
+  previewAvailable: true;
+  previewHref?: string;
+  progressPercent: number;
+  voice: string;
+}
+
 export interface EditorialPipelineData {
   aiRecommendation: string;
+  audiobook: AudiobookPipelineState;
   documents: DocumentRecord[];
   documentsError: string | null;
   nextStep: EditorialPipelineStep | null;
@@ -122,6 +136,12 @@ export async function getEditorialPipelineData(input: {
 
     return {
       aiRecommendation: buildAiRecommendation(steps),
+      audiobook: buildAudiobookState({
+        approvedForOfficialAudio: false,
+        project,
+        rightsWarnings: [],
+        selectedDocument
+      }),
       documents,
       documentsError: documentsResult.error,
       nextStep: findNextStep(steps),
@@ -163,6 +183,16 @@ export async function getEditorialPipelineData(input: {
 
   return {
     aiRecommendation: buildAiRecommendation(steps),
+    audiobook: buildAudiobookState({
+      approvedForOfficialAudio: isOfficialAudiobookAvailable({
+        rightsWarnings: rightsResult.data ?? [],
+        selectedDocument,
+        workflow: workflowResult.data
+      }),
+      project,
+      rightsWarnings: rightsResult.data ?? [],
+      selectedDocument
+    }),
     documents,
     documentsError: documentsResult.error,
     nextStep: findNextStep(steps),
@@ -206,6 +236,15 @@ function buildPipelineSteps(input: {
   const readyForExport = workflowStatus === "READY_FOR_EXPORT";
   const translationComplete = hasTranslations || segments.some((segment) => segment.status === "TRANSLATED" || segment.status === "APPROVED");
   const exportWarnings = approved && !exported ? ["Export missing."] : [];
+  const publishingRightsMissing = rightsWarnings.some((warning) =>
+    warning.code === "PUBLICATION_AUTHORIZATION_MISSING" ||
+    warning.code === "PUBLICATION_NOT_AUTHORIZED"
+  );
+  const officialAudiobookAvailable = isOfficialAudiobookAvailable({
+    rightsWarnings,
+    selectedDocument,
+    workflow
+  });
 
   return [
     {
@@ -239,18 +278,32 @@ function buildPipelineSteps(input: {
       warnings: analysisWarnings
     },
     {
-      completionPercent: translationComplete ? 100 : hasSegments ? 45 : 15,
-      continueHref: selectedDocument ? `/translation?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
-      id: "editing-translation",
+      completionPercent: hasSegments ? 100 : hasDocument ? 45 : 0,
+      continueHref: selectedDocument ? `/author-studio` : undefined,
+      id: "editing",
       locked: !hasDocument,
-      openHref: selectedDocument ? `/translation?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
-      sourceModules: ["Author Studio", "Translation Workspace"],
-      status: !hasDocument ? "LOCKED" : translationComplete ? "COMPLETED" : "IN_PROGRESS",
+      openHref: "/author-studio",
+      sourceModules: ["Author Studio", "Preview Audio"],
+      status: !hasDocument ? "LOCKED" : hasSegments ? "COMPLETED" : "IN_PROGRESS",
       summary: hasSegments
-        ? `${segments.length} segments available for editing or translation.`
-        : "Open the translation workspace or author manuscript workspace to continue editing.",
-      title: "Editing / Translation",
+        ? `${segments.length} segments available for editorial editing. Preview Audio can be regenerated after edits.`
+        : "Open Author Studio to continue manuscript editing. Preview Audio remains draft-only.",
+      title: "Editing",
       warnings: hasSegments ? [] : ["Missing segments."]
+    },
+    {
+      completionPercent: translationComplete ? 100 : hasSegments ? 45 : 0,
+      continueHref: selectedDocument ? `/translation?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "translation",
+      locked: !hasSegments,
+      openHref: selectedDocument ? `/translation?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Translation Workspace", "Language Policy", "Preview Audio"],
+      status: !hasSegments ? "LOCKED" : translationComplete ? "COMPLETED" : "IN_PROGRESS",
+      summary: translationComplete
+        ? "Translation content is available for review."
+        : "Translate the prepared segments. Preview Audio can read selected text, section, chapter, or manuscript draft.",
+      title: "Translation",
+      warnings: hasSegments ? [] : ["Editing must prepare segments before translation."]
     },
     {
       completionPercent: reviewStarted ? 100 : hasTranslations ? 40 : 0,
@@ -333,6 +386,24 @@ function buildPipelineSteps(input: {
       summary: "Publication uses the existing publishing workspace and public portal metadata.",
       title: "Publication",
       warnings: exported ? [] : ["Final approval and export are required before publication."]
+    },
+    {
+      completionPercent: officialAudiobookAvailable ? 25 : 0,
+      continueHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "audiobook",
+      locked: !officialAudiobookAvailable,
+      openHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Audio Narration", "Publishing Workspace", "Human Final Authority"],
+      status: !officialAudiobookAvailable ? "LOCKED" : "READY",
+      summary: "Optional official audiobook production uses the final approved text, chapter structure, narrator metadata, cover, and export metadata.",
+      title: "Audiobook (optional)",
+      warnings: officialAudiobookAvailable
+        ? []
+        : [
+            publishingRightsMissing
+              ? "Publishing rights are required before official audiobook generation."
+              : "Final approval is required before official audiobook generation."
+          ]
     }
   ];
 }
@@ -351,8 +422,65 @@ function buildAiRecommendation(steps: EditorialPipelineStep[]): string {
   return `Next action: continue with ${next.title}. AI may summarize progress or detect blockers, but cannot approve or publish.`;
 }
 
+function buildAudiobookState(input: {
+  approvedForOfficialAudio: boolean;
+  project: ProjectRecord | null;
+  rightsWarnings: RightsWarning[];
+  selectedDocument: DocumentRecord | null;
+}): AudiobookPipelineState {
+  const { approvedForOfficialAudio, project, rightsWarnings, selectedDocument } = input;
+  const language = selectedDocument
+    ? formatLanguageLocale(
+        selectedDocument.targetLanguage ?? selectedDocument.authoringLanguage ?? selectedDocument.sourceLanguage,
+        selectedDocument.targetLocale ?? selectedDocument.authoringLocale ?? selectedDocument.originalLocale
+      )
+    : project
+      ? formatLanguageLocale(project.targetLanguages[0] ?? project.sourceLanguage, project.targetLocales?.[0] ?? project.originalLocale)
+      : "Not selected";
+  const publicationRightsWarning = rightsWarnings.find((warning) =>
+    warning.code === "PUBLICATION_AUTHORIZATION_MISSING" ||
+    warning.code === "PUBLICATION_NOT_AUTHORIZED"
+  );
+
+  return {
+    audiobookStatus: approvedForOfficialAudio ? "READY_FOR_GENERATION" : "LOCKED",
+    exportFormats: ["MP3", "M4B"],
+    generateHref: approvedForOfficialAudio && selectedDocument
+      ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}`
+      : undefined,
+    language,
+    narrator: "Narrator metadata pending",
+    officialLockedReason:
+      publicationRightsWarning?.message ??
+      "Official audiobook requires final approved text and publishing rights.",
+    previewAvailable: true,
+    previewHref: selectedDocument
+      ? `/translation?documentId=${encodeURIComponent(selectedDocument.id)}`
+      : "/author-studio",
+    progressPercent: approvedForOfficialAudio ? 25 : 0,
+    voice: "Draft studio voice"
+  };
+}
+
 function findNextStep(steps: EditorialPipelineStep[]): EditorialPipelineStep | null {
   return steps.find((step) => step.status !== "COMPLETED" && !step.locked) ?? null;
+}
+
+function isOfficialAudiobookAvailable(input: {
+  rightsWarnings: RightsWarning[];
+  selectedDocument: DocumentRecord | null;
+  workflow: ReviewWorkflowState | null;
+}): boolean {
+  const { rightsWarnings, selectedDocument, workflow } = input;
+  const publicationBlocked = rightsWarnings.some((warning) =>
+    warning.code === "PUBLICATION_AUTHORIZATION_MISSING" ||
+    warning.code === "PUBLICATION_NOT_AUTHORIZED"
+  );
+  const finalTextApproved =
+    workflow?.status === "EXPORTED" ||
+    selectedDocument?.status === "EXPORTED";
+
+  return finalTextApproved && !publicationBlocked;
 }
 
 function buildLanguageWarnings(project: ProjectRecord, document: DocumentRecord): string[] {
@@ -418,7 +546,7 @@ function resolveIndexCurrentStep(document: DocumentRecord | undefined): string {
   }
 
   if (document.status === "IN_TRANSLATION") {
-    return "Editing / Translation";
+    return "Translation";
   }
 
   return "Automatic Analysis";
