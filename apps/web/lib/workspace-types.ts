@@ -66,6 +66,7 @@ export interface WorkspacePreferences {
     [key: string]: unknown;
   };
   language: string;
+  platformLanguage?: string;
   notificationPreferences: object;
 }
 
