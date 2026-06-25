@@ -100,7 +100,13 @@ export interface ResearchSource {
   author?: string;
   originalAuthor?: string;
   language: string;
+  locale?: string;
   originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   firstPublicationYear?: number;
   sourceType: ResearchSourceType;
   publisher?: string;
@@ -225,7 +231,13 @@ export interface CreateResearchSourceInput {
   author?: string;
   originalAuthor?: string;
   language: string;
+  locale?: string;
   originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   firstPublicationYear?: number;
   sourceType: ResearchSourceType;
   publisher?: string;
