@@ -16,7 +16,9 @@ export interface SegmentTranslation {
   sourceText: string;
   targetText: string;
   sourceLanguage: string;
+  sourceLocale?: string;
   targetLanguage: string;
+  targetLocale?: string;
   status: "DRAFT" | "SUBMITTED" | "VALIDATED" | "APPROVED";
   createdBy: string;
   createdAt: string;
@@ -36,7 +38,9 @@ export interface TranslationLexicographicSupport {
   sourceId: string;
   term: string;
   sourceLanguage: string;
+  sourceLocale?: string;
   targetLanguage?: string;
+  targetLocale?: string;
   senseIds: string[];
   translationEquivalents: string[];
   sourceReferences: string[];
