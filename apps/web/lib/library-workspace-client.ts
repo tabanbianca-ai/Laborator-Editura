@@ -29,6 +29,13 @@ export interface LibraryItemRecord {
   id: string;
   itemType: LibraryItemType;
   language?: string;
+  locale?: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   lastAccessedAt?: string;
   metadata?: LibraryItemMetadata;
   publicCatalogItemId?: string;
