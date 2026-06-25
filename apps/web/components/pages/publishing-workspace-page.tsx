@@ -243,11 +243,11 @@ function AttributionPanel({ workspace }: { workspace: PublishingWorkspaceData })
         </div>
         <div>
           <dt>Source language</dt>
-          <dd>{workspace.selectedDocument?.sourceLanguage.toUpperCase() ?? "N/A"}</dd>
+          <dd>{workspace.selectedDocument ? formatLanguage(workspace.selectedDocument.originalLanguage ?? workspace.selectedDocument.sourceLanguage, workspace.selectedDocument.originalLocale) : "N/A"}</dd>
         </div>
         <div>
           <dt>Target language</dt>
-          <dd>{workspace.selectedDocument?.targetLanguage.toUpperCase() ?? "N/A"}</dd>
+          <dd>{workspace.selectedDocument ? formatLanguage(workspace.selectedDocument.targetLanguage, workspace.selectedDocument.targetLocale) : "N/A"}</dd>
         </div>
       </dl>
       <p className="review-human-authority">
@@ -343,6 +343,10 @@ function PublicPortalPanel({ workspace }: { workspace: PublishingWorkspaceData }
           <ReferenceItem label={item.metadata.title} text={item.availabilityStatus.replace(/_/g, " ")} />
           <ReferenceItem label="Release approval" text={item.releaseApprovalStatus.replace(/_/g, " ")} />
           <ReferenceItem
+            label="Publication language"
+            text={formatLanguage(item.metadata.targetLanguage ?? item.metadata.language, item.metadata.targetLocale)}
+          />
+          <ReferenceItem
             label="Original source"
             text={item.metadata.originalSourceReferences.join(", ") || "Preserved in metadata"}
           />
@@ -363,7 +367,7 @@ function CommercePanel({ workspace }: { workspace: PublishingWorkspaceData }) {
       ) : (
         <div className="reference-stack">
           <ReferenceItem label={edition.title} text={edition.availabilityStatus.replace(/_/g, " ")} />
-          <ReferenceItem label="Edition" text={`${edition.editionType} · ${edition.language.toUpperCase()}`} />
+          <ReferenceItem label="Edition" text={`${edition.editionType} · ${formatLanguage(edition.targetLanguage ?? edition.language, edition.targetLocale)}`} />
           <ReferenceItem
             label="Print profile"
             text={`${edition.printProfile.region} ${edition.printProfile.trimSize}, bleed ${edition.printProfile.bleed ?? "N/A"}`}
@@ -388,7 +392,29 @@ function OriginalSourcePanel({ workspace }: { workspace: PublishingWorkspaceData
         />
         <ReferenceItem
           label="Original language"
-          text={workspace.selectedProject?.sourceLanguage.toUpperCase() ?? workspace.selectedDocument?.sourceLanguage.toUpperCase() ?? "N/A"}
+          text={
+            workspace.selectedDocument
+              ? formatLanguage(workspace.selectedDocument.originalLanguage ?? workspace.selectedDocument.sourceLanguage, workspace.selectedDocument.originalLocale)
+              : workspace.selectedProject
+                ? formatLanguage(workspace.selectedProject.originalLanguage ?? workspace.selectedProject.sourceLanguage, workspace.selectedProject.originalLocale)
+                : "N/A"
+          }
+        />
+        <ReferenceItem
+          label="Authoring language"
+          text={
+            workspace.selectedDocument
+              ? formatLanguage(workspace.selectedDocument.authoringLanguage ?? workspace.selectedDocument.sourceLanguage, workspace.selectedDocument.authoringLocale)
+              : "N/A"
+          }
+        />
+        <ReferenceItem
+          label="Target language"
+          text={
+            workspace.selectedDocument
+              ? formatLanguage(workspace.selectedDocument.targetLanguage, workspace.selectedDocument.targetLocale)
+              : "N/A"
+          }
         />
         <ReferenceItem
           label="Document type"
@@ -481,4 +507,8 @@ function toneForPublicRelease(status: string | undefined): BadgeTone {
 
 function toneForCommerce(status: string | undefined): BadgeTone {
   return toneForApproval(status);
+}
+
+function formatLanguage(language: string, locale?: string): string {
+  return locale ? `${language.toUpperCase()} · ${locale}` : language.toUpperCase();
 }
