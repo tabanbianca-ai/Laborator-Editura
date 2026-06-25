@@ -33,6 +33,8 @@ test("language policy defines supported assisted translation targets for v1.0", 
 
   assert.match(source, /SUPPORTED_TRANSLATION_TARGETS_V1/);
   assert.match(source, /validateTranslationTargetV1/);
+  assert.match(source, /formatLanguageLocale/);
+  assert.match(source, /English/);
 });
 
 test("language policy keeps manuscript ISO language validation separate from translation target validation", () => {
