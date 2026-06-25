@@ -13,6 +13,10 @@
     "./json-master-format": {
       "types": "./dist/json-master-format/index.d.ts",
       "default": "./dist/json-master-format/index.js"
+    },
+    "./language-policy": {
+      "types": "./dist/language-policy.d.ts",
+      "default": "./dist/language-policy.js"
     }
   },
   "scripts": {
