@@ -11,7 +11,10 @@ export interface Project {
   name: string;
   description?: string;
   sourceLanguage: string;
+  originalLanguage: string;
+  originalLocale?: string;
   targetLanguages: string[];
+  targetLocales?: string[];
   domain?: string;
   status: "ACTIVE" | "ARCHIVED";
   createdBy: string;
@@ -24,7 +27,10 @@ export interface CreateProjectInput {
   name: string;
   description?: string;
   sourceLanguage: string;
+  originalLanguage?: string;
+  originalLocale?: string;
   targetLanguages: string[];
+  targetLocales?: string[];
   domain?: string;
   metadata?: Record<string, unknown>;
 }
