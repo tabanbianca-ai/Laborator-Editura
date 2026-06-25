@@ -1,0 +1,477 @@
+import { formatLanguageLocale } from "@laborator/shared";
+import { apiGet, type ApiResult } from "./api-client";
+import {
+  listDocuments,
+  listProjects,
+  type DocumentRecord,
+  type ProjectRecord
+} from "./projects-documents-api";
+import { getRightsWarningsForDocument, type RightsWarning } from "./rights-workspace-client";
+import type { ReviewWorkflowState, ReviewWorkflowStatus } from "./review-workspace-client";
+import type {
+  WorkspaceSegmentRecord,
+  WorkspaceTranslationRecord
+} from "./translation-workspace-client";
+
+export type PipelineStepStatus =
+  | "COMPLETED"
+  | "IN_PROGRESS"
+  | "NEEDS_ATTENTION"
+  | "LOCKED"
+  | "READY";
+
+export interface EditorialPipelineIndexProject {
+  currentStepLabel: string;
+  documentCount: number;
+  href: string;
+  id: string;
+  languageSummary: string;
+  name: string;
+  status: ProjectRecord["status"];
+  warningCount: number;
+}
+
+export interface EditorialPipelineIndexData {
+  documentsError: string | null;
+  projects: EditorialPipelineIndexProject[];
+  projectsError: string | null;
+}
+
+export interface EditorialPipelineStep {
+  completionPercent: number;
+  continueHref?: string;
+  id: string;
+  locked: boolean;
+  openHref?: string;
+  sourceModules: string[];
+  status: PipelineStepStatus;
+  summary: string;
+  title: string;
+  warnings: string[];
+}
+
+export interface EditorialPipelineData {
+  aiRecommendation: string;
+  documents: DocumentRecord[];
+  documentsError: string | null;
+  nextStep: EditorialPipelineStep | null;
+  project: ProjectRecord | null;
+  projectsError: string | null;
+  rightsError: string | null;
+  rightsWarnings: RightsWarning[];
+  selectedDocument: DocumentRecord | null;
+  segments: WorkspaceSegmentRecord[];
+  segmentsError: string | null;
+  steps: EditorialPipelineStep[];
+  translations: WorkspaceTranslationRecord[];
+  translationsError: string | null;
+  workflow: ReviewWorkflowState | null;
+  workflowError: string | null;
+}
+
+export async function getEditorialPipelineIndexData(): Promise<EditorialPipelineIndexData> {
+  const [projectsResult, documentsResult] = await Promise.all([listProjects(), listDocuments()]);
+  const documents = documentsResult.data ?? [];
+
+  return {
+    documentsError: documentsResult.error,
+    projects: (projectsResult.data ?? []).map((project) => {
+      const projectDocuments = documents.filter((document) => document.projectId === project.id);
+      const firstDocument = projectDocuments[0];
+      const currentStepLabel = resolveIndexCurrentStep(firstDocument);
+      const warningCount = projectDocuments.filter((document) => hasLanguageMismatch(project, document)).length;
+
+      return {
+        currentStepLabel,
+        documentCount: projectDocuments.length,
+        href: `/pipeline/${encodeURIComponent(project.id)}${firstDocument ? `?documentId=${encodeURIComponent(firstDocument.id)}` : ""}`,
+        id: project.id,
+        languageSummary: formatProjectLanguages(project),
+        name: project.name,
+        status: project.status,
+        warningCount
+      };
+    }),
+    projectsError: projectsResult.error
+  };
+}
+
+export async function getEditorialPipelineData(input: {
+  documentId?: string;
+  projectId: string;
+}): Promise<EditorialPipelineData> {
+  const [projectsResult, documentsResult] = await Promise.all([
+    listProjects(),
+    listDocuments(input.projectId)
+  ]);
+  const project = (projectsResult.data ?? []).find((item) => item.id === input.projectId) ?? null;
+  const documents = documentsResult.data ?? [];
+  const selectedDocument = input.documentId
+    ? documents.find((document) => document.id === input.documentId) ?? null
+    : documents[0] ?? null;
+
+  if (!project || !selectedDocument) {
+    const steps = buildPipelineSteps({
+      project,
+      rightsWarnings: [],
+      selectedDocument,
+      segments: [],
+      translations: [],
+      workflow: null
+    });
+
+    return {
+      aiRecommendation: buildAiRecommendation(steps),
+      documents,
+      documentsError: documentsResult.error,
+      nextStep: findNextStep(steps),
+      project,
+      projectsError: projectsResult.error,
+      rightsError: null,
+      rightsWarnings: [],
+      selectedDocument,
+      segments: [],
+      segmentsError: null,
+      steps,
+      translations: [],
+      translationsError: null,
+      workflow: null,
+      workflowError: null
+    };
+  }
+
+  const [segmentsResult, translationsResult, workflowResult, rightsResult] = await Promise.all([
+    listPipelineSegments(selectedDocument.id),
+    listPipelineTranslations(selectedDocument.id),
+    getPipelineWorkflowStatus({
+      documentId: selectedDocument.id,
+      projectId: selectedDocument.projectId
+    }),
+    getRightsWarningsForDocument({
+      documentId: selectedDocument.id,
+      projectId: selectedDocument.projectId
+    })
+  ]);
+  const steps = buildPipelineSteps({
+    project,
+    rightsWarnings: rightsResult.data ?? [],
+    selectedDocument,
+    segments: segmentsResult.data ?? [],
+    translations: translationsResult.data ?? [],
+    workflow: workflowResult.data
+  });
+
+  return {
+    aiRecommendation: buildAiRecommendation(steps),
+    documents,
+    documentsError: documentsResult.error,
+    nextStep: findNextStep(steps),
+    project,
+    projectsError: projectsResult.error,
+    rightsError: rightsResult.error,
+    rightsWarnings: rightsResult.data ?? [],
+    selectedDocument,
+    segments: segmentsResult.data ?? [],
+    segmentsError: segmentsResult.error,
+    steps,
+    translations: translationsResult.data ?? [],
+    translationsError: translationsResult.error,
+    workflow: workflowResult.data,
+    workflowError: workflowResult.error
+  };
+}
+
+function buildPipelineSteps(input: {
+  project: ProjectRecord | null;
+  rightsWarnings: RightsWarning[];
+  selectedDocument: DocumentRecord | null;
+  segments: WorkspaceSegmentRecord[];
+  translations: WorkspaceTranslationRecord[];
+  workflow: ReviewWorkflowState | null;
+}): EditorialPipelineStep[] {
+  const { project, rightsWarnings, selectedDocument, segments, translations, workflow } = input;
+  const importWarnings = selectedDocument ? [] : ["Missing manuscript or document."];
+  const languageWarnings = selectedDocument && project
+    ? buildLanguageWarnings(project, selectedDocument)
+    : [];
+  const rightsMessages = rightsWarnings.map((warning) => warning.message);
+  const analysisWarnings = [...rightsMessages, ...languageWarnings];
+  const hasDocument = Boolean(selectedDocument);
+  const hasSegments = segments.length > 0;
+  const hasTranslations = translations.length > 0;
+  const workflowStatus = workflow?.status;
+  const reviewStarted = isWorkflowAtLeast(workflowStatus, "IN_REVIEW");
+  const approved = isWorkflowAtLeast(workflowStatus, "APPROVED") || selectedDocument?.status === "APPROVED" || selectedDocument?.status === "EXPORTED";
+  const exported = workflowStatus === "EXPORTED" || selectedDocument?.status === "EXPORTED";
+  const readyForExport = workflowStatus === "READY_FOR_EXPORT";
+  const translationComplete = hasTranslations || segments.some((segment) => segment.status === "TRANSLATED" || segment.status === "APPROVED");
+  const exportWarnings = approved && !exported ? ["Export missing."] : [];
+
+  return [
+    {
+      completionPercent: hasDocument ? 100 : 0,
+      continueHref: "/author-studio",
+      id: "import",
+      locked: false,
+      openHref: "/author-studio",
+      sourceModules: ["Author Studio"],
+      status: hasDocument ? "COMPLETED" : "IN_PROGRESS",
+      summary: hasDocument
+        ? `Manuscript linked as ${selectedDocument?.title}.`
+        : "Create or import the manuscript before production can continue.",
+      title: "Import Manuscript",
+      warnings: importWarnings
+    },
+    {
+      completionPercent: hasDocument && analysisWarnings.length === 0 ? 100 : hasDocument ? 55 : 0,
+      continueHref: selectedDocument
+        ? `/rights?projectId=${encodeURIComponent(selectedDocument.projectId)}&documentId=${encodeURIComponent(selectedDocument.id)}`
+        : undefined,
+      id: "analysis",
+      locked: !hasDocument,
+      openHref: selectedDocument
+        ? `/rights?projectId=${encodeURIComponent(selectedDocument.projectId)}&documentId=${encodeURIComponent(selectedDocument.id)}`
+        : undefined,
+      sourceModules: ["Research", "AI", "Language Policy", "Rights metadata"],
+      status: !hasDocument ? "LOCKED" : analysisWarnings.length > 0 ? "NEEDS_ATTENTION" : "COMPLETED",
+      summary: "Language metadata, rights signals, and research context are checked before editing.",
+      title: "Automatic Analysis",
+      warnings: analysisWarnings
+    },
+    {
+      completionPercent: translationComplete ? 100 : hasSegments ? 45 : 15,
+      continueHref: selectedDocument ? `/translation?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "editing-translation",
+      locked: !hasDocument,
+      openHref: selectedDocument ? `/translation?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Author Studio", "Translation Workspace"],
+      status: !hasDocument ? "LOCKED" : translationComplete ? "COMPLETED" : "IN_PROGRESS",
+      summary: hasSegments
+        ? `${segments.length} segments available for editing or translation.`
+        : "Open the translation workspace or author manuscript workspace to continue editing.",
+      title: "Editing / Translation",
+      warnings: hasSegments ? [] : ["Missing segments."]
+    },
+    {
+      completionPercent: reviewStarted ? 100 : hasTranslations ? 40 : 0,
+      continueHref: selectedDocument ? `/review?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "editorial-review",
+      locked: !translationComplete,
+      openHref: selectedDocument ? `/review?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Review Workspace"],
+      status: !translationComplete ? "LOCKED" : reviewStarted ? "COMPLETED" : "READY",
+      summary: "Editors compare source and target text, issues, terminology, and semantic reports.",
+      title: "Editorial Review",
+      warnings: translationComplete ? [] : ["Translation is not ready for review."]
+    },
+    {
+      completionPercent: approved ? 100 : reviewStarted ? 60 : 0,
+      continueHref: selectedDocument ? `/workflow-center?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "editorial-validation",
+      locked: !reviewStarted,
+      openHref: selectedDocument ? `/workflow-center?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Workflow"],
+      status: !reviewStarted ? "LOCKED" : approved ? "COMPLETED" : "READY",
+      summary: "Human workflow approval confirms the editorial text can move toward layout.",
+      title: "Editorial Validation",
+      warnings: approved ? [] : ["Missing approvals."]
+    },
+    {
+      completionPercent: readyForExport || exported ? 100 : approved ? 35 : 0,
+      continueHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "layout",
+      locked: !approved,
+      openHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Publishing Layout"],
+      status: !approved ? "LOCKED" : readyForExport || exported ? "COMPLETED" : "READY",
+      summary: "Layout preparation uses the publishing workspace; no duplicate editor is created here.",
+      title: "Layout",
+      warnings: approved ? [] : ["Editorial validation required."]
+    },
+    {
+      completionPercent: exported ? 100 : readyForExport ? 70 : approved ? 35 : 0,
+      continueHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "export",
+      locked: !approved,
+      openHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Export Center"],
+      status: !approved ? "LOCKED" : exported ? "COMPLETED" : readyForExport ? "READY" : "IN_PROGRESS",
+      summary: "Generate JSON Master and publication-ready formats through the existing export flow.",
+      title: "Export",
+      warnings: exportWarnings
+    },
+    {
+      completionPercent: exported ? 50 : 0,
+      id: "technical-validation",
+      locked: !exported,
+      sourceModules: ["Preflight placeholder"],
+      status: !exported ? "LOCKED" : "READY",
+      summary: "Preflight will later validate typography, files, and production constraints.",
+      title: "Technical Validation",
+      warnings: exported ? ["Preflight placeholder is not automated yet."] : ["Export required before technical validation."]
+    },
+    {
+      completionPercent: exported ? 75 : 0,
+      continueHref: selectedDocument ? `/workflow-center?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "final-approval",
+      locked: !exported,
+      openHref: selectedDocument ? `/workflow-center?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Workflow"],
+      status: !exported ? "LOCKED" : "READY",
+      summary: "Authorized humans perform final approval. AI cannot approve workflow or publication.",
+      title: "Final Approval",
+      warnings: exported ? [] : ["Export required before final approval."]
+    },
+    {
+      completionPercent: exported ? 50 : 0,
+      continueHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "publication",
+      locked: !exported,
+      openHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Publishing Workspace"],
+      status: !exported ? "LOCKED" : "READY",
+      summary: "Publication uses the existing publishing workspace and public portal metadata.",
+      title: "Publication",
+      warnings: exported ? [] : ["Final approval and export are required before publication."]
+    }
+  ];
+}
+
+function buildAiRecommendation(steps: EditorialPipelineStep[]): string {
+  const next = findNextStep(steps);
+
+  if (!next) {
+    return "Production workflow is complete. AI can summarize release notes, but publication remains a human decision.";
+  }
+
+  if (next.warnings.length > 0) {
+    return `Next action: resolve ${next.title.toLowerCase()} warnings before moving forward.`;
+  }
+
+  return `Next action: continue with ${next.title}. AI may summarize progress or detect blockers, but cannot approve or publish.`;
+}
+
+function findNextStep(steps: EditorialPipelineStep[]): EditorialPipelineStep | null {
+  return steps.find((step) => step.status !== "COMPLETED" && !step.locked) ?? null;
+}
+
+function buildLanguageWarnings(project: ProjectRecord, document: DocumentRecord): string[] {
+  const warnings: string[] = [];
+  const originalLanguage = document.originalLanguage ?? project.originalLanguage ?? project.sourceLanguage;
+  const authoringLanguage = document.authoringLanguage ?? document.sourceLanguage;
+
+  if (!originalLanguage) {
+    warnings.push("Missing original language metadata.");
+  }
+
+  if (!authoringLanguage) {
+    warnings.push("Missing current manuscript language metadata.");
+  }
+
+  if (!document.targetLanguage) {
+    warnings.push("Missing translation target language.");
+  }
+
+  if (hasLanguageMismatch(project, document)) {
+    warnings.push("Language mismatch between project and selected document.");
+  }
+
+  return warnings;
+}
+
+function hasLanguageMismatch(project: ProjectRecord, document: DocumentRecord): boolean {
+  if (project.id !== document.projectId) {
+    return true;
+  }
+
+  return Boolean(
+    project.originalLanguage &&
+    document.originalLanguage &&
+    project.originalLanguage !== document.originalLanguage
+  );
+}
+
+function formatProjectLanguages(project: ProjectRecord): string {
+  const original = formatLanguageLocale(project.originalLanguage ?? project.sourceLanguage, project.originalLocale);
+  const targets = project.targetLanguages
+    .map((language, index) => formatLanguageLocale(language, project.targetLocales?.[index]))
+    .join(", ");
+
+  return `${original} -> ${targets}`;
+}
+
+function resolveIndexCurrentStep(document: DocumentRecord | undefined): string {
+  if (!document) {
+    return "Import Manuscript";
+  }
+
+  if (document.status === "EXPORTED") {
+    return "Publication";
+  }
+
+  if (document.status === "APPROVED") {
+    return "Layout";
+  }
+
+  if (document.status === "IN_REVIEW") {
+    return "Editorial Review";
+  }
+
+  if (document.status === "IN_TRANSLATION") {
+    return "Editing / Translation";
+  }
+
+  return "Automatic Analysis";
+}
+
+function isWorkflowAtLeast(
+  status: ReviewWorkflowStatus | undefined,
+  threshold: ReviewWorkflowStatus
+): boolean {
+  if (!status) {
+    return false;
+  }
+
+  return workflowOrder(status) >= workflowOrder(threshold);
+}
+
+function workflowOrder(status: ReviewWorkflowStatus): number {
+  const order: Record<ReviewWorkflowStatus, number> = {
+    DRAFT: 0,
+    IN_TRANSLATION: 1,
+    IN_QA: 2,
+    IN_SEMANTIC_REVIEW: 3,
+    IN_REVIEW: 4,
+    APPROVED: 5,
+    READY_FOR_EXPORT: 6,
+    EXPORTED: 7,
+    BLOCKED: -1
+  };
+
+  return order[status];
+}
+
+function listPipelineSegments(documentId: string): Promise<ApiResult<WorkspaceSegmentRecord[]>> {
+  return apiGet<WorkspaceSegmentRecord[]>(`/segments?documentId=${encodeURIComponent(documentId)}`);
+}
+
+function listPipelineTranslations(documentId: string): Promise<ApiResult<WorkspaceTranslationRecord[]>> {
+  return apiGet<WorkspaceTranslationRecord[]>(
+    `/translations?documentId=${encodeURIComponent(documentId)}`
+  );
+}
+
+function getPipelineWorkflowStatus(input: {
+  documentId: string;
+  projectId?: string;
+}): Promise<ApiResult<ReviewWorkflowState>> {
+  const query = new URLSearchParams({
+    documentId: input.documentId
+  });
+
+  if (input.projectId) {
+    query.set("projectId", input.projectId);
+  }
+
+  return apiGet<ReviewWorkflowState>(`/workflow/status?${query.toString()}`);
+}
