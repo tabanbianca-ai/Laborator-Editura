@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { validateTranslationTargetV1 } from "@laborator/shared";
 import { randomUUID } from "node:crypto";
 import { LexicographicService } from "../lexicographic/lexicographic.service";
 import { type LexicographicEntryEvidence } from "../lexicographic/lexicographic.types";
@@ -40,6 +41,7 @@ export class TranslationsService {
     }
 
     const segment = await this.segmentsService.getSegment(actor, input.segmentId);
+    this.assertTranslationTargetSupported(segment.targetLanguage, segment.targetLocale);
     const now = new Date().toISOString();
     const translationId = randomUUID();
     const lexicographicEntries = await this.lexicographicService.searchEntries(actor, {
@@ -104,7 +106,9 @@ export class TranslationsService {
       sourceText: segment.sourceText,
       targetText: input.targetText,
       sourceLanguage: segment.sourceLanguage,
+      sourceLocale: segment.sourceLocale,
       targetLanguage: segment.targetLanguage,
+      targetLocale: segment.targetLocale,
       status:
         terminology.valid &&
         qaReport.issueCount === 0 &&
@@ -124,6 +128,11 @@ export class TranslationsService {
       metadata: {
         terminologyValid: terminology.valid,
         lexicographicSupport: this.mapLexicographicSupport(lexicographicSupport),
+        languagePolicyVersion: "v1.0",
+        originalLanguage: segment.sourceLanguage,
+        originalLocale: segment.sourceLocale,
+        targetLanguage: segment.targetLanguage,
+        targetLocale: segment.targetLocale,
         qaScore: qaReport.score,
         semanticScore: semanticReport.score,
         ...input.metadata
@@ -197,6 +206,17 @@ export class TranslationsService {
   private validateActor(actor: TranslationActor): void {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("userId and organizationId are required.");
+    }
+  }
+
+  private assertTranslationTargetSupported(targetLanguage: string, targetLocale?: string): void {
+    const validation = validateTranslationTargetV1({
+      targetLanguage,
+      targetLocale
+    });
+
+    if (!validation.valid) {
+      throw new BadRequestException(validation.reason ?? "Unsupported translation target.");
     }
   }
 
