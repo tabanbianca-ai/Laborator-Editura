@@ -80,7 +80,15 @@ export function AuthorStudioDetailPage({
             </div>
             <div>
               <dt>Language</dt>
-              <dd>{manuscript.language}</dd>
+              <dd>{formatLanguage(manuscript.authoringLanguage ?? manuscript.language, manuscript.authoringLocale)}</dd>
+            </div>
+            <div>
+              <dt>Original language</dt>
+              <dd>{formatLanguage(manuscript.originalLanguage ?? manuscript.language, manuscript.originalLocale)}</dd>
+            </div>
+            <div>
+              <dt>Authoring language</dt>
+              <dd>{formatLanguage(manuscript.authoringLanguage ?? manuscript.language, manuscript.authoringLocale)}</dd>
             </div>
             <div>
               <dt>Updated</dt>
@@ -243,4 +251,8 @@ function formatDate(value: string): string {
     dateStyle: "medium",
     timeStyle: "short"
   }).format(new Date(value));
+}
+
+function formatLanguage(language: string, locale?: string): string {
+  return locale ? `${language.toUpperCase()} · ${locale}` : language.toUpperCase();
 }
