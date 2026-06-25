@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import Link from "next/link";
+import { formatLanguageLocale } from "@laborator/shared";
 import {
   addLibraryBookmarkAction,
   addLibraryHighlightAction,
@@ -139,7 +140,7 @@ function SavedItemsList({
             key={item.id}
           >
             <strong>{item.title}</strong>
-            <span>{item.language?.toUpperCase() ?? "No language"} · {formatDate(item.savedAt)}</span>
+            <span>{formatOptionalLanguage(item.language, item.locale)} · {formatDate(item.savedAt)}</span>
             <div className="library-badge-row">
               <Badge tone={toneForItemType(item.itemType)}>{item.itemType}</Badge>
               {item.favorite ? <Badge tone="success">Favorite</Badge> : null}
@@ -173,7 +174,19 @@ function LibraryItemDetail({ item }: { item: LibraryItemRecord | null }) {
         <dl className="research-metadata-grid">
           <div>
             <dt>Language</dt>
-            <dd>{item.language?.toUpperCase() ?? "Not recorded"}</dd>
+            <dd>{formatOptionalLanguage(item.language, item.locale)}</dd>
+          </div>
+          <div>
+            <dt>Original</dt>
+            <dd>{formatOptionalLanguage(item.originalLanguage, item.originalLocale)}</dd>
+          </div>
+          <div>
+            <dt>Current manuscript</dt>
+            <dd>{formatOptionalLanguage(item.authoringLanguage, item.authoringLocale)}</dd>
+          </div>
+          <div>
+            <dt>Translation target</dt>
+            <dd>{formatOptionalLanguage(item.targetLanguage, item.targetLocale)}</dd>
           </div>
           <div>
             <dt>Saved</dt>
@@ -388,4 +401,8 @@ function toneForItemType(itemType: LibraryItemType): BadgeTone {
 
 function formatDate(value: string): string {
   return value.slice(0, 10);
+}
+
+function formatOptionalLanguage(language?: string, locale?: string): string {
+  return language ? formatLanguageLocale(language, locale) : "Not recorded";
 }
