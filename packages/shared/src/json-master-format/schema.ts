@@ -198,7 +198,19 @@ export const jsonMasterFormatV1Schema = {
         sourceLanguage: {
           $ref: "#/$defs/languageCode"
         },
+        originalLanguage: {
+          $ref: "#/$defs/languageCode"
+        },
+        originalLocale: {
+          $ref: "#/$defs/languageCode"
+        },
         targetLanguages: {
+          type: "array",
+          items: {
+            $ref: "#/$defs/languageCode"
+          }
+        },
+        targetLocales: {
           type: "array",
           items: {
             $ref: "#/$defs/languageCode"
@@ -237,6 +249,24 @@ export const jsonMasterFormatV1Schema = {
           type: "string"
         },
         sourceLanguage: {
+          $ref: "#/$defs/languageCode"
+        },
+        originalLanguage: {
+          $ref: "#/$defs/languageCode"
+        },
+        originalLocale: {
+          $ref: "#/$defs/languageCode"
+        },
+        authoringLanguage: {
+          $ref: "#/$defs/languageCode"
+        },
+        authoringLocale: {
+          $ref: "#/$defs/languageCode"
+        },
+        targetLanguage: {
+          $ref: "#/$defs/languageCode"
+        },
+        targetLocale: {
           $ref: "#/$defs/languageCode"
         },
         documentType: {
@@ -346,6 +376,12 @@ export const jsonMasterFormatV1Schema = {
           $ref: "#/$defs/id"
         },
         language: {
+          $ref: "#/$defs/languageCode"
+        },
+        targetLanguage: {
+          $ref: "#/$defs/languageCode"
+        },
+        targetLocale: {
           $ref: "#/$defs/languageCode"
         },
         text: {
