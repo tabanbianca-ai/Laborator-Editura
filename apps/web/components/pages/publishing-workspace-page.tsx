@@ -43,6 +43,7 @@ export function PublishingWorkspacePage({
       {workspace.documentsError ? <ErrorState message={workspace.documentsError} /> : null}
       {workspace.translationsError ? <ErrorState message={workspace.translationsError} /> : null}
       {workspace.workflowError ? <ErrorState message={workspace.workflowError} /> : null}
+      {workspace.rightsError ? <ErrorState message={workspace.rightsError} /> : null}
 
       <PublicationDashboard workspace={workspace} />
       <DocumentSelector workspace={workspace} />
@@ -171,6 +172,18 @@ function PublishingReadinessPanel({ workspace }: { workspace: PublishingWorkspac
           label="Human approval"
           text={workspace.layoutPlan?.approvedBy ?? workspace.workflow?.approvedBy ?? "Required before release"}
         />
+        {workspace.rightsWarnings.length > 0 ? (
+          <div className="rights-warning-banner rights-warning-banner-compact">
+            <strong>Translation or publication cannot continue until the required rights are available.</strong>
+            <ul>
+              {workspace.rightsWarnings.map((warning) => (
+                <li key={warning.code}>{warning.message}</li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <ReferenceItem label="Rights gate" text="No missing rights warnings recorded" />
+        )}
         <form action={createPublishingExportAction} className="publishing-action-form">
           <input name="documentId" type="hidden" value={workspace.selectedDocument?.id ?? ""} />
           <input name="projectId" type="hidden" value={workspace.selectedProject?.id ?? ""} />
