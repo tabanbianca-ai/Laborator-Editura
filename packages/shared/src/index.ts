@@ -9,3 +9,4 @@ export interface HealthResponse {
 }
 
 export * from "./json-master-format";
+export * from "./language-policy";
