@@ -24,6 +24,7 @@ test("publishing workspace route loads the publishing workspace", () => {
 
 test("publishing workspace client uses existing backend endpoints only", () => {
   const client = readSource("lib/publishing-workspace-client.ts");
+  const rightsClient = readSource("lib/rights-workspace-client.ts");
   const apiClient = readSource("lib/api-client.ts");
 
   for (const endpoint of [
@@ -33,11 +34,14 @@ test("publishing workspace client uses existing backend endpoints only", () => {
     "/export/documents",
     "/export/artifacts",
     "/public-portal/catalog-items",
-    "/commerce/editions"
+    "/commerce/editions",
+    "/rights/translation",
+    "/rights/publishing"
   ]) {
-    assert.match(client, new RegExp(endpoint.replaceAll("/", "\\/")));
+    assert.match(client + rightsClient, new RegExp(endpoint.replaceAll("/", "\\/")));
   }
 
+  assert.match(client, /getRightsWarningsForDocument/);
   assert.match(client, /listProjects/);
   assert.match(client, /listDocuments/);
   assert.match(apiClient, /Authorization: `Bearer \$\{token\}`/);
@@ -61,6 +65,8 @@ test("publishing workspace displays publication approval, source and attribution
   const page = readSource("components/pages/publishing-workspace-page.tsx");
 
   assert.match(page, /Human approval/);
+  assert.match(page, /Rights gate/);
+  assert.match(page, /Translation or publication cannot continue until the required rights are available\./);
   assert.match(page, /Original source metadata/);
   assert.match(page, /Author/);
   assert.match(page, /Translator/);
