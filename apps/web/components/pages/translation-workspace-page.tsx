@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatLanguageLocale } from "@laborator/shared";
 import { saveWorkspaceTranslationAction } from "../../lib/translation-workspace-actions";
 import type {
   LexicographicReference,
@@ -406,5 +407,5 @@ function truncate(value: string, maxLength: number): string {
 }
 
 function formatLanguage(language: string, locale?: string): string {
-  return locale ? `${language.toUpperCase()} · ${locale}` : language.toUpperCase();
+  return formatLanguageLocale(language, locale);
 }
