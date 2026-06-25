@@ -1,4 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  normalizeLanguageLocale,
+  validateIsoCompatibleLanguageTag,
+  type LanguageLocaleMetadata
+} from "@laborator/shared";
 import { randomUUID } from "node:crypto";
 import { DatabaseLibraryRepository } from "./library.repository";
 import {
@@ -35,6 +40,10 @@ export class LibraryService {
     }
 
     const now = new Date().toISOString();
+    const itemLanguage = this.normalizeOptionalIsoLanguage(input.language, input.locale);
+    const originalLanguage = this.normalizeOptionalIsoLanguage(input.originalLanguage, input.originalLocale);
+    const authoringLanguage = this.normalizeOptionalIsoLanguage(input.authoringLanguage, input.authoringLocale);
+    const targetLanguage = this.normalizeOptionalIsoLanguage(input.targetLanguage, input.targetLocale);
     const item: LibraryItem = {
       id: randomUUID(),
       organizationId: actor.organizationId,
@@ -43,7 +52,14 @@ export class LibraryService {
       commerceEditionId: input.commerceEditionId,
       itemType: input.itemType,
       title: input.title,
-      language: input.language,
+      language: itemLanguage?.language,
+      locale: itemLanguage?.locale,
+      originalLanguage: originalLanguage?.language,
+      originalLocale: originalLanguage?.locale,
+      authoringLanguage: authoringLanguage?.language,
+      authoringLocale: authoringLanguage?.locale,
+      targetLanguage: targetLanguage?.language,
+      targetLocale: targetLanguage?.locale,
       sourceReference: input.sourceReference,
       favorite: false,
       savedAt: now,
@@ -276,5 +292,22 @@ export class LibraryService {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("userId and organizationId are required.");
     }
+  }
+
+  private normalizeOptionalIsoLanguage(
+    language: string | undefined,
+    locale?: string
+  ): LanguageLocaleMetadata | undefined {
+    if (!language) {
+      return undefined;
+    }
+
+    const validation = validateIsoCompatibleLanguageTag(language);
+
+    if (!validation.valid) {
+      throw new BadRequestException(validation.reason ?? "Language must be ISO-compatible.");
+    }
+
+    return normalizeLanguageLocale(language, locale);
   }
 }
