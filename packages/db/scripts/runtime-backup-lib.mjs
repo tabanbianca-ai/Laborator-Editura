@@ -66,6 +66,11 @@ export const TABLE_NAMES = [
   "launch_gdpr_requests",
   "launch_secret_vault_entries",
   "launch_essentials_audit_events",
+  "rights_collaboration_agreements",
+  "rights_translation_authorizations",
+  "rights_publishing_authorizations",
+  "rights_provenance_records",
+  "rights_audit_events",
   "organization_founder_protection",
   "founder_ownership_transfers",
   "projects",
@@ -206,6 +211,11 @@ const TENANT_SCOPED_TABLES = new Set([
   "launch_gdpr_requests",
   "launch_secret_vault_entries",
   "launch_essentials_audit_events",
+  "rights_collaboration_agreements",
+  "rights_translation_authorizations",
+  "rights_publishing_authorizations",
+  "rights_provenance_records",
+  "rights_audit_events",
   "projects",
   "documents",
   "document_segments",
@@ -447,6 +457,18 @@ function validateTenantBoundaries(data, issues) {
   validateReferenceTenant(data, issues, "segment_translations", "segmentId", "document_segments");
   validateReferenceTenant(data, issues, "export_artifacts", "projectId", "projects");
   validateReferenceTenant(data, issues, "export_artifacts", "documentId", "documents");
+  validateReferenceTenant(data, issues, "rights_collaboration_agreements", "projectId", "projects");
+  validateReferenceTenant(data, issues, "rights_collaboration_agreements", "documentId", "documents");
+  validateReferenceTenant(data, issues, "rights_translation_authorizations", "projectId", "projects");
+  validateReferenceTenant(data, issues, "rights_translation_authorizations", "documentId", "documents");
+  validateReferenceTenant(data, issues, "rights_publishing_authorizations", "projectId", "projects");
+  validateReferenceTenant(data, issues, "rights_publishing_authorizations", "documentId", "documents");
+  validateReferenceTenant(data, issues, "rights_provenance_records", "projectId", "projects");
+  validateReferenceTenant(data, issues, "rights_provenance_records", "documentId", "documents");
+  validateReferenceTenant(data, issues, "rights_audit_events", "collaborationAgreementId", "rights_collaboration_agreements");
+  validateReferenceTenant(data, issues, "rights_audit_events", "translationAuthorizationId", "rights_translation_authorizations");
+  validateReferenceTenant(data, issues, "rights_audit_events", "publishingAuthorizationId", "rights_publishing_authorizations");
+  validateReferenceTenant(data, issues, "rights_audit_events", "provenanceRecordId", "rights_provenance_records");
   validateReferenceTenant(data, issues, "webhook_delivery_logs", "webhookId", "webhooks");
   validateReferenceTenant(data, issues, "gateway_audit_events", "apiKeyId", "gateway_api_keys");
   validateReferenceTenant(data, issues, "gateway_audit_events", "webhookId", "webhooks");
