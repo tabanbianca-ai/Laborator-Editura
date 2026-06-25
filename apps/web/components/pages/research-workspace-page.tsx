@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import Link from "next/link";
+import { formatLanguageLocale } from "@laborator/shared";
 import { createResearchSourceAction } from "../../lib/research-workspace-actions";
 import type {
   ResearchCollectionRecord,
@@ -220,8 +221,19 @@ function MetadataGrid({ source }: { source: ResearchSourceRecord }) {
   const rows = [
     ["Title", source.title],
     ["Author", source.author ?? "Not recorded"],
-    ["Language", source.language],
-    ["Original language", source.originalLanguage ?? "Not recorded"],
+    ["Language", formatLanguage(source.language, source.locale)],
+    [
+      "Original",
+      source.originalLanguage ? formatLanguage(source.originalLanguage, source.originalLocale) : "Not recorded"
+    ],
+    [
+      "Current manuscript",
+      source.authoringLanguage ? formatLanguage(source.authoringLanguage, source.authoringLocale) : "Not recorded"
+    ],
+    [
+      "Translation target",
+      source.targetLanguage ? formatLanguage(source.targetLanguage, source.targetLocale) : "Not recorded"
+    ],
     ["First publication year", source.firstPublicationYear?.toString() ?? "Not recorded"],
     ["Source type", source.sourceType.replace(/_/g, " ")],
     ["Citation", source.citation ?? "Citation pending"]
@@ -289,7 +301,19 @@ function CreateResearchSourceForm() {
         <Input label="Author" name="author" />
         <div className="research-form-row">
           <Input label="Language" name="language" placeholder="ro" required />
+          <Input label="Locale" name="locale" placeholder="ro-RO" />
+        </div>
+        <div className="research-form-row">
           <Input label="Original language" name="originalLanguage" placeholder="fr" />
+          <Input label="Original locale" name="originalLocale" placeholder="fr-FR" />
+        </div>
+        <div className="research-form-row">
+          <Input label="Current manuscript language" name="authoringLanguage" placeholder="ro" />
+          <Input label="Current manuscript locale" name="authoringLocale" placeholder="ro-RO" />
+        </div>
+        <div className="research-form-row">
+          <Input label="Translation target" name="targetLanguage" placeholder="en" />
+          <Input label="Target locale" name="targetLocale" placeholder="en-GB" />
         </div>
         <div className="research-form-row">
           <Input label="First publication year" name="firstPublicationYear" type="number" />
@@ -448,6 +472,10 @@ function toneForVisibility(visibility: ResearchVisibility): BadgeTone {
   }
 
   return "neutral";
+}
+
+function formatLanguage(language: string, locale?: string): string {
+  return formatLanguageLocale(language, locale);
 }
 
 function emptySearchResult(): ResearchSearchResult {
