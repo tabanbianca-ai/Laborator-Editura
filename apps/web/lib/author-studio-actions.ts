@@ -12,9 +12,13 @@ import {
 
 export async function createManuscriptAction(formData: FormData): Promise<void> {
   const result = await createAuthorManuscript({
+    authoringLanguage: readOptionalString(formData, "authoringLanguage"),
+    authoringLocale: readOptionalString(formData, "authoringLocale"),
     genre: readOptionalString(formData, "genre"),
     language: readRequiredString(formData, "language"),
     manuscriptType: readRequiredString(formData, "manuscriptType") as AuthorManuscriptType,
+    originalLanguage: readOptionalString(formData, "originalLanguage"),
+    originalLocale: readOptionalString(formData, "originalLocale"),
     outline: readOptionalString(formData, "outline"),
     sourceManuscriptId: readOptionalString(formData, "sourceManuscriptId"),
     subtitle: readOptionalString(formData, "subtitle"),
