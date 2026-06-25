@@ -119,6 +119,11 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "launch_gdpr_requests",
     "launch_secret_vault_entries",
     "launch_essentials_audit_events",
+    "rights_collaboration_agreements",
+    "rights_translation_authorizations",
+    "rights_publishing_authorizations",
+    "rights_provenance_records",
+    "rights_audit_events",
     "organization_founder_protection",
     "founder_ownership_transfers",
     "translation_memory_entries",
@@ -503,6 +508,24 @@ function sampleSnapshot() {
   );
   snapshot.export_artifacts.push(
     { id: "export-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", format: "JSON_MASTER", artifact: { formatVersion: "1.0" }, createdBy: "user-a", createdAt: "2026-01-01T00:05:00.000Z", metadata: { translatorAttribution: [{ translatorId: "user-a", translatorName: "Translator A", originalAuthorName: "Author A", originalAuthorAttributionPreserved: true, visibleInPublicationRecords: true }] } }
+  );
+  snapshot.rights_collaboration_agreements.push(
+    { id: "rights-contract-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", agreementType: "TRANSLATOR", status: "ACCEPTED", collaboratorId: "user-a", collaboratorName: "Translator A", startDate: "2026-01-01", endDate: "2026-12-31", attachedDocumentMetadata: { fileName: "translator-agreement.pdf", reference: "internal-rights-a" }, notes: "Translator collaboration agreement metadata.", createdBy: "user-a", createdAt: "2026-01-01T00:05:10.000Z", updatedAt: "2026-01-01T00:05:10.000Z" }
+  );
+  snapshot.rights_translation_authorizations.push(
+    { id: "rights-translation-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", originalAuthor: "Author A", rightsHolder: "Rights Holder A", translationAuthorized: false, authorizedLanguages: ["ro"], territories: ["EU"], validUntil: "2026-12-31", authorizationDocumentMetadata: { fileName: "translation-authorization.pdf", reference: "internal-rights-b" }, notes: "Translation authorization pending human confirmation.", createdBy: "user-a", createdAt: "2026-01-01T00:05:11.000Z", updatedAt: "2026-01-01T00:05:11.000Z" }
+  );
+  snapshot.rights_publishing_authorizations.push(
+    { id: "rights-publishing-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", publicationAuthorized: false, ebookAllowed: false, printAllowed: false, pdfAllowed: false, mobiAllowed: false, audiobookAllowed: false, videoAllowed: false, commercialDistributionAllowed: false, notes: "Publication rights pending human confirmation.", createdBy: "user-a", createdAt: "2026-01-01T00:05:12.000Z", updatedAt: "2026-01-01T00:05:12.000Z" }
+  );
+  snapshot.rights_provenance_records.push(
+    { id: "rights-provenance-a", organizationId: "org-a", projectId: "project-a", documentId: "document-a", originalTitle: "Document A Original", originalLanguage: "es", firstPublicationYear: 1860, originalEdition: "1860 edition", originalPublisher: "Original Publisher", originalSourceReference: "Chapter I", originalAuthor: "Author A", translator: "Translator A", reviewer: "Reviewer A", publisher: "Laboratorul Editurii", publicationHistory: ["Original publication", "Romanian translation preparation"], metadata: { provenancePreserved: true }, createdBy: "user-a", createdAt: "2026-01-01T00:05:13.000Z", updatedAt: "2026-01-01T00:05:13.000Z" }
+  );
+  snapshot.rights_audit_events.push(
+    { id: "rights-audit-a", organizationId: "org-a", action: "COLLABORATION_AGREEMENT_CREATED", actorId: "user-a", collaborationAgreementId: "rights-contract-a", afterState: { id: "rights-contract-a" }, humanFinalAuthorityRequired: true, aiMaySummarizeAgreements: true, aiMayDetectMissingPermissions: true, aiMayApproveAgreements: false, aiMayAuthorizeTranslations: false, aiMayAuthorizePublication: false, aiMayModifyProvenanceAutomatically: false, createdAt: "2026-01-01T00:05:10.000Z" },
+    { id: "rights-audit-b", organizationId: "org-a", action: "TRANSLATION_AUTHORIZATION_CREATED", actorId: "user-a", translationAuthorizationId: "rights-translation-a", afterState: { id: "rights-translation-a" }, humanFinalAuthorityRequired: true, aiMaySummarizeAgreements: true, aiMayDetectMissingPermissions: true, aiMayApproveAgreements: false, aiMayAuthorizeTranslations: false, aiMayAuthorizePublication: false, aiMayModifyProvenanceAutomatically: false, createdAt: "2026-01-01T00:05:11.000Z" },
+    { id: "rights-audit-c", organizationId: "org-a", action: "PUBLISHING_AUTHORIZATION_CREATED", actorId: "user-a", publishingAuthorizationId: "rights-publishing-a", afterState: { id: "rights-publishing-a" }, humanFinalAuthorityRequired: true, aiMaySummarizeAgreements: true, aiMayDetectMissingPermissions: true, aiMayApproveAgreements: false, aiMayAuthorizeTranslations: false, aiMayAuthorizePublication: false, aiMayModifyProvenanceAutomatically: false, createdAt: "2026-01-01T00:05:12.000Z" },
+    { id: "rights-audit-d", organizationId: "org-a", action: "PROVENANCE_RECORD_CREATED", actorId: "user-a", provenanceRecordId: "rights-provenance-a", afterState: { id: "rights-provenance-a" }, humanFinalAuthorityRequired: true, aiMaySummarizeAgreements: true, aiMayDetectMissingPermissions: true, aiMayApproveAgreements: false, aiMayAuthorizeTranslations: false, aiMayAuthorizePublication: false, aiMayModifyProvenanceAutomatically: false, createdAt: "2026-01-01T00:05:13.000Z" }
   );
   snapshot.foundation_audit_events.push(
     { id: "audit-a", organizationId: "org-a", actorId: "user-a", action: "CREATE", entityType: "PROJECT", entityId: "project-a", afterState: { id: "project-a" }, createdAt: "2026-01-01T00:06:00.000Z" }
