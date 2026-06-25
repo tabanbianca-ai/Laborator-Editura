@@ -63,6 +63,20 @@ export interface AudiobookPipelineState {
   voice: string;
 }
 
+export interface VideoPipelineState {
+  exportFormat: "MP4";
+  exportStatus: "NOT_READY" | "READY_FOR_EXPORT";
+  generateHref?: string;
+  officialLockedReason?: string;
+  previewAvailable: boolean;
+  previewHref?: string;
+  progressPercent: number;
+  subtitleLanguageLocale: string;
+  thumbnailMetadata: string;
+  videoStatus: "PREVIEW_AVAILABLE" | "LOCKED" | "READY_FOR_GENERATION";
+  voiceOverSource: "AI Voice" | "Human Narration" | "Existing Audiobook";
+}
+
 export interface EditorialPipelineData {
   aiRecommendation: string;
   audiobook: AudiobookPipelineState;
@@ -79,6 +93,7 @@ export interface EditorialPipelineData {
   steps: EditorialPipelineStep[];
   translations: WorkspaceTranslationRecord[];
   translationsError: string | null;
+  video: VideoPipelineState;
   workflow: ReviewWorkflowState | null;
   workflowError: string | null;
 }
@@ -155,6 +170,13 @@ export async function getEditorialPipelineData(input: {
       steps,
       translations: [],
       translationsError: null,
+      video: buildVideoState({
+        approvedForOfficialVideo: false,
+        officialAudiobookAvailable: false,
+        project,
+        rightsWarnings: [],
+        selectedDocument
+      }),
       workflow: null,
       workflowError: null
     };
@@ -206,6 +228,21 @@ export async function getEditorialPipelineData(input: {
     steps,
     translations: translationsResult.data ?? [],
     translationsError: translationsResult.error,
+    video: buildVideoState({
+      approvedForOfficialVideo: isOfficialVideoAvailable({
+        rightsWarnings: rightsResult.data ?? [],
+        selectedDocument,
+        workflow: workflowResult.data
+      }),
+      officialAudiobookAvailable: isOfficialAudiobookAvailable({
+        rightsWarnings: rightsResult.data ?? [],
+        selectedDocument,
+        workflow: workflowResult.data
+      }),
+      project,
+      rightsWarnings: rightsResult.data ?? [],
+      selectedDocument
+    }),
     workflow: workflowResult.data,
     workflowError: workflowResult.error
   };
@@ -241,6 +278,11 @@ function buildPipelineSteps(input: {
     warning.code === "PUBLICATION_NOT_AUTHORIZED"
   );
   const officialAudiobookAvailable = isOfficialAudiobookAvailable({
+    rightsWarnings,
+    selectedDocument,
+    workflow
+  });
+  const officialVideoAvailable = isOfficialVideoAvailable({
     rightsWarnings,
     selectedDocument,
     workflow
@@ -404,6 +446,24 @@ function buildPipelineSteps(input: {
               ? "Publishing rights are required before official audiobook generation."
               : "Final approval is required before official audiobook generation."
           ]
+    },
+    {
+      completionPercent: officialVideoAvailable ? 25 : 0,
+      continueHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "video",
+      locked: !officialVideoAvailable,
+      openHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Video Production", "Subtitles", "Voice-over", "Publishing Workspace"],
+      status: !officialVideoAvailable ? "LOCKED" : "READY",
+      summary: "Optional official video production uses final approved manuscript text, optional official audiobook narration, subtitles, thumbnail metadata, and MP4 export metadata.",
+      title: "Video (optional)",
+      warnings: officialVideoAvailable
+        ? []
+        : [
+            publishingRightsMissing
+              ? "Publishing rights are required before official video generation."
+              : "Final approval is required before official video generation."
+          ]
     }
   ];
 }
@@ -419,7 +479,7 @@ function buildAiRecommendation(steps: EditorialPipelineStep[]): string {
     return `Next action: resolve ${next.title.toLowerCase()} warnings before moving forward.`;
   }
 
-  return `Next action: continue with ${next.title}. AI may summarize progress or detect blockers, but cannot approve or publish.`;
+  return `Next action: continue with ${next.title}. AI may summarize progress, suggest media timing, or detect blockers, but cannot approve or publish.`;
 }
 
 function buildAudiobookState(input: {
@@ -462,6 +522,57 @@ function buildAudiobookState(input: {
   };
 }
 
+function buildVideoState(input: {
+  approvedForOfficialVideo: boolean;
+  officialAudiobookAvailable: boolean;
+  project: ProjectRecord | null;
+  rightsWarnings: RightsWarning[];
+  selectedDocument: DocumentRecord | null;
+}): VideoPipelineState {
+  const {
+    approvedForOfficialVideo,
+    officialAudiobookAvailable,
+    project,
+    rightsWarnings,
+    selectedDocument
+  } = input;
+  const subtitleLanguageLocale = selectedDocument
+    ? formatLanguageLocale(
+        selectedDocument.targetLanguage ?? selectedDocument.authoringLanguage ?? selectedDocument.sourceLanguage,
+        selectedDocument.targetLocale ?? selectedDocument.authoringLocale ?? selectedDocument.originalLocale
+      )
+    : project
+      ? formatLanguageLocale(project.targetLanguages[0] ?? project.sourceLanguage, project.targetLocales?.[0] ?? project.originalLocale)
+      : "Not selected";
+  const publicationRightsWarning = rightsWarnings.find((warning) =>
+    warning.code === "PUBLICATION_AUTHORIZATION_MISSING" ||
+    warning.code === "PUBLICATION_NOT_AUTHORIZED"
+  );
+  const previewHref = selectedDocument
+    ? `/translation?documentId=${encodeURIComponent(selectedDocument.id)}`
+    : project
+      ? "/author-studio"
+      : undefined;
+
+  return {
+    exportFormat: "MP4",
+    exportStatus: approvedForOfficialVideo ? "READY_FOR_EXPORT" : "NOT_READY",
+    generateHref: approvedForOfficialVideo && selectedDocument
+      ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}`
+      : undefined,
+    officialLockedReason:
+      publicationRightsWarning?.message ??
+      "Official video requires final approved text and publishing rights.",
+    previewAvailable: Boolean(previewHref),
+    previewHref,
+    progressPercent: approvedForOfficialVideo ? 25 : 0,
+    subtitleLanguageLocale,
+    thumbnailMetadata: "Thumbnail and cover metadata pending",
+    videoStatus: approvedForOfficialVideo ? "READY_FOR_GENERATION" : selectedDocument ? "PREVIEW_AVAILABLE" : "LOCKED",
+    voiceOverSource: officialAudiobookAvailable ? "Existing Audiobook" : "AI Voice"
+  };
+}
+
 function findNextStep(steps: EditorialPipelineStep[]): EditorialPipelineStep | null {
   return steps.find((step) => step.status !== "COMPLETED" && !step.locked) ?? null;
 }
@@ -481,6 +592,14 @@ function isOfficialAudiobookAvailable(input: {
     selectedDocument?.status === "EXPORTED";
 
   return finalTextApproved && !publicationBlocked;
+}
+
+function isOfficialVideoAvailable(input: {
+  rightsWarnings: RightsWarning[];
+  selectedDocument: DocumentRecord | null;
+  workflow: ReviewWorkflowState | null;
+}): boolean {
+  return isOfficialAudiobookAvailable(input);
 }
 
 function buildLanguageWarnings(project: ProjectRecord, document: DocumentRecord): string[] {
