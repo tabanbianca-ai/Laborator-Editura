@@ -7,9 +7,12 @@ export interface ProjectRecord {
   domain?: string;
   id: string;
   name: string;
+  originalLanguage?: string;
+  originalLocale?: string;
   sourceLanguage: string;
   status: "ACTIVE" | "ARCHIVED";
   targetLanguages: string[];
+  targetLocales?: string[];
   updatedAt: string;
 }
 
@@ -18,10 +21,15 @@ export interface DocumentRecord {
   createdBy: string;
   documentType: string;
   id: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
   projectId: string;
   sourceLanguage: string;
   status: "DRAFT" | "IN_TRANSLATION" | "IN_REVIEW" | "APPROVED" | "EXPORTED";
   targetLanguage: string;
+  targetLocale?: string;
   title: string;
   updatedAt: string;
 }
