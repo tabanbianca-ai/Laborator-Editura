@@ -64,3 +64,34 @@ test("export public portal commerce and rights provenance carry language metadat
     assert.match(publicTypes + commerceTypes + rightsTypes, new RegExp(field));
   }
 });
+
+test("research and library preserve language locale metadata without translation allowlist", () => {
+  const researchService = readModule("research", "research.service.ts");
+  const researchTypes = readModule("research", "research.types.ts");
+  const libraryService = readModule("library", "library.service.ts");
+  const libraryTypes = readModule("library", "library.types.ts");
+
+  for (const field of [
+    "originalLanguage",
+    "originalLocale",
+    "authoringLanguage",
+    "authoringLocale",
+    "targetLanguage",
+    "targetLocale"
+  ]) {
+    assert.match(researchTypes + libraryTypes, new RegExp(field));
+    assert.match(researchService + libraryService, new RegExp(field));
+  }
+
+  assert.match(researchService + libraryService, /validateIsoCompatibleLanguageTag/);
+  assert.doesNotMatch(researchService + libraryService, /validateTranslationTargetV1/);
+});
+
+test("workspace preferences expose platformLanguage separately from editorial language metadata", () => {
+  const service = readModule("workspace", "workspace.service.ts");
+  const types = readModule("workspace", "workspace.types.ts");
+
+  assert.match(service + types, /platformLanguage/);
+  assert.match(service, /normalizePlatformLanguage/);
+  assert.match(service, /validateIsoCompatibleLanguageTag/);
+});
