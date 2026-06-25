@@ -41,7 +41,8 @@ export class PublicPortalService {
         ...input.metadata,
         authors: input.metadata.authors ?? [],
         keywords: input.metadata.keywords ?? [],
-        originalSourceReferences: input.metadata.originalSourceReferences ?? []
+        originalSourceReferences: input.metadata.originalSourceReferences ?? [],
+        targetLanguage: input.metadata.targetLanguage ?? input.metadata.language
       },
       readerAccess: this.buildReaderAccess(input.readerAccess),
       rights: input.rights ?? {},
@@ -117,6 +118,7 @@ export class PublicPortalService {
       releaseDate: input.releaseDate,
       editionStatus: input.editionStatus,
       languageVariants: input.languageVariants ?? [],
+      localeVariants: input.localeVariants ?? [],
       printOnDemandMetadata: input.printOnDemandMetadata ?? {},
       paymentIntegration: "NOT_CONFIGURED",
       fileHostingIntegration: "NOT_CONFIGURED",
