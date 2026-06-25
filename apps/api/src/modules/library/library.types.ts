@@ -38,6 +38,13 @@ export interface LibraryItem {
   itemType: LibraryItemType;
   title: string;
   language?: string;
+  locale?: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   sourceReference?: string;
   favorite: boolean;
   savedAt: string;
@@ -131,6 +138,13 @@ export interface AddLibraryItemInput {
   itemType: LibraryItemType;
   title: string;
   language?: string;
+  locale?: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   sourceReference?: string;
   metadata?: Record<string, unknown>;
 }
