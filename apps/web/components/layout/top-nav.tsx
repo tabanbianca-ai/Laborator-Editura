@@ -1,6 +1,6 @@
 "use client";
 
-import { PRODUCT_NAME } from "@laborator/shared";
+import { formatLanguageLocale, PRODUCT_NAME } from "@laborator/shared";
 
 import { Badge, Button } from "../ui";
 import type { WorkspaceNavigationItem, WorkspacePreferences } from "../../lib/workspace-types";
@@ -15,7 +15,7 @@ interface TopNavProps {
 
 export function TopNav({ currentPath, navigation, preferences }: TopNavProps) {
   const navigationItems = toNavigationItems(navigation);
-  const language = preferences?.language?.toUpperCase() ?? "RO";
+  const language = formatLanguageLocale(preferences?.platformLanguage ?? preferences?.language ?? "ro");
 
   return (
     <header className="top-nav">
