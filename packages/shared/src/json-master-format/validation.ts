@@ -99,6 +99,9 @@ function validateProject(value: unknown, issues: JsonMasterValidationIssue[]): v
   if (!Array.isArray(value.targetLanguages)) {
     addIssue(issues, "$.project.targetLanguages", "targetLanguages must be an array.");
   }
+
+  requireOptionalString(value, "originalLanguage", "$.project.originalLanguage", issues);
+  requireOptionalString(value, "originalLocale", "$.project.originalLocale", issues);
 }
 
 function validateDocuments(value: unknown, issues: JsonMasterValidationIssue[]): void {
@@ -117,6 +120,17 @@ function validateDocuments(value: unknown, issues: JsonMasterValidationIssue[]):
 
     for (const field of DOCUMENT_STRING_FIELDS) {
       requireNonEmptyString(document, field, `${path}.${field}`, issues);
+    }
+
+    for (const field of [
+      "originalLanguage",
+      "originalLocale",
+      "authoringLanguage",
+      "authoringLocale",
+      "targetLanguage",
+      "targetLocale"
+    ]) {
+      requireOptionalString(document, field, `${path}.${field}`, issues);
     }
 
     if (!Array.isArray(document.segments)) {
@@ -176,6 +190,9 @@ function validateTranslation(
   for (const field of TRANSLATION_STRING_FIELDS) {
     requireString(value, field, `${path}.${field}`, issues);
   }
+
+  requireOptionalString(value, "targetLanguage", `${path}.targetLanguage`, issues);
+  requireOptionalString(value, "targetLocale", `${path}.targetLocale`, issues);
 
   const provenance = value.provenance;
 
@@ -418,6 +435,17 @@ function requireNonEmptyString(
 ): void {
   if (typeof value[key] !== "string" || String(value[key]).length === 0) {
     addIssue(issues, path, "field must be a non-empty string.");
+  }
+}
+
+function requireOptionalString(
+  value: Record<string, unknown>,
+  key: string,
+  path: string,
+  issues: JsonMasterValidationIssue[]
+): void {
+  if (value[key] !== undefined && typeof value[key] !== "string") {
+    addIssue(issues, path, `${key} must be a string when present.`);
   }
 }
 
