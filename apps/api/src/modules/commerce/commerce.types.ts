@@ -42,6 +42,11 @@ export interface CommerceEditionMetadata {
   editionNumber?: string;
   originalEditionReference?: string;
   originalLanguage: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   firstPublicationYear?: number;
 }
 
@@ -94,6 +99,8 @@ export interface CommerceEdition {
   publicCatalogItemId?: string;
   title: string;
   language: string;
+  targetLanguage: string;
+  targetLocale?: string;
   editionType: CommerceEditionType;
   metadata: CommerceEditionMetadata;
   printProfile: CommercePrintProfile;
