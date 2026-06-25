@@ -35,6 +35,10 @@ export interface AuthorManuscript {
   humanEditorialApprovalRequired: true;
   id: string;
   language: string;
+  originalLanguage: string;
+  originalLocale?: string;
+  authoringLanguage: string;
+  authoringLocale?: string;
   manuscriptType: AuthorManuscriptType;
   organizationId: string;
   outline?: string;
@@ -93,6 +97,10 @@ export interface AuthorDraft {
 export interface CreateAuthorManuscriptInput {
   genre?: string;
   language: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
   manuscriptType: AuthorManuscriptType;
   outline?: string;
   sourceManuscriptId?: string;
