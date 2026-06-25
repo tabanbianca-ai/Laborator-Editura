@@ -39,6 +39,8 @@ export class CommerceService {
       publicCatalogItemId: input.publicCatalogItemId,
       title: input.title,
       language: input.language,
+      targetLanguage: input.metadata.targetLanguage ?? input.language,
+      targetLocale: input.metadata.targetLocale,
       editionType: input.editionType,
       metadata: this.buildEditionMetadata(input.metadata),
       printProfile,
@@ -242,6 +244,11 @@ export class CommerceService {
       editionNumber: metadata.editionNumber,
       originalEditionReference: metadata.originalEditionReference,
       originalLanguage: metadata.originalLanguage,
+      originalLocale: metadata.originalLocale,
+      authoringLanguage: metadata.authoringLanguage,
+      authoringLocale: metadata.authoringLocale,
+      targetLanguage: metadata.targetLanguage,
+      targetLocale: metadata.targetLocale,
       firstPublicationYear: metadata.firstPublicationYear
     };
   }
