@@ -41,7 +41,7 @@ export function EditorialPipelineIndexPage({
         <Card>
           <div className="metric-card">
             <span>Production mode</span>
-            <strong>10</strong>
+            <strong>12</strong>
             <Badge tone="success">Steps</Badge>
           </div>
         </Card>
@@ -125,7 +125,7 @@ export function EditorialPipelineProjectPage({
         <div className="section-heading">
           <div>
             <p className="section-kicker">Guided workflow</p>
-            <h2>Import → Analysis → Editing → Review → Validation → Layout → Export → Approval → Publication</h2>
+            <h2>Import → Analysis → Editing → Translation → Review → Validation → Layout → Export → Approval → Publication → Audiobook</h2>
           </div>
           <Badge tone={data.nextStep ? toneForStatus(data.nextStep.status) : "success"}>
             {data.nextStep?.title ?? "Complete"}
@@ -143,10 +143,11 @@ export function EditorialPipelineProjectPage({
             ))}
           </div>
           <aside className="pipeline-side-panel" aria-label="Pipeline guidance">
+            <AudiobookPanel data={data} />
             <Card title="AI progress summary">
               <p className="pipeline-guidance">{data.aiRecommendation}</p>
               <p className="review-human-authority">
-                AI may summarize progress, suggest next actions, and detect blockers. It cannot approve workflow, publish, or grant rights.
+                AI may summarize progress, suggest next actions, generate preview narration, suggest pronunciation, and detect blockers. It cannot approve workflow, publish, approve audiobook, or grant rights.
               </p>
             </Card>
             <Card title="Warnings">
@@ -167,6 +168,120 @@ export function EditorialPipelineProjectPage({
         </div>
       </section>
     </main>
+  );
+}
+
+function AudiobookPanel({ data }: { data: EditorialPipelineData }) {
+  return (
+    <Card title="Audiobook production">
+      <div className="audiobook-status-grid">
+        <div>
+          <span>Preview Audio</span>
+          <strong>Available</strong>
+          <Badge tone="info">Draft only</Badge>
+        </div>
+        <div>
+          <span>Audiobook Status</span>
+          <strong>{data.audiobook.audiobookStatus.replace(/_/g, " ")}</strong>
+          <Badge tone={data.audiobook.audiobookStatus === "READY_FOR_GENERATION" ? "success" : "neutral"}>
+            Official
+          </Badge>
+        </div>
+        <div>
+          <span>Narrator</span>
+          <strong>{data.audiobook.narrator}</strong>
+        </div>
+        <div>
+          <span>Voice</span>
+          <strong>{data.audiobook.voice}</strong>
+        </div>
+        <div>
+          <span>Language</span>
+          <strong>{data.audiobook.language}</strong>
+        </div>
+        <div>
+          <span>Export</span>
+          <strong>{data.audiobook.exportFormats.join(", ")}</strong>
+        </div>
+      </div>
+
+      <div className="audiobook-progress">
+        <div>
+          <span>Progress</span>
+          <strong>{data.audiobook.progressPercent}%</strong>
+        </div>
+        <div className="pipeline-progress" aria-label={`Audiobook progress ${data.audiobook.progressPercent}%`}>
+          <span style={{ width: `${data.audiobook.progressPercent}%` }} />
+        </div>
+      </div>
+
+      <div className="audiobook-preview-controls" aria-label="Preview Audio draft controls">
+        <label className="ui-input-field">
+          <span>Voice selection</span>
+          <select className="ui-input ui-select" defaultValue="draft-studio-voice">
+            <option value="draft-studio-voice">Draft studio voice</option>
+            <option value="warm-editorial">Warm editorial</option>
+            <option value="clear-neutral">Clear neutral</option>
+          </select>
+        </label>
+        <label className="ui-input-field">
+          <span>Locale / accent selection</span>
+          <select className="ui-input ui-select" defaultValue={data.audiobook.language}>
+            <option value={data.audiobook.language}>{data.audiobook.language}</option>
+            <option value="English (en-GB)">English (en-GB)</option>
+            <option value="Romanian (ro-RO)">Romanian (ro-RO)</option>
+            <option value="French (fr-FR)">French (fr-FR)</option>
+          </select>
+        </label>
+        <label className="ui-input-field">
+          <span>Playback speed</span>
+          <select className="ui-input ui-select" defaultValue="1">
+            <option value="0.85">0.85x</option>
+            <option value="1">1x</option>
+            <option value="1.15">1.15x</option>
+          </select>
+        </label>
+      </div>
+
+      <p className="pipeline-guidance">
+        Preview Audio can read selected text, current section, current chapter, or the current manuscript draft.
+        It can be regenerated after edits and is never published.
+      </p>
+
+      <div className="pipeline-step-actions">
+        {data.audiobook.previewHref ? (
+          <Link className="ui-button ui-button-secondary ui-button-sm" href={data.audiobook.previewHref}>
+            Preview Audio
+          </Link>
+        ) : (
+          <button className="ui-button ui-button-secondary ui-button-sm" disabled type="button">
+            Preview Audio
+          </button>
+        )}
+        {data.audiobook.previewHref ? (
+          <Link className="ui-button ui-button-secondary ui-button-sm" href={data.audiobook.previewHref}>
+            Regenerate Preview
+          </Link>
+        ) : (
+          <button className="ui-button ui-button-secondary ui-button-sm" disabled type="button">
+            Regenerate Preview
+          </button>
+        )}
+        {data.audiobook.generateHref ? (
+          <Link className="ui-button ui-button-primary ui-button-sm" href={data.audiobook.generateHref}>
+            Generate Audiobook
+          </Link>
+        ) : (
+          <button className="ui-button ui-button-primary ui-button-sm" disabled type="button">
+            Generate Audiobook
+          </button>
+        )}
+      </div>
+
+      {data.audiobook.generateHref ? null : (
+        <p className="pipeline-guidance">{data.audiobook.officialLockedReason}</p>
+      )}
+    </Card>
   );
 }
 
