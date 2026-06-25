@@ -21,7 +21,12 @@ export interface Document {
   projectId: string;
   title: string;
   sourceLanguage: string;
+  originalLanguage: string;
+  originalLocale?: string;
+  authoringLanguage: string;
+  authoringLocale?: string;
   targetLanguage: string;
+  targetLocale?: string;
   documentType: string;
   status: "DRAFT" | "IN_TRANSLATION" | "IN_REVIEW" | "APPROVED" | "EXPORTED";
   createdBy: string;
@@ -39,7 +44,12 @@ export interface CreateDocumentInput {
   projectId: string;
   title: string;
   sourceLanguage: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
   targetLanguage: string;
+  targetLocale?: string;
   documentType?: string;
   translatorId?: string;
   translatorName?: string;
