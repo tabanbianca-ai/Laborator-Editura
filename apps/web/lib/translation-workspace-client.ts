@@ -14,9 +14,11 @@ export interface WorkspaceSegmentRecord {
   order: number;
   projectId: string;
   sourceLanguage: string;
+  sourceLocale?: string;
   sourceText: string;
   status: "APPROVED" | "IN_REVIEW" | "IN_TRANSLATION" | "NEW" | "TRANSLATED";
   targetLanguage: string;
+  targetLocale?: string;
   updatedAt: string;
 }
 
@@ -38,9 +40,11 @@ export interface WorkspaceTranslationRecord {
   segmentId: string;
   semanticReportId?: string;
   sourceLanguage: string;
+  sourceLocale?: string;
   sourceText: string;
   status: "APPROVED" | "DRAFT" | "SUBMITTED" | "VALIDATED";
   targetLanguage: string;
+  targetLocale?: string;
   targetText: string;
   translatorId?: string;
   translatorName?: string;
