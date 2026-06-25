@@ -149,7 +149,10 @@ export class ExportService {
         id: project.id,
         name: project.name,
         sourceLanguage: project.sourceLanguage,
+        originalLanguage: project.originalLanguage ?? project.sourceLanguage,
+        originalLocale: project.originalLocale,
         targetLanguages: project.targetLanguages,
+        targetLocales: project.targetLocales,
         domain: project.domain,
         status: this.mapProjectStatus(project.status),
         createdAt: project.createdAt,
@@ -161,6 +164,12 @@ export class ExportService {
           projectId: document.projectId,
           title: document.title,
           sourceLanguage: document.sourceLanguage,
+          originalLanguage: document.originalLanguage ?? document.sourceLanguage,
+          originalLocale: document.originalLocale,
+          authoringLanguage: document.authoringLanguage ?? document.sourceLanguage,
+          authoringLocale: document.authoringLocale,
+          targetLanguage: document.targetLanguage,
+          targetLocale: document.targetLocale,
           documentType: this.mapDocumentType(document.documentType),
           metadata: this.buildDocumentExportMetadata(document, translations),
           segments: segments.map((segment) => ({
@@ -174,6 +183,8 @@ export class ExportService {
               .map((translation) => ({
                 id: translation.id,
                 language: translation.targetLanguage,
+                targetLanguage: translation.targetLanguage,
+                targetLocale: translation.targetLocale,
                 text: translation.targetText,
                 status: this.mapTranslationStatus(translation.status),
                 translatorId: translation.translatorId ?? translation.createdBy,
@@ -246,7 +257,13 @@ export class ExportService {
   ): Record<string, unknown> | undefined {
     const translatorAttribution = this.collectTranslatorAttribution(document, translations);
     const metadata: Record<string, unknown> = {
-      ...(document.metadata ?? {})
+      ...(document.metadata ?? {}),
+      originalLanguage: document.originalLanguage ?? document.sourceLanguage,
+      originalLocale: document.originalLocale,
+      authoringLanguage: document.authoringLanguage ?? document.sourceLanguage,
+      authoringLocale: document.authoringLocale,
+      targetLanguage: document.targetLanguage,
+      targetLocale: document.targetLocale
     };
 
     if (translatorAttribution.length > 0) {
