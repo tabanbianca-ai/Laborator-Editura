@@ -61,6 +61,12 @@ export interface PublicCatalogMetadata {
     originalAuthorAttributionPreserved: true;
   }>;
   language: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   edition?: string;
   keywords: string[];
   originalSourceReferences: string[];
@@ -111,6 +117,7 @@ export interface PublicDistributionRecord {
   releaseDate?: string;
   editionStatus?: string;
   languageVariants: string[];
+  localeVariants?: string[];
   printOnDemandMetadata: Record<string, string>;
   paymentIntegration: "NOT_CONFIGURED";
   fileHostingIntegration: "NOT_CONFIGURED";
@@ -163,6 +170,7 @@ export interface CreatePublicDistributionRecordInput {
   releaseDate?: string;
   editionStatus?: string;
   languageVariants?: string[];
+  localeVariants?: string[];
   printOnDemandMetadata?: Record<string, string>;
   metadata?: Record<string, unknown>;
 }
