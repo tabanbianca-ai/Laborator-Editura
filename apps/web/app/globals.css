@@ -1635,6 +1635,110 @@ textarea {
   gap: 10px;
 }
 
+.library-workspace-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(240px, 320px) minmax(0, 1fr) minmax(280px, 380px);
+}
+
+.library-workspace-grid-wide {
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+}
+
+.library-panel-card {
+  min-width: 0;
+}
+
+.library-item-list,
+.library-reader-form,
+.library-reading-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.library-item-link {
+  border: 1px solid #e1e7e2;
+  border-radius: 8px;
+  color: #26312e;
+  display: grid;
+  gap: 7px;
+  padding: 10px;
+}
+
+.library-item-link strong,
+.library-item-heading strong {
+  color: #17211f;
+  font-size: 0.94rem;
+}
+
+.library-item-link span,
+.library-item-heading span {
+  color: #64716b;
+  font-size: 0.84rem;
+}
+
+.library-item-link:hover,
+.library-item-link:focus-visible {
+  border-color: #1f6f62;
+  outline: 2px solid #cde7df;
+  outline-offset: 1px;
+}
+
+.library-item-link-active {
+  background: #f3faf4;
+  border-color: #1f6f62;
+}
+
+.library-badge-row,
+.library-action-form,
+.library-form-row,
+.library-current-position {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.library-form-row .ui-input-field,
+.library-current-position .reference-item {
+  flex: 1 1 150px;
+}
+
+.library-item-heading {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.library-item-heading div {
+  display: grid;
+  gap: 4px;
+}
+
+.library-privacy-note {
+  color: #64716b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.library-reading-panel h2 {
+  color: #17211f;
+  font-size: 1.12rem;
+  margin: 0;
+}
+
+.library-reading-panel p {
+  color: #3f4d49;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.library-textarea {
+  line-height: 1.5;
+  resize: vertical;
+}
+
 .editor-mobile-tabs {
   display: none;
 }
@@ -1749,7 +1853,9 @@ textarea {
   .publishing-workspace-grid-wide,
   .research-workspace-grid,
   .research-workspace-grid-wide,
-  .research-search-form {
+  .research-search-form,
+  .library-workspace-grid,
+  .library-workspace-grid-wide {
     grid-template-columns: 1fr;
   }
 
