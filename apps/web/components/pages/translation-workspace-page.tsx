@@ -157,8 +157,9 @@ function TranslationEditorPanel({
       <Card title="Source text">
         <p className="source-text-block">{segment.sourceText}</p>
         <div className="translation-language-row">
-          <Badge tone="neutral">{segment.sourceLanguage.toUpperCase()}</Badge>
-          <span>{segment.targetLanguage.toUpperCase()}</span>
+          <Badge tone="neutral">{formatLanguage(segment.sourceLanguage, segment.sourceLocale)}</Badge>
+          <span>{formatLanguage(segment.targetLanguage, segment.targetLocale)}</span>
+          <Badge tone="info">v1.0</Badge>
         </div>
       </Card>
 
@@ -220,6 +221,10 @@ function AttributionBlock({
       <div>
         <dt>Translator</dt>
         <dd>{latestTranslation?.translatorName ?? "Not recorded"}</dd>
+      </div>
+      <div>
+        <dt>Target language</dt>
+        <dd>{latestTranslation ? formatLanguage(latestTranslation.targetLanguage, latestTranslation.targetLocale) : "Pending"}</dd>
       </div>
       <div>
         <dt>Original author</dt>
@@ -398,4 +403,8 @@ function truncate(value: string, maxLength: number): string {
   }
 
   return `${value.slice(0, maxLength - 1)}...`;
+}
+
+function formatLanguage(language: string, locale?: string): string {
+  return locale ? `${language.toUpperCase()} · ${locale}` : language.toUpperCase();
 }
