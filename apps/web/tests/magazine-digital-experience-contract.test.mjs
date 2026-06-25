@@ -55,7 +55,7 @@ test("magazine UI covers flipbook article audio video rights and human authority
   assert.match(page, /Generate Official Audio/);
   assert.match(page, /Generate Preview Video/);
   assert.match(page, /Generate Official Video/);
-  assert.match(page, /MP4/);
+  assert.match(page, /article\.video\.exportFormat/);
   assert.match(page, /Thumbnail/);
   assert.match(page, /Voice-over/);
   assert.match(page, /never published/);
