@@ -93,6 +93,11 @@ export interface ProvenanceRecord {
   documentId?: string;
   originalTitle?: string;
   originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   firstPublicationYear?: number;
   originalEdition?: string;
   originalPublisher?: string;
@@ -174,6 +179,11 @@ export interface CreateProvenanceRecordInput {
   documentId?: string;
   originalTitle?: string;
   originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   firstPublicationYear?: number;
   originalEdition?: string;
   originalPublisher?: string;
