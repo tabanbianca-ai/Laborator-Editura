@@ -1,4 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  normalizeLanguageLocale,
+  validateIsoCompatibleLanguageTag,
+  type LanguageLocaleMetadata
+} from "@laborator/shared";
 import { randomUUID } from "node:crypto";
 import { DatabaseResearchRepository } from "./research.repository";
 import {
@@ -32,6 +37,19 @@ export class ResearchService {
       throw new BadRequestException("title, language, and sourceType are required.");
     }
 
+    const sourceLanguage = this.normalizeIsoLanguage(input.language, input.locale);
+    const originalLanguage = this.normalizeOptionalIsoLanguage(
+      input.originalLanguage,
+      input.originalLocale
+    );
+    const authoringLanguage = this.normalizeOptionalIsoLanguage(
+      input.authoringLanguage,
+      input.authoringLocale
+    );
+    const targetLanguage = this.normalizeOptionalIsoLanguage(
+      input.targetLanguage,
+      input.targetLocale
+    );
     const now = new Date().toISOString();
     const source: ResearchSource = {
       id: randomUUID(),
@@ -40,8 +58,14 @@ export class ResearchService {
       subtitle: input.subtitle,
       author: input.author,
       originalAuthor: input.originalAuthor,
-      language: input.language,
-      originalLanguage: input.originalLanguage,
+      language: sourceLanguage.language,
+      locale: sourceLanguage.locale,
+      originalLanguage: originalLanguage?.language,
+      originalLocale: originalLanguage?.locale,
+      authoringLanguage: authoringLanguage?.language,
+      authoringLocale: authoringLanguage?.locale,
+      targetLanguage: targetLanguage?.language,
+      targetLocale: targetLanguage?.locale,
       firstPublicationYear: input.firstPublicationYear,
       sourceType: input.sourceType,
       publisher: input.publisher,
@@ -408,7 +432,17 @@ export class ResearchService {
       source.notes
     ) &&
       this.matchesOptional(query.author, source.author, source.originalAuthor) &&
-      this.matchesOptional(query.language, source.language, source.originalLanguage) &&
+      this.matchesOptional(
+        query.language,
+        source.language,
+        source.locale,
+        source.originalLanguage,
+        source.originalLocale,
+        source.authoringLanguage,
+        source.authoringLocale,
+        source.targetLanguage,
+        source.targetLocale
+      ) &&
       this.matchesOptional(query.sourceType, source.sourceType) &&
       this.matchesTags(tags, source.tags) &&
       this.matchesProject(query.projectId, source.ecosystemReferences);
@@ -535,6 +569,27 @@ export class ResearchService {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("Authenticated research context is required.");
     }
+  }
+
+  private normalizeIsoLanguage(language: string, locale?: string): LanguageLocaleMetadata {
+    const validation = validateIsoCompatibleLanguageTag(language);
+
+    if (!validation.valid) {
+      throw new BadRequestException(validation.reason ?? "Language must be ISO-compatible.");
+    }
+
+    return normalizeLanguageLocale(language, locale);
+  }
+
+  private normalizeOptionalIsoLanguage(
+    language: string | undefined,
+    locale?: string
+  ): LanguageLocaleMetadata | undefined {
+    if (!language) {
+      return undefined;
+    }
+
+    return this.normalizeIsoLanguage(language, locale);
   }
 
   private async audit(
