@@ -67,7 +67,7 @@ export function normalizeLanguageLocale(
   explicitLocale?: string
 ): LanguageLocaleMetadata {
   const normalizedLanguageTag = normalizeLanguageTag(languageOrLocale);
-  const language = normalizedLanguageTag.split("-")[0];
+  const [language = ""] = normalizedLanguageTag.split("-");
   const locale = explicitLocale ? normalizeLanguageTag(explicitLocale) : inferLocale(normalizedLanguageTag);
 
   return {
@@ -120,7 +120,9 @@ export function validateTranslationTargetV1(input: {
     };
   }
 
-  if (normalized.locale && !policy.locales.includes(normalized.locale)) {
+  const supportedLocales: readonly string[] = policy.locales;
+
+  if (normalized.locale && !supportedLocales.includes(normalized.locale)) {
     return {
       ...normalized,
       valid: false,
@@ -174,7 +176,9 @@ function normalizeLanguageTag(value: string): string {
         return part.toUpperCase();
       }
 
-      return `${part[0].toUpperCase()}${part.slice(1).toLowerCase()}`;
+      const firstCharacter = part[0] ?? "";
+
+      return `${firstCharacter.toUpperCase()}${part.slice(1).toLowerCase()}`;
     })
     .join("-");
 }
