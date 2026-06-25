@@ -35,8 +35,14 @@ export function AuthorStudioNewPage({ error }: AuthorStudioNewPageProps) {
           <Input label="Subtitle" name="subtitle" />
           <div className="manuscript-form-grid">
             <Input defaultValue="ro" label="Language" name="language" required />
+            <Input label="Authoring locale" name="authoringLocale" placeholder="ro-RO, ja-JP" />
             <Select label="Type" name="manuscriptType" options={manuscriptTypeOptions} />
             <Input label="Genre" name="genre" />
+          </div>
+          <div className="manuscript-form-grid">
+            <Input label="Original language" name="originalLanguage" placeholder="fr" />
+            <Input label="Original locale" name="originalLocale" placeholder="fr-FR" />
+            <Input label="Authoring language" name="authoringLanguage" placeholder="Defaults to language" />
           </div>
           <Input label="Source manuscript ID" name="sourceManuscriptId" />
           <Input label="Translator name" name="translatorName" />
