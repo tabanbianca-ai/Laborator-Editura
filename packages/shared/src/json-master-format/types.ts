@@ -82,7 +82,10 @@ export interface JsonMasterProject {
   name: string;
   description?: string;
   sourceLanguage: string;
+  originalLanguage?: string;
+  originalLocale?: string;
   targetLanguages: string[];
+  targetLocales?: string[];
   domain?: string;
   status: JsonMasterStatus;
   createdAt: string;
@@ -95,6 +98,12 @@ export interface JsonMasterDocument {
   projectId: string;
   title: string;
   sourceLanguage: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   documentType?:
     | "book"
     | "article"
@@ -139,6 +148,8 @@ export interface JsonMasterSourceSegment {
 export interface JsonMasterTranslation {
   id: string;
   language: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   text: string;
   status: TranslationStatus;
   translatorId?: string;
