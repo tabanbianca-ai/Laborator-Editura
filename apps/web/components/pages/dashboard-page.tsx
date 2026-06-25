@@ -26,6 +26,7 @@ const mainLaunchRoutes = [
   { href: "/translation", label: "Translation" },
   { href: "/review", label: "Review" },
   { href: "/publishing", label: "Publishing" },
+  { href: "/magazine", label: "Magazine" },
   { href: "/research", label: "Research" },
   { href: "/library", label: "Library" },
   { href: "/marketplace", label: "Marketplace" },
