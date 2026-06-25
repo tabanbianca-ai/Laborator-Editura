@@ -1,4 +1,5 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { normalizeLanguageLocale, validateIsoCompatibleLanguageTag } from "@laborator/shared";
 import { randomUUID } from "node:crypto";
 import { DatabaseAuthorStudioRepository } from "./author-studio.repository";
 import {
@@ -30,6 +31,11 @@ export class AuthorStudioService {
       throw new BadRequestException("title, language, and manuscriptType are required.");
     }
 
+    const authoringLanguage = this.normalizeIsoLanguage(input.authoringLanguage ?? input.language, input.authoringLocale);
+    const originalLanguage = this.normalizeIsoLanguage(
+      input.originalLanguage ?? input.language,
+      input.originalLocale
+    );
     const now = new Date().toISOString();
     const manuscript: AuthorManuscript = {
       id: randomUUID(),
@@ -40,7 +46,11 @@ export class AuthorStudioService {
       documentId: input.documentId,
       title: input.title,
       subtitle: input.subtitle,
-      language: input.language,
+      language: authoringLanguage.language,
+      originalLanguage: originalLanguage.language,
+      originalLocale: originalLanguage.locale,
+      authoringLanguage: authoringLanguage.language,
+      authoringLocale: authoringLanguage.locale,
       genre: input.genre,
       manuscriptType: input.manuscriptType,
       status: "DRAFT",
@@ -345,6 +355,16 @@ export class AuthorStudioService {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("Authenticated author studio context is required.");
     }
+  }
+
+  private normalizeIsoLanguage(language: string, locale?: string) {
+    const validation = validateIsoCompatibleLanguageTag(language);
+
+    if (!validation.valid) {
+      throw new BadRequestException(validation.reason ?? "Language must be ISO-compatible.");
+    }
+
+    return normalizeLanguageLocale(language, locale);
   }
 
   private async audit(
