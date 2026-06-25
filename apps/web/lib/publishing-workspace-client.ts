@@ -78,6 +78,12 @@ export interface PublicCatalogItemRecord {
   metadata: {
     authors: string[];
     language: string;
+    originalLanguage?: string;
+    originalLocale?: string;
+    authoringLanguage?: string;
+    authoringLocale?: string;
+    targetLanguage?: string;
+    targetLocale?: string;
     originalSourceReferences: string[];
     title: string;
     translators?: Array<{
@@ -104,11 +110,18 @@ export interface CommerceEditionRecord {
   editionType: string;
   id: string;
   language: string;
+  targetLanguage?: string;
+  targetLocale?: string;
   metadata: {
     firstPublicationYear?: number;
     isbn?: string;
     originalEditionReference?: string;
     originalLanguage: string;
+    originalLocale?: string;
+    authoringLanguage?: string;
+    authoringLocale?: string;
+    targetLanguage?: string;
+    targetLocale?: string;
   };
   paymentProviderIntegration: "NOT_CONFIGURED";
   printOnDemand: {
