@@ -311,16 +311,22 @@ function ArticleMediaPanel({
               </Badge>
               <div>
                 <strong>{article.title}</strong>
-                <span>
-                  {mediaType === "audio"
-                    ? `${article.audio.voice} · ${article.audio.narrator} · ${article.audio.languageLocale}`
-                    : `${article.video.exportFormat} · ${article.video.voiceOverSource} · ${article.video.subtitleLanguageLocale}`}
-                </span>
-                <span>
-                  {mediaType === "audio"
-                    ? "Preview audio is available for article drafts and is never published."
-                    : `Preview video is available for article drafts; thumbnail ${article.video.thumbnailMetadata.toLowerCase()}.`}
-                </span>
+                {mediaType === "audio" ? (
+                  <>
+                    <span>Voice: {article.audio.voice}</span>
+                    <span>Narrator: {article.audio.narrator}</span>
+                    <span>Language/locale: {article.audio.languageLocale}</span>
+                    <span>Preview audio is available for article drafts and is never published.</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Format: {article.video.exportFormat}</span>
+                    <span>Voice-over: {article.video.voiceOverSource}</span>
+                    <span>Subtitles: {article.video.subtitleLanguageLocale}</span>
+                    <span>Thumbnail: {article.video.thumbnailMetadata}</span>
+                    <span>Preview video is available for article drafts and is never published.</span>
+                  </>
+                )}
                 {(mediaType === "audio" ? article.audio.officialLockedReason : article.video.officialLockedReason) ? (
                   <span>{mediaType === "audio" ? article.audio.officialLockedReason : article.video.officialLockedReason}</span>
                 ) : null}
