@@ -12,7 +12,9 @@ export interface Segment {
   documentId: string;
   sourceText: string;
   sourceLanguage: string;
+  sourceLocale?: string;
   targetLanguage: string;
+  targetLocale?: string;
   order: number;
   status: "NEW" | "IN_TRANSLATION" | "TRANSLATED" | "IN_REVIEW" | "APPROVED";
   latestTranslationId?: string;
@@ -28,7 +30,9 @@ export interface CreateSegmentInput {
   documentId: string;
   sourceText: string;
   sourceLanguage?: string;
+  sourceLocale?: string;
   targetLanguage?: string;
+  targetLocale?: string;
   order?: number;
   metadata?: Record<string, unknown>;
 }
