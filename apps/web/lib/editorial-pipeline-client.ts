@@ -274,6 +274,8 @@ function buildPipelineSteps(input: {
   const translationComplete = hasTranslations || segments.some((segment) => segment.status === "TRANSLATED" || segment.status === "APPROVED");
   const exportWarnings = approved && !exported ? ["Export missing."] : [];
   const distributionHref = selectedDocument ? `/distribution?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined;
+  const magazineHref = selectedDocument ? `/magazine/${encodeURIComponent(selectedDocument.projectId)}` : "/magazine";
+  const magazineCandidate = isMagazineDocumentType(selectedDocument?.documentType);
   const publishingRightsMissing = rightsWarnings.some((warning) =>
     warning.code === "PUBLICATION_AUTHORIZATION_MISSING" ||
     warning.code === "PUBLICATION_NOT_AUTHORIZED"
@@ -478,6 +480,24 @@ function buildPipelineSteps(input: {
               ? "Publishing rights are required before official video generation."
               : "Final approval is required before official video generation."
           ]
+    },
+    {
+      completionPercent: magazineCandidate && exported ? 50 : magazineCandidate && approved ? 25 : 0,
+      continueHref: magazineHref,
+      id: "magazine-digital-outputs",
+      locked: !magazineCandidate,
+      openHref: magazineHref,
+      sourceModules: ["Magazine", "Publishing", "Export", "Rights", "Public Portal"],
+      status: !magazineCandidate ? "LOCKED" : exported ? "READY" : approved ? "IN_PROGRESS" : "LOCKED",
+      summary: "Optional magazine digital outputs connect PDF/exported layout, flipbook readiness, article audio/video previews, rights warnings, and public portal visibility.",
+      title: "Magazine Digital Outputs (optional)",
+      warnings: !magazineCandidate
+        ? []
+        : publishingRightsMissing
+          ? ["Publishing rights are required before magazine digital outputs."]
+          : exported
+            ? []
+            : ["Approved or exported magazine content is required before digital issue output."]
     }
   ];
 }
@@ -614,6 +634,19 @@ function isOfficialVideoAvailable(input: {
   workflow: ReviewWorkflowState | null;
 }): boolean {
   return isOfficialAudiobookAvailable(input);
+}
+
+function isMagazineDocumentType(documentType: string | undefined): boolean {
+  if (!documentType) {
+    return false;
+  }
+
+  const normalized = documentType.toUpperCase();
+
+  return normalized === "MAGAZINE" ||
+    normalized === "MAGAZINE_ARTICLE" ||
+    normalized === "ARTICLE" ||
+    normalized.includes("MAGAZINE");
 }
 
 function buildPreflightWarnings(input: {
