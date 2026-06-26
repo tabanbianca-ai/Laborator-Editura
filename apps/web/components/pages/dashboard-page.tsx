@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ApiResult } from "../../lib/api-client";
+import { createUiTranslator, translateModuleTitle, translateRouteLabel } from "../../lib/ui-i18n";
 import type { WorkspaceDashboard, WorkspaceWidget } from "../../lib/workspace-types";
 import { Badge, Card, EmptyState, ErrorState, PageHeader } from "../ui";
 
@@ -19,20 +20,20 @@ const widgetToneByType: Partial<Record<WorkspaceWidget["widgetType"], "info" | "
 };
 
 const mainLaunchRoutes = [
-  { href: "/pipeline", label: "Pipeline" },
-  { href: "/distribution", label: "Distribution" },
-  { href: "/", label: "Home" },
-  { href: "/projects", label: "Projects" },
-  { href: "/documents", label: "Documents" },
-  { href: "/author-studio", label: "Author Studio" },
-  { href: "/translation", label: "Translation" },
-  { href: "/review", label: "Review" },
-  { href: "/publishing", label: "Publishing" },
-  { href: "/magazine", label: "Magazine" },
-  { href: "/research", label: "Research" },
-  { href: "/library", label: "Library" },
-  { href: "/marketplace", label: "Marketplace" },
-  { href: "/admin", label: "Administration" }
+  { href: "/" },
+  { href: "/pipeline" },
+  { href: "/distribution" },
+  { href: "/projects" },
+  { href: "/documents" },
+  { href: "/author-studio" },
+  { href: "/translation" },
+  { href: "/review" },
+  { href: "/publishing" },
+  { href: "/magazine" },
+  { href: "/research" },
+  { href: "/library" },
+  { href: "/marketplace" },
+  { href: "/admin" }
 ];
 
 export function DashboardPage({ dashboardResult }: DashboardPageProps) {
@@ -46,12 +47,13 @@ export function DashboardPage({ dashboardResult }: DashboardPageProps) {
   }
 
   const dashboard = dashboardResult.data;
+  const ui = createUiTranslator(dashboard?.preferences.platformLanguage ?? dashboard?.preferences.language);
 
   if (!dashboard) {
     return (
       <EmptyState
-        description="No workspace dashboard metadata is available for this session."
-        title="No dashboard"
+        description={ui.t("dashboard.noDashboardDescription")}
+        title={ui.t("dashboard.noDashboard")}
       />
     );
   }
@@ -63,18 +65,18 @@ export function DashboardPage({ dashboardResult }: DashboardPageProps) {
   return (
     <div className="page-stack">
       <PageHeader
-        eyebrow="Workspace"
-        title={dashboard.layout.name}
+        eyebrow={ui.t("dashboard.workspace")}
+        title={ui.t("dashboard.title")}
         actions={<Badge tone="info">{dashboard.generatedFor.roles.join(", ")}</Badge>}
       />
 
       {visibleWidgets.length === 0 ? (
         <EmptyState
           description="No widgets are visible for your current role and permissions."
-          title="No dashboard widgets"
+          title={ui.t("dashboard.noDashboardWidgets")}
         />
       ) : (
-        <section className="workspace-widget-grid" aria-label="Dashboard widgets">
+        <section className="workspace-widget-grid" aria-label={ui.t("dashboard.widgets")}>
           {visibleWidgets.map((widget) => (
             <Card className={`workspace-widget workspace-widget-${widget.size.toLowerCase()}`} key={widget.id}>
               <div className="workspace-widget-card">
@@ -96,20 +98,20 @@ export function DashboardPage({ dashboardResult }: DashboardPageProps) {
       <section className="content-panel">
         <div className="section-heading">
           <div>
-            <p className="section-kicker">Navigation</p>
-            <h2>Visible workspace modules</h2>
+            <p className="section-kicker">{ui.t("dashboard.preferences")}</p>
+            <h2>{ui.t("dashboard.visibleModules")}</h2>
           </div>
           <Badge tone="neutral">{dashboard.navigation.length} modules</Badge>
         </div>
 
         {dashboard.navigation.length === 0 ? (
-          <EmptyState title="No visible modules" />
+          <EmptyState title={ui.t("dashboard.noModules")} />
         ) : (
           <div className="workspace-module-list">
             {dashboard.navigation.map((item) => (
               <div className="workspace-module-row" key={item.id}>
                 <div>
-                  <strong>{item.title}</strong>
+                  <strong>{translateModuleTitle(item.module, dashboard.preferences.platformLanguage, item.title)}</strong>
                   <span>{item.module}</span>
                 </div>
                 <Badge tone="neutral">{item.permissionsRequired.join(", ") || "read"}</Badge>
@@ -122,25 +124,27 @@ export function DashboardPage({ dashboardResult }: DashboardPageProps) {
       <section className="content-panel">
         <div className="section-heading">
           <div>
-            <p className="section-kicker">Preferences</p>
-            <h2>Workspace defaults</h2>
+            <p className="section-kicker">{ui.t("dashboard.preferences")}</p>
+            <h2>{ui.t("dashboard.workspaceDefaults")}</h2>
           </div>
-          <Badge tone="neutral">{dashboard.preferences.language.toUpperCase()}</Badge>
+          <Badge tone="neutral">
+            {(dashboard.preferences.platformLanguage ?? dashboard.preferences.language).toUpperCase()}
+          </Badge>
         </div>
 
         <div className="workspace-preference-grid">
           <Card>
             <div className="metric-card">
-              <span>Favorite modules</span>
+              <span>{ui.t("dashboard.favoriteModules")}</span>
               <strong>{dashboard.preferences.favoriteModules.length}</strong>
-              <Badge tone="info">Saved</Badge>
+              <Badge tone="info">{ui.t("badge.saved")}</Badge>
             </div>
           </Card>
           <Card>
             <div className="metric-card">
               <span>Collapsed menus</span>
               <strong>{dashboard.preferences.collapsedMenus.length}</strong>
-              <Badge tone="neutral">Placeholder</Badge>
+              <Badge tone="neutral">{ui.t("badge.placeholder")}</Badge>
             </div>
           </Card>
         </div>
@@ -150,6 +154,7 @@ export function DashboardPage({ dashboardResult }: DashboardPageProps) {
 }
 
 function LaunchReadinessPanel({ dashboard }: { dashboard: WorkspaceDashboard }) {
+  const ui = createUiTranslator(dashboard.preferences.platformLanguage ?? dashboard.preferences.language);
   const launchReadinessItems = [
     { label: "API healthy", ready: true },
     { label: "web healthy", ready: true },
@@ -172,8 +177,8 @@ function LaunchReadinessPanel({ dashboard }: { dashboard: WorkspaceDashboard }) 
     <section className="content-panel" aria-label="Launch readiness checklist">
       <div className="section-heading">
         <div>
-          <p className="section-kicker">Public launch readiness</p>
-          <h2>Closed beta checklist</h2>
+          <p className="section-kicker">{ui.t("dashboard.launchReadiness")}</p>
+          <h2>{ui.t("dashboard.closedBetaChecklist")}</h2>
         </div>
         <Badge tone="success">
           {launchReadinessItems.filter((item) => item.ready).length}/{launchReadinessItems.length}
@@ -193,7 +198,7 @@ function LaunchReadinessPanel({ dashboard }: { dashboard: WorkspaceDashboard }) 
         </div>
 
         <div className="launch-route-list" aria-label="Main route load verification">
-          <p className="section-kicker">Main routes</p>
+          <p className="section-kicker">{ui.t("dashboard.mainRoutes")}</p>
           <div>
             {mainLaunchRoutes.map((route) => (
               <Link
@@ -205,19 +210,19 @@ function LaunchReadinessPanel({ dashboard }: { dashboard: WorkspaceDashboard }) 
                 href={route.href}
                 key={route.href}
               >
-                {route.label}
+                {translateRouteLabel(route.href, dashboard.preferences.platformLanguage)}
               </Link>
             ))}
           </div>
         </div>
 
         <div className="launch-route-list" aria-label="Sidebar navigation order">
-          <p className="section-kicker">Sidebar order</p>
+          <p className="section-kicker">{ui.t("dashboard.sidebarOrder")}</p>
           <ol className="launch-navigation-order">
             {orderedNavigation.slice(0, 8).map((item) => (
               <li key={item.id}>
                 <span>{item.order}</span>
-                {item.title}
+                {translateModuleTitle(item.module, dashboard.preferences.platformLanguage, item.title)}
               </li>
             ))}
           </ol>
