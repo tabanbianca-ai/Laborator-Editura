@@ -14,6 +14,7 @@ function readSource(path) {
 test("all public launch main routes have page files", () => {
   const routePages = [
     "app/page.tsx",
+    "app/pipeline/page.tsx",
     "app/projects/page.tsx",
     "app/documents/page.tsx",
     "app/author-studio/page.tsx",
@@ -63,6 +64,8 @@ test("dashboard launch readiness links include requested main routes", () => {
   const dashboard = readSource("components/pages/dashboard-page.tsx");
 
   for (const route of [
+    'href: "/pipeline"',
+    'href: "/distribution"',
     'href: "/"',
     'href: "/projects"',
     'href: "/documents"',
@@ -70,7 +73,6 @@ test("dashboard launch readiness links include requested main routes", () => {
     'href: "/translation"',
     'href: "/review"',
     'href: "/publishing"',
-    'href: "/distribution"',
     'href: "/research"',
     'href: "/library"',
     'href: "/marketplace"',
@@ -78,6 +80,23 @@ test("dashboard launch readiness links include requested main routes", () => {
   ]) {
     assert.match(dashboard, new RegExp(route.replaceAll("/", "\\/")));
   }
+});
+
+test("launch polish makes pipeline and distribution primary access points", () => {
+  const dashboard = readSource("components/pages/dashboard-page.tsx");
+  const sidebar = readSource("components/layout/sidebar-nav.tsx");
+  const topNav = readSource("components/layout/top-nav.tsx");
+  const css = readSource("app/globals.css");
+
+  assert.match(dashboard, /label: "Pipeline"/);
+  assert.match(dashboard, /label: "Distribution"/);
+  assert.match(dashboard, /launch-route-link-primary/);
+  assert.match(sidebar, /Production Pipeline/);
+  assert.match(sidebar, /sidebar-link-primary/);
+  assert.match(topNav, /Pipeline/);
+  assert.match(topNav, /Distribution/);
+  assert.match(css, /\.sidebar-link-primary/);
+  assert.match(css, /\.launch-route-link-primary/);
 });
 
 test("sidebar navigation order remains backend-order driven", () => {
