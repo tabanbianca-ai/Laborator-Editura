@@ -20,13 +20,14 @@ test("app shell consumes workspace navigation and preferences", () => {
   assert.match(rootLayout, /getWorkspacePreferences/);
   assert.match(rootLayout, /data-theme=\{theme\}/);
   assert.match(rootLayout, /lang=\{language\}/);
+  assert.match(rootLayout, /platformLanguage/);
   assert.match(appShell, /navigation: WorkspaceNavigationItem\[\]/);
   assert.match(appShell, /preferences\?: WorkspacePreferences/);
   assert.match(appShell, /data-collapsed-menus/);
   assert.match(topNav, /href="\/pipeline"/);
   assert.match(topNav, /href="\/distribution"/);
-  assert.match(topNav, /Workspace/);
-  assert.match(topNav, /User/);
+  assert.match(topNav, /ui\.t\("label\.workspace"\)/);
+  assert.match(topNav, /ui\.t\("label\.user"\)/);
 });
 
 test("navigation renders only visible backend modules through module registry routes", () => {
@@ -37,8 +38,9 @@ test("navigation renders only visible backend modules through module registry ro
   assert.match(navigation, /\.filter\(\(item\) => item\.visible\)/);
   assert.match(navigation, /resolveModuleRoute/);
   assert.match(navigation, /resolveModuleTitle/);
-  assert.match(sidebar, /toNavigationItems\(navigation\)/);
-  assert.match(sidebar, /Production Pipeline/);
+  assert.match(navigation, /translateModuleTitle/);
+  assert.match(sidebar, /toNavigationItems\(navigation, platformLanguage\)/);
+  assert.match(sidebar, /ui\.t\("label\.productionPipeline"\)/);
   assert.match(sidebar, /href="\/pipeline"/);
   assert.match(sidebar, /navigationError/);
   assert.doesNotMatch(sidebar, /mainNavigation/);
@@ -57,7 +59,7 @@ test("dashboard shell consumes workspace dashboard and renders widgets states an
   assert.match(dashboardPage, /dashboardResult: ApiResult<WorkspaceDashboard>/);
   assert.match(dashboardPage, /visibleWidgets/);
   assert.match(dashboardPage, /Workspace dashboard unavailable/);
-  assert.match(dashboardPage, /No dashboard widgets/);
+  assert.match(dashboardPage, /ui\.t\("dashboard\.noDashboardWidgets"\)/);
   assert.match(dashboardPage, /favoriteModules/);
   assert.match(dashboardPage, /collapsedMenus/);
   assert.match(dashboardLoading, /Loading workspace dashboard/);
@@ -103,6 +105,6 @@ test("frontend foundation remains shell-only without full module implementations
   const dashboardPage = readSource("components/pages/dashboard-page.tsx");
   const client = readSource("lib/workspace-client.ts");
 
-  assert.match(dashboardPage, /Dashboard widgets/);
+  assert.match(dashboardPage, /ui\.t\("dashboard\.widgets"\)/);
   assert.doesNotMatch(client, /translation-memory|terminology|qa-center|semantic-fidelity/);
 });
