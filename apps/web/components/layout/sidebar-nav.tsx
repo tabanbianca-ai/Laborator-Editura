@@ -22,6 +22,21 @@ export function SidebarNav({ currentPath, navigation, navigationError }: Sidebar
         <strong>Laborator</strong>
       </div>
       <nav aria-label="Primary navigation" className="sidebar-nav-list">
+        <Link
+          aria-current={currentPath === "/pipeline" || currentPath.startsWith("/pipeline/") ? "page" : undefined}
+          className={
+            currentPath === "/pipeline" || currentPath.startsWith("/pipeline/")
+              ? "sidebar-link sidebar-link-primary sidebar-link-active"
+              : "sidebar-link sidebar-link-primary"
+          }
+          href="/pipeline"
+        >
+          <span className="sidebar-link-icon" aria-hidden="true">
+            P
+          </span>
+          Production Pipeline
+        </Link>
+
         {navigationError ? (
           <ErrorState message={navigationError} title="Navigation unavailable" />
         ) : null}
