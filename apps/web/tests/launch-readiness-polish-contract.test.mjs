@@ -36,6 +36,7 @@ test("all public launch main routes have page files", () => {
 
 test("dashboard includes lightweight launch readiness checklist", () => {
   const dashboard = readSource("components/pages/dashboard-page.tsx");
+  const i18n = readSource("lib/ui-i18n.ts");
 
   for (const checklistItem of [
     "API healthy",
@@ -57,7 +58,8 @@ test("dashboard includes lightweight launch readiness checklist", () => {
   }
 
   assert.match(dashboard, /LaunchReadinessPanel/);
-  assert.match(dashboard, /Closed beta checklist/);
+  assert.match(dashboard, /ui\.t\("dashboard\.closedBetaChecklist"\)/);
+  assert.match(i18n, /Closed beta checklist/);
 });
 
 test("dashboard launch readiness links include requested main routes", () => {
@@ -87,14 +89,16 @@ test("launch polish makes pipeline and distribution primary access points", () =
   const sidebar = readSource("components/layout/sidebar-nav.tsx");
   const topNav = readSource("components/layout/top-nav.tsx");
   const css = readSource("app/globals.css");
+  const i18n = readSource("lib/ui-i18n.ts");
 
-  assert.match(dashboard, /label: "Pipeline"/);
-  assert.match(dashboard, /label: "Distribution"/);
+  assert.match(dashboard, /translateRouteLabel\(route\.href/);
   assert.match(dashboard, /launch-route-link-primary/);
-  assert.match(sidebar, /Production Pipeline/);
+  assert.match(sidebar, /ui\.t\("label\.productionPipeline"\)/);
   assert.match(sidebar, /sidebar-link-primary/);
-  assert.match(topNav, /Pipeline/);
-  assert.match(topNav, /Distribution/);
+  assert.match(topNav, /ui\.t\("label\.productionPipeline"\)/);
+  assert.match(topNav, /ui\.t\("label\.distribution"\)/);
+  assert.match(i18n, /Pipeline/);
+  assert.match(i18n, /Distribuție/);
   assert.match(css, /\.sidebar-link-primary/);
   assert.match(css, /\.launch-route-link-primary/);
 });
