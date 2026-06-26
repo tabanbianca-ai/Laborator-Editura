@@ -41,15 +41,15 @@ export function EditorialPipelineIndexPage({
         <Card>
           <div className="metric-card">
             <span>Production mode</span>
-            <strong>13</strong>
+            <strong>14</strong>
             <Badge tone="success">Steps</Badge>
           </div>
         </Card>
         <Card>
           <div className="metric-card">
-            <span>Approval rule</span>
-            <strong>Human</strong>
-            <Badge tone="neutral">Final authority</Badge>
+            <span>Human Final Authority</span>
+            <strong>Required</strong>
+            <Badge tone="neutral">Approval rule</Badge>
           </div>
         </Card>
       </section>
@@ -125,7 +125,7 @@ export function EditorialPipelineProjectPage({
         <div className="section-heading">
           <div>
             <p className="section-kicker">Guided workflow</p>
-            <h2>Import → Analysis → Editing → Translation → Review → Validation → Layout → Export → Technical Validation → Approval → Publication → Audiobook → Video</h2>
+            <h2>Import → Analysis → Editing → Translation → Review → Validation → Layout → Export → Technical Validation → Approval → Publication → Audiobook → Video → Magazine</h2>
           </div>
           <Badge tone={data.nextStep ? toneForStatus(data.nextStep.status) : "success"}>
             {data.nextStep?.title ?? "Complete"}
@@ -148,7 +148,7 @@ export function EditorialPipelineProjectPage({
             <Card title="AI progress summary">
               <p className="pipeline-guidance">{data.aiRecommendation}</p>
               <p className="review-human-authority">
-                AI may summarize progress, suggest next actions, generate preview narration, suggest pronunciation, suggest video visuals, subtitles, and timing, and detect blockers. It cannot approve workflow, publish, approve audiobook or video, or grant rights.
+                Human Final Authority remains required. AI may summarize progress, suggest next actions, generate preview narration, suggest pronunciation, suggest video visuals, subtitles, and timing, and detect blockers. It cannot approve workflow, publish, approve audiobook or video, or grant rights.
               </p>
             </Card>
             <Card title="Warnings">
