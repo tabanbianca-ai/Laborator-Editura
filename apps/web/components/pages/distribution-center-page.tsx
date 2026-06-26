@@ -7,69 +7,73 @@ import type {
   PreflightCheck,
   PreflightStatus
 } from "../../lib/distribution-center-client";
+import { createUiTranslator, type UiTranslator } from "../../lib/ui-i18n";
 import { Badge, Card, EmptyState, ErrorState, PageHeader, Table } from "../ui";
 
 type BadgeTone = ComponentProps<typeof Badge>["tone"];
 
 export function DistributionCenterPage({
-  data
+  data,
+  platformLanguage
 }: {
   data: DistributionCenterData;
+  platformLanguage?: string | null;
 }) {
   const { workspace } = data;
+  const ui = createUiTranslator(platformLanguage);
 
   return (
     <main className="page-stack">
       <PageHeader
-        eyebrow="Preflight"
-        title="Preflight & Distribution Center"
+        eyebrow={ui.t("distribution.preflight")}
+        title={ui.t("distribution.title")}
       />
 
-      {workspace.projectsError ? <ErrorState message={workspace.projectsError} title="Projects unavailable" /> : null}
-      {workspace.documentsError ? <ErrorState message={workspace.documentsError} title="Documents unavailable" /> : null}
-      {workspace.workflowError ? <ErrorState message={workspace.workflowError} title="Workflow unavailable" /> : null}
-      {workspace.rightsError ? <ErrorState message={workspace.rightsError} title="Rights unavailable" /> : null}
+      {workspace.projectsError ? <ErrorState message={workspace.projectsError} title={ui.t("error.projectsUnavailable")} /> : null}
+      {workspace.documentsError ? <ErrorState message={workspace.documentsError} title={ui.t("error.documentsUnavailable")} /> : null}
+      {workspace.workflowError ? <ErrorState message={workspace.workflowError} title={ui.t("error.workflowUnavailable")} /> : null}
+      {workspace.rightsError ? <ErrorState message={workspace.rightsError} title={ui.t("error.rightsUnavailable")} /> : null}
 
-      <DistributionOverview data={data} />
-      <DocumentSelector data={data} />
+      <DistributionOverview data={data} ui={ui} />
+      <DocumentSelector data={data} ui={ui} />
 
       {!workspace.selectedDocument ? (
         <EmptyState
-          description="Select a document from the list to run the final production gate."
-          title="No document selected for preflight"
+          description={ui.t("distribution.emptyDocumentDescription")}
+          title={ui.t("distribution.emptyDocumentTitle")}
         />
       ) : (
         <>
-          <section className="publishing-workspace-grid" aria-label="Final production gate">
-            <PreflightValidationPanel checks={data.preflightChecks} />
-            <PublicationGatePanel data={data} />
-            <HumanAuthorityPanel />
+          <section className="publishing-workspace-grid" aria-label={ui.t("distribution.finalGate")}>
+            <PreflightValidationPanel checks={data.preflightChecks} ui={ui} />
+            <PublicationGatePanel data={data} ui={ui} />
+            <HumanAuthorityPanel ui={ui} />
           </section>
 
           <section className="content-panel">
             <div className="section-heading">
               <div>
-                <p className="section-kicker">Distribution Center</p>
-                <h2>Publication channels</h2>
+                <p className="section-kicker">{ui.t("label.distributionCenter")}</p>
+                <h2>{ui.t("distribution.publicationChannels")}</h2>
               </div>
               <Badge tone={data.blockedCount > 0 ? "warning" : "success"}>
-                {data.blockedCount > 0 ? "Blockers present" : "Ready"}
+                {data.blockedCount > 0 ? ui.t("distribution.blockersPresent") : ui.t("badge.ready")}
               </Badge>
             </div>
-            <DistributionChannelTable channels={data.channels} />
+            <DistributionChannelTable channels={data.channels} ui={ui} />
           </section>
 
           <section className="content-panel">
             <div className="section-heading">
               <div>
-                <p className="section-kicker">Blockers</p>
-                <h2>Pre-publication blockers</h2>
+                <p className="section-kicker">{ui.t("distribution.blockers")}</p>
+                <h2>{ui.t("distribution.prePublicationBlockers")}</h2>
               </div>
               <Badge tone={data.blockedCount > 0 ? "warning" : "success"}>
                 {data.blockedCount}
               </Badge>
             </div>
-            <BlockerList checks={data.preflightChecks} channels={data.channels} />
+            <BlockerList checks={data.preflightChecks} channels={data.channels} ui={ui} />
           </section>
         </>
       )}
@@ -77,51 +81,51 @@ export function DistributionCenterPage({
   );
 }
 
-function DistributionOverview({ data }: { data: DistributionCenterData }) {
+function DistributionOverview({ data, ui }: { data: DistributionCenterData; ui: UiTranslator }) {
   return (
     <section className="metric-grid" aria-label="Preflight overview">
       <Card>
         <div className="metric-card">
-          <span>Ready checks</span>
+          <span>{ui.t("distribution.readyChecks")}</span>
           <strong>{data.readyCount}</strong>
           <Badge tone="success">READY</Badge>
         </div>
       </Card>
       <Card>
         <div className="metric-card">
-          <span>Warnings</span>
+          <span>{ui.t("distribution.warningCount")}</span>
           <strong>{data.warningCount}</strong>
           <Badge tone={data.warningCount > 0 ? "warning" : "success"}>WARNING</Badge>
         </div>
       </Card>
       <Card>
         <div className="metric-card">
-          <span>Blocked</span>
+          <span>{ui.t("pipeline.blocked")}</span>
           <strong>{data.blockedCount}</strong>
           <Badge tone={data.blockedCount > 0 ? "danger" : "success"}>BLOCKED</Badge>
         </div>
       </Card>
       <Card>
         <div className="metric-card">
-          <span>Channels</span>
+          <span>{ui.t("distribution.channels")}</span>
           <strong>{data.channels.length}</strong>
-          <Badge tone="info">Distribution</Badge>
+          <Badge tone="info">{ui.t("badge.distribution")}</Badge>
         </div>
       </Card>
     </section>
   );
 }
 
-function DocumentSelector({ data }: { data: DistributionCenterData }) {
+function DocumentSelector({ data, ui }: { data: DistributionCenterData; ui: UiTranslator }) {
   const { workspace } = data;
 
   return (
     <section className="translation-selector-grid" aria-label="Distribution document selection">
-      <Card title="Project">
-        <p className="selector-value">{workspace.selectedProject?.name ?? "Not selected"}</p>
+      <Card title={ui.t("distribution.project")}>
+        <p className="selector-value">{workspace.selectedProject?.name ?? ui.t("distribution.notSelected")}</p>
       </Card>
-      <Card title="Document">
-        <p className="selector-value">{workspace.selectedDocument?.title ?? "Not selected"}</p>
+      <Card title={ui.t("distribution.document")}>
+        <p className="selector-value">{workspace.selectedDocument?.title ?? ui.t("distribution.notSelected")}</p>
         <div className="document-link-list">
           {workspace.documents.slice(0, 8).map((document) => (
             <Link
@@ -142,9 +146,15 @@ function DocumentSelector({ data }: { data: DistributionCenterData }) {
   );
 }
 
-function PreflightValidationPanel({ checks }: { checks: PreflightCheck[] }) {
+function PreflightValidationPanel({
+  checks,
+  ui
+}: {
+  checks: PreflightCheck[];
+  ui: UiTranslator;
+}) {
   return (
-    <Card title="Preflight validation panel">
+    <Card title={ui.t("distribution.preflightPanel")}>
       <div className="reference-stack">
         {checks.map((check) => (
           <div className="signal-row" key={check.label}>
@@ -157,60 +167,66 @@ function PreflightValidationPanel({ checks }: { checks: PreflightCheck[] }) {
   );
 }
 
-function PublicationGatePanel({ data }: { data: DistributionCenterData }) {
+function PublicationGatePanel({ data, ui }: { data: DistributionCenterData; ui: UiTranslator }) {
   return (
-    <Card title="Publication gate">
+    <Card title={ui.t("distribution.publicationGate")}>
       <div className="reference-stack">
         <ReferenceItem
-          label="Workflow"
-          value={data.workspace.workflow?.status?.replace(/_/g, " ") ?? "No workflow linked"}
+          label={ui.t("distribution.workflow")}
+          value={data.workspace.workflow?.status?.replace(/_/g, " ") ?? ui.t("distribution.noWorkflowLinked")}
         />
         <ReferenceItem
-          label="Rights/provenance"
-          value={data.workspace.rightsWarnings.length > 0 ? "Warnings present" : "No rights warnings"}
+          label={ui.t("distribution.rightsProvenance")}
+          value={data.workspace.rightsWarnings.length > 0 ? ui.t("distribution.warningsPresent") : ui.t("distribution.noRightsWarnings")}
         />
         <ReferenceItem
-          label="JSON master"
+          label={ui.t("distribution.jsonMaster")}
           value={data.workspace.artifact ? "Available" : "Missing"}
         />
         <button className="ui-button ui-button-primary ui-button-sm" disabled type="button">
-          Publish
+          {ui.t("action.publish")}
         </button>
         <p className="pipeline-guidance">
-          Publication is disabled here until authorized humans confirm all gates. No billing or external distribution provider is connected.
+          {ui.t("distribution.publishDisabled")}
         </p>
       </div>
     </Card>
   );
 }
 
-function HumanAuthorityPanel() {
+function HumanAuthorityPanel({ ui }: { ui: UiTranslator }) {
   return (
-    <Card title="Human Final Authority">
+    <Card title={ui.t("pipeline.humanAuthority")}>
       <p className="review-human-authority">
         Preflight may identify blockers and distribution readiness, but it cannot approve, publish, bypass rights,
         or release content automatically.
       </p>
       <div className="reference-stack">
-        <ReferenceItem label="Auto-publish" value="Disabled" />
-        <ReferenceItem label="Auto-approve" value="Disabled" />
-        <ReferenceItem label="External providers" value="Not configured" />
+        <ReferenceItem label={ui.t("distribution.autoPublish")} value="Disabled" />
+        <ReferenceItem label={ui.t("distribution.autoApprove")} value="Disabled" />
+        <ReferenceItem label={ui.t("distribution.externalProviders")} value={ui.t("distribution.notConfigured")} />
       </div>
     </Card>
   );
 }
 
-function DistributionChannelTable({ channels }: { channels: DistributionChannel[] }) {
+function DistributionChannelTable({
+  channels,
+  ui
+}: {
+  channels: DistributionChannel[];
+  ui: UiTranslator;
+}) {
   return (
     <Table ariaLabel="Distribution channels">
       <thead>
         <tr>
-          <th>Channel</th>
+          <th>{ui.t("distribution.channels")}</th>
           <th>Status</th>
-          <th>Required approvals</th>
-          <th>Blockers</th>
-          <th>Last export date</th>
-          <th>Publish readiness</th>
+          <th>{ui.t("distribution.requiredApprovals")}</th>
+          <th>{ui.t("distribution.blockers")}</th>
+          <th>{ui.t("distribution.lastExportDate")}</th>
+          <th>{ui.t("distribution.publishReadiness")}</th>
         </tr>
       </thead>
       <tbody>
@@ -235,10 +251,12 @@ function DistributionChannelTable({ channels }: { channels: DistributionChannel[
 
 function BlockerList({
   channels,
-  checks
+  checks,
+  ui
 }: {
   channels: DistributionChannel[];
   checks: PreflightCheck[];
+  ui: UiTranslator;
 }) {
   const preflightBlockers = checks.flatMap((check) =>
     check.blockers.map((blocker) => `${check.label}: ${blocker}`)
@@ -249,7 +267,7 @@ function BlockerList({
   const blockers = [...preflightBlockers, ...channelBlockers];
 
   if (blockers.length === 0) {
-    return <EmptyState title="No pre-publication blockers" />;
+    return <EmptyState title={ui.t("distribution.emptyBlockers")} />;
   }
 
   return (
