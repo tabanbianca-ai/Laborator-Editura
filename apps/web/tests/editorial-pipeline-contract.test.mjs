@@ -37,7 +37,8 @@ test("pipeline client orchestrates existing modules without creating a new backe
     "Final Approval",
     "Publication",
     "Audiobook (optional)",
-    "Video (optional)"
+    "Video (optional)",
+    "Magazine Digital Outputs (optional)"
   ]) {
     assert.match(client, new RegExp(step.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
@@ -49,6 +50,7 @@ test("pipeline client orchestrates existing modules without creating a new backe
     "/workflow-center",
     "/publishing",
     "/distribution",
+    "/magazine",
     "/rights"
   ]) {
     assert.match(client, new RegExp(route));
@@ -64,6 +66,8 @@ test("pipeline client orchestrates existing modules without creating a new backe
   assert.match(client, /READY_FOR_GENERATION/);
   assert.match(client, /Video Production/);
   assert.match(client, /Official video requires final approved text and publishing rights/);
+  assert.match(client, /isMagazineDocumentType/);
+  assert.match(client, /Optional magazine digital outputs connect PDF\/exported layout, flipbook readiness, article audio\/video previews, rights warnings, and public portal visibility/);
   assert.match(client, /Distribution Center/);
   assert.match(client, /Preflight validates ISBN, metadata, rights\/provenance, cover, fonts, image resolution, table of contents, hyperlinks, PDF print, EPUB, MOBI, JSON Master, audiobook, video, and magazine flipbook readiness/);
   assert.match(client, /Resolve preflight blockers before publication/);
@@ -94,6 +98,8 @@ test("pipeline UI renders vertical steps media controls with locked actions and 
   assert.match(page, /Generate Preview Video/);
   assert.match(page, /Generate Official Video/);
   assert.match(page, /Technical Validation/);
+  assert.match(page, /Magazine/);
+  assert.match(page, /<strong>14<\/strong>/);
   assert.match(page, /Video status/);
   assert.match(page, /Format/);
   assert.match(page, /data\.video\.exportFormat/);
