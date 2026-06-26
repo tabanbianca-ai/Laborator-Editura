@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { formatLanguageLocale, PRODUCT_NAME } from "@laborator/shared";
 
 import { Badge, Button } from "../ui";
@@ -25,6 +26,12 @@ export function TopNav({ currentPath, navigation, preferences }: TopNavProps) {
       </div>
 
       <div className="top-nav-meta" aria-label="Workspace status">
+        <Link className="ui-button ui-button-primary ui-button-sm" href="/pipeline">
+          Pipeline
+        </Link>
+        <Link className="ui-button ui-button-secondary ui-button-sm" href="/distribution">
+          Distribution
+        </Link>
         <Button disabled size="sm" variant="secondary">
           Workspace
         </Button>
