@@ -56,6 +56,32 @@ test("environment validation requires strong staging and production secrets with
   assert.match(main, /validateSecurityEnvironment\(\)/);
 });
 
+test("staging deployment uses standard NODE_ENV and APP_ENV for staging semantics", () => {
+  const dockerfileApi = readFileSync(
+    join(apiRoot, "..", "..", "deploy", "staging", "Dockerfile.api"),
+    "utf8"
+  );
+  const dockerfileWeb = readFileSync(
+    join(apiRoot, "..", "..", "deploy", "staging", "Dockerfile.web"),
+    "utf8"
+  );
+  const compose = readFileSync(
+    join(apiRoot, "..", "..", "deploy", "staging", "docker-compose.staging.yml"),
+    "utf8"
+  );
+  const envExample = readFileSync(
+    join(apiRoot, "..", "..", "deploy", "staging", ".env.staging.example"),
+    "utf8"
+  );
+  const combined = `${dockerfileApi}\n${dockerfileWeb}\n${compose}\n${envExample}`;
+
+  assert.doesNotMatch(combined, /NODE_ENV[:=] ?"?staging"?/);
+  assert.match(dockerfileApi, /ENV NODE_ENV="production"/);
+  assert.match(dockerfileWeb, /ENV NODE_ENV="production"/);
+  assert.match(compose, /NODE_ENV: production/);
+  assert.match(combined, /APP_ENV[:=] ?"?staging"?/);
+});
+
 test("auth login records failed attempts and temporary account lockout", () => {
   const service = readModule("auth/auth.service.ts");
   const repository = readModule("auth/auth.repository.ts");
