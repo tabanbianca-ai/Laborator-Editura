@@ -43,6 +43,7 @@ test("editorial production workflow has route coverage for every launch step", (
 test("pipeline orders manuscript to publication with optional media and magazine outputs", () => {
   const client = readSource("lib/editorial-pipeline-client.ts");
   const page = readSource("components/pages/editorial-pipeline-page.tsx");
+  const i18n = readSource("lib/ui-i18n.ts");
 
   assertOrdered(client, [
     'title: "Import Manuscript"',
@@ -61,17 +62,18 @@ test("pipeline orders manuscript to publication with optional media and magazine
     'title: "Magazine Digital Outputs (optional)"'
   ]);
 
-  assert.match(page, /Production mode/);
+  assert.match(page, /ui\.t\("pipeline\.productionMode"\)/);
   assert.match(page, /<strong>14<\/strong>/);
-  assert.match(page, /Technical Validation/);
-  assert.match(page, /Audiobook/);
-  assert.match(page, /Video/);
-  assert.match(page, /Magazine/);
+  assert.match(i18n, /Technical Validation/);
+  assert.match(i18n, /Audiobook/);
+  assert.match(i18n, /Video/);
+  assert.match(i18n, /Magazine/);
 });
 
 test("workflow gates preserve rights language workflow and human final authority", () => {
   const client = readSource("lib/editorial-pipeline-client.ts");
   const page = readSource("components/pages/editorial-pipeline-page.tsx");
+  const i18n = readSource("lib/ui-i18n.ts");
   const rightsClient = readSource("lib/rights-workspace-client.ts");
 
   assert.match(client, /getRightsWarningsForDocument/);
@@ -85,8 +87,8 @@ test("workflow gates preserve rights language workflow and human final authority
   assert.match(client, /Publishing rights are required before official audiobook generation/);
   assert.match(client, /Publishing rights are required before official video generation/);
   assert.match(client, /Publishing rights are required before magazine digital outputs/);
-  assert.match(page, /Human Final Authority/);
-  assert.match(page, /cannot approve workflow, publish, approve audiobook or video, or grant rights/);
+  assert.match(page, /ui\.t\("pipeline\.humanAuthority"\)/);
+  assert.match(i18n, /cannot approve workflow, publish, approve audiobook or video, or grant rights/);
   assert.match(rightsClient, /TRANSLATION_NOT_AUTHORIZED/);
   assert.match(rightsClient, /Translation authorization is not confirmed/);
   assert.match(rightsClient, /PUBLICATION_NOT_AUTHORIZED/);
@@ -99,6 +101,7 @@ test("distribution and magazine outputs surface readiness without automatic publ
   const distributionPage = readSource("components/pages/distribution-center-page.tsx");
   const magazineClient = readSource("lib/magazine-experience-client.ts");
   const magazinePage = readSource("components/pages/magazine-digital-experience-page.tsx");
+  const i18n = readSource("lib/ui-i18n.ts");
 
   for (const required of [
     "ISBN",
@@ -116,8 +119,8 @@ test("distribution and magazine outputs surface readiness without automatic publ
     assert.match(distributionClient, new RegExp(required.replace("/", "\\/")));
   }
 
-  assert.match(distributionPage, /Preflight & Distribution Center/);
-  assert.match(distributionPage, /Publication is disabled here until authorized humans confirm all gates/);
+  assert.match(distributionPage, /ui\.t\("distribution\.title"\)/);
+  assert.match(i18n, /Publication is disabled here until authorized humans confirm all gates/);
   assert.match(distributionPage, /disabled type="button"/);
   assert.match(magazineClient, /MagazineReadinessStatus = "NOT_READY" \| "READY" \| "PUBLISHED"/);
   assert.match(magazineClient, /draftNeverPublished: true/);
@@ -133,13 +136,14 @@ test("launch navigation keeps pipeline and distribution accessible with no dead-
   const topNav = readSource("components/layout/top-nav.tsx");
   const dashboard = readSource("components/pages/dashboard-page.tsx");
   const navigation = readSource("components/layout/navigation.ts");
+  const i18n = readSource("lib/ui-i18n.ts");
 
-  assert.match(sidebar, /Production Pipeline/);
+  assert.match(sidebar, /ui\.t\("label\.productionPipeline"\)/);
   assert.match(topNav, /href="\/pipeline"/);
   assert.match(topNav, /href="\/distribution"/);
-  assert.match(dashboard, /Closed beta checklist/);
-  assert.match(dashboard, /label: "Pipeline"/);
-  assert.match(dashboard, /label: "Distribution"/);
-  assert.match(navigation, /Production Pipeline/);
-  assert.match(navigation, /Distribution Center/);
+  assert.match(dashboard, /ui\.t\("dashboard\.closedBetaChecklist"\)/);
+  assert.match(dashboard, /translateRouteLabel\(route\.href/);
+  assert.match(navigation, /translateRouteLabel/);
+  assert.match(i18n, /Editorial Production Pipeline/);
+  assert.match(i18n, /Linie de producție editorială/);
 });
