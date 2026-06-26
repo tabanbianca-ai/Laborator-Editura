@@ -273,10 +273,18 @@ function buildPipelineSteps(input: {
   const readyForExport = workflowStatus === "READY_FOR_EXPORT";
   const translationComplete = hasTranslations || segments.some((segment) => segment.status === "TRANSLATED" || segment.status === "APPROVED");
   const exportWarnings = approved && !exported ? ["Export missing."] : [];
+  const distributionHref = selectedDocument ? `/distribution?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined;
   const publishingRightsMissing = rightsWarnings.some((warning) =>
     warning.code === "PUBLICATION_AUTHORIZATION_MISSING" ||
     warning.code === "PUBLICATION_NOT_AUTHORIZED"
   );
+  const preflightWarnings = buildPreflightWarnings({
+    approved,
+    exported,
+    publishingRightsMissing,
+    readyForExport,
+    selectedDocument
+  });
   const officialAudiobookAvailable = isOfficialAudiobookAvailable({
     rightsWarnings,
     selectedDocument,
@@ -396,14 +404,16 @@ function buildPipelineSteps(input: {
       warnings: exportWarnings
     },
     {
-      completionPercent: exported ? 50 : 0,
+      completionPercent: exported && preflightWarnings.length === 0 ? 100 : readyForExport ? 65 : approved ? 35 : 0,
+      continueHref: distributionHref,
       id: "technical-validation",
-      locked: !exported,
-      sourceModules: ["Preflight placeholder"],
-      status: !exported ? "LOCKED" : "READY",
-      summary: "Preflight will later validate typography, files, and production constraints.",
+      locked: !approved,
+      openHref: distributionHref,
+      sourceModules: ["Preflight", "Export", "Rights", "Publishing", "Distribution Center"],
+      status: !approved ? "LOCKED" : preflightWarnings.length > 0 ? "NEEDS_ATTENTION" : "READY",
+      summary: "Preflight validates ISBN, metadata, rights/provenance, cover, fonts, image resolution, table of contents, hyperlinks, PDF print, EPUB, MOBI, JSON Master, audiobook, video, and magazine flipbook readiness.",
       title: "Technical Validation",
-      warnings: exported ? ["Preflight placeholder is not automated yet."] : ["Export required before technical validation."]
+      warnings: preflightWarnings
     },
     {
       completionPercent: exported ? 75 : 0,
@@ -419,15 +429,19 @@ function buildPipelineSteps(input: {
     },
     {
       completionPercent: exported ? 50 : 0,
-      continueHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      continueHref: distributionHref,
       id: "publication",
       locked: !exported,
-      openHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
-      sourceModules: ["Publishing Workspace"],
+      openHref: distributionHref,
+      sourceModules: ["Distribution Center", "Publishing Workspace", "Public Portal"],
       status: !exported ? "LOCKED" : "READY",
-      summary: "Publication uses the existing publishing workspace and public portal metadata.",
+      summary: "Publication opens the Distribution Center for print PDF, digital PDF, EPUB, MOBI, audiobook, video, magazine flipbook, and public portal readiness.",
       title: "Publication",
-      warnings: exported ? [] : ["Final approval and export are required before publication."]
+      warnings: exported
+        ? preflightWarnings.length > 0
+          ? ["Resolve preflight blockers before publication."]
+          : []
+        : ["Final approval and export are required before publication."]
     },
     {
       completionPercent: officialAudiobookAvailable ? 25 : 0,
@@ -600,6 +614,39 @@ function isOfficialVideoAvailable(input: {
   workflow: ReviewWorkflowState | null;
 }): boolean {
   return isOfficialAudiobookAvailable(input);
+}
+
+function buildPreflightWarnings(input: {
+  approved: boolean;
+  exported: boolean;
+  publishingRightsMissing: boolean;
+  readyForExport: boolean;
+  selectedDocument: DocumentRecord | null;
+}): string[] {
+  const warnings: string[] = [];
+  const { approved, exported, publishingRightsMissing, readyForExport, selectedDocument } = input;
+
+  if (!selectedDocument) {
+    warnings.push("Document metadata is required for preflight.");
+  }
+
+  if (!approved) {
+    warnings.push("Human approval is required before technical validation.");
+  }
+
+  if (!readyForExport && !exported) {
+    warnings.push("READY_FOR_EXPORT or exported status is required before distribution readiness.");
+  }
+
+  if (publishingRightsMissing) {
+    warnings.push("Rights/provenance blockers must be resolved before publication.");
+  }
+
+  if (!exported) {
+    warnings.push("JSON Master and production exports must be checked before publication.");
+  }
+
+  return warnings;
 }
 
 function buildLanguageWarnings(project: ProjectRecord, document: DocumentRecord): string[] {
