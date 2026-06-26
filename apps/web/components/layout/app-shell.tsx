@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 import type { WorkspaceNavigationItem, WorkspacePreferences } from "../../lib/workspace-types";
+import { createUiTranslator } from "../../lib/ui-i18n";
 import { SidebarNav } from "./sidebar-nav";
 import { TopNav } from "./top-nav";
 
@@ -23,16 +24,19 @@ export function AppShell({
   const pathname = usePathname() ?? "/dashboard";
   const currentPath = pathname === "/" ? "/dashboard" : pathname;
   const collapsedMenus = preferences?.collapsedMenus?.join(",") ?? "";
+  const platformLanguage = preferences?.platformLanguage ?? preferences?.language ?? "en";
+  const ui = createUiTranslator(platformLanguage);
 
   return (
     <div className="app-shell" data-collapsed-menus={collapsedMenus}>
       <a className="skip-link" href="#main-content">
-        Skip to content
+        {ui.t("nav.skipToContent")}
       </a>
       <SidebarNav
         currentPath={currentPath}
         navigation={navigation}
         navigationError={navigationError}
+        platformLanguage={platformLanguage}
       />
       <div className="app-main">
         <TopNav currentPath={currentPath} navigation={navigation} preferences={preferences} />
