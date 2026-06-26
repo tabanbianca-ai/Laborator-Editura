@@ -135,6 +135,28 @@ textarea {
   color: #14211d;
 }
 
+.sidebar-link-primary {
+  background: #20302c;
+  border: 1px solid #47645a;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.sidebar-link-primary .sidebar-link-icon {
+  background: #e8f4eb;
+  color: #14211d;
+}
+
+.sidebar-link-primary:hover,
+.sidebar-link-primary:focus-visible {
+  background: #2c423b;
+}
+
+.sidebar-link-primary.sidebar-link-active {
+  background: #ffffff;
+  color: #14211d;
+}
+
 .sidebar-nav .ui-state {
   color: #c8d3ce;
   padding: 16px 8px;
@@ -191,7 +213,7 @@ textarea {
 }
 
 .app-content {
-  padding: 24px 28px 36px;
+  padding: 28px;
 }
 
 .app-content:focus {
@@ -200,7 +222,7 @@ textarea {
 
 .page-stack {
   display: grid;
-  gap: 18px;
+  gap: 20px;
 }
 
 .metric-grid {
@@ -231,6 +253,7 @@ textarea {
   background: #ffffff;
   border: 1px solid #d7ded8;
   border-radius: 8px;
+  box-shadow: 0 1px 0 rgba(24, 33, 31, 0.03);
   overflow: hidden;
 }
 
@@ -255,6 +278,7 @@ textarea {
   display: flex;
   gap: 14px;
   justify-content: space-between;
+  min-height: 44px;
 }
 
 .page-header h2 {
@@ -565,7 +589,9 @@ textarea {
 }
 
 .ui-state p {
+  line-height: 1.5;
   margin: 0;
+  max-width: 560px;
 }
 
 .ui-state-action {
@@ -683,6 +709,12 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.launch-route-link-primary {
+  background: #e8f4eb;
+  border-color: #9ccbad;
+  color: #14211d;
 }
 
 .launch-navigation-order {
@@ -1040,6 +1072,13 @@ textarea {
   font-weight: 750;
   line-height: 1.4;
   padding: 10px;
+}
+
+.blocking-warning,
+.pipeline-warning,
+.rights-warning-banner,
+.terminology-warning {
+  overflow-wrap: anywhere;
 }
 
 .terminology-match-list {
