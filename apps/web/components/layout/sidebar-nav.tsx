@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { EmptyState, ErrorState } from "../ui";
+import { createUiTranslator } from "../../lib/ui-i18n";
 import type { WorkspaceNavigationItem } from "../../lib/workspace-types";
 import { toNavigationItems } from "./navigation";
 
@@ -10,10 +11,17 @@ interface SidebarNavProps {
   currentPath: string;
   navigation: WorkspaceNavigationItem[];
   navigationError?: string | null;
+  platformLanguage?: string | null;
 }
 
-export function SidebarNav({ currentPath, navigation, navigationError }: SidebarNavProps) {
-  const items = toNavigationItems(navigation);
+export function SidebarNav({
+  currentPath,
+  navigation,
+  navigationError,
+  platformLanguage
+}: SidebarNavProps) {
+  const ui = createUiTranslator(platformLanguage);
+  const items = toNavigationItems(navigation, platformLanguage);
 
   return (
     <aside className="sidebar-nav">
@@ -34,15 +42,18 @@ export function SidebarNav({ currentPath, navigation, navigationError }: Sidebar
           <span className="sidebar-link-icon" aria-hidden="true">
             P
           </span>
-          Production Pipeline
+          {ui.t("label.productionPipeline")}
         </Link>
 
         {navigationError ? (
-          <ErrorState message={navigationError} title="Navigation unavailable" />
+          <ErrorState message={navigationError} title={ui.t("error.navigationUnavailable")} />
         ) : null}
 
         {!navigationError && items.length === 0 ? (
-          <EmptyState description="No modules are visible for this session." title="No navigation" />
+          <EmptyState
+            description={ui.t("empty.noNavigationDescription")}
+            title={ui.t("empty.noNavigation")}
+          />
         ) : null}
 
         {items.map((item) => {
