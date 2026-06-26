@@ -21,7 +21,7 @@ export default async function RootLayout({
     getWorkspaceNavigation(),
     getWorkspacePreferences()
   ]);
-  const language = preferencesResult.data?.language ?? "ro";
+  const language = preferencesResult.data?.platformLanguage ?? preferencesResult.data?.language ?? "ro";
   const theme = preferencesResult.data?.themeMetadata?.theme ?? "system";
 
   return (
