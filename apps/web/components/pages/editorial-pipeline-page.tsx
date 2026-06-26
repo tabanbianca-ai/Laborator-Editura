@@ -125,7 +125,7 @@ export function EditorialPipelineProjectPage({
         <div className="section-heading">
           <div>
             <p className="section-kicker">Guided workflow</p>
-            <h2>Import → Analysis → Editing → Translation → Review → Validation → Layout → Export → Approval → Publication → Audiobook → Video</h2>
+            <h2>Import → Analysis → Editing → Translation → Review → Validation → Layout → Export → Technical Validation → Approval → Publication → Audiobook → Video</h2>
           </div>
           <Badge tone={data.nextStep ? toneForStatus(data.nextStep.status) : "success"}>
             {data.nextStep?.title ?? "Complete"}
