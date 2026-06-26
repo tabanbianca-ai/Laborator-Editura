@@ -22,6 +22,13 @@ cp deploy/staging/.env.staging.example deploy/staging/.env.staging
 Edit `deploy/staging/.env.staging` with real staging values. Do not commit the
 real `.env.staging` file.
 
+Runtime environment values:
+
+- `NODE_ENV=production` is required for standard Next.js and Node production
+  behavior.
+- `APP_ENV=staging` marks the deployment as staging for security validation and
+  operator scripts.
+
 Required security values:
 
 - `LABORATOR_SESSION_SECRET`: high-entropy session secret, at least 32
