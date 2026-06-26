@@ -19,6 +19,8 @@ const widgetToneByType: Partial<Record<WorkspaceWidget["widgetType"], "info" | "
 };
 
 const mainLaunchRoutes = [
+  { href: "/pipeline", label: "Pipeline" },
+  { href: "/distribution", label: "Distribution" },
   { href: "/", label: "Home" },
   { href: "/projects", label: "Projects" },
   { href: "/documents", label: "Documents" },
@@ -26,7 +28,6 @@ const mainLaunchRoutes = [
   { href: "/translation", label: "Translation" },
   { href: "/review", label: "Review" },
   { href: "/publishing", label: "Publishing" },
-  { href: "/distribution", label: "Distribution" },
   { href: "/magazine", label: "Magazine" },
   { href: "/research", label: "Research" },
   { href: "/library", label: "Library" },
@@ -195,7 +196,15 @@ function LaunchReadinessPanel({ dashboard }: { dashboard: WorkspaceDashboard }) 
           <p className="section-kicker">Main routes</p>
           <div>
             {mainLaunchRoutes.map((route) => (
-              <Link className="document-selector-link" href={route.href} key={route.href}>
+              <Link
+                className={
+                  route.href === "/pipeline" || route.href === "/distribution"
+                    ? "document-selector-link launch-route-link-primary"
+                    : "document-selector-link"
+                }
+                href={route.href}
+                key={route.href}
+              >
                 {route.label}
               </Link>
             ))}
