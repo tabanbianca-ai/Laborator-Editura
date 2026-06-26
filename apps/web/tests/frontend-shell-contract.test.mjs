@@ -23,6 +23,8 @@ test("app shell consumes workspace navigation and preferences", () => {
   assert.match(appShell, /navigation: WorkspaceNavigationItem\[\]/);
   assert.match(appShell, /preferences\?: WorkspacePreferences/);
   assert.match(appShell, /data-collapsed-menus/);
+  assert.match(topNav, /href="\/pipeline"/);
+  assert.match(topNav, /href="\/distribution"/);
   assert.match(topNav, /Workspace/);
   assert.match(topNav, /User/);
 });
@@ -36,6 +38,8 @@ test("navigation renders only visible backend modules through module registry ro
   assert.match(navigation, /resolveModuleRoute/);
   assert.match(navigation, /resolveModuleTitle/);
   assert.match(sidebar, /toNavigationItems\(navigation\)/);
+  assert.match(sidebar, /Production Pipeline/);
+  assert.match(sidebar, /href="\/pipeline"/);
   assert.match(sidebar, /navigationError/);
   assert.doesNotMatch(sidebar, /mainNavigation/);
 
