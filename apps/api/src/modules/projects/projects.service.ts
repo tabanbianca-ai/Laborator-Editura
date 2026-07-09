@@ -13,13 +13,16 @@ import {
   type Project,
   type ProjectActor,
   type ProjectAuditAction,
+  type ProjectCapability,
   type ProjectAuditEvent,
   type ProjectDossier,
   type ProjectDossierItem,
   type ProjectDossierItemType,
   type ProjectDossierOverview,
+  type ProjectEditorialProcessStage,
   type ProjectIdentity,
   type ProjectOrigin,
+  type ProjectPublicationType,
   type ProjectRightsStatus
 } from "./projects.types";
 
@@ -42,6 +45,26 @@ const PROJECT_RIGHTS_STATUSES: readonly ProjectRightsStatus[] = [
   "OPEN_LICENSE",
   "RIGHTS_PENDING",
   "RESTRICTED_PUBLICATION"
+];
+
+const PROJECT_PUBLICATION_TYPES: readonly ProjectPublicationType[] = [
+  "BOOK",
+  "CHILDRENS_BOOK",
+  "MAGAZINE",
+  "POETRY",
+  "DICTIONARY",
+  "COURSE",
+  "AUDIOBOOK",
+  "VIDEO"
+];
+
+const PROJECT_CAPABILITIES: readonly ProjectCapability[] = [
+  "ILLUSTRATIONS",
+  "TRANSLATION",
+  "AUDIOBOOK",
+  "VIDEO",
+  "FLIPBOOK",
+  "ACCESSIBILITY"
 ];
 
 const PROJECT_DOSSIER_ITEM_TYPES: readonly ProjectDossierItemType[] = [
@@ -71,6 +94,19 @@ const DEFAULT_PROJECT_DOSSIERS = [
   "Publishing"
 ] as const;
 
+const BASE_EDITORIAL_PROCESS: readonly ProjectEditorialProcessStage[] = [
+  "IMPORT",
+  "ANALYSIS",
+  "EDITING",
+  "REVIEW",
+  "EDITORIAL_VALIDATION",
+  "LAYOUT",
+  "EXPORT",
+  "TECHNICAL_VALIDATION",
+  "FINAL_APPROVAL",
+  "PUBLICATION"
+];
+
 @Injectable()
 export class ProjectsService {
   constructor(private readonly repository: DatabaseProjectsRepository) {}
@@ -83,6 +119,9 @@ export class ProjectsService {
     }
 
     const projectIdentity = this.buildProjectIdentity(input);
+    const publicationType = this.validatePublicationType(input.publicationType);
+    const capabilities = this.normalizeProjectCapabilities(input.capabilities, publicationType);
+    const editorialProcess = this.buildEditorialProcess(publicationType, capabilities);
     const originalLanguage = this.normalizeIsoLanguage(input.originalLanguage ?? input.sourceLanguage, input.originalLocale);
     const targetLanguages = input.targetLanguages.map((targetLanguage, index) =>
       this.normalizeTranslationTarget(targetLanguage, input.targetLocales?.[index])
@@ -90,7 +129,10 @@ export class ProjectsService {
     const targetLocales = targetLanguages.flatMap((target) => target.locale ? [target.locale] : []);
     const metadata = {
       ...(input.metadata ?? {}),
-      projectIdentity
+      projectIdentity,
+      publicationType,
+      capabilities,
+      editorialProcess
     };
     const now = new Date().toISOString();
     const project = await this.repository.createProject({
@@ -105,6 +147,9 @@ export class ProjectsService {
       targetLocales: targetLocales.length > 0 ? targetLocales : undefined,
       domain: input.domain,
       status: "ACTIVE",
+      publicationType,
+      capabilities,
+      editorialProcess,
       projectIdentity,
       createdBy: actor.userId,
       createdAt: now,
@@ -358,6 +403,83 @@ export class ProjectsService {
       .filter((contractId) => contractId.length > 0);
 
     return normalized.length > 0 ? [...new Set(normalized)] : undefined;
+  }
+
+  private validatePublicationType(publicationType: ProjectPublicationType | undefined): ProjectPublicationType {
+    if (!publicationType) {
+      throw new BadRequestException("Publication Type is required.");
+    }
+
+    if (!PROJECT_PUBLICATION_TYPES.includes(publicationType)) {
+      throw new BadRequestException("Unsupported publication type.");
+    }
+
+    return publicationType;
+  }
+
+  private normalizeProjectCapabilities(
+    capabilities: ProjectCapability[] | undefined,
+    publicationType: ProjectPublicationType
+  ): ProjectCapability[] {
+    const normalized = [...new Set(capabilities ?? [])];
+
+    for (const capability of normalized) {
+      if (!PROJECT_CAPABILITIES.includes(capability)) {
+        throw new BadRequestException("Unsupported project capability.");
+      }
+    }
+
+    if (normalized.includes("FLIPBOOK") && publicationType !== "MAGAZINE") {
+      throw new BadRequestException("Flipbook capability is available only for Magazine projects.");
+    }
+
+    if (publicationType === "AUDIOBOOK" && !normalized.includes("AUDIOBOOK")) {
+      normalized.push("AUDIOBOOK");
+    }
+
+    if (publicationType === "VIDEO" && !normalized.includes("VIDEO")) {
+      normalized.push("VIDEO");
+    }
+
+    return normalized;
+  }
+
+  private buildEditorialProcess(
+    publicationType: ProjectPublicationType,
+    capabilities: ProjectCapability[]
+  ): ProjectEditorialProcessStage[] {
+    const capabilitySet = new Set(capabilities);
+    const stages: ProjectEditorialProcessStage[] = [];
+
+    for (const stage of BASE_EDITORIAL_PROCESS) {
+      if (stage === "EDITING" && capabilitySet.has("ILLUSTRATIONS")) {
+        stages.push("ILLUSTRATION");
+      }
+
+      if (stage === "REVIEW" && capabilitySet.has("TRANSLATION")) {
+        stages.push("TRANSLATION");
+      }
+
+      if (stage === "FINAL_APPROVAL" && capabilitySet.has("ACCESSIBILITY")) {
+        stages.push("ACCESSIBILITY");
+      }
+
+      stages.push(stage);
+    }
+
+    if (publicationType === "AUDIOBOOK" || capabilitySet.has("AUDIOBOOK")) {
+      stages.push("AUDIOBOOK");
+    }
+
+    if (publicationType === "VIDEO" || capabilitySet.has("VIDEO")) {
+      stages.push("VIDEO");
+    }
+
+    if (publicationType === "MAGAZINE" && capabilitySet.has("FLIPBOOK")) {
+      stages.push("FLIPBOOK");
+    }
+
+    return stages;
   }
 
   private async ensureDefaultDossiers(actor: ProjectActor, projectId: string): Promise<ProjectDossier[]> {
