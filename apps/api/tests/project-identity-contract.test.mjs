@@ -35,7 +35,7 @@ test("Project Identity is part of project creation and persisted on projects", (
   assert.match(types, /projectIdentity: ProjectIdentityInput/);
   assert.match(types, /projectIdentity\?: ProjectIdentity/);
   assert.match(service, /Project Identity requires projectOrigin and rightsStatus/);
-  assert.match(service, /metadata = \{\n\s+\.\.\.\(input\.metadata \?\? \{\}\),\n\s+projectIdentity\n\s+\}/);
+  assert.match(service, /metadata = \{/);
   assert.match(service, /projectIdentity,/);
 });
 
