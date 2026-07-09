@@ -8,6 +8,7 @@ import {
   createProjectDossier,
   type ProjectCapability,
   type ProjectDossierItemType,
+  type ProjectEditorialDomain,
   type ProjectOrigin,
   type ProjectPublicationType,
   type ProjectRightsStatus
@@ -28,6 +29,12 @@ export async function createProjectAction(formData: FormData): Promise<void> {
     originalLanguage: readOptionalString(formData, "originalLanguage"),
     originalLocale: readOptionalString(formData, "originalLocale"),
     publicationType: readRequiredString(formData, "publicationType") as ProjectPublicationType,
+    editorialDomain: readRequiredString(formData, "editorialDomain") as ProjectEditorialDomain,
+    editorialClassification: {
+      collection: readOptionalString(formData, "editorialCollection"),
+      series: readOptionalString(formData, "editorialSeries"),
+      volume: readOptionalString(formData, "editorialVolume")
+    },
     capabilities: readStringList(formData, "capabilities") as ProjectCapability[],
     projectIdentity: {
       linkedRightsContractIds,
