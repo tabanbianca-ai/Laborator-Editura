@@ -47,6 +47,42 @@ export type ProjectRightsStatus =
   | "RIGHTS_PENDING"
   | "RESTRICTED_PUBLICATION";
 
+export type ProjectPublicationType =
+  | "BOOK"
+  | "CHILDRENS_BOOK"
+  | "MAGAZINE"
+  | "POETRY"
+  | "DICTIONARY"
+  | "COURSE"
+  | "AUDIOBOOK"
+  | "VIDEO";
+
+export type ProjectCapability =
+  | "ILLUSTRATIONS"
+  | "TRANSLATION"
+  | "AUDIOBOOK"
+  | "VIDEO"
+  | "FLIPBOOK"
+  | "ACCESSIBILITY";
+
+export type ProjectEditorialProcessStage =
+  | "IMPORT"
+  | "ANALYSIS"
+  | "ILLUSTRATION"
+  | "EDITING"
+  | "TRANSLATION"
+  | "REVIEW"
+  | "EDITORIAL_VALIDATION"
+  | "LAYOUT"
+  | "EXPORT"
+  | "TECHNICAL_VALIDATION"
+  | "ACCESSIBILITY"
+  | "FINAL_APPROVAL"
+  | "PUBLICATION"
+  | "AUDIOBOOK"
+  | "VIDEO"
+  | "FLIPBOOK";
+
 export interface ProjectOriginalAuthorIdentity {
   name: string;
   country?: string;
@@ -90,6 +126,9 @@ export interface Project {
   targetLocales?: string[];
   domain?: string;
   status: "ACTIVE" | "ARCHIVED";
+  publicationType: ProjectPublicationType;
+  capabilities: ProjectCapability[];
+  editorialProcess: ProjectEditorialProcessStage[];
   projectIdentity?: ProjectIdentity;
   createdBy: string;
   createdAt: string;
@@ -138,6 +177,8 @@ export interface CreateProjectInput {
   targetLanguages: string[];
   targetLocales?: string[];
   domain?: string;
+  publicationType: ProjectPublicationType;
+  capabilities?: ProjectCapability[];
   projectIdentity: ProjectIdentityInput;
   metadata?: Record<string, unknown>;
 }
