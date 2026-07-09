@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   listProjects,
   type ProjectOrigin,
+  type ProjectPublicationType,
   type ProjectRecord,
   type ProjectRightsStatus
 } from "../../lib/projects-documents-api";
@@ -71,6 +72,7 @@ export async function ProjectsPage({ platformLanguage }: ProjectsPageProps) {
                   </Link>
                 )
               },
+              { header: ui.t("project.publicationType"), render: (project) => formatPublicationType(project.publicationType, ui) },
               { header: ui.t("project.origin"), render: (project) => formatProjectOrigin(project.projectIdentity?.projectOrigin, ui) },
               { header: ui.t("project.rightsStatus"), render: (project) => formatRightsStatus(project.projectIdentity?.rightsStatus, ui) },
               { header: ui.t("project.language"), render: formatLanguagePair },
@@ -111,6 +113,25 @@ function formatProjectOrigin(origin: ProjectOrigin | undefined, ui: UiTranslator
   };
 
   return ui.t(labels[origin]);
+}
+
+function formatPublicationType(publicationType: ProjectPublicationType | undefined, ui: UiTranslator): string {
+  if (!publicationType) {
+    return ui.t("dossier.notRecorded");
+  }
+
+  const labels: Record<ProjectPublicationType, UiTranslationKey> = {
+    AUDIOBOOK: "project.publicationAudiobook",
+    BOOK: "project.publicationBook",
+    CHILDRENS_BOOK: "project.publicationChildrensBook",
+    COURSE: "project.publicationCourse",
+    DICTIONARY: "project.publicationDictionary",
+    MAGAZINE: "project.publicationMagazine",
+    POETRY: "project.publicationPoetry",
+    VIDEO: "project.publicationVideo"
+  };
+
+  return ui.t(labels[publicationType]);
 }
 
 function formatRightsStatus(status: ProjectRightsStatus | undefined, ui: UiTranslator): string {
