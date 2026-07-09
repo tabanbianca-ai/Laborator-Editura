@@ -18,6 +18,8 @@ import {
   type ProjectDossier,
   type ProjectDossierItem,
   type ProjectDossierItemType,
+  type ProjectEditorialClassification,
+  type ProjectEditorialDomain,
   type ProjectDossierOverview,
   type ProjectEditorialProcessStage,
   type ProjectIdentity,
@@ -65,6 +67,28 @@ const PROJECT_CAPABILITIES: readonly ProjectCapability[] = [
   "VIDEO",
   "FLIPBOOK",
   "ACCESSIBILITY"
+];
+
+const PROJECT_EDITORIAL_DOMAINS: readonly ProjectEditorialDomain[] = [
+  "LITERATURE",
+  "PHILOSOPHY",
+  "SPIRITISM",
+  "RELIGION",
+  "PSYCHOLOGY",
+  "EDUCATION",
+  "HISTORY",
+  "SCIENCE",
+  "BIOLOGY",
+  "MATHEMATICS",
+  "MEDICINE",
+  "ART",
+  "MUSIC",
+  "LINGUISTICS",
+  "LAW",
+  "ECONOMICS",
+  "TECHNOLOGY",
+  "CHILDREN_EDUCATIONAL",
+  "OTHER"
 ];
 
 const PROJECT_DOSSIER_ITEM_TYPES: readonly ProjectDossierItemType[] = [
@@ -120,6 +144,8 @@ export class ProjectsService {
 
     const projectIdentity = this.buildProjectIdentity(input);
     const publicationType = this.validatePublicationType(input.publicationType);
+    const editorialDomain = this.normalizeEditorialDomain(input.editorialDomain, input.domain);
+    const editorialClassification = this.normalizeEditorialClassification(input.editorialClassification);
     const capabilities = this.normalizeProjectCapabilities(input.capabilities, publicationType);
     const editorialProcess = this.buildEditorialProcess(publicationType, capabilities);
     const originalLanguage = this.normalizeIsoLanguage(input.originalLanguage ?? input.sourceLanguage, input.originalLocale);
@@ -131,6 +157,8 @@ export class ProjectsService {
       ...(input.metadata ?? {}),
       projectIdentity,
       publicationType,
+      editorialDomain,
+      editorialClassification,
       capabilities,
       editorialProcess
     };
@@ -145,9 +173,11 @@ export class ProjectsService {
       originalLocale: originalLanguage.locale,
       targetLanguages: targetLanguages.map((target) => target.language),
       targetLocales: targetLocales.length > 0 ? targetLocales : undefined,
-      domain: input.domain,
+      domain: input.domain ?? editorialDomain,
       status: "ACTIVE",
       publicationType,
+      editorialDomain,
+      editorialClassification,
       capabilities,
       editorialProcess,
       projectIdentity,
@@ -442,6 +472,43 @@ export class ProjectsService {
     }
 
     return normalized;
+  }
+
+  private normalizeEditorialDomain(
+    editorialDomain: ProjectEditorialDomain | undefined,
+    legacyDomain: string | undefined
+  ): ProjectEditorialDomain {
+    if (editorialDomain) {
+      if (!PROJECT_EDITORIAL_DOMAINS.includes(editorialDomain)) {
+        throw new BadRequestException("Unsupported editorial domain.");
+      }
+
+      return editorialDomain;
+    }
+
+    const normalizedLegacyDomain = legacyDomain
+      ?.trim()
+      .toUpperCase()
+      .replace(/[^A-Z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "");
+
+    if (normalizedLegacyDomain && PROJECT_EDITORIAL_DOMAINS.includes(normalizedLegacyDomain as ProjectEditorialDomain)) {
+      return normalizedLegacyDomain as ProjectEditorialDomain;
+    }
+
+    return "OTHER";
+  }
+
+  private normalizeEditorialClassification(
+    classification: ProjectEditorialClassification | undefined
+  ): ProjectEditorialClassification | undefined {
+    const normalized = {
+      collection: classification?.collection?.trim() || undefined,
+      series: classification?.series?.trim() || undefined,
+      volume: classification?.volume?.trim() || undefined
+    };
+
+    return normalized.collection || normalized.series || normalized.volume ? normalized : undefined;
   }
 
   private buildEditorialProcess(
