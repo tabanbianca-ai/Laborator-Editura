@@ -1,4 +1,50 @@
-import { apiGet, type ApiResult } from "./api-client";
+import { apiGet, apiPost, type ApiResult } from "./api-client";
+
+export type ProjectOrigin =
+  | "ORIGINAL_CREATION"
+  | "EXTERNAL_AUTHOR"
+  | "TRANSLATION"
+  | "EDITORIAL_COLLABORATION"
+  | "PUBLIC_DOMAIN_CLASSICAL_WORK"
+  | "MAGAZINE_ARTICLE"
+  | "CHILDRENS_BOOK"
+  | "AUDIO_VIDEO_PROJECT";
+
+export type ProjectRightsStatus =
+  | "ORIGINAL_CREATION"
+  | "RIGHTS_OBTAINED"
+  | "PUBLIC_DOMAIN"
+  | "CLASSICAL_WORK"
+  | "OPEN_LICENSE"
+  | "RIGHTS_PENDING"
+  | "RESTRICTED_PUBLICATION";
+
+export interface ProjectIdentityRecord {
+  projectOrigin: ProjectOrigin;
+  rightsStatus: ProjectRightsStatus;
+  originalAuthor?: {
+    country?: string;
+    name: string;
+    originalLanguage: string;
+  };
+  linkedRightsContractIds?: string[];
+  rightsContributionTracking: {
+    audiobook: boolean;
+    cover: boolean;
+    editorialAdaptation: boolean;
+    illustrations: boolean;
+    layout: boolean;
+    otherOriginalContributions: boolean;
+    translation: boolean;
+    video: boolean;
+  };
+  publicationEligibility: {
+    editingAllowed: boolean;
+    originalAuthorRightsRequired: boolean;
+    publicationAllowed: boolean;
+    translationAllowed: boolean;
+  };
+}
 
 export interface ProjectRecord {
   createdAt: string;
@@ -14,6 +60,32 @@ export interface ProjectRecord {
   targetLanguages: string[];
   targetLocales?: string[];
   updatedAt: string;
+  projectIdentity?: ProjectIdentityRecord;
+  metadata?: {
+    projectIdentity?: ProjectIdentityRecord;
+    [key: string]: unknown;
+  };
+}
+
+export interface CreateProjectRequest {
+  description?: string;
+  domain?: string;
+  name: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  projectIdentity: {
+    linkedRightsContractIds?: string[];
+    originalAuthor?: {
+      country?: string;
+      name?: string;
+      originalLanguage?: string;
+    };
+    projectOrigin: ProjectOrigin;
+    rightsStatus: ProjectRightsStatus;
+  };
+  sourceLanguage: string;
+  targetLanguages: string[];
+  targetLocales?: string[];
 }
 
 export interface DocumentRecord {
@@ -36,6 +108,10 @@ export interface DocumentRecord {
 
 export function listProjects(): Promise<ApiResult<ProjectRecord[]>> {
   return apiGet<ProjectRecord[]>("/projects");
+}
+
+export function createProject(input: CreateProjectRequest): Promise<ApiResult<ProjectRecord>> {
+  return apiPost<ProjectRecord, CreateProjectRequest>("/projects", input);
 }
 
 export function listDocuments(projectId?: string): Promise<ApiResult<DocumentRecord[]>> {
