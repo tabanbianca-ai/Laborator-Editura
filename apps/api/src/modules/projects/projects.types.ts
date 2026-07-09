@@ -3,7 +3,30 @@ export interface ProjectActor {
   organizationId: string;
 }
 
-export type ProjectAuditAction = "CREATE" | "UPDATE" | "DELETE" | "APPROVE" | "EXPORT";
+export type ProjectAuditAction =
+  | "CREATE"
+  | "UPDATE"
+  | "DELETE"
+  | "APPROVE"
+  | "EXPORT"
+  | "DOSSIER_CREATED"
+  | "DOSSIER_ITEM_ASSIGNED";
+
+export type ProjectDossierType =
+  | "DEFAULT"
+  | "CUSTOM";
+
+export type ProjectDossierItemType =
+  | "MANUSCRIPT"
+  | "DOCUMENT"
+  | "RESEARCH_FILE"
+  | "CONTRACT"
+  | "IMAGE"
+  | "AUDIO"
+  | "VIDEO"
+  | "EXPORT"
+  | "PUBLISHING_FILE"
+  | "OTHER_ASSET";
 
 export type ProjectOrigin =
   | "ORIGINAL_CREATION"
@@ -74,6 +97,38 @@ export interface Project {
   metadata?: Record<string, unknown>;
 }
 
+export interface ProjectDossier {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  parentDossierId?: string;
+  name: string;
+  slug: string;
+  dossierType: ProjectDossierType;
+  order: number;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectDossierItem {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  dossierId: string;
+  itemType: ProjectDossierItemType;
+  itemId: string;
+  label?: string;
+  metadata?: Record<string, unknown>;
+  assignedBy: string;
+  assignedAt: string;
+}
+
+export interface ProjectDossierOverview {
+  dossiers: ProjectDossier[];
+  items: ProjectDossierItem[];
+}
+
 export interface CreateProjectInput {
   name: string;
   description?: string;
@@ -94,14 +149,27 @@ export interface ProjectIdentityInput {
   linkedRightsContractIds?: string[];
 }
 
+export interface CreateProjectDossierInput {
+  name: string;
+  parentDossierId?: string;
+}
+
+export interface AssignProjectDossierItemInput {
+  dossierId: string;
+  itemType: ProjectDossierItemType;
+  itemId: string;
+  label?: string;
+  metadata?: Record<string, unknown>;
+}
+
 export interface ProjectAuditEvent {
   id: string;
   organizationId: string;
   actorId: string;
   action: ProjectAuditAction;
-  entityType: "PROJECT";
+  entityType: "PROJECT" | "PROJECT_DOSSIER" | "PROJECT_DOSSIER_ITEM";
   entityId: string;
-  beforeState?: Project | null;
-  afterState?: Project | null;
+  beforeState?: Project | ProjectDossier | ProjectDossierItem | null;
+  afterState?: Project | ProjectDossier | ProjectDossierItem | null;
   createdAt: string;
 }
