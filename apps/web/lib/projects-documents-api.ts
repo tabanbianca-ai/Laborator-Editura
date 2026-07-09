@@ -37,6 +37,27 @@ export type ProjectCapability =
   | "FLIPBOOK"
   | "ACCESSIBILITY";
 
+export type ProjectEditorialDomain =
+  | "LITERATURE"
+  | "PHILOSOPHY"
+  | "SPIRITISM"
+  | "RELIGION"
+  | "PSYCHOLOGY"
+  | "EDUCATION"
+  | "HISTORY"
+  | "SCIENCE"
+  | "BIOLOGY"
+  | "MATHEMATICS"
+  | "MEDICINE"
+  | "ART"
+  | "MUSIC"
+  | "LINGUISTICS"
+  | "LAW"
+  | "ECONOMICS"
+  | "TECHNOLOGY"
+  | "CHILDREN_EDUCATIONAL"
+  | "OTHER";
+
 export type ProjectEditorialProcessStage =
   | "IMPORT"
   | "ANALYSIS"
@@ -54,6 +75,12 @@ export type ProjectEditorialProcessStage =
   | "AUDIOBOOK"
   | "VIDEO"
   | "FLIPBOOK";
+
+export interface ProjectEditorialClassificationRecord {
+  series?: string;
+  collection?: string;
+  volume?: string;
+}
 
 export type ProjectDossierItemType =
   | "MANUSCRIPT"
@@ -109,11 +136,15 @@ export interface ProjectRecord {
   targetLocales?: string[];
   updatedAt: string;
   publicationType?: ProjectPublicationType;
+  editorialDomain?: ProjectEditorialDomain;
+  editorialClassification?: ProjectEditorialClassificationRecord;
   capabilities?: ProjectCapability[];
   editorialProcess?: ProjectEditorialProcessStage[];
   projectIdentity?: ProjectIdentityRecord;
   metadata?: {
     capabilities?: ProjectCapability[];
+    editorialClassification?: ProjectEditorialClassificationRecord;
+    editorialDomain?: ProjectEditorialDomain;
     editorialProcess?: ProjectEditorialProcessStage[];
     publicationType?: ProjectPublicationType;
     projectIdentity?: ProjectIdentityRecord;
@@ -160,6 +191,8 @@ export interface CreateProjectRequest {
   originalLanguage?: string;
   originalLocale?: string;
   publicationType: ProjectPublicationType;
+  editorialDomain: ProjectEditorialDomain;
+  editorialClassification?: ProjectEditorialClassificationRecord;
   capabilities?: ProjectCapability[];
   projectIdentity: {
     linkedRightsContractIds?: string[];
