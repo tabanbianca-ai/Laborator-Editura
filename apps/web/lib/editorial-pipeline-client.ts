@@ -307,11 +307,11 @@ function buildPipelineSteps(input: {
   return [
     {
       completionPercent: hasDocument ? 100 : 0,
-      continueHref: "/author-studio",
+      continueHref: project ? `/projects/${encodeURIComponent(project.id)}` : "/author-studio",
       id: "import",
       locked: false,
-      openHref: "/author-studio",
-      sourceModules: ["Author Studio"],
+      openHref: project ? `/projects/${encodeURIComponent(project.id)}` : "/author-studio",
+      sourceModules: ["Author Studio", "Project Dossiers"],
       status: projectIdentityWarnings.length > 0 ? "NEEDS_ATTENTION" : hasDocument ? "COMPLETED" : "IN_PROGRESS",
       summary: projectIdentityWarnings.length > 0
         ? "Complete Project Identity before editorial production continues."
