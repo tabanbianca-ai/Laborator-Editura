@@ -5,6 +5,7 @@ import {
   listProjects,
   type DocumentRecord,
   type ProjectCapability,
+  type ProjectEditorialDomain,
   type ProjectPublicationType,
   type ProjectRecord
 } from "./projects-documents-api";
@@ -262,8 +263,14 @@ function buildPipelineSteps(input: {
   const projectIdentityWarnings = project?.projectIdentity
     ? []
     : ["Project Identity is required before entering the editorial process."];
+  const editorialTaxonomyWarnings = project && getProjectPublicationType(project) && getProjectEditorialDomain(project)
+    ? []
+    : project
+      ? ["Editorial taxonomy is required before entering the editorial process."]
+      : [];
   const importWarnings = [
     ...projectIdentityWarnings,
+    ...editorialTaxonomyWarnings,
     ...(selectedDocument ? [] : ["Missing manuscript or document."])
   ];
   const languageWarnings = selectedDocument && project
@@ -321,9 +328,11 @@ function buildPipelineSteps(input: {
       locked: false,
       openHref: project ? `/projects/${encodeURIComponent(project.id)}` : "/author-studio",
       sourceModules: ["Author Studio", "Project Dossiers"],
-      status: projectIdentityWarnings.length > 0 ? "NEEDS_ATTENTION" : hasDocument ? "COMPLETED" : "IN_PROGRESS",
+      status: projectIdentityWarnings.length + editorialTaxonomyWarnings.length > 0 ? "NEEDS_ATTENTION" : hasDocument ? "COMPLETED" : "IN_PROGRESS",
       summary: projectIdentityWarnings.length > 0
         ? "Complete Project Identity before editorial production continues."
+        : editorialTaxonomyWarnings.length > 0
+        ? "Complete Publication Type, Editorial Domain, and Project Capabilities before production continues."
         : hasDocument
         ? `Manuscript linked as ${selectedDocument?.title}.`
         : "Create or import the manuscript before production can continue.",
@@ -584,6 +593,10 @@ function hasProjectCapabilityConfiguration(project: ProjectRecord | null): boole
 
 function getProjectPublicationType(project: ProjectRecord | null): ProjectPublicationType | undefined {
   return project?.publicationType ?? project?.metadata?.publicationType;
+}
+
+function getProjectEditorialDomain(project: ProjectRecord | null): ProjectEditorialDomain | undefined {
+  return project?.editorialDomain ?? project?.metadata?.editorialDomain;
 }
 
 function getProjectCapabilities(project: ProjectRecord | null): ProjectCapability[] {
