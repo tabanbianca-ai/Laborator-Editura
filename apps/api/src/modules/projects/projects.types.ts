@@ -65,6 +65,27 @@ export type ProjectCapability =
   | "FLIPBOOK"
   | "ACCESSIBILITY";
 
+export type ProjectEditorialDomain =
+  | "LITERATURE"
+  | "PHILOSOPHY"
+  | "SPIRITISM"
+  | "RELIGION"
+  | "PSYCHOLOGY"
+  | "EDUCATION"
+  | "HISTORY"
+  | "SCIENCE"
+  | "BIOLOGY"
+  | "MATHEMATICS"
+  | "MEDICINE"
+  | "ART"
+  | "MUSIC"
+  | "LINGUISTICS"
+  | "LAW"
+  | "ECONOMICS"
+  | "TECHNOLOGY"
+  | "CHILDREN_EDUCATIONAL"
+  | "OTHER";
+
 export type ProjectEditorialProcessStage =
   | "IMPORT"
   | "ANALYSIS"
@@ -82,6 +103,12 @@ export type ProjectEditorialProcessStage =
   | "AUDIOBOOK"
   | "VIDEO"
   | "FLIPBOOK";
+
+export interface ProjectEditorialClassification {
+  series?: string;
+  collection?: string;
+  volume?: string;
+}
 
 export interface ProjectOriginalAuthorIdentity {
   name: string;
@@ -127,6 +154,8 @@ export interface Project {
   domain?: string;
   status: "ACTIVE" | "ARCHIVED";
   publicationType: ProjectPublicationType;
+  editorialDomain: ProjectEditorialDomain;
+  editorialClassification?: ProjectEditorialClassification;
   capabilities: ProjectCapability[];
   editorialProcess: ProjectEditorialProcessStage[];
   projectIdentity?: ProjectIdentity;
@@ -178,6 +207,8 @@ export interface CreateProjectInput {
   targetLocales?: string[];
   domain?: string;
   publicationType: ProjectPublicationType;
+  editorialDomain?: ProjectEditorialDomain;
+  editorialClassification?: ProjectEditorialClassification;
   capabilities?: ProjectCapability[];
   projectIdentity: ProjectIdentityInput;
   metadata?: Record<string, unknown>;
