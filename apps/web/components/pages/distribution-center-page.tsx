@@ -7,7 +7,8 @@ import type {
   PreflightCheck,
   PreflightStatus
 } from "../../lib/distribution-center-client";
-import { createUiTranslator, type UiTranslator } from "../../lib/ui-i18n";
+import type { ProjectOrigin, ProjectRightsStatus } from "../../lib/projects-documents-api";
+import { createUiTranslator, type UiTranslationKey, type UiTranslator } from "../../lib/ui-i18n";
 import { Badge, Card, EmptyState, ErrorState, PageHeader, Table } from "../ui";
 
 type BadgeTone = ComponentProps<typeof Badge>["tone"];
@@ -123,6 +124,18 @@ function DocumentSelector({ data, ui }: { data: DistributionCenterData; ui: UiTr
     <section className="translation-selector-grid" aria-label="Distribution document selection">
       <Card title={ui.t("distribution.project")}>
         <p className="selector-value">{workspace.selectedProject?.name ?? ui.t("distribution.notSelected")}</p>
+        {workspace.selectedProject?.projectIdentity ? (
+          <div className="reference-stack">
+            <ReferenceItem
+              label={ui.t("project.origin")}
+              value={formatProjectOrigin(workspace.selectedProject.projectIdentity.projectOrigin, ui)}
+            />
+            <ReferenceItem
+              label={ui.t("project.rightsStatus")}
+              value={formatRightsStatus(workspace.selectedProject.projectIdentity.rightsStatus, ui)}
+            />
+          </div>
+        ) : null}
       </Card>
       <Card title={ui.t("distribution.document")}>
         <p className="selector-value">{workspace.selectedDocument?.title ?? ui.t("distribution.notSelected")}</p>
@@ -294,6 +307,35 @@ function ReferenceItem({
       <span>{value}</span>
     </div>
   );
+}
+
+function formatProjectOrigin(origin: ProjectOrigin, ui: UiTranslator): string {
+  const labels: Record<ProjectOrigin, UiTranslationKey> = {
+    AUDIO_VIDEO_PROJECT: "project.audioVideoProject",
+    CHILDRENS_BOOK: "project.childrenBook",
+    EDITORIAL_COLLABORATION: "project.editorialCollaboration",
+    EXTERNAL_AUTHOR: "project.externalAuthor",
+    MAGAZINE_ARTICLE: "project.magazineArticle",
+    ORIGINAL_CREATION: "project.originalCreation",
+    PUBLIC_DOMAIN_CLASSICAL_WORK: "project.publicDomainClassicalWork",
+    TRANSLATION: "project.translation"
+  };
+
+  return ui.t(labels[origin]);
+}
+
+function formatRightsStatus(status: ProjectRightsStatus, ui: UiTranslator): string {
+  const labels: Record<ProjectRightsStatus, UiTranslationKey> = {
+    CLASSICAL_WORK: "project.classicalWork",
+    OPEN_LICENSE: "project.openLicense",
+    ORIGINAL_CREATION: "project.originalCreation",
+    PUBLIC_DOMAIN: "project.publicDomain",
+    RESTRICTED_PUBLICATION: "project.restrictedPublication",
+    RIGHTS_OBTAINED: "project.rightsObtained",
+    RIGHTS_PENDING: "project.rightsPending"
+  };
+
+  return ui.t(labels[status]);
 }
 
 function toneForPreflight(status: PreflightStatus): BadgeTone {
