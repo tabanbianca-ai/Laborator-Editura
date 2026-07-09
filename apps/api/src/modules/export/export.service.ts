@@ -156,7 +156,8 @@ export class ExportService {
         domain: project.domain,
         status: this.mapProjectStatus(project.status),
         createdAt: project.createdAt,
-        updatedAt: project.updatedAt
+        updatedAt: project.updatedAt,
+        metadata: project.metadata
       },
       documents: [
         {
