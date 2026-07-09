@@ -9,6 +9,7 @@ import type {
   ProjectDossierItemRecord,
   ProjectDossierOverview,
   ProjectDossierRecord,
+  ProjectEditorialDomain,
   ProjectPublicationType,
   ProjectRecord
 } from "../../lib/projects-documents-api";
@@ -79,6 +80,8 @@ export function ProjectDetailPage({
               value={project.projectIdentity?.originalAuthor?.name ?? ui.t("project.unassigned")}
             />
             <ReferenceItem label={ui.t("project.publicationType")} value={formatPublicationType(project.publicationType, ui)} />
+            <ReferenceItem label={ui.t("project.editorialDomain")} value={formatEditorialDomain(project.editorialDomain, ui)} />
+            <ReferenceItem label={ui.t("project.editorialClassification")} value={formatEditorialClassification(project, ui)} />
             <ReferenceItem label={ui.t("project.capabilities")} value={formatCapabilities(project.capabilities, ui)} />
             <ReferenceItem label={ui.t("project.editorialProcess")} value={formatEditorialProcess(project.editorialProcess, ui)} />
           </div>
@@ -304,6 +307,47 @@ function formatPublicationType(publicationType: ProjectPublicationType | undefin
   };
 
   return labels[publicationType];
+}
+
+function formatEditorialDomain(editorialDomain: ProjectEditorialDomain | undefined, ui: UiTranslator): string {
+  if (!editorialDomain) {
+    return ui.t("dossier.notRecorded");
+  }
+
+  const labels: Record<ProjectEditorialDomain, string> = {
+    ART: ui.t("project.domainArt"),
+    BIOLOGY: ui.t("project.domainBiology"),
+    CHILDREN_EDUCATIONAL: ui.t("project.domainChildrenEducational"),
+    ECONOMICS: ui.t("project.domainEconomics"),
+    EDUCATION: ui.t("project.domainEducation"),
+    HISTORY: ui.t("project.domainHistory"),
+    LAW: ui.t("project.domainLaw"),
+    LINGUISTICS: ui.t("project.domainLinguistics"),
+    LITERATURE: ui.t("project.domainLiterature"),
+    MATHEMATICS: ui.t("project.domainMathematics"),
+    MEDICINE: ui.t("project.domainMedicine"),
+    MUSIC: ui.t("project.domainMusic"),
+    OTHER: ui.t("project.domainOther"),
+    PHILOSOPHY: ui.t("project.domainPhilosophy"),
+    PSYCHOLOGY: ui.t("project.domainPsychology"),
+    RELIGION: ui.t("project.domainReligion"),
+    SCIENCE: ui.t("project.domainScience"),
+    SPIRITISM: ui.t("project.domainSpiritism"),
+    TECHNOLOGY: ui.t("project.domainTechnology")
+  };
+
+  return labels[editorialDomain];
+}
+
+function formatEditorialClassification(project: ProjectRecord, ui: UiTranslator): string {
+  const classification = project.editorialClassification ?? project.metadata?.editorialClassification;
+  const values = [
+    classification?.series,
+    classification?.collection,
+    classification?.volume
+  ].filter((value): value is string => Boolean(value));
+
+  return values.length > 0 ? values.join(" / ") : ui.t("dossier.notRecorded");
 }
 
 function formatCapabilities(capabilities: ProjectCapability[] | undefined, ui: UiTranslator): string {
