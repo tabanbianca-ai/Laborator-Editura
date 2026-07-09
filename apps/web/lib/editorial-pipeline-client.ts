@@ -257,7 +257,13 @@ function buildPipelineSteps(input: {
   workflow: ReviewWorkflowState | null;
 }): EditorialPipelineStep[] {
   const { project, rightsWarnings, selectedDocument, segments, translations, workflow } = input;
-  const importWarnings = selectedDocument ? [] : ["Missing manuscript or document."];
+  const projectIdentityWarnings = project?.projectIdentity
+    ? []
+    : ["Project Identity is required before entering the editorial process."];
+  const importWarnings = [
+    ...projectIdentityWarnings,
+    ...(selectedDocument ? [] : ["Missing manuscript or document."])
+  ];
   const languageWarnings = selectedDocument && project
     ? buildLanguageWarnings(project, selectedDocument)
     : [];
@@ -306,8 +312,10 @@ function buildPipelineSteps(input: {
       locked: false,
       openHref: "/author-studio",
       sourceModules: ["Author Studio"],
-      status: hasDocument ? "COMPLETED" : "IN_PROGRESS",
-      summary: hasDocument
+      status: projectIdentityWarnings.length > 0 ? "NEEDS_ATTENTION" : hasDocument ? "COMPLETED" : "IN_PROGRESS",
+      summary: projectIdentityWarnings.length > 0
+        ? "Complete Project Identity before editorial production continues."
+        : hasDocument
         ? `Manuscript linked as ${selectedDocument?.title}.`
         : "Create or import the manuscript before production can continue.",
       title: "Import Manuscript",
