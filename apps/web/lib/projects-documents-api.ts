@@ -19,6 +19,18 @@ export type ProjectRightsStatus =
   | "RIGHTS_PENDING"
   | "RESTRICTED_PUBLICATION";
 
+export type ProjectDossierItemType =
+  | "MANUSCRIPT"
+  | "DOCUMENT"
+  | "RESEARCH_FILE"
+  | "CONTRACT"
+  | "IMAGE"
+  | "AUDIO"
+  | "VIDEO"
+  | "EXPORT"
+  | "PUBLISHING_FILE"
+  | "OTHER_ASSET";
+
 export interface ProjectIdentityRecord {
   projectOrigin: ProjectOrigin;
   rightsStatus: ProjectRightsStatus;
@@ -67,6 +79,38 @@ export interface ProjectRecord {
   };
 }
 
+export interface ProjectDossierRecord {
+  createdAt: string;
+  createdBy: string;
+  dossierType: "DEFAULT" | "CUSTOM";
+  id: string;
+  name: string;
+  order: number;
+  organizationId: string;
+  parentDossierId?: string;
+  projectId: string;
+  slug: string;
+  updatedAt: string;
+}
+
+export interface ProjectDossierItemRecord {
+  assignedAt: string;
+  assignedBy: string;
+  dossierId: string;
+  id: string;
+  itemId: string;
+  itemType: ProjectDossierItemType;
+  label?: string;
+  metadata?: Record<string, unknown>;
+  organizationId: string;
+  projectId: string;
+}
+
+export interface ProjectDossierOverview {
+  dossiers: ProjectDossierRecord[];
+  items: ProjectDossierItemRecord[];
+}
+
 export interface CreateProjectRequest {
   description?: string;
   domain?: string;
@@ -110,8 +154,45 @@ export function listProjects(): Promise<ApiResult<ProjectRecord[]>> {
   return apiGet<ProjectRecord[]>("/projects");
 }
 
+export function getProject(projectId: string): Promise<ApiResult<ProjectRecord>> {
+  return apiGet<ProjectRecord>(`/projects/${encodeURIComponent(projectId)}`);
+}
+
 export function createProject(input: CreateProjectRequest): Promise<ApiResult<ProjectRecord>> {
   return apiPost<ProjectRecord, CreateProjectRequest>("/projects", input);
+}
+
+export function getProjectDossiers(projectId: string): Promise<ApiResult<ProjectDossierOverview>> {
+  return apiGet<ProjectDossierOverview>(`/projects/${encodeURIComponent(projectId)}/dossiers`);
+}
+
+export function createProjectDossier(
+  projectId: string,
+  input: {
+    name: string;
+    parentDossierId?: string;
+  }
+): Promise<ApiResult<ProjectDossierRecord>> {
+  return apiPost<ProjectDossierRecord, typeof input>(
+    `/projects/${encodeURIComponent(projectId)}/dossiers`,
+    input
+  );
+}
+
+export function assignProjectDossierItem(
+  projectId: string,
+  input: {
+    dossierId: string;
+    itemId: string;
+    itemType: ProjectDossierItemType;
+    label?: string;
+    metadata?: Record<string, unknown>;
+  }
+): Promise<ApiResult<ProjectDossierItemRecord>> {
+  return apiPost<ProjectDossierItemRecord, typeof input>(
+    `/projects/${encodeURIComponent(projectId)}/dossier-items`,
+    input
+  );
 }
 
 export function listDocuments(projectId?: string): Promise<ApiResult<DocumentRecord[]>> {
