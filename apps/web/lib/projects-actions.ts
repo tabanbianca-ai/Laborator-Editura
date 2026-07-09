@@ -3,7 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
+  assignProjectDossierItem,
   createProject,
+  createProjectDossier,
+  type ProjectDossierItemType,
   type ProjectOrigin,
   type ProjectRightsStatus
 } from "./projects-documents-api";
@@ -44,6 +47,38 @@ export async function createProjectAction(formData: FormData): Promise<void> {
   revalidatePath("/projects");
   revalidatePath("/pipeline");
   redirect(`/pipeline/${result.data.id}`);
+}
+
+export async function createProjectDossierAction(formData: FormData): Promise<void> {
+  const projectId = readRequiredString(formData, "projectId");
+  const result = await createProjectDossier(projectId, {
+    name: readRequiredString(formData, "name"),
+    parentDossierId: readOptionalString(formData, "parentDossierId")
+  });
+
+  finishProjectDossierMutation(projectId, result.error, "dossierError");
+}
+
+export async function assignProjectDossierItemAction(formData: FormData): Promise<void> {
+  const projectId = readRequiredString(formData, "projectId");
+  const result = await assignProjectDossierItem(projectId, {
+    dossierId: readRequiredString(formData, "dossierId"),
+    itemId: readRequiredString(formData, "itemId"),
+    itemType: readRequiredString(formData, "itemType") as ProjectDossierItemType,
+    label: readOptionalString(formData, "label")
+  });
+
+  finishProjectDossierMutation(projectId, result.error, "assignError");
+}
+
+function finishProjectDossierMutation(projectId: string, error: string | null, errorKey: string): never {
+  if (error) {
+    redirect(`/projects/${encodeURIComponent(projectId)}?${errorKey}=${encodeURIComponent(error)}`);
+  }
+
+  revalidatePath(`/projects/${projectId}`);
+  revalidatePath(`/pipeline/${projectId}`);
+  redirect(`/projects/${projectId}`);
 }
 
 function readRequiredString(formData: FormData, fieldName: string): string {
