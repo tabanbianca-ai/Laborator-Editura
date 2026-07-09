@@ -2,7 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { createUiTranslator, type UiTranslationKey } from "../../lib/ui-i18n";
-import type { ProjectOrigin, ProjectRightsStatus } from "../../lib/projects-documents-api";
+import type {
+  ProjectCapability,
+  ProjectOrigin,
+  ProjectPublicationType,
+  ProjectRightsStatus
+} from "../../lib/projects-documents-api";
 import { Badge, Button, Input, Select } from "../ui";
 
 interface ProjectIdentityFormProps {
@@ -31,12 +36,34 @@ const rightsStatusValues: ProjectRightsStatus[] = [
   "RESTRICTED_PUBLICATION"
 ];
 
+const publicationTypeValues: ProjectPublicationType[] = [
+  "BOOK",
+  "CHILDRENS_BOOK",
+  "MAGAZINE",
+  "POETRY",
+  "DICTIONARY",
+  "COURSE",
+  "AUDIOBOOK",
+  "VIDEO"
+];
+
+const capabilityValues: ProjectCapability[] = [
+  "ILLUSTRATIONS",
+  "TRANSLATION",
+  "AUDIOBOOK",
+  "VIDEO",
+  "FLIPBOOK",
+  "ACCESSIBILITY"
+];
+
 export function ProjectIdentityForm({ action, platformLanguage }: ProjectIdentityFormProps) {
   const ui = createUiTranslator(platformLanguage);
   const [projectOrigin, setProjectOrigin] = useState<ProjectOrigin>("ORIGINAL_CREATION");
+  const [publicationType, setPublicationType] = useState<ProjectPublicationType>("BOOK");
   const [rightsStatus, setRightsStatus] = useState<ProjectRightsStatus>("ORIGINAL_CREATION");
   const requiresOriginalAuthor = projectOrigin !== "ORIGINAL_CREATION";
   const publicDomainSelected = rightsStatus === "PUBLIC_DOMAIN" || rightsStatus === "CLASSICAL_WORK";
+  const flipbookAvailable = publicationType === "MAGAZINE";
 
   const originOptions = useMemo(
     () => projectOriginValues.map((value) => ({ label: labelForProjectOrigin(value, ui.t), value })),
@@ -44,6 +71,10 @@ export function ProjectIdentityForm({ action, platformLanguage }: ProjectIdentit
   );
   const rightsStatusOptions = useMemo(
     () => rightsStatusValues.map((value) => ({ label: labelForRightsStatus(value, ui.t), value })),
+    [ui]
+  );
+  const publicationTypeOptions = useMemo(
+    () => publicationTypeValues.map((value) => ({ label: labelForPublicationType(value, ui.t), value })),
     [ui]
   );
 
@@ -128,6 +159,56 @@ export function ProjectIdentityForm({ action, platformLanguage }: ProjectIdentit
         <p className="muted-text">{ui.t("project.linkedRightsContractsHelp")}</p>
       </section>
 
+      <section className="content-panel">
+        <div className="section-heading">
+          <div>
+            <p className="section-kicker">{ui.t("project.publicationType")}</p>
+            <h2>{ui.t("project.publicationTypeHelp")}</h2>
+          </div>
+          <Badge tone="warning">{ui.t("badge.required")}</Badge>
+        </div>
+
+        <Select
+          label={ui.t("project.publicationType")}
+          name="publicationType"
+          onChange={(event) => setPublicationType(event.target.value as ProjectPublicationType)}
+          options={publicationTypeOptions}
+          required
+          value={publicationType}
+        />
+      </section>
+
+      <section className="content-panel">
+        <div className="section-heading">
+          <div>
+            <p className="section-kicker">{ui.t("project.projectCapabilities")}</p>
+            <h2>{ui.t("project.projectCapabilitiesHelp")}</h2>
+          </div>
+          <Badge tone="info">{ui.t("badge.guided")}</Badge>
+        </div>
+
+        <div className="manuscript-form-grid">
+          {capabilityValues.map((capability) => {
+            const disabled = capability === "FLIPBOOK" && !flipbookAvailable;
+
+            return (
+              <label className="rights-checkbox" key={capability}>
+                <input
+                  disabled={disabled}
+                  name="capabilities"
+                  type="checkbox"
+                  value={capability}
+                />
+                <span>{labelForProjectCapability(capability, ui.t)}</span>
+              </label>
+            );
+          })}
+        </div>
+        {!flipbookAvailable ? (
+          <p className="muted-text">{ui.t("project.flipbookMagazineOnly")}</p>
+        ) : null}
+      </section>
+
       <div className="form-actions">
         <Button type="submit">{ui.t("action.createProject")}</Button>
       </div>
@@ -148,6 +229,40 @@ function labelForProjectOrigin(
     ORIGINAL_CREATION: "project.originalCreation",
     PUBLIC_DOMAIN_CLASSICAL_WORK: "project.publicDomainClassicalWork",
     TRANSLATION: "project.translation"
+  };
+
+  return t(labels[value]);
+}
+
+function labelForPublicationType(
+  value: ProjectPublicationType,
+  t: ReturnType<typeof createUiTranslator>["t"]
+): string {
+  const labels: Record<ProjectPublicationType, UiTranslationKey> = {
+    AUDIOBOOK: "project.publicationAudiobook",
+    BOOK: "project.publicationBook",
+    CHILDRENS_BOOK: "project.publicationChildrensBook",
+    COURSE: "project.publicationCourse",
+    DICTIONARY: "project.publicationDictionary",
+    MAGAZINE: "project.publicationMagazine",
+    POETRY: "project.publicationPoetry",
+    VIDEO: "project.publicationVideo"
+  };
+
+  return t(labels[value]);
+}
+
+function labelForProjectCapability(
+  value: ProjectCapability,
+  t: ReturnType<typeof createUiTranslator>["t"]
+): string {
+  const labels: Record<ProjectCapability, UiTranslationKey> = {
+    ACCESSIBILITY: "project.capabilityAccessibility",
+    AUDIOBOOK: "project.capabilityAudiobook",
+    FLIPBOOK: "project.capabilityFlipbook",
+    ILLUSTRATIONS: "project.capabilityIllustrations",
+    TRANSLATION: "project.capabilityTranslation",
+    VIDEO: "project.capabilityVideo"
   };
 
   return t(labels[value]);
