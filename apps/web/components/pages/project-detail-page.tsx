@@ -5,9 +5,11 @@ import {
 } from "../../lib/projects-actions";
 import type {
   DocumentRecord,
+  ProjectCapability,
   ProjectDossierItemRecord,
   ProjectDossierOverview,
   ProjectDossierRecord,
+  ProjectPublicationType,
   ProjectRecord
 } from "../../lib/projects-documents-api";
 import { createUiTranslator, type UiTranslator } from "../../lib/ui-i18n";
@@ -76,6 +78,9 @@ export function ProjectDetailPage({
               label={ui.t("project.originalAuthor")}
               value={project.projectIdentity?.originalAuthor?.name ?? ui.t("project.unassigned")}
             />
+            <ReferenceItem label={ui.t("project.publicationType")} value={formatPublicationType(project.publicationType, ui)} />
+            <ReferenceItem label={ui.t("project.capabilities")} value={formatCapabilities(project.capabilities, ui)} />
+            <ReferenceItem label={ui.t("project.editorialProcess")} value={formatEditorialProcess(project.editorialProcess, ui)} />
           </div>
         </Card>
         <Card title={ui.t("label.projectDossiers")}>
@@ -280,6 +285,53 @@ function findDocumentTitle(documents: DocumentRecord[], documentId: string): str
 
 function formatEnum(value: string | undefined, ui: UiTranslator): string {
   return value ? value.replace(/_/g, " ") : ui.t("dossier.notRecorded");
+}
+
+function formatPublicationType(publicationType: ProjectPublicationType | undefined, ui: UiTranslator): string {
+  if (!publicationType) {
+    return ui.t("dossier.notRecorded");
+  }
+
+  const labels: Record<ProjectPublicationType, string> = {
+    AUDIOBOOK: ui.t("project.publicationAudiobook"),
+    BOOK: ui.t("project.publicationBook"),
+    CHILDRENS_BOOK: ui.t("project.publicationChildrensBook"),
+    COURSE: ui.t("project.publicationCourse"),
+    DICTIONARY: ui.t("project.publicationDictionary"),
+    MAGAZINE: ui.t("project.publicationMagazine"),
+    POETRY: ui.t("project.publicationPoetry"),
+    VIDEO: ui.t("project.publicationVideo")
+  };
+
+  return labels[publicationType];
+}
+
+function formatCapabilities(capabilities: ProjectCapability[] | undefined, ui: UiTranslator): string {
+  if (!capabilities || capabilities.length === 0) {
+    return ui.t("dossier.notRecorded");
+  }
+
+  const labels: Record<ProjectCapability, string> = {
+    ACCESSIBILITY: ui.t("project.capabilityAccessibility"),
+    AUDIOBOOK: ui.t("project.capabilityAudiobook"),
+    FLIPBOOK: ui.t("project.capabilityFlipbook"),
+    ILLUSTRATIONS: ui.t("project.capabilityIllustrations"),
+    TRANSLATION: ui.t("project.capabilityTranslation"),
+    VIDEO: ui.t("project.capabilityVideo")
+  };
+
+  return capabilities.map((capability) => labels[capability]).join(", ");
+}
+
+function formatEditorialProcess(
+  editorialProcess: ProjectRecord["editorialProcess"],
+  ui: UiTranslator
+): string {
+  if (!editorialProcess || editorialProcess.length === 0) {
+    return ui.t("dossier.notRecorded");
+  }
+
+  return editorialProcess.map((stage) => stage.replace(/_/g, " ")).join(" -> ");
 }
 
 function ReferenceItem({ label, value }: { label: string; value: string }) {
