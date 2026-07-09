@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { createUiTranslator, type UiTranslationKey } from "../../lib/ui-i18n";
 import type {
   ProjectCapability,
+  ProjectEditorialDomain,
   ProjectOrigin,
   ProjectPublicationType,
   ProjectRightsStatus
@@ -56,6 +57,28 @@ const capabilityValues: ProjectCapability[] = [
   "ACCESSIBILITY"
 ];
 
+const editorialDomainValues: ProjectEditorialDomain[] = [
+  "LITERATURE",
+  "PHILOSOPHY",
+  "SPIRITISM",
+  "RELIGION",
+  "PSYCHOLOGY",
+  "EDUCATION",
+  "HISTORY",
+  "SCIENCE",
+  "BIOLOGY",
+  "MATHEMATICS",
+  "MEDICINE",
+  "ART",
+  "MUSIC",
+  "LINGUISTICS",
+  "LAW",
+  "ECONOMICS",
+  "TECHNOLOGY",
+  "CHILDREN_EDUCATIONAL",
+  "OTHER"
+];
+
 export function ProjectIdentityForm({ action, platformLanguage }: ProjectIdentityFormProps) {
   const ui = createUiTranslator(platformLanguage);
   const [projectOrigin, setProjectOrigin] = useState<ProjectOrigin>("ORIGINAL_CREATION");
@@ -75,6 +98,10 @@ export function ProjectIdentityForm({ action, platformLanguage }: ProjectIdentit
   );
   const publicationTypeOptions = useMemo(
     () => publicationTypeValues.map((value) => ({ label: labelForPublicationType(value, ui.t), value })),
+    [ui]
+  );
+  const editorialDomainOptions = useMemo(
+    () => editorialDomainValues.map((value) => ({ label: labelForEditorialDomain(value, ui.t), value })),
     [ui]
   );
 
@@ -148,7 +175,6 @@ export function ProjectIdentityForm({ action, platformLanguage }: ProjectIdentit
         <div className="manuscript-form-grid">
           <Input label={ui.t("project.originalLanguage")} name="originalLanguage" placeholder="Defaults to source language" />
           <Input label={ui.t("project.originalLocale")} name="originalLocale" placeholder="fr-FR, ro-RO" />
-          <Input label={ui.t("project.domain")} name="domain" />
         </div>
 
         <Input
@@ -177,6 +203,39 @@ export function ProjectIdentityForm({ action, platformLanguage }: ProjectIdentit
           value={publicationType}
         />
       </section>
+
+      <section className="content-panel">
+        <div className="section-heading">
+          <div>
+            <p className="section-kicker">{ui.t("project.editorialDomain")}</p>
+            <h2>{ui.t("project.editorialDomainHelp")}</h2>
+          </div>
+          <Badge tone="warning">{ui.t("badge.required")}</Badge>
+        </div>
+
+        <Select
+          label={ui.t("project.editorialDomain")}
+          name="editorialDomain"
+          options={editorialDomainOptions}
+          required
+        />
+      </section>
+
+      <details className="content-panel">
+        <summary className="section-heading">
+          <div>
+            <p className="section-kicker">{ui.t("project.editorialClassification")}</p>
+            <h2>{ui.t("project.editorialClassificationHelp")}</h2>
+          </div>
+          <Badge tone="neutral">{ui.t("badge.placeholder")}</Badge>
+        </summary>
+
+        <div className="manuscript-form-grid">
+          <Input label={ui.t("project.editorialSeries")} name="editorialSeries" placeholder="Works of Allan Kardec" />
+          <Input label={ui.t("project.editorialCollection")} name="editorialCollection" placeholder="Spiritist Library" />
+          <Input label={ui.t("project.editorialVolume")} name="editorialVolume" placeholder="Volume I" />
+        </div>
+      </details>
 
       <section className="content-panel">
         <div className="section-heading">
@@ -229,6 +288,35 @@ function labelForProjectOrigin(
     ORIGINAL_CREATION: "project.originalCreation",
     PUBLIC_DOMAIN_CLASSICAL_WORK: "project.publicDomainClassicalWork",
     TRANSLATION: "project.translation"
+  };
+
+  return t(labels[value]);
+}
+
+function labelForEditorialDomain(
+  value: ProjectEditorialDomain,
+  t: ReturnType<typeof createUiTranslator>["t"]
+): string {
+  const labels: Record<ProjectEditorialDomain, UiTranslationKey> = {
+    ART: "project.domainArt",
+    BIOLOGY: "project.domainBiology",
+    CHILDREN_EDUCATIONAL: "project.domainChildrenEducational",
+    ECONOMICS: "project.domainEconomics",
+    EDUCATION: "project.domainEducation",
+    HISTORY: "project.domainHistory",
+    LAW: "project.domainLaw",
+    LINGUISTICS: "project.domainLinguistics",
+    LITERATURE: "project.domainLiterature",
+    MATHEMATICS: "project.domainMathematics",
+    MEDICINE: "project.domainMedicine",
+    MUSIC: "project.domainMusic",
+    OTHER: "project.domainOther",
+    PHILOSOPHY: "project.domainPhilosophy",
+    PSYCHOLOGY: "project.domainPsychology",
+    RELIGION: "project.domainReligion",
+    SCIENCE: "project.domainScience",
+    SPIRITISM: "project.domainSpiritism",
+    TECHNOLOGY: "project.domainTechnology"
   };
 
   return t(labels[value]);
