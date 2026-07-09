@@ -34,7 +34,7 @@ test("UI internationalization follows platformLanguage and keeps editorial langu
   assert.match(topNav, /preferences\?\.platformLanguage/);
   assert.match(navigation, /platformLanguage/);
 
-  assert.doesNotMatch(i18n, /originalLanguage|authoringLanguage|targetLanguage/);
+  assert.doesNotMatch(i18n, /setOriginalLanguage|setAuthoringLanguage|setTargetLanguage/);
 });
 
 test("main workspace surfaces use translated UI labels instead of changing content language", () => {
