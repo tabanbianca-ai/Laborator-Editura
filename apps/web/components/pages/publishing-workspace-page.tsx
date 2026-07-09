@@ -392,6 +392,14 @@ function OriginalSourcePanel({ workspace }: { workspace: PublishingWorkspaceData
           text={workspace.selectedProject?.name ?? "Not selected"}
         />
         <ReferenceItem
+          label="Project origin"
+          text={formatIdentityValue(workspace.selectedProject?.projectIdentity?.projectOrigin)}
+        />
+        <ReferenceItem
+          label="Rights status"
+          text={formatIdentityValue(workspace.selectedProject?.projectIdentity?.rightsStatus)}
+        />
+        <ReferenceItem
           label="Original language"
           text={
             workspace.selectedDocument
@@ -428,6 +436,10 @@ function OriginalSourcePanel({ workspace }: { workspace: PublishingWorkspaceData
       </div>
     </Card>
   );
+}
+
+function formatIdentityValue(value: string | undefined): string {
+  return value ? value.replace(/_/g, " ") : "Not recorded";
 }
 
 function ReferenceItem({ label, text }: { label: string; text: string }) {
