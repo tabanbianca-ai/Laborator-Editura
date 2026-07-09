@@ -6,8 +6,10 @@ import {
   assignProjectDossierItem,
   createProject,
   createProjectDossier,
+  type ProjectCapability,
   type ProjectDossierItemType,
   type ProjectOrigin,
+  type ProjectPublicationType,
   type ProjectRightsStatus
 } from "./projects-documents-api";
 
@@ -25,6 +27,8 @@ export async function createProjectAction(formData: FormData): Promise<void> {
     name: readRequiredString(formData, "name"),
     originalLanguage: readOptionalString(formData, "originalLanguage"),
     originalLocale: readOptionalString(formData, "originalLocale"),
+    publicationType: readRequiredString(formData, "publicationType") as ProjectPublicationType,
+    capabilities: readStringList(formData, "capabilities") as ProjectCapability[],
     projectIdentity: {
       linkedRightsContractIds,
       originalAuthor: {
@@ -95,4 +99,12 @@ function readOptionalString(formData: FormData, fieldName: string): string | und
   const value = readRequiredString(formData, fieldName);
 
   return value.length > 0 ? value : undefined;
+}
+
+function readStringList(formData: FormData, fieldName: string): string[] {
+  return formData
+    .getAll(fieldName)
+    .filter((value): value is string => typeof value === "string")
+    .map((value) => value.trim())
+    .filter((value) => value.length > 0);
 }
