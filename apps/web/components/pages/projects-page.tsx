@@ -63,7 +63,14 @@ export async function ProjectsPage({ platformLanguage }: ProjectsPageProps) {
           <DataTable
             ariaLabel={ui.t("pipeline.projects")}
             columns={[
-              { header: ui.t("project.name"), render: (project) => project.name },
+              {
+                header: ui.t("project.name"),
+                render: (project) => (
+                  <Link href={`/projects/${encodeURIComponent(project.id)}`}>
+                    {project.name}
+                  </Link>
+                )
+              },
               { header: ui.t("project.origin"), render: (project) => formatProjectOrigin(project.projectIdentity?.projectOrigin, ui) },
               { header: ui.t("project.rightsStatus"), render: (project) => formatRightsStatus(project.projectIdentity?.rightsStatus, ui) },
               { header: ui.t("project.language"), render: formatLanguagePair },
