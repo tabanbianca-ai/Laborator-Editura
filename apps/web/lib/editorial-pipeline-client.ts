@@ -4,6 +4,8 @@ import {
   listDocuments,
   listProjects,
   type DocumentRecord,
+  type ProjectCapability,
+  type ProjectPublicationType,
   type ProjectRecord
 } from "./projects-documents-api";
 import { getRightsWarningsForDocument, type RightsWarning } from "./rights-workspace-client";
@@ -303,8 +305,15 @@ function buildPipelineSteps(input: {
     selectedDocument,
     workflow
   });
+  const translationEnabled = isProjectCapabilityEnabled(project, "TRANSLATION", true);
+  const illustrationsEnabled = isProjectCapabilityEnabled(project, "ILLUSTRATIONS", false);
+  const audiobookEnabled = getProjectPublicationType(project) === "AUDIOBOOK" || isProjectCapabilityEnabled(project, "AUDIOBOOK", true);
+  const videoEnabled = getProjectPublicationType(project) === "VIDEO" || isProjectCapabilityEnabled(project, "VIDEO", true);
+  const magazineOutputsEnabled = isMagazineDigitalOutputEnabled(project, magazineCandidate);
+  const accessibilityEnabled = isProjectCapabilityEnabled(project, "ACCESSIBILITY", false);
+  const reviewReady = translationEnabled ? translationComplete : hasSegments;
 
-  return [
+  const steps: EditorialPipelineStep[] = [
     {
       completionPercent: hasDocument ? 100 : 0,
       continueHref: project ? `/projects/${encodeURIComponent(project.id)}` : "/author-studio",
@@ -338,6 +347,18 @@ function buildPipelineSteps(input: {
       warnings: analysisWarnings
     },
     {
+      completionPercent: illustrationsEnabled && hasDocument ? 35 : 0,
+      continueHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      id: "illustration",
+      locked: !hasDocument,
+      openHref: selectedDocument ? `/publishing?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
+      sourceModules: ["Publishing Layout", "Multimedia Creation", "Rights metadata"],
+      status: !hasDocument ? "LOCKED" : "READY",
+      summary: "Illustration planning is activated by Project Capabilities and reuses the existing publishing/media workspaces.",
+      title: "Illustration",
+      warnings: hasDocument ? [] : ["Import is required before illustration planning."]
+    },
+    {
       completionPercent: hasSegments ? 100 : hasDocument ? 45 : 0,
       continueHref: selectedDocument ? `/author-studio` : undefined,
       id: "editing",
@@ -369,13 +390,15 @@ function buildPipelineSteps(input: {
       completionPercent: reviewStarted ? 100 : hasTranslations ? 40 : 0,
       continueHref: selectedDocument ? `/review?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
       id: "editorial-review",
-      locked: !translationComplete,
+      locked: !reviewReady,
       openHref: selectedDocument ? `/review?documentId=${encodeURIComponent(selectedDocument.id)}` : undefined,
       sourceModules: ["Review Workspace"],
-      status: !translationComplete ? "LOCKED" : reviewStarted ? "COMPLETED" : "READY",
+      status: !reviewReady ? "LOCKED" : reviewStarted ? "COMPLETED" : "READY",
       summary: "Editors compare source and target text, issues, terminology, and semantic reports.",
       title: "Editorial Review",
-      warnings: translationComplete ? [] : ["Translation is not ready for review."]
+      warnings: reviewReady
+        ? []
+        : [translationEnabled ? "Translation is not ready for review." : "Editing must prepare segments before review."]
     },
     {
       completionPercent: approved ? 100 : reviewStarted ? 60 : 0,
@@ -424,6 +447,18 @@ function buildPipelineSteps(input: {
       summary: "Preflight validates ISBN, metadata, rights/provenance, cover, fonts, image resolution, table of contents, hyperlinks, PDF print, EPUB, MOBI, JSON Master, audiobook, video, and magazine flipbook readiness.",
       title: "Technical Validation",
       warnings: preflightWarnings
+    },
+    {
+      completionPercent: accessibilityEnabled && exported ? 75 : accessibilityEnabled && readyForExport ? 50 : 0,
+      continueHref: distributionHref,
+      id: "accessibility",
+      locked: !approved,
+      openHref: distributionHref,
+      sourceModules: ["Accessibility metadata", "Export", "Distribution Center"],
+      status: !approved ? "LOCKED" : exported ? "READY" : "IN_PROGRESS",
+      summary: "Accessibility metadata and accessible output readiness are activated by Project Capabilities.",
+      title: "Accessibility",
+      warnings: approved ? [] : ["Editorial validation required before accessibility output review."]
     },
     {
       completionPercent: exported ? 75 : 0,
@@ -508,6 +543,71 @@ function buildPipelineSteps(input: {
             : ["Approved or exported magazine content is required before digital issue output."]
     }
   ];
+
+  return steps.filter((step) => {
+    if (step.id === "illustration") {
+      return illustrationsEnabled;
+    }
+
+    if (step.id === "translation") {
+      return translationEnabled;
+    }
+
+    if (step.id === "accessibility") {
+      return accessibilityEnabled;
+    }
+
+    if (step.id === "audiobook") {
+      return audiobookEnabled;
+    }
+
+    if (step.id === "video") {
+      return videoEnabled;
+    }
+
+    if (step.id === "magazine-digital-outputs") {
+      return magazineOutputsEnabled;
+    }
+
+    return true;
+  });
+}
+
+function hasProjectCapabilityConfiguration(project: ProjectRecord | null): boolean {
+  return Boolean(
+    project?.publicationType ??
+    project?.metadata?.publicationType ??
+    project?.capabilities ??
+    project?.metadata?.capabilities
+  );
+}
+
+function getProjectPublicationType(project: ProjectRecord | null): ProjectPublicationType | undefined {
+  return project?.publicationType ?? project?.metadata?.publicationType;
+}
+
+function getProjectCapabilities(project: ProjectRecord | null): ProjectCapability[] {
+  return project?.capabilities ?? project?.metadata?.capabilities ?? [];
+}
+
+function isProjectCapabilityEnabled(
+  project: ProjectRecord | null,
+  capability: ProjectCapability,
+  legacyDefault: boolean
+): boolean {
+  if (!hasProjectCapabilityConfiguration(project)) {
+    return legacyDefault;
+  }
+
+  return getProjectCapabilities(project).includes(capability);
+}
+
+function isMagazineDigitalOutputEnabled(project: ProjectRecord | null, legacyMagazineCandidate: boolean): boolean {
+  if (!hasProjectCapabilityConfiguration(project)) {
+    return legacyMagazineCandidate;
+  }
+
+  return getProjectPublicationType(project) === "MAGAZINE";
 }
 
 function buildAiRecommendation(steps: EditorialPipelineStep[]): string {
