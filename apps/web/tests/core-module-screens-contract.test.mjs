@@ -39,7 +39,8 @@ test("core module screens use shared shell components and placeholders", () => {
   }
 
   assert.match(coreScreen, /Button disabled/);
-  assert.match(projectsPage, /New project/);
+  assert.match(projectsPage, /project\.newProject/);
+  assert.match(projectsPage, /\/projects\/new/);
   assert.match(documentsPage, /Import document/);
 });
 
