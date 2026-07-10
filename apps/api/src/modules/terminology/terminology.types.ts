@@ -1,6 +1,9 @@
 import {
   type LexicographicAuthority,
-  type LexicographicCitation
+  type LexicographicCitation,
+  type LinguisticAuthorityLevel,
+  type LinguisticContentAccessMode,
+  type LinguisticLicenseStatus
 } from "../lexicographic/lexicographic.types";
 
 export type TerminologyTermStatus =
@@ -174,6 +177,13 @@ export interface TerminologyDictionaryEvidence {
   sourceReferences: string[];
   citations: LexicographicCitation[];
   authority: LexicographicAuthority;
+  authorityLevel?: LinguisticAuthorityLevel;
+  sourceTitle?: string;
+  sourceEdition?: string;
+  publicationYear?: number;
+  licenseStatus?: LinguisticLicenseStatus;
+  accessMode?: LinguisticContentAccessMode;
+  lastVerificationDate?: string;
   priorityRank: number;
   priority: "DICTIONARY_EVIDENCE_AFTER_VALIDATED_GLOSSARY";
   authoritative: false;
