@@ -292,6 +292,107 @@ Glossary priority rules:
 AI suggestions cannot become source authority or validated terminology without
 authorized human approval.
 
+### Integrated Linguistic Knowledge Base
+
+Status: implemented as an extension of the existing Lexicographic Intelligence,
+Terminology, Semantic Fidelity, AI Governance, Audit, and Translation
+infrastructure. It is not a new enterprise module.
+
+Purpose: provide a project-level linguistic knowledge base used by Translation,
+Review, Documentation, Terminology & Lexicography, Semantic Fidelity, and
+Quality agents.
+
+Supported resource categories:
+
+- Monolingual explanatory dictionaries.
+- Orthographic, orthoepic, and morphological dictionaries.
+- Official grammar and punctuation rules.
+- Bilingual dictionaries.
+- Idioms and phraseological expressions.
+- Specialized glossaries.
+- Terminology databases.
+- Validated editorial guides.
+- Linguistic corpora and usage examples.
+
+Each linguistic resource must preserve:
+
+- Language.
+- Language pair when bilingual.
+- Title.
+- Publisher or issuing institution.
+- Edition.
+- Publication year.
+- Version.
+- Source URL or imported document reference.
+- License status.
+- Copyright holder.
+- Redistribution permission.
+- Authority level.
+- Domain.
+- Effective date.
+- Last verification date.
+- Enabled status.
+
+Content access modes:
+
+1. `INTEGRATED_CONTENT`: allowed only when the license permits ingestion and
+   internal use. Searchable entries may include headword, definition, senses,
+   grammatical category, inflection, pronunciation, usage labels, examples,
+   idioms, synonyms, antonyms, etymology, bilingual equivalents, source, and
+   exact edition.
+2. `EXTERNAL_CONTROLLED_ACCESS`: used for resources that cannot be copied or
+   redistributed. The platform stores metadata, authorized API integration,
+   official link, permitted excerpts, access restrictions, and license notes
+   only.
+
+Rules:
+
+- The platform must never ingest full copyrighted dictionary content without
+  documented authorization.
+- Romanian linguistic sources such as DOOM editions, DEX-type explanatory
+  resources, official grammar, orthographic and punctuation rules, bilingual
+  dictionaries, phraseological dictionaries, and specialized dictionaries are
+  configurable metadata sources. Their copyrighted content is not hardcoded.
+- Translation Agent queries source-language and target-language resources,
+  checks idioms and contextual meanings, compares dictionary senses, cites exact
+  source and edition, and sends unresolved terms to Terminology & Lexicography.
+- Terminology & Lexicography Subagent indexes dictionary entries, manages
+  approved terminology, detects source conflicts, distinguishes normative,
+  descriptive, and specialized sources, proposes preferred terms, and records
+  provenance.
+- Semantic Fidelity Subagent verifies selected dictionary senses against source
+  context, detects literal but semantically wrong translations, and checks
+  idioms or figurative expressions.
+- Review Agent proposes spelling, grammar, inflection, register, and usage
+  corrections against approved resources without imposing them.
+- Documentation Agent adds and verifies linguistic sources and editions.
+- Rights & Provenance Agent validates licenses, permissions, and redistribution
+  rights.
+- Quality Agent reports missing, outdated, disabled, or unauthorized linguistic
+  resources and does not correct project content.
+
+Source authority levels:
+
+1. `OFFICIAL_NORMATIVE`.
+2. `ACADEMIC`.
+3. `VALIDATED_SPECIALIZED`.
+4. `EDITORIAL_GUIDE`.
+5. `DESCRIPTIVE`.
+6. `INFORMATIVE`.
+
+Conflict rules:
+
+- Normative sources take priority for orthography and grammar.
+- Validated specialized sources may take priority for domain terminology.
+- All conflicts must be reported for authorized human review.
+- No silent replacement is allowed.
+
+Search requirements:
+
+- Search by headword, phrase, idiom, language, language pair, domain,
+  grammatical category, source, edition, and authority level.
+- Support exact, normalized, fuzzy, and morphological search modes.
+
 #### Layout & Editorial Production Agent
 
 Purpose: reserve professional editorial production support for print and
