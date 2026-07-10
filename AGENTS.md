@@ -142,6 +142,33 @@ Rules:
   executions, but those fields do not authorize runtime implementation by
   themselves.
 
+### AI Agent Governance & Quality Agent Directive
+
+Purpose:
+
+- Define the final governance model for AI agents and add Quality Agent as a
+  validation-only agent within the existing orchestration architecture.
+
+Rules:
+
+- Every AI agent must define mission, responsibilities, collaboration, limits,
+  and authority.
+- Agents may exchange information, request assistance, reuse results, notify
+  other agents, and coordinate through the Coordinator Agent.
+- There are no communication restrictions between agents.
+- Each agent has final AI responsibility only within its own specialization.
+- Human approval always overrides every AI decision.
+- No AI agent may publish automatically, approve automatically, grant rights,
+  bypass workflow, modify security, or change governance.
+- Quality Agent verifies editorial consistency, metadata, missing assets,
+  exports, accessibility, links, publication readiness, and distribution
+  readiness.
+- Quality Agent reports issues only. It must not translate, review, edit,
+  illustrate, publish, approve, or correct the project.
+- Quality Agent is a governance refinement in existing AI Governance,
+  Marketplace, and Platform Engineering orchestration. It is not a new
+  enterprise module.
+
 ### ChatGPT
 
 Role: System Architect.
