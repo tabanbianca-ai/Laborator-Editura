@@ -20,6 +20,7 @@ export type MarketplaceAgentCategory =
   | "AUTHOR_STUDIO"
   | "RESEARCH"
   | "SECURITY"
+  | "QUALITY"
   | "CUSTOM";
 
 export type MarketplaceIntegrationType =
