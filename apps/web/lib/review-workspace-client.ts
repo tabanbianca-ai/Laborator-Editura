@@ -37,6 +37,44 @@ export interface ReviewWorkflowState {
   updatedBy?: string;
 }
 
+export type ReviewProposalStatus = "PENDING" | "ACCEPTED" | "REJECTED";
+
+export interface ReviewProposal {
+  proposalId: string;
+  projectId: string;
+  documentId: string;
+  segmentId: string;
+  sourceText: string;
+  currentTranslation: string;
+  proposedText: string;
+  language: string;
+  issueType: string;
+  explanation: string;
+  confidence: number;
+  status: ReviewProposalStatus;
+  createdByAgent: "Review Agent" | "Editorial Decision Subagent";
+  reviewedBy?: string;
+  createdAt: string;
+  resolvedAt?: string;
+}
+
+export type ParallelReviewDisplayMode = "TWO_COLUMNS" | "THREE_COLUMNS" | "FOUR_COLUMNS";
+
+export interface ParallelReviewInterfaceState {
+  acceptedRejectedProposalsAudited: true;
+  allowedDisplayModes: ParallelReviewDisplayMode[];
+  columnsResizableOrHideable: true;
+  defaultDisplayMode: "TWO_COLUMNS";
+  differencesHighlighted: true;
+  individualAcceptRejectActions: true;
+  originalTextImmutable: true;
+  proposalsAttachedToRelevantTranslation: true;
+  sentenceAndParagraphAlignment: true;
+  synchronizedScrollingCanBeToggled: true;
+  translationUnchangedUntilProposalAccepted: true;
+  versionHistoryPreserved: true;
+}
+
 export interface ReviewWorkspaceData {
   activeSegment: WorkspaceSegmentRecord | null;
   documents: DocumentRecord[];
@@ -46,6 +84,8 @@ export interface ReviewWorkspaceData {
   lexicographicReferencesError: string | null;
   projects: ProjectRecord[];
   projectsError: string | null;
+  parallelReview: ParallelReviewInterfaceState;
+  reviewProposals: ReviewProposal[];
   selectedDocument: DocumentRecord | null;
   selectedProject: ProjectRecord | null;
   semanticIssues: SemanticIssue[];
@@ -113,6 +153,8 @@ export async function getReviewWorkspaceData({
       lexicographicReferencesError: null,
       projects,
       projectsError: projectsResult.error,
+      parallelReview: parallelReviewInterface,
+      reviewProposals: [],
       selectedDocument,
       selectedProject,
       semanticIssues: [],
@@ -148,6 +190,12 @@ export async function getReviewWorkspaceData({
       segmentId: activeSegment.id
     })
   ]);
+  const reviewProposals = buildReviewProposals({
+    latestTranslation,
+    segment: activeSegment,
+    semanticIssues: semanticResult.data ?? [],
+    terminology: terminologyResult.data ?? null
+  });
 
   return {
     activeSegment,
@@ -158,6 +206,8 @@ export async function getReviewWorkspaceData({
     lexicographicReferencesError: lexicographicResult.error,
     projects,
     projectsError: projectsResult.error,
+    parallelReview: parallelReviewInterface,
+    reviewProposals,
     selectedDocument,
     selectedProject,
     semanticIssues: semanticResult.data ?? [],
@@ -181,6 +231,21 @@ export function approveReviewDocument(input: {
 }
 
 export type ReviewLexicographicEvidence = LexicographicReference;
+
+export const parallelReviewInterface: ParallelReviewInterfaceState = {
+  acceptedRejectedProposalsAudited: true,
+  allowedDisplayModes: ["TWO_COLUMNS", "THREE_COLUMNS", "FOUR_COLUMNS"],
+  columnsResizableOrHideable: true,
+  defaultDisplayMode: "TWO_COLUMNS",
+  differencesHighlighted: true,
+  individualAcceptRejectActions: true,
+  originalTextImmutable: true,
+  proposalsAttachedToRelevantTranslation: true,
+  sentenceAndParagraphAlignment: true,
+  synchronizedScrollingCanBeToggled: true,
+  translationUnchangedUntilProposalAccepted: true,
+  versionHistoryPreserved: true
+};
 
 function listReviewSegments(documentId: string): Promise<ApiResult<WorkspaceSegmentRecord[]>> {
   return apiGet<WorkspaceSegmentRecord[]>(`/segments?documentId=${encodeURIComponent(documentId)}`);
@@ -275,6 +340,58 @@ function findLatestTranslation(
   );
 }
 
+function buildReviewProposals(input: {
+  latestTranslation: WorkspaceTranslationRecord | null;
+  segment: WorkspaceSegmentRecord;
+  semanticIssues: SemanticIssue[];
+  terminology: TerminologyCheckResult | null;
+}): ReviewProposal[] {
+  const currentTranslation = input.latestTranslation?.targetText ?? input.segment.latestTargetText ?? "";
+
+  if (!currentTranslation) {
+    return [];
+  }
+
+  const semanticProposals = input.semanticIssues
+    .filter((issue) => issue.status === "OPEN")
+    .slice(0, 3)
+    .map((issue, index) => ({
+      proposalId: `${input.segment.id}-semantic-${index + 1}`,
+      projectId: input.segment.projectId,
+      documentId: input.segment.documentId,
+      segmentId: input.segment.id,
+      sourceText: input.segment.sourceText,
+      currentTranslation,
+      proposedText: issue.alternatives?.[0] ?? currentTranslation,
+      language: input.segment.targetLanguage,
+      issueType: issue.type,
+      explanation: issue.aiExplanation ?? issue.message,
+      confidence: 0.72,
+      status: "PENDING" as const,
+      createdByAgent: "Review Agent" as const,
+      createdAt: issue.createdAt
+    }));
+
+  const terminologyProposals = (input.terminology?.violations ?? []).slice(0, 3).map((violation, index) => ({
+    proposalId: `${input.segment.id}-terminology-${index + 1}`,
+    projectId: input.segment.projectId,
+    documentId: input.segment.documentId,
+    segmentId: input.segment.id,
+    sourceText: input.segment.sourceText,
+    currentTranslation,
+    proposedText: currentTranslation,
+    language: input.segment.targetLanguage,
+    issueType: violation.type,
+    explanation: violation.message,
+    confidence: 0.68,
+    status: "PENDING" as const,
+    createdByAgent: "Editorial Decision Subagent" as const,
+    createdAt: input.latestTranslation?.updatedAt ?? input.segment.updatedAt
+  }));
+
+  return [...semanticProposals, ...terminologyProposals];
+}
+
 function emptyReviewWorkspace(input: {
   documents: DocumentRecord[];
   documentsError: string | null;
@@ -290,6 +407,8 @@ function emptyReviewWorkspace(input: {
     lexicographicReferencesError: null,
     projects: input.projects,
     projectsError: input.projectsError,
+    parallelReview: parallelReviewInterface,
+    reviewProposals: [],
     selectedDocument: null,
     selectedProject: null,
     semanticIssues: [],
