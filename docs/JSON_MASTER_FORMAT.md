@@ -218,6 +218,88 @@ Rules:
   runtime validators, database schema, APIs, UI, migrations, or staging
   infrastructure changes.
 
+## Integrated Linguistic Knowledge Base Representation
+
+Phase 7 Step 11 extends the existing dictionary and lexicographic data model
+into a project-level linguistic knowledge base. JSON Master consumers should be
+able to preserve linguistic source metadata, searchable lexical entries when
+licensed, source consultation references, conflict reports, and human decisions.
+
+Recommended optional fields:
+
+- `linguisticKnowledgeBase`: project-level linguistic resource registry.
+- `linguisticResources`: monolingual dictionaries, bilingual dictionaries,
+  orthographic/orthoepic/morphological dictionaries, grammar and punctuation
+  rules, idiom and phraseological resources, specialized glossaries,
+  terminology databases, editorial guides, corpora, and usage examples.
+- `linguisticEntries`: licensed searchable entries containing headword,
+  definition, senses, grammatical category, inflection, pronunciation, usage
+  labels, examples, idioms, synonyms, antonyms, etymology, bilingual
+  equivalents, source reference, and exact edition.
+- `linguisticSourceConsultations`: source IDs, entry IDs, edition references,
+  authority level, language, language pair, project/document/segment refs, and
+  agent action that consulted the source.
+- `linguisticConflicts`: conflicting definitions, source authorities, affected
+  terms, required human review, and final human decision refs.
+- `linguisticAuditRefs`: audit event references for resource added, resource
+  updated, license changed, entry imported, source consulted, terminology
+  decision, dictionary conflict, human override, and resource disabled.
+
+Resource metadata fields:
+
+- `resourceId`.
+- `projectId`.
+- `language`.
+- `languagePair`.
+- `title`.
+- `publisherOrInstitution`.
+- `edition`.
+- `publicationYear`.
+- `version`.
+- `sourceUrl`.
+- `importedDocumentRef`.
+- `licenseStatus`.
+- `copyrightHolder`.
+- `redistributionPermission`.
+- `authorityLevel`.
+- `domain`.
+- `effectiveDate`.
+- `lastVerificationDate`.
+- `enabled`.
+- `accessMode`.
+- `authorizedApiIntegration`.
+- `officialLink`.
+- `permittedExcerpts`.
+- `accessRestrictions`.
+- `licenseNotes`.
+
+Access rules:
+
+- `INTEGRATED_CONTENT` may include searchable linguistic entries only when
+  ingestion and internal use are documented as permitted.
+- `EXTERNAL_CONTROLLED_ACCESS` must preserve metadata, official links,
+  authorized integration references, permitted excerpts, restrictions, and
+  notes only.
+- Full copyrighted dictionary content must not be stored in JSON Master unless
+  authorization is documented.
+
+Authority levels:
+
+1. `OFFICIAL_NORMATIVE`.
+2. `ACADEMIC`.
+3. `VALIDATED_SPECIALIZED`.
+4. `EDITORIAL_GUIDE`.
+5. `DESCRIPTIVE`.
+6. `INFORMATIVE`.
+
+Conflict handling:
+
+- Normative sources take priority for orthography and grammar.
+- Validated specialized sources may take priority for domain terminology.
+- Conflicts must remain auditable and require authorized human review.
+- AI output is never source authority and cannot silently replace a validated
+  glossary, rule, or human-approved decision.
+
 ## Translation Rules Versioning
 
 Every translation rule must be versioned.
