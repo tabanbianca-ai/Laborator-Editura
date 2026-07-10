@@ -62,7 +62,7 @@ test("lexicographic matching finds a dictionary term inside a source sentence", 
     true
   );
   assert.equal(matchesLexicalTerm("rit", "El espíritu progresa por la experiencia."), false);
-  assert.match(repository, /matchesLexicalTerm\(entry\.normalizedTerm, normalizedQuery\)/);
+  assert.match(repository, /matchesLexicalTerm\(entry, normalizedQuery/);
   assert.match(repository, /hasTokenSafeOccurrence/);
   assert.match(service, /term: segment\.sourceText/);
   assert.match(service, /lexicographicSupport: this\.mapLexicographicSupport/);
