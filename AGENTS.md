@@ -206,6 +206,55 @@ Rules:
   automatically, change rights/security outside authority, or perform another
   agent's specialized responsibility.
 
+### Integrated Linguistic Knowledge Base Directive
+
+Purpose:
+
+- Provide a central, project-level linguistic knowledge base through existing
+  Lexicographic Intelligence, Terminology, Semantic Fidelity, Translation,
+  Review, Documentation, Rights, Quality, Audit, and AI Governance
+  infrastructure.
+
+Rules:
+
+- This is not a new enterprise module and must not duplicate existing
+  Lexicographic, Terminology, Research, Rights, or Quality infrastructure.
+- Linguistic resources may include monolingual dictionaries, bilingual
+  dictionaries, orthographic/orthoepic/morphological dictionaries, grammar and
+  punctuation rules, idioms, phraseological expressions, specialized
+  glossaries, terminology databases, editorial guides, corpora, and usage
+  examples.
+- Every resource must preserve language, language pair when bilingual, title,
+  publisher or institution, edition, publication year, version, source URL or
+  imported document reference, license status, copyright holder, redistribution
+  permission, authority level, domain, effective date, last verification date,
+  and enabled status.
+- `INTEGRATED_CONTENT` may store searchable content only when license and
+  redistribution metadata permit internal ingestion.
+- `EXTERNAL_CONTROLLED_ACCESS` must store metadata, official links, authorized
+  integration references, permitted excerpts, access restrictions, and license
+  notes only.
+- Full copyrighted dictionary content must never be ingested without documented
+  authorization.
+- Romanian linguistic sources such as DOOM, DEX-type explanatory resources,
+  official grammar, orthographic and punctuation rules, bilingual dictionaries,
+  phraseological dictionaries, and specialized dictionaries are configurable
+  metadata sources. Copyrighted content must not be hardcoded.
+- Source authority levels are `OFFICIAL_NORMATIVE`, `ACADEMIC`,
+  `VALIDATED_SPECIALIZED`, `EDITORIAL_GUIDE`, `DESCRIPTIVE`, and
+  `INFORMATIVE`.
+- Normative sources take priority for orthography and grammar; validated
+  specialized sources may take priority for domain terminology.
+- Source conflicts must be reported for authorized human review. No silent
+  replacement is allowed.
+- Translation Agent, Review Agent, Documentation Agent, Rights & Provenance
+  Agent, Quality Agent, Terminology & Lexicography Subagent, and Semantic
+  Fidelity Subagent must use the knowledge base within their existing
+  specialization and may not bypass human final authority.
+- Audit must cover resource added, resource updated, license changed, entry
+  imported, source consulted, terminology decision, dictionary conflict, human
+  override, and resource disabled events.
+
 ### ChatGPT
 
 Role: System Architect.
