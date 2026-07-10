@@ -63,7 +63,13 @@ export class PlatformEngineeringService {
         evolution: "READY",
         multimediaCreation: "READY",
         platformEngineering: "READY",
-        quality: "READY"
+        quality: "READY",
+        terminologyLexicographySubagent: "READY",
+        semanticFidelitySubagent: "READY",
+        editorialDecisionSubagent: "READY",
+        planningCoordinationSubagent: "READY",
+        mediaLocalizationSubagent: "READY",
+        platformEngineeringSubagent: "READY"
       },
       destructiveActionsExecuted: false,
       checkedAt
