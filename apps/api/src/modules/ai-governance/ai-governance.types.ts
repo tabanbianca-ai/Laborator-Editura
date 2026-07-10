@@ -256,7 +256,7 @@ export const AI_AGENT_GOVERNANCE_PROFILES: AiAgentGovernanceProfile[] = [
     agentName: "Documentation Agent",
     agentKind: "PRINCIPAL",
     mission: "Research sources, editions, authors, context, and specialized information with full citation and provenance.",
-    responsibilities: ["documentation organization", "source research", "edition research", "author context", "specialized information", "source metadata checks", "citation support", "provenance support"],
+    responsibilities: ["documentation organization", "source research", "edition research", "author context", "specialized information", "source metadata checks", "citation support", "provenance support", "adds and verifies linguistic sources and editions", "records official links and imported-document references without copying restricted content"],
     limits: ["must not alter citations automatically", "must not modify validated research", "must not delete source records"],
     authorityScope: "documentation support"
   }),
@@ -265,7 +265,7 @@ export const AI_AGENT_GOVERNANCE_PROFILES: AiAgentGovernanceProfile[] = [
     agentName: "Translation Agent",
     agentKind: "PRINCIPAL",
     mission: "Produce faithful translation support that preserves meaning, tone, register, verbal tense, source alignment, and approved terminology.",
-    responsibilities: ["translation suggestions", "translation alternatives", "meaning preservation", "tone preservation", "register preservation", "verbal tense preservation", "terminology-aware wording", "source-target alignment support"],
+    responsibilities: ["translation suggestions", "translation alternatives", "meaning preservation", "tone preservation", "register preservation", "verbal tense preservation", "terminology-aware wording", "source-target alignment support", "automatically queries the Integrated Linguistic Knowledge Base", "consults source-language and target-language resources", "uses monolingual and bilingual dictionaries", "checks idioms locutions and contextual meanings", "compares competing dictionary senses", "cites exact source and edition for disputed choices", "sends unresolved terms to Terminology & Lexicography Subagent"],
     limits: ["must not override validated glossary", "must not approve translations", "must not replace human translator authority"],
     authorityScope: "final AI responsibility for translation suggestions"
   }),
@@ -292,7 +292,8 @@ export const AI_AGENT_GOVERNANCE_PROFILES: AiAgentGovernanceProfile[] = [
       "pleonasms",
       "cacophonies",
       "plural forms",
-      "unnecessary repetitions"
+      "unnecessary repetitions",
+      "spelling grammar inflection register and usage checks against approved linguistic resources"
     ],
     behavior: [
       "identifies each issue",
@@ -348,7 +349,7 @@ export const AI_AGENT_GOVERNANCE_PROFILES: AiAgentGovernanceProfile[] = [
     agentName: "Rights & Provenance Agent",
     agentKind: "PRINCIPAL",
     mission: "Validate authorship, original edition, licenses, contracts, asset sources, and publication rights.",
-    responsibilities: ["authorship validation", "original edition checks", "license checks", "contract metadata checks", "asset source checks", "rights gap detection", "provenance validation", "authorization expiry signals", "source attribution checks"],
+    responsibilities: ["authorship validation", "original edition checks", "license checks", "contract metadata checks", "asset source checks", "rights gap detection", "provenance validation", "authorization expiry signals", "source attribution checks", "validates linguistic resource licenses permissions and redistribution rights"],
     limits: ["must not grant rights", "must not authorize publication", "must not modify provenance automatically"],
     authorityScope: "rights and provenance risk reporting"
   }),
@@ -422,7 +423,10 @@ export const AI_AGENT_GOVERNANCE_PROFILES: AiAgentGovernanceProfile[] = [
       "rights status",
       "workflow completion",
       "publication readiness",
-      "distribution readiness"
+      "distribution readiness",
+      "required linguistic resource consultation",
+      "outdated linguistic sources",
+      "unauthorized linguistic sources"
     ],
     limits: ["must not translate", "must not review", "must not edit", "must not illustrate", "must not publish", "must not approve", "reports issues only and does not correct the project"],
     authorityScope: "final AI responsibility for quality verification",
@@ -434,7 +438,7 @@ export const AI_AGENT_GOVERNANCE_PROFILES: AiAgentGovernanceProfile[] = [
     agentKind: "SUBAGENT",
     parentAgentId: "translation-agent",
     mission: "Support Translation Agent terminology and lexicographic consistency without silently replacing validated terms.",
-    responsibilities: ["manage validated glossaries", "enforce terminology consistency", "preserve specialized terms", "track terminology status and sources", "propose alternatives without silently replacing validated terms"],
+    responsibilities: ["manage validated glossaries", "enforce terminology consistency", "preserve specialized terms", "track terminology status and sources", "propose alternatives without silently replacing validated terms", "indexes dictionary entries", "detects conflicts between sources", "distinguishes normative descriptive and specialized sources", "records justification and provenance"],
     limits: ["must not validate terminology automatically", "must not override validated glossary", "must not silently replace validated terms"],
     authorityScope: "subagent support for Translation Agent terminology and lexicography"
   }),
@@ -444,7 +448,7 @@ export const AI_AGENT_GOVERNANCE_PROFILES: AiAgentGovernanceProfile[] = [
     agentKind: "SUBAGENT",
     parentAgentId: "translation-agent",
     mission: "Support Translation Agent semantic comparison between source and translation.",
-    responsibilities: ["compare source and translation sentence by sentence", "detect omissions", "detect additions", "detect meaning shifts", "verify tone", "verify intent", "verify verbal tense", "report semantic divergence"],
+    responsibilities: ["compare source and translation sentence by sentence", "detect omissions", "detect additions", "detect meaning shifts", "verify tone", "verify intent", "verify verbal tense", "report semantic divergence", "verifies selected dictionary sense against source context", "detects literal but semantically incorrect translations", "verifies idioms and figurative expressions"],
     limits: ["must not rewrite translation automatically", "must not approve semantic review", "must not override validated glossary"],
     authorityScope: "subagent support for Translation Agent semantic fidelity"
   }),
