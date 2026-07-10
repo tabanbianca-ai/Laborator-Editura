@@ -495,6 +495,68 @@ Report:
 
 - `docs/PHASE_7_STEP_10_AI_AGENT_FUNCTIONAL_TEST_REPORT.md`.
 
+## Phase 7 Step 11 - Integrated Linguistic Knowledge Base
+
+Status: Implemented as an extension of existing Lexicographic Intelligence,
+Terminology, Translation, Semantic Fidelity, AI Governance, Audit, and Quality
+infrastructure.
+
+Scope:
+
+- No new enterprise modules.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+- Uses existing lexicographic runtime persistence and audit tables.
+
+Implemented capabilities:
+
+- Project-level linguistic resource metadata for monolingual dictionaries,
+  bilingual dictionaries, orthographic/orthoepic/morphological dictionaries,
+  official grammar and punctuation rules, idioms, phraseological expressions,
+  specialized glossaries, terminology databases, editorial guides, corpora, and
+  usage examples.
+- Resource metadata: language, language pair, title, publisher/institution,
+  edition, publication year, version, source URL/imported document reference,
+  license status, copyright holder, redistribution permission, authority level,
+  domain, effective date, last verification date, and enabled status.
+- `INTEGRATED_CONTENT` and `EXTERNAL_CONTROLLED_ACCESS` modes with guardrails
+  preventing full copyrighted dictionary ingestion without authorization.
+- Configurable Romanian linguistic source profile for DOOM, DEX-type
+  resources, official grammar, orthographic and punctuation rules, bilingual
+  dictionaries, phraseological dictionaries, and specialized dictionaries.
+- Search by headword, phrase, idiom, language, language pair, domain,
+  grammatical category, source, edition, authority level, and exact,
+  normalized, fuzzy, or morphological modes.
+- Source authority levels:
+  `OFFICIAL_NORMATIVE > ACADEMIC > VALIDATED_SPECIALIZED > EDITORIAL_GUIDE >
+  DESCRIPTIVE > INFORMATIVE`.
+- Conflict reporting for competing definitions or source authorities with
+  required human review and no silent replacement.
+- Optional source edition, license, authority, and verification metadata in
+  Translation, Terminology, and Semantic Fidelity evidence.
+- Quality Agent resource readiness reporting for missing, outdated, disabled,
+  or unauthorized sources.
+
+Validation coverage:
+
+- Monolingual and bilingual dictionary modeling.
+- Idioms and expressions.
+- Language-pair lookup.
+- Source priority.
+- Conflicting definitions.
+- Edition traceability.
+- License restrictions.
+- Forbidden full-content ingestion.
+- Translation Agent lookup.
+- Terminology & Lexicography Subagent behavior.
+- Semantic Fidelity validation.
+- Review Agent recommendations.
+- Quality Agent outdated-source detection.
+
+Report:
+
+- `docs/PHASE_7_STEP_11_INTEGRATED_LINGUISTIC_KNOWLEDGE_BASE_REPORT.md`.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
