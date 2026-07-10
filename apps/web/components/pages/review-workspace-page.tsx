@@ -2,6 +2,8 @@ import type { ComponentProps } from "react";
 import Link from "next/link";
 import { approveReviewAction } from "../../lib/review-workspace-actions";
 import type {
+  ParallelReviewInterfaceState,
+  ReviewProposal,
   ReviewWorkspaceData,
   ReviewWorkflowStatus
 } from "../../lib/review-workspace-client";
@@ -99,6 +101,8 @@ export function ReviewWorkspacePage({
 
           <ReviewComparisonPanel
             latestTranslation={latestTranslation}
+            parallelReview={workspace.parallelReview}
+            proposals={workspace.reviewProposals}
             segment={activeSegment}
             workflowStatus={workspace.workflow?.status}
           />
@@ -178,29 +182,83 @@ function ReviewSegmentRail({
 
 function ReviewComparisonPanel({
   latestTranslation,
+  parallelReview,
+  proposals,
   segment,
   workflowStatus
 }: {
   latestTranslation: WorkspaceTranslationRecord | null;
+  parallelReview: ParallelReviewInterfaceState;
+  proposals: ReviewProposal[];
   segment: WorkspaceSegmentRecord;
   workflowStatus?: ReviewWorkflowStatus;
 }) {
+  const targetText = latestTranslation?.targetText;
+
   return (
     <section className="translation-editor-panel" aria-label="Source and target comparison">
-      <Card title="Source text">
-        <p className="source-text-block">{segment.sourceText}</p>
-        <div className="translation-language-row">
-          <Badge tone="neutral">{segment.sourceLanguage.toUpperCase()}</Badge>
-          <span>{segment.targetLanguage.toUpperCase()}</span>
+      <Card title="Parallel translation and review">
+        <div className="parallel-review-toolbar">
+          <Badge tone="info">Default: two columns</Badge>
+          <Badge tone="neutral">Optional: three columns</Badge>
+          <Badge tone="neutral">Optional: four columns</Badge>
         </div>
-      </Card>
+        <div className="parallel-review-mode-controls" aria-label="Parallel review mode controls">
+          <label>
+            Display mode
+            <select className="ui-input ui-select" disabled name="parallel-review-display-mode">
+              <option>Two columns</option>
+              <option>Three columns</option>
+              <option>Four columns</option>
+            </select>
+          </label>
+          <label>
+            Optional language or version
+            <select className="ui-input ui-select" disabled name="parallel-review-optional-column">
+              <option>Choose language or version independently</option>
+            </select>
+          </label>
+        </div>
+        <div className="parallel-review-grid parallel-review-grid-two" data-display-mode={parallelReview.defaultDisplayMode}>
+          <article className="parallel-review-column parallel-review-column-original">
+            <div className="section-heading">
+              <div>
+                <p className="section-kicker">Column 1</p>
+                <h3>Source text</h3>
+              </div>
+              <Badge tone="neutral">{segment.sourceLanguage.toUpperCase()}</Badge>
+            </div>
+            <p className="source-text-block">{segment.sourceText}</p>
+            <p className="review-human-authority">
+              Original text is immutable. Sentence and paragraph alignment is preserved.
+            </p>
+          </article>
 
-      <Card title="Translated text">
-        {latestTranslation?.targetText ? (
-          <p className="source-text-block">{latestTranslation.targetText}</p>
-        ) : (
-          <EmptyState title="No translation submitted" />
-        )}
+          <article className="parallel-review-column parallel-review-column-translation">
+            <div className="section-heading">
+              <div>
+                <p className="section-kicker">Column 2</p>
+                <h3>Translated text</h3>
+              </div>
+              <Badge tone="neutral">{segment.targetLanguage.toUpperCase()}</Badge>
+            </div>
+            {targetText ? (
+              <p className="source-text-block">{targetText}</p>
+            ) : (
+              <EmptyState title="No translation submitted" />
+            )}
+
+            <ReviewProposalList proposals={proposals} />
+          </article>
+        </div>
+
+        <div className="parallel-review-options" aria-label="Parallel review display options">
+          <Badge tone="success">Synchronized scrolling can be toggled</Badge>
+          <Badge tone="success">Differences highlighted</Badge>
+          <Badge tone="success">Columns can be resized or hidden</Badge>
+          <Badge tone="success">Version history preserved</Badge>
+        </div>
+
         <div className="review-status-row">
           <Badge tone={toneForTranslationStatus(latestTranslation?.status)}>
             {statusLabel(latestTranslation?.status)}
@@ -214,10 +272,50 @@ function ReviewComparisonPanel({
       <Card title="Attribution and authority">
         <AttributionBlock latestTranslation={latestTranslation} />
         <p className="review-human-authority">
-          Human Final Authority: AI recommendations and validation panels are advisory.
+          Human Final Authority: AI recommendations, proposed replacement variants, and validation panels are advisory.
+          Translation remains unchanged until an authorized human accepts a proposal.
         </p>
       </Card>
     </section>
+  );
+}
+
+function ReviewProposalList({ proposals }: { proposals: ReviewProposal[] }) {
+  if (proposals.length === 0) {
+    return (
+      <div className="parallel-review-proposals">
+        <EmptyState title="No pending replacement variants" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="parallel-review-proposals" aria-label="Review Agent proposed replacement variants">
+      <p className="section-kicker">Proposed replacement variants</p>
+      {proposals.map((proposal) => (
+        <article className="review-proposal-card" key={proposal.proposalId}>
+          <div className="review-proposal-heading">
+            <strong>{proposal.issueType.replace(/_/g, " ")}</strong>
+            <Badge tone={proposal.status === "PENDING" ? "warning" : "success"}>
+              {proposal.status}
+            </Badge>
+          </div>
+          <p className="review-proposal-text">{proposal.proposedText}</p>
+          <p className="review-human-authority">{proposal.explanation}</p>
+          <div className="review-status-row">
+            <Badge tone="info">Confidence {Math.round(proposal.confidence * 100)}%</Badge>
+            <Badge tone="neutral">{proposal.createdByAgent}</Badge>
+          </div>
+          <div className="review-action-form" aria-label="Individual proposal actions">
+            <Button disabled type="button" variant="secondary">Accept proposal</Button>
+            <Button disabled type="button" variant="secondary">Reject proposal</Button>
+          </div>
+          <p className="review-human-authority">
+            Accept and reject decisions are audited. The current translation is preserved until accepted.
+          </p>
+        </article>
+      ))}
+    </div>
   );
 }
 
