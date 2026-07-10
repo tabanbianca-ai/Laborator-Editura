@@ -1,4 +1,4 @@
-export type AiGovernanceAgentName =
+export type AiPrincipalAgentName =
   | "Coordinator Agent"
   | "Projects Agent"
   | "Manuscripts Agent"
@@ -16,7 +16,19 @@ export type AiGovernanceAgentName =
   | "Magazine Agent"
   | "Administration Agent"
   | "Evolution Agent"
-  | "Quality Agent"
+  | "Quality Agent";
+
+export type AiSpecializedSubagentName =
+  | "Terminology & Lexicography Subagent"
+  | "Semantic Fidelity Subagent"
+  | "Editorial Decision Subagent"
+  | "Planning & Coordination Subagent"
+  | "Media Localization Subagent"
+  | "Platform Engineering Subagent";
+
+export type AiGovernanceAgentName =
+  | AiPrincipalAgentName
+  | AiSpecializedSubagentName
   | "Translation AI"
   | "Lexicographic AI"
   | "Semantic Fidelity"
@@ -29,18 +41,31 @@ export type AiGovernanceAgentName =
   | "Author Studio AI"
   | "Research AI";
 
+export type AiAgentKind = "PRINCIPAL" | "SUBAGENT";
+
+export type AiQualityReadinessStatus = "READY" | "READY_WITH_WARNINGS" | "BLOCKED";
+
+type AiAgentCollaborationRules = {
+  mayExchangeInformation: true;
+  mayRequestAssistance: true;
+  mayReuseResults: true;
+  mayNotifyOtherAgents: true;
+  coordinatorAgent: "Coordinator Agent";
+  communicationRestrictions: "NONE";
+};
+
 export type AiAgentGovernanceProfile = {
+  id: string;
+  name: AiGovernanceAgentName;
   agentName: AiGovernanceAgentName;
+  agentKind: AiAgentKind;
+  parentAgentId?: string;
+  parentAgentIds?: string[];
   mission: string;
   responsibilities: string[];
-  collaboration: {
-    mayExchangeInformation: true;
-    mayRequestAssistance: true;
-    mayReuseResults: true;
-    mayNotifyOtherAgents: true;
-    coordinatorAgent: "Coordinator Agent";
-    communicationRestrictions: "NONE";
-  };
+  collaboration: AiAgentCollaborationRules;
+  collaborationRules: AiAgentCollaborationRules;
+  behavior?: string[];
   limits: string[];
   authority: {
     finalResponsibilityScope: string;
@@ -52,7 +77,84 @@ export type AiAgentGovernanceProfile = {
     mayModifySecurity: false;
     mayChangeGovernance: false;
   };
+  enabled: boolean;
+  version: string;
+  updatedAt: string;
+  qualityReadinessStatuses?: AiQualityReadinessStatus[];
 };
+
+export type AiAgentGovernanceAuditAction =
+  | "AGENT_INVOCATION"
+  | "SUBAGENT_INVOCATION"
+  | "REVIEW_PROPOSAL_GENERATED"
+  | "REVIEW_PROPOSAL_ACCEPTED"
+  | "REVIEW_PROPOSAL_REJECTED"
+  | "RESPONSIBILITY_TRANSFER"
+  | "QUALITY_STATUS_RECORDED"
+  | "FINAL_AGENT_DECISION"
+  | "HUMAN_OVERRIDE";
+
+export type AiReviewProposalStatus = "PENDING" | "ACCEPTED" | "REJECTED";
+
+export interface AiReviewProposal {
+  proposalId: string;
+  projectId: string;
+  documentId: string;
+  segmentId: string;
+  sourceText: string;
+  currentTranslation: string;
+  proposedText: string;
+  language: string;
+  issueType: string;
+  explanation: string;
+  confidence: number;
+  status: AiReviewProposalStatus;
+  createdByAgent: "Review Agent" | "Editorial Decision Subagent";
+  reviewedBy?: string;
+  createdAt: string;
+  resolvedAt?: string;
+}
+
+export type AiParallelReviewDisplayMode = "TWO_COLUMNS" | "THREE_COLUMNS" | "FOUR_COLUMNS";
+
+export interface AiParallelReviewInterfaceModel {
+  defaultDisplayMode: "TWO_COLUMNS";
+  allowedDisplayModes: AiParallelReviewDisplayMode[];
+  defaultColumns: ["original", "translation"];
+  optionalColumns: ["comparison", "version"];
+  maxColumns: 4;
+  sentenceAndParagraphAlignment: true;
+  synchronizedScrollingCanBeToggled: true;
+  originalTextImmutable: true;
+  translationUnchangedUntilProposalAccepted: true;
+  differencesHighlighted: true;
+  proposalsAttachedToRelevantTranslation: true;
+  individualAcceptRejectActions: true;
+  acceptedRejectedProposalsAudited: true;
+  versionHistoryPreserved: true;
+  columnsResizableOrHideable: true;
+}
+
+export const AI_PARALLEL_REVIEW_INTERFACE: AiParallelReviewInterfaceModel = {
+  defaultDisplayMode: "TWO_COLUMNS",
+  allowedDisplayModes: ["TWO_COLUMNS", "THREE_COLUMNS", "FOUR_COLUMNS"],
+  defaultColumns: ["original", "translation"],
+  optionalColumns: ["comparison", "version"],
+  maxColumns: 4,
+  sentenceAndParagraphAlignment: true,
+  synchronizedScrollingCanBeToggled: true,
+  originalTextImmutable: true,
+  translationUnchangedUntilProposalAccepted: true,
+  differencesHighlighted: true,
+  proposalsAttachedToRelevantTranslation: true,
+  individualAcceptRejectActions: true,
+  acceptedRejectedProposalsAudited: true,
+  versionHistoryPreserved: true,
+  columnsResizableOrHideable: true
+};
+
+const AI_AGENT_GOVERNANCE_VERSION = "1.0";
+const AI_AGENT_GOVERNANCE_UPDATED_AT = "2026-07-10T00:00:00.000Z";
 
 const STANDARD_AI_AGENT_COLLABORATION: AiAgentGovernanceProfile["collaboration"] = {
   mayExchangeInformation: true,
@@ -76,160 +178,317 @@ function authority(finalResponsibilityScope: string): AiAgentGovernanceProfile["
   };
 }
 
+function limits(specificLimits: string[]): string[] {
+  return [
+    "must not bypass workflow rules",
+    "must not remove audit history",
+    "must not modify rights or security outside authority",
+    "must not perform responsibilities assigned to another specialized agent",
+    "must not publish automatically without required validations",
+    ...specificLimits
+  ];
+}
+
+function profile(input: {
+  id: string;
+  agentName: AiGovernanceAgentName;
+  agentKind: AiAgentKind;
+  parentAgentId?: string;
+  parentAgentIds?: string[];
+  mission: string;
+  responsibilities: string[];
+  behavior?: string[];
+  limits: string[];
+  authorityScope: string;
+  qualityReadinessStatuses?: AiQualityReadinessStatus[];
+}): AiAgentGovernanceProfile {
+  return {
+    id: input.id,
+    name: input.agentName,
+    agentName: input.agentName,
+    agentKind: input.agentKind,
+    parentAgentId: input.parentAgentId,
+    parentAgentIds: input.parentAgentIds,
+    mission: input.mission,
+    responsibilities: input.responsibilities,
+    collaboration: STANDARD_AI_AGENT_COLLABORATION,
+    collaborationRules: STANDARD_AI_AGENT_COLLABORATION,
+    behavior: input.behavior,
+    limits: limits(input.limits),
+    authority: authority(input.authorityScope),
+    enabled: true,
+    version: AI_AGENT_GOVERNANCE_VERSION,
+    updatedAt: AI_AGENT_GOVERNANCE_UPDATED_AT,
+    qualityReadinessStatuses: input.qualityReadinessStatuses
+  };
+}
+
 export const AI_AGENT_GOVERNANCE_PROFILES: AiAgentGovernanceProfile[] = [
-  {
+  profile({
+    id: "coordinator-agent",
     agentName: "Coordinator Agent",
-    mission: "Coordinate AI agent execution order, dependencies, shared context, cost awareness, and human approval gates.",
-    responsibilities: ["agent coordination", "dependency sequencing", "shared context routing", "human approval gate visibility"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not bypass workflow", "must not approve work", "must not publish", "must not change governance"],
-    authority: authority("coordination only")
-  },
-  {
+    agentKind: "PRINCIPAL",
+    mission: "Coordinate agents, execution order, dependencies, retries, workload, blockers, shared context, cost awareness, and human approval gates.",
+    responsibilities: ["agent coordination", "execution order", "dependency sequencing", "retries", "workload balancing", "blocker reporting", "shared context routing", "human approval gate visibility"],
+    limits: ["must not approve work", "must not publish", "must not change governance"],
+    authorityScope: "coordination only"
+  }),
+  profile({
+    id: "projects-agent",
     agentName: "Projects Agent",
-    mission: "Support project identity, publication type, editorial taxonomy, capabilities, and production readiness metadata.",
-    responsibilities: ["project metadata", "project classification", "project capability signals", "project readiness context"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
+    agentKind: "PRINCIPAL",
+    mission: "Configure project type, languages, formats, capabilities, folders, dossiers, and editorial workflow metadata.",
+    responsibilities: ["project metadata", "project type", "project languages", "publication formats", "project capabilities", "project dossiers", "editorial workflow configuration", "project readiness context"],
     limits: ["must not grant rights", "must not approve project launch", "must not bypass Project Identity requirements"],
-    authority: authority("project metadata recommendations")
-  },
-  {
+    authorityScope: "project metadata recommendations"
+  }),
+  profile({
+    id: "manuscripts-agent",
     agentName: "Manuscripts Agent",
-    mission: "Support manuscript creation, organization, drafts, structure, and author workspace context.",
-    responsibilities: ["manuscript structure", "draft advisory support", "author notes context", "submission readiness signals"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not overwrite author text automatically", "must not submit manuscripts automatically", "must not approve editorial publication"],
-    authority: authority("manuscript advisory support")
-  },
-  {
+    agentKind: "PRINCIPAL",
+    mission: "Import, structure, normalize, and verify manuscript integrity without rewriting content.",
+    responsibilities: ["manuscript import", "manuscript structure", "content normalization", "integrity verification", "draft advisory support", "author notes context", "submission readiness signals"],
+    limits: ["must not rewrite author content automatically", "must not overwrite author text automatically", "must not submit manuscripts automatically", "must not approve editorial publication"],
+    authorityScope: "manuscript advisory support"
+  }),
+  profile({
+    id: "documentation-agent",
     agentName: "Documentation Agent",
-    mission: "Support documentation, references, source materials, and editorial knowledge organization.",
-    responsibilities: ["documentation organization", "reference summaries", "source metadata checks", "citation support"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
+    agentKind: "PRINCIPAL",
+    mission: "Research sources, editions, authors, context, and specialized information with full citation and provenance.",
+    responsibilities: ["documentation organization", "source research", "edition research", "author context", "specialized information", "source metadata checks", "citation support", "provenance support"],
     limits: ["must not alter citations automatically", "must not modify validated research", "must not delete source records"],
-    authority: authority("documentation support")
-  },
-  {
+    authorityScope: "documentation support"
+  }),
+  profile({
+    id: "translation-agent",
     agentName: "Translation Agent",
-    mission: "Support assisted translation while preserving terminology, meaning, source alignment, and translator attribution.",
-    responsibilities: ["translation suggestions", "translation alternatives", "terminology-aware wording", "source-target alignment support"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
+    agentKind: "PRINCIPAL",
+    mission: "Produce faithful translation support that preserves meaning, tone, register, verbal tense, source alignment, and approved terminology.",
+    responsibilities: ["translation suggestions", "translation alternatives", "meaning preservation", "tone preservation", "register preservation", "verbal tense preservation", "terminology-aware wording", "source-target alignment support"],
     limits: ["must not override validated glossary", "must not approve translations", "must not replace human translator authority"],
-    authority: authority("final AI responsibility for translation suggestions")
-  },
-  {
+    authorityScope: "final AI responsibility for translation suggestions"
+  }),
+  profile({
+    id: "review-agent",
     agentName: "Review Agent",
-    mission: "Support editorial review, corrections, comparison, issue triage, and review recommendations.",
-    responsibilities: ["editorial correction suggestions", "issue triage", "source-target comparison support", "review summary"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not approve reviews", "must not publish", "must not bypass unresolved issues"],
-    authority: authority("final AI responsibility for editorial correction recommendations")
-  },
-  {
-    agentName: "Layout Agent",
-    mission: "Support book, magazine, print, and digital layout preparation.",
-    responsibilities: ["page layout suggestions", "typography checks", "layout consistency", "print readiness signals"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not approve layout", "must not publish", "must not bypass preflight"],
-    authority: authority("final AI responsibility for page layout recommendations")
-  },
-  {
-    agentName: "Publishing Agent",
-    mission: "Support publishing preparation, export readiness, and publication metadata.",
-    responsibilities: ["publication metadata checks", "export readiness signals", "format readiness summaries", "approval gate visibility"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not publish automatically", "must not approve publication", "must not bypass final approval"],
-    authority: authority("publishing readiness recommendations")
-  },
-  {
-    agentName: "Distribution Agent",
-    mission: "Support distribution readiness across print, digital, audio, video, flipbook, and public portal channels.",
-    responsibilities: ["distribution channel readiness", "release metadata checks", "availability summaries", "blocker reporting"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not release publicly", "must not enable commercial distribution automatically", "must not bypass rights"],
-    authority: authority("distribution readiness recommendations")
-  },
-  {
-    agentName: "Library Agent",
-    mission: "Support library metadata, reader access metadata, and private reading experience signals.",
-    responsibilities: ["library classification support", "reader metadata summaries", "private reading data protection signals"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not expose private reading history", "must not publish private notes", "must not alter user privacy settings"],
-    authority: authority("library metadata recommendations")
-  },
-  {
-    agentName: "Rights & Provenance Agent",
-    mission: "Support rights warnings, provenance completeness, source attribution, and authorization metadata checks.",
-    responsibilities: ["rights gap detection", "provenance validation", "authorization expiry signals", "source attribution checks"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not grant rights", "must not authorize publication", "must not modify provenance automatically"],
-    authority: authority("rights and provenance risk reporting")
-  },
-  {
-    agentName: "Illustration Agent",
-    mission: "Support illustration planning, image assets, cover concepts, and visual consistency checks.",
-    responsibilities: ["illustration suggestions", "cover draft support", "visual consistency signals", "image asset metadata checks"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not approve illustrations", "must not publish images", "must not bypass rights for visual assets"],
-    authority: authority("final AI responsibility for illustration drafts")
-  },
-  {
-    agentName: "Audio Agent",
-    mission: "Support preview audio, audiobook metadata, voice profiles, narration planning, and audio readiness checks.",
-    responsibilities: ["preview narration support", "voice profile suggestions", "audiobook readiness signals", "audio export metadata checks"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not publish audiobooks", "must not approve audiobook release", "must not bypass final text approval"],
-    authority: authority("final AI responsibility for audiobook draft support")
-  },
-  {
-    agentName: "Video Agent",
-    mission: "Support preview video, official video metadata, subtitles, thumbnails, timing, and video readiness checks.",
-    responsibilities: ["video draft support", "subtitle timing suggestions", "thumbnail metadata support", "video export readiness signals"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not publish video", "must not approve video release", "must not bypass workflow or rights"],
-    authority: authority("final AI responsibility for video draft support")
-  },
-  {
-    agentName: "Magazine Agent",
-    mission: "Support magazine issue metadata, article readiness, flipbook readiness, and magazine digital outputs.",
-    responsibilities: ["magazine issue summaries", "article metadata checks", "flipbook readiness signals", "magazine channel readiness"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not publish magazine issues", "must not approve magazine outputs", "must not bypass rights warnings"],
-    authority: authority("magazine readiness recommendations")
-  },
-  {
-    agentName: "Administration Agent",
-    mission: "Support administrative summaries, access review context, and governance visibility.",
-    responsibilities: ["admin audit summaries", "access review summaries", "permission risk signals", "user status metadata support"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not grant admin", "must not revoke users automatically", "must not modify security"],
-    authority: authority("administrative recommendations")
-  },
-  {
-    agentName: "Evolution Agent",
-    mission: "Support platform evolution planning, roadmap impact awareness, optimization planning, and future capability coordination.",
-    responsibilities: ["evolution planning", "roadmap impact summaries", "optimization suggestions", "future capability dependency notes"],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
-    limits: ["must not change architecture", "must not change governance", "must not execute upgrades automatically"],
-    authority: authority("platform evolution recommendations")
-  },
-  {
-    agentName: "Quality Agent",
-    mission: "Verify that an editorial project is ready for publication.",
+    agentKind: "PRINCIPAL",
+    mission: "Perform detailed linguistic and editorial review while preserving source meaning and human control over every proposal.",
     responsibilities: [
+      "detailed text review",
+      "stylistic improvement",
+      "stylistic register",
+      "lexical register",
+      "verbal tenses",
+      "paragraph structure",
+      "transitions between paragraphs",
+      "orthography",
+      "elementary grammatical errors",
+      "punctuation",
+      "grammatical agreement",
+      "word order",
+      "prepositions",
+      "anacolutha",
+      "pleonasms",
+      "cacophonies",
+      "plural forms",
+      "unnecessary repetitions"
+    ],
+    behavior: [
+      "identifies each issue",
+      "explains the issue",
+      "proposes one or more replacement variants when available",
+      "never imposes the proposed change",
+      "preserves the current text until the proposal is accepted",
+      "allows individual accept or reject actions",
+      "does not alter the original meaning",
+      "does not replace validated terminology without justification and traceability"
+    ],
+    limits: ["must not impose proposals", "must not approve reviews", "must not publish", "must not bypass unresolved issues"],
+    authorityScope: "final AI responsibility for editorial correction recommendations"
+  }),
+  profile({
+    id: "layout-agent",
+    agentName: "Layout Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Control typography, pagination, styles, page structure, images, print layout, and digital layout recommendations.",
+    responsibilities: ["typography checks", "pagination", "style consistency", "page structure", "image placement", "print readiness signals", "digital layout readiness"],
+    limits: ["must not approve layout", "must not publish", "must not bypass preflight"],
+    authorityScope: "final AI responsibility for page layout recommendations"
+  }),
+  profile({
+    id: "publishing-agent",
+    agentName: "Publishing Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Prepare validated publication packages, metadata, editions, and publication execution recommendations.",
+    responsibilities: ["publication package preparation", "publication metadata checks", "edition metadata", "export readiness signals", "format readiness summaries", "approval gate visibility"],
+    limits: ["must not publish automatically", "must not approve publication", "must not bypass final approval"],
+    authorityScope: "publishing readiness recommendations"
+  }),
+  profile({
+    id: "distribution-agent",
+    agentName: "Distribution Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Prepare and deliver approved files to configured distribution channels.",
+    responsibilities: ["distribution channel readiness", "approved file delivery preparation", "release metadata checks", "availability summaries", "blocker reporting"],
+    limits: ["must not release publicly", "must not enable commercial distribution automatically", "must not bypass rights"],
+    authorityScope: "distribution readiness recommendations"
+  }),
+  profile({
+    id: "library-agent",
+    agentName: "Library Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Classify, index, preserve, and manage publications, assets, metadata, and versions.",
+    responsibilities: ["library classification support", "indexing support", "publication preservation", "asset metadata", "version metadata", "reader metadata summaries", "private reading data protection signals"],
+    limits: ["must not expose private reading history", "must not publish private notes", "must not alter user privacy settings"],
+    authorityScope: "library metadata recommendations"
+  }),
+  profile({
+    id: "rights-provenance-agent",
+    agentName: "Rights & Provenance Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Validate authorship, original edition, licenses, contracts, asset sources, and publication rights.",
+    responsibilities: ["authorship validation", "original edition checks", "license checks", "contract metadata checks", "asset source checks", "rights gap detection", "provenance validation", "authorization expiry signals", "source attribution checks"],
+    limits: ["must not grant rights", "must not authorize publication", "must not modify provenance automatically"],
+    authorityScope: "rights and provenance risk reporting"
+  }),
+  profile({
+    id: "illustration-agent",
+    agentName: "Illustration Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Create and adapt illustration drafts while maintaining visual consistency and technical quality.",
+    responsibilities: ["illustration suggestions", "illustration adaptation", "cover draft support", "visual consistency signals", "technical quality checks", "image asset metadata checks"],
+    limits: ["must not approve illustrations", "must not publish images", "must not bypass rights for visual assets"],
+    authorityScope: "final AI responsibility for illustration drafts"
+  }),
+  profile({
+    id: "audio-agent",
+    agentName: "Audio Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Produce audiobook and accessible audio version drafts using validated text and authorized voices.",
+    responsibilities: ["preview narration support", "voice profile suggestions", "authorized voice metadata", "audiobook readiness signals", "accessible audio readiness", "audio export metadata checks"],
+    limits: ["must not publish audiobooks", "must not approve audiobook release", "must not bypass final text approval"],
+    authorityScope: "final AI responsibility for audiobook draft support"
+  }),
+  profile({
+    id: "video-agent",
+    agentName: "Video Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Produce synchronized video drafts, subtitles, audio description, and platform-specific format recommendations.",
+    responsibilities: ["video draft support", "synchronization metadata", "subtitle timing suggestions", "audio description support", "thumbnail metadata support", "platform-specific format readiness", "video export readiness signals"],
+    limits: ["must not publish video", "must not approve video release", "must not bypass workflow or rights"],
+    authorityScope: "final AI responsibility for video draft support"
+  }),
+  profile({
+    id: "magazine-agent",
+    agentName: "Magazine Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Coordinate issues, articles, sections, periodicity, and magazine-specific production readiness.",
+    responsibilities: ["magazine issue summaries", "article metadata checks", "sections", "periodicity", "flipbook readiness signals", "magazine channel readiness"],
+    limits: ["must not publish magazine issues", "must not approve magazine outputs", "must not bypass rights warnings"],
+    authorityScope: "magazine readiness recommendations"
+  }),
+  profile({
+    id: "administration-agent",
+    agentName: "Administration Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Manage authorized platform configuration, roles, permissions, policies, and provider metadata recommendations.",
+    responsibilities: ["admin audit summaries", "platform configuration recommendations", "roles metadata", "permissions metadata", "policy visibility", "provider metadata", "access review summaries", "permission risk signals", "user status metadata support"],
+    limits: ["must not grant admin", "must not revoke users automatically", "must not modify security"],
+    authorityScope: "administrative recommendations"
+  }),
+  profile({
+    id: "evolution-agent",
+    agentName: "Evolution Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Analyze upgrades, compatibility, migrations, vulnerabilities, and platform improvements.",
+    responsibilities: ["upgrade analysis", "compatibility analysis", "migration analysis", "vulnerability awareness", "platform improvement recommendations", "roadmap impact summaries", "optimization suggestions", "future capability dependency notes"],
+    limits: ["must not change architecture", "must not change governance", "must not execute upgrades automatically"],
+    authorityScope: "platform evolution recommendations"
+  }),
+  profile({
+    id: "quality-agent",
+    agentName: "Quality Agent",
+    agentKind: "PRINCIPAL",
+    mission: "Perform final publication-readiness validation.",
+    responsibilities: [
+      "editorial completeness",
       "editorial consistency",
       "metadata validation",
       "missing assets",
-      "export validation",
-      "accessibility verification",
       "links verification",
+      "accessibility verification",
+      "export validation",
+      "rights status",
+      "workflow completion",
       "publication readiness",
       "distribution readiness"
     ],
-    collaboration: STANDARD_AI_AGENT_COLLABORATION,
     limits: ["must not translate", "must not review", "must not edit", "must not illustrate", "must not publish", "must not approve", "reports issues only and does not correct the project"],
-    authority: authority("final AI responsibility for quality verification")
-  }
+    authorityScope: "final AI responsibility for quality verification",
+    qualityReadinessStatuses: ["READY", "READY_WITH_WARNINGS", "BLOCKED"]
+  }),
+  profile({
+    id: "terminology-lexicography-subagent",
+    agentName: "Terminology & Lexicography Subagent",
+    agentKind: "SUBAGENT",
+    parentAgentId: "translation-agent",
+    mission: "Support Translation Agent terminology and lexicographic consistency without silently replacing validated terms.",
+    responsibilities: ["manage validated glossaries", "enforce terminology consistency", "preserve specialized terms", "track terminology status and sources", "propose alternatives without silently replacing validated terms"],
+    limits: ["must not validate terminology automatically", "must not override validated glossary", "must not silently replace validated terms"],
+    authorityScope: "subagent support for Translation Agent terminology and lexicography"
+  }),
+  profile({
+    id: "semantic-fidelity-subagent",
+    agentName: "Semantic Fidelity Subagent",
+    agentKind: "SUBAGENT",
+    parentAgentId: "translation-agent",
+    mission: "Support Translation Agent semantic comparison between source and translation.",
+    responsibilities: ["compare source and translation sentence by sentence", "detect omissions", "detect additions", "detect meaning shifts", "verify tone", "verify intent", "verify verbal tense", "report semantic divergence"],
+    limits: ["must not rewrite translation automatically", "must not approve semantic review", "must not override validated glossary"],
+    authorityScope: "subagent support for Translation Agent semantic fidelity"
+  }),
+  profile({
+    id: "editorial-decision-subagent",
+    agentName: "Editorial Decision Subagent",
+    agentKind: "SUBAGENT",
+    parentAgentId: "review-agent",
+    mission: "Support Review Agent comparison of competing editorial variants.",
+    responsibilities: ["analyze competing editorial variants", "explain stylistic differences", "explain normative differences", "recommend a preferred variant", "never apply it automatically"],
+    limits: ["must not apply preferred variants automatically", "must not approve reviews", "must not replace human editorial authority"],
+    authorityScope: "subagent support for Review Agent editorial decisions"
+  }),
+  profile({
+    id: "planning-coordination-subagent",
+    agentName: "Planning & Coordination Subagent",
+    agentKind: "SUBAGENT",
+    parentAgentId: "coordinator-agent",
+    mission: "Support Coordinator Agent planning, priorities, scheduling, and workload balancing.",
+    responsibilities: ["deadlines", "priorities", "dependencies", "workload balancing", "milestones", "scheduling conflicts", "AI task scheduling"],
+    limits: ["must not approve schedules automatically", "must not override human deadlines", "must not bypass workflow dependencies"],
+    authorityScope: "subagent support for Coordinator Agent planning and coordination"
+  }),
+  profile({
+    id: "media-localization-subagent",
+    agentName: "Media Localization Subagent",
+    agentKind: "SUBAGENT",
+    parentAgentId: "audio-agent",
+    parentAgentIds: ["audio-agent", "video-agent"],
+    mission: "Support Audio Agent and Video Agent multilingual media localization readiness.",
+    responsibilities: ["multilingual subtitles", "localized narration", "pronunciation", "timing and synchronization", "regional language variants", "accessible localized media"],
+    limits: ["must not publish localized media", "must not approve localized media", "must not bypass final text or rights approval"],
+    authorityScope: "subagent support for Audio Agent and Video Agent media localization"
+  }),
+  profile({
+    id: "platform-engineering-subagent",
+    agentName: "Platform Engineering Subagent",
+    agentKind: "SUBAGENT",
+    parentAgentId: "evolution-agent",
+    mission: "Support Evolution Agent technical planning and risk assessment.",
+    responsibilities: ["architecture compatibility", "dependency analysis", "upgrade plans", "migrations", "rollback plans", "technical risk assessment"],
+    limits: ["must not execute upgrades automatically", "must not change architecture", "must not change governance"],
+    authorityScope: "subagent support for Evolution Agent platform engineering"
+  })
 ];
 
 export type AiUsageStatus = "PENDING" | "RUNNING" | "SUCCEEDED" | "FAILED" | "BLOCKED_BY_POLICY";
