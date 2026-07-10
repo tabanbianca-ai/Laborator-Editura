@@ -359,6 +359,13 @@ export class SemanticFidelityService {
       sourceReferences: entry.sourceReferences,
       citations: entry.citations,
       authority: entry.authority,
+      authorityLevel: entry.authorityLevel,
+      sourceTitle: entry.sourceTitle,
+      sourceEdition: entry.sourceEdition,
+      publicationYear: entry.publicationYear,
+      licenseStatus: entry.licenseStatus,
+      accessMode: entry.accessMode,
+      lastVerificationDate: entry.lastVerificationDate,
       priorityRank: entry.priorityRank,
       priority: "LEXICOGRAPHIC_SUPPORT_AFTER_VALIDATED_TERMINOLOGY",
       priorityRule:
