@@ -414,6 +414,57 @@ Current governed agents:
 17. Evolution Agent.
 18. Quality Agent.
 
+## Phase 7 Step 9 - Complete AI Agent Roles, Subagents & Parallel Review
+
+Status: Implemented as governance and interface refinement.
+
+Scope:
+
+- No new enterprise modules.
+- Reuses AI Governance, Marketplace, Workflow, Audit, and Editorial Pipeline
+  infrastructure.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+
+Implemented refinements:
+
+- All 18 principal agents expose complete governance metadata: ID, name,
+  mission, responsibilities, collaboration rules, limits, authority, enabled
+  state, version, and last update timestamp.
+- All agents may collaborate freely through the Coordinator Agent.
+- Agents cannot bypass workflow, remove audit history, modify rights/security
+  outside authority, perform another specialized agent's responsibility, or
+  publish automatically without validation.
+- Review Agent responsibilities now cover detailed linguistic and editorial
+  review: style, register, tense, paragraph structure, transitions,
+  orthography, grammar, punctuation, agreement, word order, prepositions,
+  anacolutha, pleonasms, cacophonies, plural forms, and repetitions.
+- Review Agent proposals are non-imposed, remain pending until human action,
+  and support individual accept/reject decisions.
+- Quality Agent statuses are `READY`, `READY_WITH_WARNINGS`, and `BLOCKED`.
+
+Specialized subagents:
+
+1. Terminology & Lexicography Subagent under Translation Agent.
+2. Semantic Fidelity Subagent under Translation Agent.
+3. Editorial Decision Subagent under Review Agent.
+4. Planning & Coordination Subagent under Coordinator Agent.
+5. Media Localization Subagent under Audio Agent and Video Agent.
+6. Platform Engineering Subagent under Evolution Agent.
+
+Parallel translation and review interface:
+
+- Default two-column view: original text and current translation.
+- Proposed replacement variants are displayed next to the relevant translated
+  sentence.
+- Original text is immutable.
+- Translation remains unchanged until a proposal is accepted.
+- Differences are highlighted.
+- Accepted/rejected proposals are auditable.
+- Version history is preserved.
+- Optional three-column and four-column comparison modes support additional
+  languages, versions, or comparison texts.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
