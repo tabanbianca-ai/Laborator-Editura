@@ -169,6 +169,43 @@ Rules:
   Marketplace, and Platform Engineering orchestration. It is not a new
   enterprise module.
 
+### Complete AI Agent Roles, Subagents & Parallel Review Directive
+
+Purpose:
+
+- Complete AI agent role definitions, specialized subagent relationships, and
+  the multilingual parallel review interface without creating new enterprise
+  modules.
+
+Rules:
+
+- The 18 principal agents remain the only principal AI agent roles.
+- Specialized subagents are scoped under their parent agents and do not replace
+  parent responsibility.
+- Approved subagents are:
+  - Terminology & Lexicography Subagent under Translation Agent.
+  - Semantic Fidelity Subagent under Translation Agent.
+  - Editorial Decision Subagent under Review Agent.
+  - Planning & Coordination Subagent under Coordinator Agent.
+  - Media Localization Subagent under Audio Agent and Video Agent.
+  - Platform Engineering Subagent under Evolution Agent.
+- Review Agent must identify issues, explain them, propose replacement
+  variants, and preserve current text until an authorized human accepts a
+  proposal.
+- Review proposals must support `PENDING`, `ACCEPTED`, and `REJECTED` states,
+  individual accept/reject decisions, audit trail, and version history.
+- The default review interface is two columns: original text and current
+  translation.
+- Optional comparison modes may show three or four columns for additional
+  languages, versions, or comparison texts.
+- Original text is immutable, translation is unchanged until acceptance, and
+  accepted/rejected proposals must be auditable.
+- Quality Agent readiness statuses are `READY`, `READY_WITH_WARNINGS`, and
+  `BLOCKED`.
+- No AI agent or subagent may bypass workflow, remove audit history, publish
+  automatically, change rights/security outside authority, or perform another
+  agent's specialized responsibility.
+
 ### ChatGPT
 
 Role: System Architect.
