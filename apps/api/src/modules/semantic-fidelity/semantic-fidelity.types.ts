@@ -1,6 +1,9 @@
 import {
   type LexicographicAuthority,
-  type LexicographicCitation
+  type LexicographicCitation,
+  type LinguisticAuthorityLevel,
+  type LinguisticContentAccessMode,
+  type LinguisticLicenseStatus
 } from "../lexicographic/lexicographic.types";
 
 export type SemanticFidelityReportScope = "SEGMENT" | "DOCUMENT";
@@ -86,6 +89,13 @@ export interface SemanticLexicographicReference {
   sourceReferences: string[];
   citations: LexicographicCitation[];
   authority: LexicographicAuthority;
+  authorityLevel?: LinguisticAuthorityLevel;
+  sourceTitle?: string;
+  sourceEdition?: string;
+  publicationYear?: number;
+  licenseStatus?: LinguisticLicenseStatus;
+  accessMode?: LinguisticContentAccessMode;
+  lastVerificationDate?: string;
   priorityRank: number;
   priority: "LEXICOGRAPHIC_SUPPORT_AFTER_VALIDATED_TERMINOLOGY";
   priorityRule: "validated platform glossary > documented editorial decision > specialized dictionary > academic dictionary > AI suggestion";
