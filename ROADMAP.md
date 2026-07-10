@@ -361,6 +361,59 @@ the architecture reserves space for future magazine publishing, reading, audio,
 and cross-publication workflows without disrupting the current MVP or closed
 beta preparation.
 
+## Phase 7 Step 8 - AI Agent Governance & Quality Agent
+
+Status: Implemented as governance refinement.
+
+Scope:
+
+- No new enterprise modules.
+- Reuses AI Governance, Marketplace Agent Registry, and Platform Engineering
+  orchestration.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+
+Rules:
+
+- Every agent defines mission, responsibilities, collaboration, limits, and
+  authority.
+- Agents may exchange information, request assistance, reuse results, notify
+  other agents, and coordinate through the Coordinator Agent.
+- No communication restrictions exist between agents.
+- Each agent has final AI responsibility only within its own specialization.
+- Human approval always overrides every AI decision.
+- No AI agent may publish automatically, approve automatically, grant rights,
+  bypass workflow, modify security, or change governance.
+
+Quality Agent:
+
+- Verifies editorial consistency, metadata, missing assets, exports,
+  accessibility, links, publication readiness, and distribution readiness.
+- Reports issues only.
+- Does not translate, review, edit, illustrate, publish, approve, or correct
+  the project.
+
+Current governed agents:
+
+1. Coordinator Agent.
+2. Projects Agent.
+3. Manuscripts Agent.
+4. Documentation Agent.
+5. Translation Agent.
+6. Review Agent.
+7. Layout Agent.
+8. Publishing Agent.
+9. Distribution Agent.
+10. Library Agent.
+11. Rights & Provenance Agent.
+12. Illustration Agent.
+13. Audio Agent.
+14. Video Agent.
+15. Magazine Agent.
+16. Administration Agent.
+17. Evolution Agent.
+18. Quality Agent.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
