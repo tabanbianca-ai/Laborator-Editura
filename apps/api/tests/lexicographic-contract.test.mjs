@@ -58,12 +58,14 @@ test("lexicographic controller exposes required authenticated endpoints", () => 
 
   assert.match(source, /@Post\("sources"\)/);
   assert.match(source, /@Get\("sources"\)/);
+  assert.match(source, /@Post\("sources\/:id"\)/);
+  assert.match(source, /@Post\("sources\/:id\/disable"\)/);
   assert.match(source, /@Post\("entries"\)/);
   assert.match(source, /@Get\("search"\)/);
   assert.match(source, /@Post\("compare"\)/);
   assert.match(source, /@Post\("validate-term"\)/);
   assert.match(source, /AuthenticatedRequestContext/);
-  assert.equal(source.match(/@CurrentActor\(\)/g)?.length, 6);
+  assert.equal(source.match(/@CurrentActor\(\)/g)?.length, 8);
   assert.doesNotMatch(source, /x-user-id/);
   assert.doesNotMatch(source, /x-organization-id/);
   assert.doesNotMatch(source, /x-user-roles/);
