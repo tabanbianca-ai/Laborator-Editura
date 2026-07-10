@@ -2567,24 +2567,34 @@ Optional top-level key reserved for future phases:
 }
 ```
 
-## AI Agent Governance & Quality Agent
+## AI Agent Governance, Subagents & Parallel Review
 
 Status: Governance refinement. No new enterprise module.
 
 All AI agents follow one governance model. For every agent the platform records
 or exposes:
 
+- ID.
+- Name.
+- Parent agent ID where applicable.
 - Mission.
 - Responsibilities.
-- Collaboration.
+- Collaboration rules.
 - Limits.
 - Authority.
+- Enabled state.
+- Version.
+- Last update timestamp.
 
 ### Collaboration
 
 All agents may collaborate freely. Agents may exchange information, request
 assistance, reuse results, notify other agents, and coordinate through the
 Coordinator Agent. There are no communication restrictions between agents.
+
+All agent invocations, subagent invocations, generated proposals,
+accepted/rejected proposals, responsibility transfers, quality statuses, final
+agent decisions, and human overrides must remain auditable.
 
 ### Responsibility
 
@@ -2597,6 +2607,8 @@ Each agent has final AI responsibility only within its own specialization:
 - Audio Agent: audiobook draft support and audio readiness.
 - Video Agent: video draft support and video readiness.
 - Quality Agent: quality verification.
+
+Principal agents retain final responsibility for their subagents' results.
 
 ### Human Final Authority
 
@@ -2627,23 +2639,123 @@ The current governed agents are:
 17. Evolution Agent.
 18. Quality Agent.
 
+### Specialized Subagents
+
+The approved subagents are:
+
+1. Terminology & Lexicography Subagent.
+   Parent: Translation Agent.
+   Responsibilities: validated glossaries, terminology consistency,
+   specialized terms, terminology status, source tracking, alternatives that do
+   not silently replace validated terms.
+2. Semantic Fidelity Subagent.
+   Parent: Translation Agent.
+   Responsibilities: sentence-by-sentence source/translation comparison,
+   omissions, additions, meaning shifts, tone, intent, verbal tense, semantic
+   divergence reports.
+3. Editorial Decision Subagent.
+   Parent: Review Agent.
+   Responsibilities: competing editorial variants, stylistic differences,
+   normative differences, preferred-variant recommendations, no automatic
+   application.
+4. Planning & Coordination Subagent.
+   Parent: Coordinator Agent.
+   Responsibilities: deadlines, priorities, dependencies, workload balancing,
+   milestones, scheduling conflicts, AI task scheduling.
+5. Media Localization Subagent.
+   Parents: Audio Agent and Video Agent.
+   Responsibilities: multilingual subtitles, localized narration,
+   pronunciation, timing and synchronization, regional variants, accessible
+   localized media.
+6. Platform Engineering Subagent.
+   Parent: Evolution Agent.
+   Responsibilities: architecture compatibility, dependency analysis, upgrade
+   plans, migrations, rollback plans, technical risk assessment.
+
 ### Quality Agent
 
 Mission: verify that an editorial project is ready for publication.
 
 Responsibilities:
 
+- Editorial completeness.
 - Editorial consistency.
 - Metadata validation.
 - Missing assets.
-- Export validation.
-- Accessibility verification.
 - Links verification.
+- Accessibility verification.
+- Export validation.
+- Rights status.
+- Workflow completion.
 - Publication readiness.
 - Distribution readiness.
 
 Quality Agent reports issues only. It does not correct the project and may not
 translate, review, edit, illustrate, publish, or approve.
+
+Quality Agent statuses:
+
+- `READY`.
+- `READY_WITH_WARNINGS`.
+- `BLOCKED`.
+
+### Review Agent Proposal Model
+
+Review proposals must store:
+
+- `proposalId`.
+- `projectId`.
+- `documentId`.
+- `segmentId`.
+- `sourceText`.
+- `currentTranslation`.
+- `proposedText`.
+- `language`.
+- `issueType`.
+- `explanation`.
+- `confidence`.
+- `status`: `PENDING`, `ACCEPTED`, or `REJECTED`.
+- `createdByAgent`.
+- `reviewedBy`.
+- `createdAt`.
+- `resolvedAt`.
+
+Review Agent identifies each issue, explains it, proposes one or more
+replacement variants when available, never imposes the proposed change,
+preserves current text until a proposal is accepted, supports individual accept
+or reject actions, does not alter original meaning, and does not replace
+validated terminology without justification and traceability.
+
+### Parallel Translation & Review Interface
+
+The original text and translation must remain visible in parallel.
+
+Default display:
+
+- Two columns.
+- Column 1: original text.
+- Column 2: current translation and proposed replacement variants attached to
+  relevant translated sentences.
+
+Required behavior:
+
+- Sentence and paragraph alignment.
+- Synchronized scrolling can be enabled or disabled.
+- Original text remains immutable.
+- Translation remains unchanged until a proposal is accepted.
+- Differences are highlighted.
+- Accepted and rejected proposals are audited.
+- Version history is preserved.
+- User may resize or temporarily hide columns.
+
+Optional display modes:
+
+- Three columns: original, translation, and another language, version, or
+  comparison text.
+- Four columns: simultaneous comparison of up to four languages or versions.
+
+For optional columns, language or version can be selected independently while
+alignment is preserved.
 
 ## Future Phase - Media Localization Studio
 
