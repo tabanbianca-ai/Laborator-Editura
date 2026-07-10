@@ -2567,6 +2567,84 @@ Optional top-level key reserved for future phases:
 }
 ```
 
+## AI Agent Governance & Quality Agent
+
+Status: Governance refinement. No new enterprise module.
+
+All AI agents follow one governance model. For every agent the platform records
+or exposes:
+
+- Mission.
+- Responsibilities.
+- Collaboration.
+- Limits.
+- Authority.
+
+### Collaboration
+
+All agents may collaborate freely. Agents may exchange information, request
+assistance, reuse results, notify other agents, and coordinate through the
+Coordinator Agent. There are no communication restrictions between agents.
+
+### Responsibility
+
+Each agent has final AI responsibility only within its own specialization:
+
+- Translation Agent: translation suggestions and translation decision support.
+- Review Agent: editorial corrections and review recommendations.
+- Layout Agent: page layout recommendations.
+- Illustration Agent: illustration drafts and visual consistency.
+- Audio Agent: audiobook draft support and audio readiness.
+- Video Agent: video draft support and video readiness.
+- Quality Agent: quality verification.
+
+### Human Final Authority
+
+Human approval always overrides every AI decision. No AI agent may publish
+automatically, approve automatically, grant rights, bypass workflow, modify
+security, or change governance.
+
+### Current Agents
+
+The current governed agents are:
+
+1. Coordinator Agent.
+2. Projects Agent.
+3. Manuscripts Agent.
+4. Documentation Agent.
+5. Translation Agent.
+6. Review Agent.
+7. Layout Agent.
+8. Publishing Agent.
+9. Distribution Agent.
+10. Library Agent.
+11. Rights & Provenance Agent.
+12. Illustration Agent.
+13. Audio Agent.
+14. Video Agent.
+15. Magazine Agent.
+16. Administration Agent.
+17. Evolution Agent.
+18. Quality Agent.
+
+### Quality Agent
+
+Mission: verify that an editorial project is ready for publication.
+
+Responsibilities:
+
+- Editorial consistency.
+- Metadata validation.
+- Missing assets.
+- Export validation.
+- Accessibility verification.
+- Links verification.
+- Publication readiness.
+- Distribution readiness.
+
+Quality Agent reports issues only. It does not correct the project and may not
+translate, review, edit, illustrate, publish, or approve.
+
 ## Future Phase - Media Localization Studio
 
 Status: Future Phase. Do not implement now.
