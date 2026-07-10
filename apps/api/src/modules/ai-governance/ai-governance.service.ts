@@ -2,8 +2,10 @@ import { BadRequestException, ForbiddenException, Injectable, NotFoundException 
 import { randomUUID } from "node:crypto";
 import { DatabaseAiGovernanceRepository } from "./ai-governance.repository";
 import {
+  AI_AGENT_GOVERNANCE_PROFILES,
   type AiBudget,
   type AiBudgetOverrideRequest,
+  type AiAgentGovernanceProfile,
   type AiCostAuditAction,
   type AiCostAuditEvent,
   type AiCostPolicy,
@@ -21,6 +23,11 @@ import {
 @Injectable()
 export class AiGovernanceService {
   constructor(private readonly repository: DatabaseAiGovernanceRepository) {}
+
+  listAgentGovernanceProfiles(actor: AiGovernanceActor): AiAgentGovernanceProfile[] {
+    this.assertAdminActor(actor);
+    return AI_AGENT_GOVERNANCE_PROFILES;
+  }
 
   async listUsage(actor: AiGovernanceActor): Promise<AiUsageRecord[]> {
     this.assertAdminActor(actor);
