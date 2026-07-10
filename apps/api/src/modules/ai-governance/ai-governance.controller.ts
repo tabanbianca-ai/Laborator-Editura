@@ -15,6 +15,11 @@ import {
 export class AiGovernanceController {
   constructor(private readonly aiGovernanceService: AiGovernanceService) {}
 
+  @Get("agents")
+  listAgentGovernanceProfiles(@CurrentActor() actor: AuthenticatedRequestContext) {
+    return this.aiGovernanceService.listAgentGovernanceProfiles(actor);
+  }
+
   @Get("usage")
   listUsage(@CurrentActor() actor: AuthenticatedRequestContext) {
     return this.aiGovernanceService.listUsage(actor);
