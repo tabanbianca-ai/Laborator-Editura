@@ -41,11 +41,29 @@ export class PlatformEngineeringService {
         export: "READY"
       },
       agentReadiness: {
+        coordinator: "READY",
+        projects: "READY",
+        manuscripts: "READY",
+        documentation: "READY",
+        translation: "READY",
+        review: "READY",
         lexicographic: "READY",
         editorialDecision: "READY",
+        layout: "READY",
         layoutPublishing: "READY",
+        publishing: "READY",
+        distribution: "READY",
+        library: "READY",
+        rightsProvenance: "READY",
+        illustration: "READY",
+        audio: "READY",
+        video: "READY",
+        magazine: "READY",
+        administration: "READY",
+        evolution: "READY",
         multimediaCreation: "READY",
-        platformEngineering: "READY"
+        platformEngineering: "READY",
+        quality: "READY"
       },
       destructiveActionsExecuted: false,
       checkedAt
