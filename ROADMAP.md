@@ -465,6 +465,36 @@ Parallel translation and review interface:
 - Optional three-column and four-column comparison modes support additional
   languages, versions, or comparison texts.
 
+## Phase 7 Step 10 - Functional Testing of AI Agents
+
+Status: Implemented as deterministic functional test coverage.
+
+Scope:
+
+- No new enterprise modules.
+- Reuses AI Governance, Workflow, Audit, Review, Translation, Publishing,
+  Library, Rights, and Editorial Pipeline infrastructure.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+
+Implemented validation:
+
+- Functional integration tests for realistic editorial workflows.
+- Reusable editorial fixtures for translated book, original manuscript,
+  children's book, magazine issue, audiobook, and video publication.
+- Deterministic mocked AI responses for offline/local validation.
+- Coverage matrix for all 18 principal agents and all 6 specialized subagents.
+- Workflow execution reports with expected result, actual result, pass/fail,
+  detected gaps, and unresolved risks.
+- Failure and boundary tests for unauthorized publication, workflow bypass,
+  rights failure, malformed manuscript, missing translation segment,
+  terminology conflict, semantic omission, timeout/retry handling, human
+  override, and audit integrity.
+
+Report:
+
+- `docs/PHASE_7_STEP_10_AI_AGENT_FUNCTIONAL_TEST_REPORT.md`.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
