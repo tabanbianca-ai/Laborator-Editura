@@ -177,7 +177,7 @@ test("semantic lexicographic references preserve token-safe matching and reject 
 
   assert.equal(hasTokenSafeOccurrence(normalizedSource, "espiritu"), true);
   assert.equal(hasTokenSafeOccurrence(normalizedSource, "rit"), false);
-  assert.match(repository, /matchesLexicalTerm\(entry\.normalizedTerm, normalizedQuery\)/);
+  assert.match(repository, /matchesLexicalTerm\(entry, normalizedQuery/);
   assert.match(repository, /hasTokenSafeOccurrence/);
   assert.match(source, /lexicographicService\.searchEntries/);
 });
