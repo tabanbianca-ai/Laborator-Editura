@@ -113,6 +113,8 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "workspace_navigation_items",
     "workspace_widgets",
     "workspace_preferences",
+    "workspace_collaborator_invitations",
+    "workspace_need_to_know_grants",
     "workspace_audit_events",
     "launch_mfa_records",
     "launch_gdpr_consents",
@@ -463,10 +465,18 @@ function sampleSnapshot() {
   snapshot.workspace_preferences.push(
     { id: "workspace-preferences-a", organizationId: "org-a", userId: "user-a", favoriteModules: ["DASHBOARD", "MY_PROJECTS"], dashboardLayout: { columns: 3 }, collapsedMenus: ["admin"], themeMetadata: { theme: "system" }, language: "ro", notificationPreferences: { inApp: true, email: false }, createdAt: "2026-01-01T00:00:07.159Z", updatedAt: "2026-01-01T00:00:07.159Z", metadata: { aiMayAlterPermissions: false, aiMayExposeHiddenModules: false, aiMayChangePolicies: false } }
   );
+  snapshot.workspace_collaborator_invitations.push(
+    { id: "workspace-invitation-a", organizationId: "org-a", inviteeEmail: "translator@example.test", inviteeName: "Translator One", projectId: "project-a", role: "TRANSLATOR", permittedTools: ["DASHBOARD", "MY_PROJECTS", "TRANSLATION", "LEXICOGRAPHIC", "COLLABORATION"], accessScope: { projectId: "project-a", documentIds: ["document-a"], chapterIds: ["chapter-a"], sectionIds: ["section-a"], segmentIds: ["segment-a"] }, startsAt: "2026-01-01T00:00:07.159Z", expiresAt: "2026-02-01T00:00:00.000Z", reason: "Assigned translation scope only.", status: "ACCEPTED", sentBy: "user-a", sentAt: "2026-01-01T00:00:07.159Z", acceptedBy: "user-c", acceptedAt: "2026-01-01T00:00:07.159Z", accessGrantId: "workspace-grant-a", preview: { visiblePanels: ["sourceText", "translation", "linguisticResources"], hiddenPanels: ["financialData", "rightsNegotiations", "administration"], permittedActions: ["viewSource", "saveTranslation"], restrictedResourceTypes: ["ADMINISTRATION", "DISTRIBUTION", "RIGHTS_RECORD"], restrictedMetadataReturned: false }, metadata: { hiddenDataLoadedThroughApi: false } }
+  );
+  snapshot.workspace_need_to_know_grants.push(
+    { id: "workspace-grant-a", organizationId: "org-a", userId: "user-c", collaboratorEmail: "translator@example.test", collaboratorName: "Translator One", projectId: "project-a", role: "TRANSLATOR", permittedTools: ["DASHBOARD", "MY_PROJECTS", "TRANSLATION", "LEXICOGRAPHIC", "COLLABORATION"], accessScope: { projectId: "project-a", documentIds: ["document-a"], chapterIds: ["chapter-a"], sectionIds: ["section-a"], segmentIds: ["segment-a"] }, startsAt: "2026-01-01T00:00:07.159Z", expiresAt: "2026-02-01T00:00:00.000Z", reason: "Assigned translation scope only.", grantedBy: "user-a", grantedAt: "2026-01-01T00:00:07.159Z", status: "ACTIVE", temporary: true, confidentialClassification: "INTERNAL", mostRestrictiveRuleApplied: true, metadata: { hiddenDataLoadedThroughApi: false } }
+  );
   snapshot.workspace_audit_events.push(
     { id: "workspace-audit-a", organizationId: "org-a", actorId: "user-a", action: "WORKSPACE_LAYOUT_CREATED", layoutId: "workspace-layout-a", afterState: { id: "workspace-layout-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.154Z" },
     { id: "workspace-audit-b", organizationId: "org-a", actorId: "user-a", action: "WORKSPACE_WIDGET_CREATED", widgetId: "workspace-widget-a", afterState: { id: "workspace-widget-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.157Z" },
-    { id: "workspace-audit-c", organizationId: "org-a", actorId: "user-a", action: "WORKSPACE_PREFERENCES_SAVED", preferenceId: "workspace-preferences-a", afterState: { id: "workspace-preferences-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.159Z" }
+    { id: "workspace-audit-c", organizationId: "org-a", actorId: "user-a", action: "WORKSPACE_PREFERENCES_SAVED", preferenceId: "workspace-preferences-a", afterState: { id: "workspace-preferences-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.159Z" },
+    { id: "workspace-audit-d", organizationId: "org-a", actorId: "user-a", action: "INVITATION_SENT", invitationId: "workspace-invitation-a", projectId: "project-a", afterState: { id: "workspace-invitation-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.159Z" },
+    { id: "workspace-audit-e", organizationId: "org-a", actorId: "user-c", action: "NEED_TO_KNOW_ACCESS_GRANTED", accessGrantId: "workspace-grant-a", invitationId: "workspace-invitation-a", projectId: "project-a", afterState: { id: "workspace-grant-a" }, humanFinalAuthority: true, createdAt: "2026-01-01T00:00:07.159Z" }
   );
   snapshot.launch_mfa_records.push(
     { id: "launch-mfa-a", organizationId: "org-a", userId: "user-a", role: "ADMIN", status: "ENABLED", totpSecretPlaceholder: "TOTP_SECRET_PLACEHOLDER", recoveryCodesMetadata: { generated: true, codeCount: 10, lastGeneratedAt: "2026-01-01T00:00:07.160Z", storedAsHashPlaceholder: true }, externalMfaProvider: "NOT_CONFIGURED", enabledBy: "user-a", enabledAt: "2026-01-01T00:00:07.160Z", auditRequired: true, humanFinalAuthorityRequired: true, createdAt: "2026-01-01T00:00:07.160Z", updatedAt: "2026-01-01T00:00:07.160Z" }
