@@ -15,6 +15,10 @@ import {
   type WorkspaceAuditAction,
   type WorkspaceAuditEvent,
   type WorkspaceDashboard,
+  type WorkspaceEffectiveAccessAction,
+  type WorkspaceEffectiveAccessInput,
+  type WorkspaceEffectiveAccessResult,
+  type WorkspaceEntitlementFeature,
   type WorkspaceLayout,
   type WorkspaceModule,
   type WorkspaceNavigationItem,
@@ -23,8 +27,15 @@ import {
   type WorkspaceNeedToKnowGrant,
   type WorkspaceNeedToKnowPreview,
   type WorkspaceNeedToKnowRole,
+  type WorkspaceOperationalRole,
+  type WorkspacePlanQuotaKey,
+  type WorkspaceRoleAssignmentScope,
   type WorkspaceAgentDataAccessInput,
   type WorkspacePreferences,
+  type WorkspaceSubscriptionPlan,
+  type WorkspaceSubscriptionPlanDefinition,
+  type WorkspaceSubscriptionSummary,
+  type WorkspaceSubscriptionUsage,
   type WorkspaceWidget
 } from "./workspace.types";
 
@@ -186,6 +197,211 @@ const ALWAYS_RESTRICTED_RESOURCE_TYPES = new Set<WorkspaceAccessResourceType>([
   "RIGHTS_RECORD"
 ]);
 
+const OFFICIAL_OPERATIONAL_ROLES: WorkspaceOperationalRole[] = [
+  "ADMINISTRATOR",
+  "PROJECT_MANAGER",
+  "EDITOR",
+  "TRANSLATOR",
+  "REVIEWER",
+  "DESIGNER",
+  "AUDIO_NARRATOR",
+  "AUTHOR",
+  "COLLABORATOR",
+  "READER",
+  "GUEST"
+];
+
+const ROLE_ASSIGNMENT_SCOPES = [
+  "ORGANIZATION",
+  "PROJECT",
+  "DOCUMENT",
+  "CHAPTER",
+  "SEGMENT"
+] as const;
+
+const SUBSCRIPTION_PLANS: Record<WorkspaceSubscriptionPlan, WorkspaceSubscriptionPlanDefinition> = {
+  FREE: {
+    plan: "FREE",
+    enabled: true,
+    includedFeatures: ["EXPORT_JSON_MASTER", "EXPORT_PDF", "TRANSLATION_VOLUME"],
+    quotas: {
+      activeProjects: 1,
+      aiUsage: 25,
+      collaborators: 1,
+      storageMb: 512,
+      translationSegments: 1000
+    },
+    exportFormats: ["JSON_MASTER", "PDF"],
+    publishingChannels: ["INTERNAL_EXPORT"],
+    distributionChannels: ["LOCAL_DOWNLOAD"],
+    auditRetentionDays: 30,
+    backupRetentionDays: 7,
+    priorityProcessing: false,
+    downgradeBehavior: {
+      preserveExistingContent: true,
+      preserveAuditAndVersions: true,
+      disableUnavailableFutureActionsOnly: true,
+      markOverLimitResourcesReadOnly: true,
+      automaticDeletion: false,
+      remediationSummaryRequired: true
+    }
+  },
+  PREMIUM: {
+    plan: "PREMIUM",
+    enabled: true,
+    includedFeatures: [
+      "ADVANCED_EDITORIAL_TOOLS",
+      "AI_AGENT",
+      "COLLABORATION",
+      "EXPORT_DOCX",
+      "EXPORT_EPUB",
+      "EXPORT_JSON_MASTER",
+      "EXPORT_MOBI",
+      "EXPORT_PDF",
+      "TRANSLATION_VOLUME"
+    ],
+    quotas: {
+      activeProjects: 10,
+      aiUsage: 1000,
+      collaborators: 5,
+      storageMb: 10240,
+      translationSegments: 50000
+    },
+    exportFormats: ["JSON_MASTER", "PDF", "DOCX", "EPUB", "MOBI"],
+    publishingChannels: ["INTERNAL_EXPORT", "PUBLIC_PORTAL_DRAFT"],
+    distributionChannels: ["LOCAL_DOWNLOAD"],
+    auditRetentionDays: 180,
+    backupRetentionDays: 30,
+    priorityProcessing: false,
+    downgradeBehavior: {
+      preserveExistingContent: true,
+      preserveAuditAndVersions: true,
+      disableUnavailableFutureActionsOnly: true,
+      markOverLimitResourcesReadOnly: true,
+      automaticDeletion: false,
+      remediationSummaryRequired: true
+    }
+  },
+  BUSINESS: {
+    plan: "BUSINESS",
+    enabled: true,
+    includedFeatures: [
+      "ADVANCED_EDITORIAL_TOOLS",
+      "AI_AGENT",
+      "API_ACCESS",
+      "AUDIT_RETENTION",
+      "BACKUP_RETENTION",
+      "COLLABORATION",
+      "DISTRIBUTION_CHANNELS",
+      "EXPORT_DOCX",
+      "EXPORT_EPUB",
+      "EXPORT_JSON_MASTER",
+      "EXPORT_MOBI",
+      "EXPORT_PDF",
+      "EXPORT_PRINT",
+      "PRIORITY_PROCESSING",
+      "PUBLISHING_CHANNELS",
+      "TEAM_ADMINISTRATION",
+      "TRANSLATION_VOLUME"
+    ],
+    quotas: {
+      activeProjects: 100,
+      aiUsage: 10000,
+      collaborators: 50,
+      storageMb: 102400,
+      translationSegments: 500000
+    },
+    exportFormats: ["JSON_MASTER", "PDF", "DOCX", "EPUB", "MOBI", "PRINT"],
+    publishingChannels: ["INTERNAL_EXPORT", "PUBLIC_PORTAL", "MARKETPLACE_METADATA"],
+    distributionChannels: ["PUBLIC_PORTAL", "LOCAL_DOWNLOAD", "PARTNER_METADATA"],
+    auditRetentionDays: 365,
+    backupRetentionDays: 90,
+    priorityProcessing: true,
+    downgradeBehavior: {
+      preserveExistingContent: true,
+      preserveAuditAndVersions: true,
+      disableUnavailableFutureActionsOnly: true,
+      markOverLimitResourcesReadOnly: true,
+      automaticDeletion: false,
+      remediationSummaryRequired: true
+    }
+  },
+  ENTERPRISE_RESERVED: {
+    plan: "ENTERPRISE_RESERVED",
+    enabled: false,
+    includedFeatures: [],
+    quotas: {
+      activeProjects: null,
+      aiUsage: null,
+      collaborators: null,
+      storageMb: null,
+      translationSegments: null
+    },
+    exportFormats: [],
+    publishingChannels: [],
+    distributionChannels: [],
+    auditRetentionDays: 0,
+    backupRetentionDays: 0,
+    priorityProcessing: false,
+    downgradeBehavior: {
+      preserveExistingContent: true,
+      preserveAuditAndVersions: true,
+      disableUnavailableFutureActionsOnly: true,
+      markOverLimitResourcesReadOnly: true,
+      automaticDeletion: false,
+      remediationSummaryRequired: true
+    }
+  }
+};
+
+const FEATURE_MINIMUM_PLAN: Record<WorkspaceEntitlementFeature, WorkspaceSubscriptionPlan> = {
+  ADVANCED_EDITORIAL_TOOLS: "PREMIUM",
+  AI_AGENT: "PREMIUM",
+  API_ACCESS: "BUSINESS",
+  AUDIT_RETENTION: "BUSINESS",
+  BACKUP_RETENTION: "BUSINESS",
+  COLLABORATION: "PREMIUM",
+  DISTRIBUTION_CHANNELS: "BUSINESS",
+  EXPORT_DOCX: "PREMIUM",
+  EXPORT_EPUB: "PREMIUM",
+  EXPORT_JSON_MASTER: "FREE",
+  EXPORT_MOBI: "PREMIUM",
+  EXPORT_PDF: "FREE",
+  EXPORT_PRINT: "BUSINESS",
+  PRIORITY_PROCESSING: "BUSINESS",
+  PUBLISHING_CHANNELS: "BUSINESS",
+  TEAM_ADMINISTRATION: "BUSINESS",
+  TRANSLATION_VOLUME: "FREE"
+};
+
+const ROLE_ACTIONS_ALLOWED: Record<WorkspaceOperationalRole, WorkspaceEffectiveAccessAction[]> = {
+  ADMINISTRATOR: [
+    "ADMINISTRATION_ACTION",
+    "AI_EXECUTION",
+    "API_USAGE",
+    "DISTRIBUTION",
+    "DOCUMENT_EDIT",
+    "EXPORT",
+    "PROJECT_CREATE",
+    "PUBLISHING",
+    "REVIEW",
+    "ROLE_ASSIGNMENT",
+    "STORAGE_UPLOAD",
+    "TRANSLATION",
+    "USER_INVITATION"
+  ],
+  PROJECT_MANAGER: ["DOCUMENT_EDIT", "PROJECT_CREATE", "REVIEW", "USER_INVITATION"],
+  EDITOR: ["DOCUMENT_EDIT", "REVIEW"],
+  TRANSLATOR: ["DOCUMENT_EDIT", "TRANSLATION"],
+  REVIEWER: ["EXPORT", "REVIEW"],
+  DESIGNER: ["DOCUMENT_EDIT", "EXPORT", "STORAGE_UPLOAD"],
+  AUDIO_NARRATOR: ["AI_EXECUTION", "DOCUMENT_EDIT", "STORAGE_UPLOAD"],
+  AUTHOR: ["DOCUMENT_EDIT", "PROJECT_CREATE"],
+  COLLABORATOR: ["DOCUMENT_EDIT"],
+  READER: [],
+  GUEST: []
+};
+
 @Injectable()
 export class WorkspaceService {
   constructor(private readonly repository: DatabaseWorkspaceRepository) {}
@@ -230,6 +446,105 @@ export class WorkspaceService {
         permissions: actor.permissions
       }
     };
+  }
+
+  async getSubscriptionSummary(actor: WorkspaceActor): Promise<WorkspaceSubscriptionSummary> {
+    const currentPlan = this.resolveSubscriptionPlan(actor);
+
+    return {
+      currentPlan,
+      plans: Object.values(SUBSCRIPTION_PLANS),
+      currentEntitlements: SUBSCRIPTION_PLANS[currentPlan],
+      usage: this.getSubscriptionUsage(actor),
+      accountOwnerCanManageSubscription: this.isAccountOwnerOrAdmin(actor),
+      roleNamesAreNotPlanNames: true,
+      enterpriseReservedEnabled: false
+    };
+  }
+
+  async resolveEffectiveAccess(
+    actor: WorkspaceActor,
+    input: WorkspaceEffectiveAccessInput
+  ): Promise<WorkspaceEffectiveAccessResult> {
+    const subscription = await this.getSubscriptionSummary(actor);
+    const operationalRole = this.operationalRoleFromActor(actor);
+    const roleAllowed = ROLE_ACTIONS_ALLOWED[operationalRole].includes(input.action);
+    const needToKnow = await this.evaluateNeedToKnowAccess(actor, input);
+    const requiredFeature = input.requiredFeature ?? this.defaultFeatureForAction(input.action);
+    const planAllowsFeature =
+      !requiredFeature ||
+      (subscription.currentEntitlements.enabled &&
+        subscription.currentEntitlements.includedFeatures.includes(requiredFeature));
+    const quotaKey = input.quotaKey ?? this.defaultQuotaForAction(input.action);
+    const requestedAmount = input.requestedAmount ?? 1;
+    const quotaLimit = quotaKey ? subscription.currentEntitlements.quotas[quotaKey] : undefined;
+    const quotaUsage = quotaKey ? subscription.usage[quotaKey] : undefined;
+    const quotaAllows =
+      !quotaKey ||
+      quotaLimit === null ||
+      quotaLimit === undefined ||
+      (quotaUsage ?? 0) + requestedAmount <= quotaLimit;
+    const subscriptionAllowed = planAllowsFeature && quotaAllows;
+    const needToKnowAllowed = needToKnow.decision === "ALLOW";
+    const decision: "ALLOW" | "DENY" =
+      roleAllowed && subscriptionAllowed && needToKnowAllowed ? "ALLOW" : "DENY";
+    const requiredPlan = requiredFeature ? FEATURE_MINIMUM_PLAN[requiredFeature] : undefined;
+    const reason = this.effectiveAccessReason({
+      roleAllowed,
+      planAllowsFeature,
+      quotaAllows,
+      needToKnowAllowed,
+      requiredFeature,
+      requiredPlan,
+      quotaKey
+    });
+
+    const result: WorkspaceEffectiveAccessResult = {
+      decision,
+      reason,
+      roleAllowed,
+      subscriptionAllowed,
+      needToKnowAllowed,
+      explicitDenialApplied: decision === "DENY",
+      mostRestrictiveRuleApplied: true,
+      operationalRole,
+      roleAssignmentScopes: [...ROLE_ASSIGNMENT_SCOPES] as WorkspaceRoleAssignmentScope[],
+      subscriptionPlan: subscription.currentPlan,
+      requiredPlan: decision === "DENY" ? requiredPlan : undefined,
+      requiredFeature,
+      quotaKey,
+      quotaLimit,
+      quotaUsage,
+      requestedAmount,
+      dataDestroyed: false,
+      existingWorkRemoved: false,
+      restrictedNewActionOnly: true,
+      readOnlyOverLimit: decision === "DENY" && Boolean(quotaKey && quotaLimit !== null && quotaLimit !== undefined),
+      remediationSummary: decision === "DENY"
+        ? this.buildRemediationSummary(requiredPlan, quotaKey)
+        : undefined,
+      needToKnow
+    };
+
+    if (decision === "DENY" && !planAllowsFeature) {
+      await this.audit(
+        "FEATURE_BLOCKED",
+        actor,
+        { projectId: input.projectId, resourceType: input.resourceType, resourceId: input.resourceId },
+        result
+      );
+    }
+
+    if (decision === "DENY" && !quotaAllows) {
+      await this.audit(
+        "QUOTA_EXCEEDED",
+        actor,
+        { projectId: input.projectId, resourceType: input.resourceType, resourceId: input.resourceId },
+        result
+      );
+    }
+
+    return result;
   }
 
   async getPreferences(actor: WorkspaceActor): Promise<WorkspacePreferences> {
@@ -770,6 +1085,135 @@ export class WorkspaceService {
   private hasPermissions(actor: WorkspaceActor, requiredPermissions: string[]): boolean {
     return requiredPermissions.length === 0 ||
       requiredPermissions.every((permission) => actor.permissions.includes(permission as never));
+  }
+
+  private resolveSubscriptionPlan(_actor: WorkspaceActor): WorkspaceSubscriptionPlan {
+    return "FREE";
+  }
+
+  private getSubscriptionUsage(_actor: WorkspaceActor): WorkspaceSubscriptionUsage {
+    return {
+      activeProjects: 1,
+      aiUsage: 0,
+      collaborators: 0,
+      storageMb: 128,
+      translationSegments: 0
+    };
+  }
+
+  private isAccountOwnerOrAdmin(actor: WorkspaceActor): boolean {
+    return actor.roles.includes("ADMIN");
+  }
+
+  private operationalRoleFromActor(actor: WorkspaceActor): WorkspaceOperationalRole {
+    if (actor.roles.includes("ADMIN")) {
+      return "ADMINISTRATOR";
+    }
+
+    if (actor.roles.includes("REVIEWER")) {
+      return "REVIEWER";
+    }
+
+    if (actor.roles.includes("TRANSLATOR")) {
+      return "TRANSLATOR";
+    }
+
+    return "READER";
+  }
+
+  private defaultFeatureForAction(
+    action: WorkspaceEffectiveAccessAction
+  ): WorkspaceEntitlementFeature | undefined {
+    switch (action) {
+      case "AI_EXECUTION":
+        return "AI_AGENT";
+      case "API_USAGE":
+        return "API_ACCESS";
+      case "DISTRIBUTION":
+        return "DISTRIBUTION_CHANNELS";
+      case "EXPORT":
+        return "EXPORT_PDF";
+      case "PUBLISHING":
+        return "PUBLISHING_CHANNELS";
+      case "ROLE_ASSIGNMENT":
+        return "TEAM_ADMINISTRATION";
+      case "TRANSLATION":
+        return "TRANSLATION_VOLUME";
+      case "USER_INVITATION":
+        return "COLLABORATION";
+      case "ADMINISTRATION_ACTION":
+      case "DOCUMENT_EDIT":
+      case "PROJECT_CREATE":
+      case "REVIEW":
+      case "STORAGE_UPLOAD":
+        return undefined;
+    }
+  }
+
+  private defaultQuotaForAction(
+    action: WorkspaceEffectiveAccessAction
+  ): WorkspacePlanQuotaKey | undefined {
+    switch (action) {
+      case "AI_EXECUTION":
+        return "aiUsage";
+      case "PROJECT_CREATE":
+        return "activeProjects";
+      case "STORAGE_UPLOAD":
+        return "storageMb";
+      case "TRANSLATION":
+        return "translationSegments";
+      case "USER_INVITATION":
+        return "collaborators";
+      case "ADMINISTRATION_ACTION":
+      case "API_USAGE":
+      case "DISTRIBUTION":
+      case "DOCUMENT_EDIT":
+      case "EXPORT":
+      case "PUBLISHING":
+      case "REVIEW":
+      case "ROLE_ASSIGNMENT":
+        return undefined;
+    }
+  }
+
+  private effectiveAccessReason(input: {
+    needToKnowAllowed: boolean;
+    planAllowsFeature: boolean;
+    quotaAllows: boolean;
+    quotaKey?: WorkspacePlanQuotaKey;
+    requiredFeature?: WorkspaceEntitlementFeature;
+    requiredPlan?: WorkspaceSubscriptionPlan;
+    roleAllowed: boolean;
+  }): string {
+    if (!input.roleAllowed) {
+      return "Role permissions do not allow this action.";
+    }
+
+    if (!input.planAllowsFeature) {
+      return `Subscription plan does not include ${input.requiredFeature}; required plan is ${input.requiredPlan}.`;
+    }
+
+    if (!input.quotaAllows) {
+      return `Subscription quota exceeded for ${input.quotaKey}. Existing work is preserved and only the new action is blocked.`;
+    }
+
+    if (!input.needToKnowAllowed) {
+      return "Need-to-Know scope does not allow this resource.";
+    }
+
+    return "Role permissions, subscription entitlements, and Need-to-Know scope allow this action.";
+  }
+
+  private buildRemediationSummary(
+    requiredPlan?: WorkspaceSubscriptionPlan,
+    quotaKey?: WorkspacePlanQuotaKey
+  ): string[] {
+    return [
+      "No existing projects, files, collaborators, audit entries, or versions are deleted.",
+      "Only unavailable future actions are disabled.",
+      quotaKey ? `Resources over the ${quotaKey} limit may become read-only where necessary.` : "Existing work remains available.",
+      requiredPlan ? `Required plan: ${requiredPlan}.` : "Review the current role, plan, and assignment scope."
+    ];
   }
 
   private normalizePlatformLanguage(language: string): string {
