@@ -255,6 +255,87 @@ Rules:
   imported, source consulted, terminology decision, dictionary conflict, human
   override, and resource disabled events.
 
+### Platform-Wide Need-to-Know Access Model Directive
+
+Purpose:
+
+- Apply contextual, role-based, task-based, and scope-based visibility across
+  the entire platform while reusing existing IAM, RBAC, project roles, document
+  permissions, audit, workspace, and AI governance.
+
+Rules:
+
+- This is a Workspace/IAM refinement, not a new enterprise module.
+- Every user must see only information, documents, panels, tools, and actions
+  required for the current role, project, assigned task, assigned document,
+  manuscript, chapter, section, segment, workflow stage, explicit grant, and
+  confidentiality classification.
+- The most restrictive valid rule wins.
+- Hidden data and restricted metadata must not be loaded or returned through
+  APIs for unauthorized users.
+- Collaborators receive access through an invitation flow that defines person,
+  role, scope, permitted tools, expiry when temporary, reason, granting user,
+  preview, and confirmation.
+- Temporary access must expire automatically and revocation must be immediate
+  across active sessions as implementation allows.
+- Translators may see assigned source text, target translation fields,
+  linguistic resources, glossaries, terminology decisions, and assigned
+  comments.
+- Reviewers may see assigned source text, translations, review proposals,
+  comments, and relevant version history.
+- Layout specialists may see validated text, styles, illustrations, layout
+  assets, and publication specifications.
+- Illustrators may see assigned fragments, briefs, approved references, and
+  relevant assets.
+- Audio/video collaborators may see validated text, assigned chapters,
+  pronunciation/localization information, and approved media assets.
+- Unrelated contracts, financial data, rights negotiations, administration
+  data, distribution credentials, and private internal discussions must remain
+  hidden unless explicitly authorized.
+- Need-to-know enforcement must be server-side for projects, manuscripts,
+  document sections, comments, versions, linguistic sources, rights records,
+  media assets, exports, publishing, distribution, administration, and agent
+  execution records.
+- AI agents receive minimum necessary data only and may not expand their own
+  access.
+- Audit must cover invitation sent and accepted, access granted, changed,
+  revoked, temporary access expired, restricted access attempt, document opened,
+  confidential resource accessed, AI agent data access, and human override.
+
+### Editorial Workspace Final Directive
+
+Purpose:
+
+- Make the Editorial Workspace the primary production environment while reusing
+  existing modules and preserving a clean, individual-first workflow that can
+  become collaborative instantly.
+
+Rules:
+
+- This is a frontend orchestration and workspace refinement, not a new
+  enterprise backend module.
+- The manuscript remains the central working object.
+- The same Editorial Workspace must support Book, Children's Book, Magazine,
+  Poetry, Dictionary, Course, Audiobook, and Video projects.
+- Do not create separate production workspaces for writing, translation,
+  review, illustration, layout, magazine production, publishing preparation, or
+  distribution. Existing module pages may remain as tools opened from the
+  unified workspace.
+- Common editorial actions should be reachable in 2-3 clicks where practical.
+- Only relevant tools should appear for the current role, project, assignment,
+  task, and workflow state.
+- Collaboration must activate through invitation, role assignment, chapter or
+  segment scope, comments, mentions, suggestions, accept/reject, synchronized
+  updates, audit, and version history without making individual work slower.
+- Useful production functions inspired by Adobe InDesign may be modeled, but
+  Adobe UI must not be reproduced.
+- Publication format changes should adapt layout, templates, styles, guides,
+  image placement, page numbering, export settings, and previews without manual
+  reconstruction.
+- Human Final Authority remains required. AI may suggest, preview, summarize,
+  and detect blockers, but it must not approve, publish, grant rights, or
+  bypass workflow.
+
 ### ChatGPT
 
 Role: System Architect.
