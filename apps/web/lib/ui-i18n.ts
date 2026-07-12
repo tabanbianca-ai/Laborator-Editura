@@ -100,6 +100,7 @@ const englishDictionary = {
   "label.dashboard": "Dashboard",
   "label.distribution": "Distribution",
   "label.distributionCenter": "Distribution Center",
+  "label.editorialWorkspace": "Editorial Workspace",
   "label.home": "Home",
   "label.lexicographic": "Lexicographic",
   "label.library": "Library",
@@ -271,7 +272,24 @@ const englishDictionary = {
   "dossier.parent": "Parent dossier",
   "dossier.projectDetail": "Project detail",
   "dossier.subDossiers": "Sub-dossiers",
-  "dossier.unassignedDocuments": "Unassigned documents"
+  "dossier.unassignedDocuments": "Unassigned documents",
+  "workspaceFinal.centralObject": "Central object",
+  "workspaceFinal.commonActions": "Common actions",
+  "workspaceFinal.currentProjects": "Current projects",
+  "workspaceFinal.eyebrow": "Editorial Workspace",
+  "workspaceFinal.fastActions": "Fast production actions",
+  "workspaceFinal.humanAuthority": "AI may suggest, summarize, preview, and detect blockers, but authorized humans approve reviews, rights, publication, and workflow transitions.",
+  "workspaceFinal.livePreview": "Live preview",
+  "workspaceFinal.manuscriptDescription": "The manuscript remains the shared production object for writing, translation, review, illustration, layout, magazine production, publishing preparation, and distribution readiness.",
+  "workspaceFinal.manuscriptFirst": "Manuscript-centered production surface",
+  "workspaceFinal.maxClicks": "max clicks",
+  "workspaceFinal.noProjectsDescription": "Create a project or open an existing pipeline to begin production from the unified workspace.",
+  "workspaceFinal.oneWorkspaceAllProduction": "One workspace for every publication type",
+  "workspaceFinal.primaryEnvironment": "Primary environment",
+  "workspaceFinal.productionQueue": "Production queue",
+  "workspaceFinal.publicationTypes": "Publication types",
+  "workspaceFinal.singleWorkspace": "Single workspace",
+  "workspaceFinal.title": "Editorial Workspace"
 } as const;
 
 const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
@@ -372,6 +390,7 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "label.dashboard": "Panou de control",
   "label.distribution": "Distribuție",
   "label.distributionCenter": "Centru de distribuție",
+  "label.editorialWorkspace": "Spațiu editorial",
   "label.home": "Acasă",
   "label.lexicographic": "Lexicografic",
   "label.library": "Bibliotecă",
@@ -543,7 +562,24 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "dossier.parent": "Dosar părinte",
   "dossier.projectDetail": "Detaliu proiect",
   "dossier.subDossiers": "Sub-dosare",
-  "dossier.unassignedDocuments": "Documente neasignate"
+  "dossier.unassignedDocuments": "Documente neasignate",
+  "workspaceFinal.centralObject": "Obiect central",
+  "workspaceFinal.commonActions": "Acțiuni uzuale",
+  "workspaceFinal.currentProjects": "Proiecte curente",
+  "workspaceFinal.eyebrow": "Spațiu editorial",
+  "workspaceFinal.fastActions": "Acțiuni rapide de producție",
+  "workspaceFinal.humanAuthority": "AI poate sugera, rezuma, previzualiza și detecta blocaje, dar oamenii autorizați aprobă reviziile, drepturile, publicarea și tranzițiile workflow.",
+  "workspaceFinal.livePreview": "Previzualizare live",
+  "workspaceFinal.manuscriptDescription": "Manuscrisul rămâne obiectul comun de producție pentru scriere, traducere, revizie, ilustrație, machetare, producție de revistă, pregătire publicare și distribuție.",
+  "workspaceFinal.manuscriptFirst": "Suprafață de producție centrată pe manuscris",
+  "workspaceFinal.maxClicks": "maxim clickuri",
+  "workspaceFinal.noProjectsDescription": "Creează un proiect sau deschide o linie de producție existentă pentru a începe din spațiul unificat.",
+  "workspaceFinal.oneWorkspaceAllProduction": "Un singur spațiu pentru toate tipurile de publicații",
+  "workspaceFinal.primaryEnvironment": "Mediu principal",
+  "workspaceFinal.productionQueue": "Coadă de producție",
+  "workspaceFinal.publicationTypes": "Tipuri de publicații",
+  "workspaceFinal.singleWorkspace": "Spațiu unic",
+  "workspaceFinal.title": "Spațiu editorial"
 };
 
 export type UiTranslationKey = keyof typeof englishDictionary;
@@ -590,7 +626,8 @@ const routeLabelKeys: Record<string, UiTranslationKey> = {
   "/research": "label.research",
   "/review": "label.review",
   "/rights": "label.rights",
-  "/translation": "label.translation"
+  "/translation": "label.translation",
+  "/workspace": "label.editorialWorkspace"
 };
 
 const pipelineStepKeys: Record<string, UiTranslationKey> = {
