@@ -360,6 +360,40 @@ Rules:
 - All administration changes must be reversible where possible and audited.
 - Critical changes must require explicit confirmation.
 
+### Roles, Permissions and Subscription Entitlements Directive
+
+Purpose:
+
+- Separate operational editorial authority from commercial subscription plans
+  and finalize the effective access model.
+
+Rules:
+
+- Effective access is `Role permissions × Subscription entitlements ×
+  Need-to-Know scope`.
+- A user may perform an action only when the assigned role permits it, the
+  subscription plan includes the required feature or quota, and the user has
+  access to the relevant project, document, chapter, section, or segment.
+- Editorial roles and subscription plans must never be treated as the same
+  concept.
+- Official roles are Administrator, Project Manager, Editor, Translator,
+  Reviewer, Designer, Audio Narrator, Author, Collaborator, Reader, and Guest.
+- Subscription plans are `FREE`, `PREMIUM`, `BUSINESS`, and
+  `ENTERPRISE_RESERVED`.
+- `ENTERPRISE_RESERVED` remains disabled until explicitly activated later.
+- Plan limits must not destroy data, remove existing work, or delete
+  collaborators. They may block only restricted new actions.
+- Downgrades preserve content, audit, versions, projects, files, and
+  collaborators, and mark over-limit resources read-only where needed.
+- Account owners may manage subscription and billing-related settings but may
+  not bypass rights restrictions, workflow blocks, audit, security policies, or
+  explicit legal restrictions.
+- Administration must clearly separate Users and Roles from Subscription and
+  Usage.
+- Role assignments, subscription changes, quota exceeded events, feature
+  blocks, upgrades, downgrades, temporary access changes, and permitted human
+  overrides must be audited.
+
 ### ChatGPT
 
 Role: System Architect.
