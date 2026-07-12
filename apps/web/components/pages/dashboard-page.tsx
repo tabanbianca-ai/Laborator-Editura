@@ -21,6 +21,7 @@ const widgetToneByType: Partial<Record<WorkspaceWidget["widgetType"], "info" | "
 
 const mainLaunchRoutes = [
   { href: "/" },
+  { href: "/workspace" },
   { href: "/pipeline" },
   { href: "/distribution" },
   { href: "/projects" },
