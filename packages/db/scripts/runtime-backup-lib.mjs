@@ -60,6 +60,8 @@ export const TABLE_NAMES = [
   "workspace_navigation_items",
   "workspace_widgets",
   "workspace_preferences",
+  "workspace_collaborator_invitations",
+  "workspace_need_to_know_grants",
   "workspace_audit_events",
   "launch_mfa_records",
   "launch_gdpr_consents",
@@ -207,6 +209,8 @@ const TENANT_SCOPED_TABLES = new Set([
   "workspace_navigation_items",
   "workspace_widgets",
   "workspace_preferences",
+  "workspace_collaborator_invitations",
+  "workspace_need_to_know_grants",
   "workspace_audit_events",
   "launch_mfa_records",
   "launch_gdpr_consents",
@@ -562,6 +566,22 @@ function validateTenantBoundaries(data, issues) {
   );
   validateReferenceTenant(data, issues, "workspace_audit_events", "widgetId", "workspace_widgets");
   validateReferenceTenant(data, issues, "workspace_audit_events", "preferenceId", "workspace_preferences");
+  validateReferenceTenant(data, issues, "workspace_collaborator_invitations", "projectId", "projects");
+  validateReferenceTenant(data, issues, "workspace_need_to_know_grants", "projectId", "projects");
+  validateReferenceTenant(
+    data,
+    issues,
+    "workspace_audit_events",
+    "invitationId",
+    "workspace_collaborator_invitations"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "workspace_audit_events",
+    "accessGrantId",
+    "workspace_need_to_know_grants"
+  );
   validateReferenceTenant(data, issues, "lexicographic_entries", "sourceId", "lexicographic_sources");
   validateReferenceTenant(
     data,
