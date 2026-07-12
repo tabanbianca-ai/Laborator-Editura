@@ -9,6 +9,7 @@ import {
   type RevokeWorkspaceAccessInput,
   type WorkspaceAccessAuditInput,
   type WorkspaceAgentDataAccessInput,
+  type WorkspaceEffectiveAccessInput,
   type WorkspaceNeedToKnowAccessInput,
   type SaveWorkspacePreferencesInput
 } from "./workspace.types";
@@ -25,6 +26,11 @@ export class WorkspaceController {
   @Get("dashboard")
   getDashboard(@CurrentActor() actor: AuthenticatedRequestContext) {
     return this.workspaceService.getDashboard(actor);
+  }
+
+  @Get("subscription")
+  getSubscription(@CurrentActor() actor: AuthenticatedRequestContext) {
+    return this.workspaceService.getSubscriptionSummary(actor);
   }
 
   @Get("preferences")
@@ -84,6 +90,14 @@ export class WorkspaceController {
     @Body() input: WorkspaceNeedToKnowAccessInput
   ) {
     return this.workspaceService.evaluateNeedToKnowAccess(actor, input);
+  }
+
+  @Post("access/resolve")
+  resolveEffectiveAccess(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: WorkspaceEffectiveAccessInput
+  ) {
+    return this.workspaceService.resolveEffectiveAccess(actor, input);
   }
 
   @Post("access/expire-temporary")
