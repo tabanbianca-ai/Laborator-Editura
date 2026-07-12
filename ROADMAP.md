@@ -557,6 +557,102 @@ Report:
 
 - `docs/PHASE_7_STEP_11_INTEGRATED_LINGUISTIC_KNOWLEDGE_BASE_REPORT.md`.
 
+## Phase 7 Step 12 - Platform-Wide Need-to-Know Access Model
+
+Status: Implemented as an additive Workspace/IAM refinement.
+
+Scope:
+
+- No new enterprise modules.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+- Uses existing workspace, IAM/RBAC, project/document permissions, audit,
+  runtime DB, backup/restore, and AI governance.
+
+Implemented capabilities:
+
+- Collaborator invitation flow with person, role, project scope, assigned
+  documents/chapters/sections/segments, permitted tools, optional expiry, and
+  access preview.
+- Role-based visibility for translators, reviewers, layout specialists,
+  illustrators, audio/video collaborators, collaborators, and administrators.
+- Server-side access evaluation where the most restrictive valid rule wins.
+- Hidden panels and restricted metadata are not returned for unauthorized
+  access decisions.
+- Temporary access expiration and immediate revocation metadata.
+- Audit events for invitation sent/accepted, access granted/revoked, temporary
+  expiration, restricted attempts, document opening, confidential resource
+  access, AI agent data access, and human override.
+- Runtime persistence and backup/restore coverage for workspace collaborator
+  invitations and need-to-know grants.
+- AI agent data access records minimum task scope and prevents self-expansion.
+
+Validation coverage:
+
+- Existing Workspace module reused; no separate Need-to-Know module.
+- Invitation and preview endpoints.
+- Effective access dimensions.
+- Role-specific panels.
+- Hidden restricted resources.
+- Temporary and revoked access.
+- AI agent minimum necessary data access.
+- Runtime DB and backup/restore inclusion.
+
+Report:
+
+- `docs/PHASE_7_STEP_12_PLATFORM_NEED_TO_KNOW_ACCESS_MODEL_REPORT.md`.
+
+## Phase 7 Step 13 - Editorial Workspace Final
+
+Status: Implemented as the primary frontend production workspace.
+
+Scope:
+
+- No new enterprise modules.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+- Reuses Projects, Project Dossiers, Editorial Process, Translation, Review,
+  Publishing, Distribution, AI Governance, Audit, Library, and Need-to-Know
+  access.
+
+Implemented capabilities:
+
+- `/workspace` route and home route render the unified Editorial Workspace.
+- Single manuscript-centered workspace for Book, Children's Book, Magazine,
+  Poetry, Dictionary, Course, Audiobook, and Video projects.
+- Fast production action hub with common actions reachable in 2-3 clicks.
+- Project queue connected to the existing Editorial Production Pipeline.
+- Translation/review preview with immutable original, highlighted proposed
+  variants, two-column default mode, and optional three/four-column review
+  modes.
+- Collaboration surface for invitation, role assignment, chapter assignment,
+  segment assignment, comments, mentions, suggestions, accept/reject,
+  synchronized updates, audit, and version history.
+- InDesign-inspired production function inventory without reproducing Adobe UI.
+- Publication format catalog and automatic adaptation targets for layout,
+  templates, styles, guides, image placement, page numbering, export settings,
+  and previews.
+- Panel behavior model: collapsible, dockable, resizable, restorable,
+  favorites, universal search, configurable shortcuts, and recently used tools.
+- Performance readiness markers for large books, large magazines, thousands of
+  pages, high-resolution illustrations, and multiple collaborators.
+
+Validation coverage:
+
+- Primary `/workspace` route and home route.
+- Supported publication types.
+- Production tools.
+- Publication formats.
+- Automatic adaptation.
+- Translation/review modes.
+- Collaboration and panels.
+- Human Final Authority.
+- No backend `EditorialWorkspaceModule`.
+
+Report:
+
+- `docs/PHASE_7_STEP_13_EDITORIAL_WORKSPACE_FINAL_REPORT.md`.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
