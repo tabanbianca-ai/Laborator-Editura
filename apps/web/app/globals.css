@@ -2334,6 +2334,303 @@ textarea {
   display: none;
 }
 
+.editorial-workspace-final {
+  --editorial-panel-gap: 14px;
+}
+
+.editorial-workspace-hero {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+}
+
+.editorial-workspace-hero-main,
+.editorial-workspace-side {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.editorial-workspace-hero-main {
+  background: #ffffff;
+  border: 1px solid #d7ded8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.editorial-canvas-preview {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 82px minmax(0, 1fr);
+  padding: 16px;
+}
+
+.editorial-page-thumbnail-rail {
+  display: grid;
+  gap: 8px;
+}
+
+.editorial-page-thumbnail-rail span {
+  align-items: center;
+  background: #f6f8f5;
+  border: 1px solid #d7ded8;
+  border-radius: 8px;
+  color: #52605b;
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 850;
+  justify-content: center;
+  min-height: 54px;
+}
+
+.editorial-manuscript-surface {
+  background:
+    linear-gradient(90deg, rgba(31, 111, 98, 0.07) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(31, 111, 98, 0.07) 1px, transparent 1px),
+    #fbfcfa;
+  background-size: 28px 28px;
+  border: 1px solid #cfd8d2;
+  border-radius: 8px;
+  min-height: 340px;
+  overflow: hidden;
+  padding: 30px 34px;
+  position: relative;
+}
+
+.editorial-manuscript-surface article {
+  background: #ffffff;
+  border: 1px solid #d7ded8;
+  border-radius: 8px;
+  box-shadow: 0 12px 34px rgba(24, 33, 31, 0.08);
+  margin: 0 auto;
+  max-width: 540px;
+  min-height: 260px;
+  padding: 28px;
+  position: relative;
+}
+
+.editorial-manuscript-surface h3 {
+  font-size: 1.22rem;
+  margin: 3px 0 12px;
+}
+
+.editorial-manuscript-surface p {
+  color: #3f4d49;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.editorial-manuscript-surface header span {
+  color: #64716b;
+  font-size: 0.75rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.editorial-ruler {
+  background: #e8f4eb;
+  border: 1px solid #c6dcca;
+  position: absolute;
+}
+
+.editorial-ruler-horizontal {
+  height: 18px;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.editorial-ruler-vertical {
+  bottom: 0;
+  left: 0;
+  top: 0;
+  width: 18px;
+}
+
+.editorial-grid-guides {
+  border: 1px dashed #9fc7b2;
+  inset: 18px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.editorial-action-list {
+  display: grid;
+  gap: 10px;
+}
+
+.editorial-action-card {
+  align-items: flex-start;
+  border: 1px solid #e1e7e2;
+  border-radius: 8px;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 11px;
+}
+
+.editorial-action-card:hover,
+.editorial-action-card:focus-visible {
+  border-color: #1f6f62;
+  outline: 2px solid #cde7df;
+  outline-offset: 1px;
+}
+
+.editorial-action-card strong,
+.editorial-action-card span {
+  display: block;
+}
+
+.editorial-action-card strong {
+  color: #17211f;
+  font-size: 0.92rem;
+}
+
+.editorial-action-card span {
+  color: #64716b;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+.editorial-project-strip,
+.editorial-workspace-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.editorial-project-strip {
+  padding: 14px;
+}
+
+.editorial-workspace-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.editorial-review-preview {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 14px;
+}
+
+.editorial-review-preview article {
+  background: #f7f9f6;
+  border: 1px solid #e1e7e2;
+  border-radius: 8px;
+  min-height: 150px;
+  padding: 14px;
+}
+
+.editorial-review-preview span {
+  color: #64716b;
+  font-size: 0.74rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.editorial-review-preview h3 {
+  margin: 5px 0 10px;
+}
+
+.editorial-review-preview p {
+  color: #3f4d49;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.editorial-review-preview mark {
+  background: #fff2d2;
+  border-radius: 4px;
+  color: #765100;
+  padding: 1px 4px;
+}
+
+.editorial-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+}
+
+.editorial-panel-copy {
+  padding: 0 14px 14px;
+}
+
+.editorial-format-groups,
+.editorial-tool-grid,
+.editorial-panel-list,
+.editorial-performance-list {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.editorial-format-groups {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.editorial-format-group,
+.editorial-tool-card,
+.editorial-panel-list article,
+.editorial-performance-list div,
+.editorial-adaptation-panel {
+  background: #f6f8f5;
+  border: 1px solid #e1e7e2;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.editorial-format-group strong,
+.editorial-tool-card strong,
+.editorial-panel-list strong,
+.editorial-performance-list strong,
+.editorial-adaptation-panel strong {
+  color: #17211f;
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.editorial-format-group div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.editorial-format-group span {
+  background: #ffffff;
+  border: 1px solid #d7ded8;
+  border-radius: 999px;
+  color: #43514c;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 5px 8px;
+}
+
+.editorial-tool-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.editorial-tool-card span,
+.editorial-panel-list span,
+.editorial-performance-list span,
+.editorial-adaptation-panel p {
+  color: #64716b;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.42;
+}
+
+.editorial-adaptation-panel {
+  margin: 0 14px 14px;
+}
+
+.editorial-adaptation-panel .editorial-chip-list {
+  padding: 10px 0 0;
+}
+
 .ui-error {
   color: #9d2c24;
 }
@@ -2439,9 +2736,11 @@ textarea {
   }
 
   .manuscript-workspace,
+  .editorial-workspace-hero,
   .translation-selector-grid,
   .launch-readiness-grid,
   .pipeline-layout,
+  .editorial-workspace-grid,
   .publishing-workspace-grid,
   .publishing-workspace-grid-wide,
   .rights-workspace-grid,
@@ -2553,6 +2852,22 @@ textarea {
 
   .translation-action-cluster {
     justify-content: flex-start;
+  }
+
+  .editorial-canvas-preview,
+  .editorial-format-groups,
+  .editorial-review-preview,
+  .editorial-tool-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .editorial-page-thumbnail-rail {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .editorial-page-thumbnail-rail span {
+    min-width: 72px;
   }
 
   .editor-toolbar {
