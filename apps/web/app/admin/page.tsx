@@ -1,8 +1,5 @@
-import { CoreModuleScreen } from "../../components/pages/core-module-screen";
-import { getCoreModuleShell } from "../../lib/core-module-client";
+import { AdministrationPage } from "../../components/pages/administration-page";
 
-export default async function AdminRoute() {
-  const result = await getCoreModuleShell("admin");
-
-  return <CoreModuleScreen eyebrow="Administration" result={result} />;
+export default function AdminRoute() {
+  return <AdministrationPage />;
 }
