@@ -2967,3 +2967,181 @@ audit, and human final authority.
 This phase is specification-only until explicitly scheduled. No application
 code, UI routes, database migrations, API endpoints, AI endpoints, or
 infrastructure changes should be implemented for this module yet.
+
+## Phase 7 Step 12 - Platform-Wide Need-to-Know Access Model
+
+Status: Implemented as an additive refinement of the existing IAM, RBAC,
+workspace, audit, project role, document permission, and AI governance
+architecture.
+
+### Core Principle
+
+Every user, collaborator, and AI agent sees only the information, documents,
+panels, tools, and actions required for the current organization role, project
+role, editorial role, assigned task, assigned manuscript/document scope,
+workflow stage, explicit grant, and confidentiality classification.
+
+The most restrictive valid rule wins. Hidden data must not be loaded through
+API responses for unauthorized users.
+
+### Default Collaborative Access
+
+- The manuscript is the primary shared editorial object.
+- Collaborators see only assigned manuscript sections, chapters, documents, or
+  segments.
+- Role-essential panels and tools are visible by default.
+- Additional information requires explicit access.
+- Unauthorized metadata, private discussions, unrelated contracts, financial
+  data, rights negotiations, administration data, distribution credentials, and
+  confidential records remain hidden.
+
+### Role Visibility
+
+- Translators may see assigned source text, target translation fields,
+  linguistic resources, glossaries, terminology decisions, and assigned
+  comments.
+- Reviewers may see assigned source text, translations, review proposals,
+  comments, and relevant version history.
+- Layout specialists may see validated text, styles, illustrations, layout
+  assets, and publication specifications.
+- Illustrators may see assigned fragments, briefs, approved references, and
+  relevant assets.
+- Audio/video collaborators may see validated text, assigned chapters,
+  pronunciation/localization information, and approved media assets.
+- Administrators may manage workspace access, but human final authority and
+  audit rules still apply.
+
+### Invitation and Temporary Access
+
+The invite collaborator flow requires:
+
+1. Person.
+2. Role.
+3. Scope: project, document, manuscript, chapter, section, segment, resource,
+   tools, and optional expiry.
+4. Preview of exactly what the collaborator will see.
+5. Confirmation by an authorized human role.
+
+Temporary access records start time, expiration, reason, granting user,
+automatic revocation, and audit trail.
+
+### API Enforcement
+
+Need-to-know access is enforced server-side for projects, manuscripts, document
+sections, comments, versions, linguistic sources, rights records, media assets,
+exports, publishing, distribution, administration, and agent execution records.
+Unauthorized requests return no restricted metadata.
+
+### AI Agent Data Access
+
+AI agents receive minimum necessary task data only. Every access records agent,
+task, accessed resource references, access scope, decision, result, and
+timestamp. Agents may not expand their own access.
+
+### Audit Events
+
+Audit must cover invitation sent/accepted, access granted/changed/revoked,
+temporary access expiration, restricted attempts, document opening,
+confidential resource access, AI agent data access, and human overrides.
+
+## Phase 7 Step 13 - Editorial Workspace Final
+
+Status: Implemented as the primary frontend production environment and an
+orchestration refinement over existing modules.
+
+### Core Principle
+
+Laborator Editura uses one unified Editorial Workspace for every publication
+type:
+
+- Book.
+- Children's Book.
+- Magazine.
+- Poetry.
+- Dictionary.
+- Course.
+- Audiobook.
+- Video.
+
+The manuscript remains the central working object. The workspace is optimized
+primarily for individual work, while collaboration can be activated instantly
+without changing the interface.
+
+### Reused Architecture
+
+The Editorial Workspace reuses:
+
+- Projects.
+- Project Dossiers.
+- Editorial Process.
+- Translation.
+- Review.
+- Illustrations and media planning.
+- Publishing.
+- Distribution.
+- AI Governance.
+- Audit.
+- Library.
+- Need-to-Know access.
+
+It must not duplicate these modules or introduce a new enterprise module.
+
+### Workspace Behavior
+
+- Common editorial actions target 2-3 clicks maximum.
+- Only tools relevant to the current task, role, project, and assignment should
+  be visible.
+- Panels are collapsible, dockable, resizable, restorable, and support
+  favorites, universal search, configurable shortcuts, and recently used tools.
+- Collaboration supports invitation, role assignment, chapter assignment,
+  segment assignment, comments, mentions, suggestions, accept/reject,
+  synchronized updates, audit, and version history.
+- Human Final Authority remains required for review, approval, rights,
+  publication, and workflow transitions.
+
+### Editorial Production Tools
+
+The workspace may include useful production functions inspired by Adobe
+InDesign, but it must not reproduce Adobe UI.
+
+Supported production functions include drag and drop, page thumbnails,
+paragraph styles, character styles, object styles, master pages/templates, page
+guides, rulers, grids, snapping, alignment, page numbering, headers, footers,
+table of contents, footnotes, endnotes, hyperlinks, anchors, image placement,
+image fitting, image replacement, layers, preflight, package project, and live
+preview.
+
+### Publication Formats
+
+The workspace supports configurable publication formats:
+
+- ISO: A0, A1, A2, A3, A4, A5, A6, A7.
+- Series B: B4, B5, B6.
+- Series C: C4, C5, C6.
+- North America: Letter, Legal, Executive, Ledger, Tabloid, Half Letter,
+  Junior Legal.
+- Trade books: Pocket, Digest, Crown, Royal, Demy, Trade Paperback, US Trade,
+  Mass Market Paperback.
+- Magazine: A4, A5, Letter, Square, Landscape, Brochure.
+- Children's books: Board Book, Picture Book, Large Format, Square.
+- Custom: width, height, portrait, landscape, bleed, spine, inside margin,
+  outside margin, top margin, bottom margin, gutter, safe area, columns.
+
+Users may change publication format at any time. The workspace should
+automatically adapt layout, templates, styles, guides, image placement, page
+numbering, export settings, and previews without manual reconstruction.
+
+### Translation and Review
+
+Default review mode is two columns:
+
+- Column 1: immutable original.
+- Column 2: translation with highlighted proposed variants.
+
+Optional modes may show three or four columns, sentence alignment, paragraph
+alignment, synchronized scrolling, and individual accept/reject decisions.
+
+### Performance
+
+The workspace must remain usable for large books, large magazines, thousands of
+pages, high-resolution illustrations, and multiple collaborators.
