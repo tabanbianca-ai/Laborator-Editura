@@ -2,6 +2,8 @@ import { Inject, Injectable } from "@nestjs/common";
 import { getDefaultRuntimeDatabase, type FileBackedRuntimeDatabase } from "@laborator/db";
 import { RUNTIME_DATABASE } from "../runtime-database.provider";
 import {
+  type WorkspaceCollaboratorInvitation,
+  type WorkspaceNeedToKnowGrant,
   type WorkspaceAuditEvent,
   type WorkspaceLayout,
   type WorkspaceNavigationItem,
@@ -57,6 +59,59 @@ export class DatabaseWorkspaceRepository implements WorkspaceRepository {
       organizationId,
       (preferences) => preferences.userId === userId
     )[0] ?? null;
+  }
+
+  async createInvitation(
+    invitation: WorkspaceCollaboratorInvitation
+  ): Promise<WorkspaceCollaboratorInvitation> {
+    return this.database.insert("workspace_collaborator_invitations", invitation);
+  }
+
+  async updateInvitation(
+    invitation: WorkspaceCollaboratorInvitation
+  ): Promise<WorkspaceCollaboratorInvitation> {
+    return this.database.upsert("workspace_collaborator_invitations", invitation);
+  }
+
+  async findInvitationById(
+    id: string,
+    organizationId: string
+  ): Promise<WorkspaceCollaboratorInvitation | null> {
+    return this.database.findByIdForTenant<WorkspaceCollaboratorInvitation>(
+      "workspace_collaborator_invitations",
+      id,
+      organizationId
+    );
+  }
+
+  async createAccessGrant(grant: WorkspaceNeedToKnowGrant): Promise<WorkspaceNeedToKnowGrant> {
+    return this.database.insert("workspace_need_to_know_grants", grant);
+  }
+
+  async updateAccessGrant(grant: WorkspaceNeedToKnowGrant): Promise<WorkspaceNeedToKnowGrant> {
+    return this.database.upsert("workspace_need_to_know_grants", grant);
+  }
+
+  async findAccessGrantById(
+    id: string,
+    organizationId: string
+  ): Promise<WorkspaceNeedToKnowGrant | null> {
+    return this.database.findByIdForTenant<WorkspaceNeedToKnowGrant>(
+      "workspace_need_to_know_grants",
+      id,
+      organizationId
+    );
+  }
+
+  async listAccessGrantsForUser(
+    userId: string,
+    organizationId: string
+  ): Promise<WorkspaceNeedToKnowGrant[]> {
+    return this.database.selectForTenant<WorkspaceNeedToKnowGrant>(
+      "workspace_need_to_know_grants",
+      organizationId,
+      (grant) => grant.userId === userId
+    );
   }
 
   async appendAuditEvent(event: WorkspaceAuditEvent): Promise<void> {
