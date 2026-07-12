@@ -1,9 +1,15 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { CurrentActor } from "../auth/request-context.decorator";
 import { type AuthenticatedRequestContext } from "../auth/request-context.types";
 import { WorkspaceService } from "./workspace.service";
 import {
+  type AcceptWorkspaceInvitationInput,
   type CreateWorkspaceWidgetInput,
+  type InviteWorkspaceCollaboratorInput,
+  type RevokeWorkspaceAccessInput,
+  type WorkspaceAccessAuditInput,
+  type WorkspaceAgentDataAccessInput,
+  type WorkspaceNeedToKnowAccessInput,
   type SaveWorkspacePreferencesInput
 } from "./workspace.types";
 
@@ -45,6 +51,69 @@ export class WorkspaceController {
     @Body() input: CreateWorkspaceWidgetInput
   ) {
     return this.workspaceService.createWidget(actor, input);
+  }
+
+  @Post("invitations")
+  inviteCollaborator(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: InviteWorkspaceCollaboratorInput
+  ) {
+    return this.workspaceService.inviteCollaborator(actor, input);
+  }
+
+  @Post("invitations/preview")
+  previewCollaboratorAccess(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: InviteWorkspaceCollaboratorInput
+  ) {
+    return this.workspaceService.previewCollaboratorAccess(actor, input);
+  }
+
+  @Post("invitations/:id/accept")
+  acceptInvitation(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") invitationId: string,
+    @Body() input: AcceptWorkspaceInvitationInput
+  ) {
+    return this.workspaceService.acceptInvitation(actor, invitationId, input);
+  }
+
+  @Post("access/evaluate")
+  evaluateAccess(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: WorkspaceNeedToKnowAccessInput
+  ) {
+    return this.workspaceService.evaluateNeedToKnowAccess(actor, input);
+  }
+
+  @Post("access/expire-temporary")
+  expireTemporaryAccess(@CurrentActor() actor: AuthenticatedRequestContext) {
+    return this.workspaceService.expireTemporaryAccess(actor);
+  }
+
+  @Post("access/restricted-attempt")
+  recordRestrictedAccessAttempt(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: WorkspaceAccessAuditInput
+  ) {
+    return this.workspaceService.recordRestrictedAccessAttempt(actor, input);
+  }
+
+  @Post("access/agent-data-access")
+  recordAgentDataAccess(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: WorkspaceAgentDataAccessInput
+  ) {
+    return this.workspaceService.recordAgentDataAccess(actor, input);
+  }
+
+  @Post("access/:id/revoke")
+  revokeAccess(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") grantId: string,
+    @Body() input: RevokeWorkspaceAccessInput
+  ) {
+    return this.workspaceService.revokeAccess(actor, grantId, input);
   }
 
   @Get("audit")
