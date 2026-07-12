@@ -35,10 +35,183 @@ export type WorkspaceWidgetType =
   | "OBSERVABILITY_SUMMARY";
 
 export type WorkspaceAuditAction =
+  | "AI_AGENT_DATA_ACCESS"
+  | "CONFIDENTIAL_RESOURCE_ACCESSED"
+  | "DOCUMENT_OPENED"
+  | "INVITATION_ACCEPTED"
+  | "INVITATION_SENT"
+  | "NEED_TO_KNOW_ACCESS_CHANGED"
+  | "NEED_TO_KNOW_ACCESS_GRANTED"
+  | "NEED_TO_KNOW_ACCESS_REVOKED"
+  | "RESTRICTED_ACCESS_ATTEMPT"
+  | "TEMPORARY_ACCESS_EXPIRED"
   | "WORKSPACE_LAYOUT_CREATED"
   | "WORKSPACE_NAVIGATION_GENERATED"
   | "WORKSPACE_WIDGET_CREATED"
-  | "WORKSPACE_PREFERENCES_SAVED";
+  | "WORKSPACE_PREFERENCES_SAVED"
+  | "WORKSPACE_HUMAN_OVERRIDE";
+
+export type WorkspaceNeedToKnowRole =
+  | "ADMINISTRATOR"
+  | "AUDIO_VIDEO_COLLABORATOR"
+  | "COLLABORATOR"
+  | "ILLUSTRATOR"
+  | "LAYOUT_SPECIALIST"
+  | "REVIEWER"
+  | "TRANSLATOR";
+
+export type WorkspaceAccessResourceType =
+  | "ADMINISTRATION"
+  | "AGENT_EXECUTION"
+  | "CHAPTER"
+  | "COMMENT"
+  | "DISTRIBUTION"
+  | "DOCUMENT"
+  | "EXPORT"
+  | "LINGUISTIC_SOURCE"
+  | "MANUSCRIPT"
+  | "MEDIA_ASSET"
+  | "PROJECT"
+  | "PUBLISHING"
+  | "RIGHTS_RECORD"
+  | "SECTION"
+  | "SEGMENT"
+  | "VERSION";
+
+export type WorkspaceConfidentialClassification =
+  | "CONFIDENTIAL"
+  | "INTERNAL"
+  | "PUBLIC_METADATA"
+  | "RESTRICTED";
+
+export type WorkspaceAccessGrantStatus = "ACTIVE" | "EXPIRED" | "REVOKED";
+
+export type WorkspaceInvitationStatus = "ACCEPTED" | "EXPIRED" | "REVOKED" | "SENT";
+
+export type WorkspaceNeedToKnowDecision = "ALLOW" | "DENY";
+
+export interface WorkspaceAccessScope {
+  projectId: string;
+  documentIds?: string[];
+  manuscriptIds?: string[];
+  chapterIds?: string[];
+  sectionIds?: string[];
+  segmentIds?: string[];
+  commentIds?: string[];
+  versionIds?: string[];
+  linguisticSourceIds?: string[];
+  rightsRecordIds?: string[];
+  mediaAssetIds?: string[];
+  exportArtifactIds?: string[];
+  publishingRecordIds?: string[];
+  distributionRecordIds?: string[];
+  agentExecutionIds?: string[];
+}
+
+export interface WorkspaceNeedToKnowGrant {
+  id: string;
+  organizationId: string;
+  userId: string;
+  collaboratorEmail?: string;
+  collaboratorName?: string;
+  projectId: string;
+  role: WorkspaceNeedToKnowRole;
+  permittedTools: WorkspaceModule[];
+  accessScope: WorkspaceAccessScope;
+  startsAt?: string;
+  expiresAt?: string;
+  reason?: string;
+  grantedBy: string;
+  grantedAt: string;
+  revokedBy?: string;
+  revokedAt?: string;
+  status: WorkspaceAccessGrantStatus;
+  temporary: boolean;
+  confidentialClassification: WorkspaceConfidentialClassification;
+  mostRestrictiveRuleApplied: true;
+  metadata?: object;
+}
+
+export interface WorkspaceCollaboratorInvitation {
+  id: string;
+  organizationId: string;
+  inviteeEmail: string;
+  inviteeName?: string;
+  projectId: string;
+  role: WorkspaceNeedToKnowRole;
+  permittedTools: WorkspaceModule[];
+  accessScope: WorkspaceAccessScope;
+  startsAt?: string;
+  expiresAt?: string;
+  reason?: string;
+  status: WorkspaceInvitationStatus;
+  sentBy: string;
+  sentAt: string;
+  acceptedBy?: string;
+  acceptedAt?: string;
+  accessGrantId?: string;
+  preview: WorkspaceNeedToKnowPreview;
+  metadata?: object;
+}
+
+export interface WorkspaceNeedToKnowPreview {
+  visiblePanels: string[];
+  hiddenPanels: string[];
+  permittedActions: string[];
+  restrictedResourceTypes: WorkspaceAccessResourceType[];
+  restrictedMetadataReturned: false;
+}
+
+export interface WorkspaceNeedToKnowAccessInput {
+  projectId: string;
+  role?: WorkspaceNeedToKnowRole;
+  assignedTask?: string;
+  workflowStage?: string;
+  resourceType: WorkspaceAccessResourceType;
+  resourceId?: string;
+  documentId?: string;
+  manuscriptId?: string;
+  chapterId?: string;
+  sectionId?: string;
+  segmentId?: string;
+  confidentialClassification?: WorkspaceConfidentialClassification;
+  requestedPanel?: string;
+  requestedAction?: string;
+}
+
+export interface WorkspaceNeedToKnowAccessResult {
+  decision: WorkspaceNeedToKnowDecision;
+  reason: string;
+  projectId: string;
+  role: WorkspaceNeedToKnowRole;
+  visiblePanels: string[];
+  hiddenPanels: string[];
+  permittedActions: string[];
+  permittedTools: WorkspaceModule[];
+  accessibleScope: WorkspaceAccessScope;
+  restrictedMetadataReturned: false;
+  mostRestrictiveRuleApplied: true;
+  temporaryAccessExpiresAt?: string;
+}
+
+export interface WorkspaceAgentDataAccessInput {
+  agent: string;
+  task: string;
+  projectId: string;
+  resourceType: WorkspaceAccessResourceType;
+  resourceIds: string[];
+  accessScope: WorkspaceAccessScope;
+  decision: WorkspaceNeedToKnowDecision;
+  result: string;
+}
+
+export interface WorkspaceAccessAuditInput {
+  projectId: string;
+  resourceType: WorkspaceAccessResourceType;
+  resourceId?: string;
+  reason?: string;
+  confidentialClassification?: WorkspaceConfidentialClassification;
+}
 
 export interface WorkspaceLayout {
   id: string;
@@ -120,6 +293,13 @@ export interface WorkspaceDashboard {
   navigation: WorkspaceNavigationItem[];
   widgets: WorkspaceWidget[];
   preferences: WorkspacePreferences;
+  needToKnow: {
+    defaultAccess: "ASSIGNED_SCOPE_ONLY";
+    hiddenDataLoadedThroughApi: false;
+    visibleModules: WorkspaceModule[];
+    panelsConfigurablePerUser: true;
+    panelsRestoredBetweenSessions: true;
+  };
   generatedFor: {
     userId: string;
     organizationId: string;
@@ -137,6 +317,12 @@ export interface WorkspaceAuditEvent {
   navigationItemId?: string;
   widgetId?: string;
   preferenceId?: string;
+  accessGrantId?: string;
+  invitationId?: string;
+  projectId?: string;
+  resourceType?: WorkspaceAccessResourceType;
+  resourceId?: string;
+  agent?: string;
   beforeState?: object;
   afterState?: object;
   humanFinalAuthority: true;
@@ -168,6 +354,28 @@ export interface CreateWorkspaceWidgetInput {
   metadata?: object;
 }
 
+export interface InviteWorkspaceCollaboratorInput {
+  inviteeEmail: string;
+  inviteeName?: string;
+  projectId: string;
+  role: WorkspaceNeedToKnowRole;
+  permittedTools?: WorkspaceModule[];
+  accessScope?: Partial<WorkspaceAccessScope>;
+  startsAt?: string;
+  expiresAt?: string;
+  reason?: string;
+  confidentialClassification?: WorkspaceConfidentialClassification;
+  metadata?: object;
+}
+
+export interface AcceptWorkspaceInvitationInput {
+  userId?: string;
+}
+
+export interface RevokeWorkspaceAccessInput {
+  reason?: string;
+}
+
 export interface WorkspaceRepository {
   createLayout(layout: WorkspaceLayout): Promise<WorkspaceLayout>;
   listLayouts(organizationId: string): Promise<WorkspaceLayout[]>;
@@ -177,6 +385,13 @@ export interface WorkspaceRepository {
   listWidgets(organizationId: string): Promise<WorkspaceWidget[]>;
   upsertPreferences(preferences: WorkspacePreferences): Promise<WorkspacePreferences>;
   findPreferencesByUser(userId: string, organizationId: string): Promise<WorkspacePreferences | null>;
+  createInvitation(invitation: WorkspaceCollaboratorInvitation): Promise<WorkspaceCollaboratorInvitation>;
+  updateInvitation(invitation: WorkspaceCollaboratorInvitation): Promise<WorkspaceCollaboratorInvitation>;
+  findInvitationById(id: string, organizationId: string): Promise<WorkspaceCollaboratorInvitation | null>;
+  createAccessGrant(grant: WorkspaceNeedToKnowGrant): Promise<WorkspaceNeedToKnowGrant>;
+  updateAccessGrant(grant: WorkspaceNeedToKnowGrant): Promise<WorkspaceNeedToKnowGrant>;
+  findAccessGrantById(id: string, organizationId: string): Promise<WorkspaceNeedToKnowGrant | null>;
+  listAccessGrantsForUser(userId: string, organizationId: string): Promise<WorkspaceNeedToKnowGrant[]>;
   appendAuditEvent(event: WorkspaceAuditEvent): Promise<void>;
   listAuditEvents(organizationId: string): Promise<WorkspaceAuditEvent[]>;
 }
