@@ -180,6 +180,27 @@ const governanceSignals = [
   { label: "Change history", status: "Reversible and audited", tone: "info" as const }
 ];
 
+const subscriptionPlans = [
+  { plan: "FREE", status: "Current", tone: "info" as const },
+  { plan: "PREMIUM", status: "Available", tone: "neutral" as const },
+  { plan: "BUSINESS", status: "Available", tone: "neutral" as const },
+  { plan: "ENTERPRISE_RESERVED", status: "Disabled", tone: "warning" as const }
+];
+
+const subscriptionUsage = [
+  { label: "Active projects", value: "1 / 1", warning: "Project limit reached" },
+  { label: "Collaborators", value: "0 / 1", warning: "Collaborator quota guarded" },
+  { label: "Storage", value: "128 MB / 512 MB", warning: "Storage quota tracked" },
+  { label: "AI usage", value: "0 / 25", warning: "AI quota tracked" },
+  { label: "Export entitlements", value: "JSON Master, PDF", warning: "Premium required for EPUB/MOBI/DOCX" }
+];
+
+const effectiveAccessRules = [
+  "Role permissions",
+  "Subscription entitlements",
+  "Need-to-Know scope"
+];
+
 function getAdminViewState(): AdminViewState {
   return "ready";
 }
@@ -273,13 +294,14 @@ export function AdministrationPage() {
             ))}
           </section>
 
-          <section className="status-grid" aria-label="Administration access and users">
+          <section className="status-grid" aria-label="Users roles and subscription usage">
             <div className="content-panel">
               <div className="section-heading">
                 <div>
-                  <p className="section-kicker">Acces pe rol</p>
-                  <h2>Administratorii configurează, editorii nu intră în Administrare</h2>
+                  <p className="section-kicker">Users and Roles</p>
+                  <h2>Roluri operaționale, separate de abonament</h2>
                 </div>
+                <Badge tone="success">Role-based</Badge>
               </div>
               <div className="stack-list">
                 {roleAccess.map((item) => (
@@ -288,16 +310,6 @@ export function AdministrationPage() {
                     <Badge tone={item.tone}>{item.access}</Badge>
                   </div>
                 ))}
-              </div>
-            </div>
-
-            <div className="content-panel">
-              <div className="section-heading">
-                <div>
-                  <p className="section-kicker">Utilizatori</p>
-                  <h2>Administratori și invitații</h2>
-                </div>
-                <Badge tone="neutral">{users.length} records</Badge>
               </div>
               <Table ariaLabel="Administration users and roles">
                 <thead>
@@ -323,6 +335,42 @@ export function AdministrationPage() {
                   ))}
                 </tbody>
               </Table>
+            </div>
+
+            <div className="content-panel">
+              <div className="section-heading">
+                <div>
+                  <p className="section-kicker">Subscription and Usage</p>
+                  <h2>Planuri comerciale, cote și limitări</h2>
+                </div>
+                <Badge tone="info">Not roles</Badge>
+              </div>
+              <div className="admin-plan-list" aria-label="Subscription plans">
+                {subscriptionPlans.map((plan) => (
+                  <div className="signal-row" key={plan.plan}>
+                    <span>{plan.plan}</span>
+                    <Badge tone={plan.tone}>{plan.status}</Badge>
+                  </div>
+                ))}
+              </div>
+              <div className="stack-list" aria-label="Subscription usage and quota warnings">
+                {subscriptionUsage.map((item) => (
+                  <div className="signal-row" key={item.label}>
+                    <span>{item.label}</span>
+                    <Badge tone={item.warning.includes("required") || item.warning.includes("reached") ? "warning" : "info"}>
+                      {item.value}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+              <div className="admin-access-formula" aria-label="Effective access formula">
+                <strong>Effective access</strong>
+                <span>{effectiveAccessRules.join(" × ")}</span>
+              </div>
+              <div className="page-header-actions admin-subscription-actions">
+                <Button disabled variant="secondary">Upgrade plan</Button>
+                <Button disabled variant="ghost">Downgrade plan</Button>
+              </div>
             </div>
           </section>
 
