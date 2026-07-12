@@ -38,12 +38,21 @@ export type WorkspaceAuditAction =
   | "AI_AGENT_DATA_ACCESS"
   | "CONFIDENTIAL_RESOURCE_ACCESSED"
   | "DOCUMENT_OPENED"
+  | "FEATURE_BLOCKED"
   | "INVITATION_ACCEPTED"
   | "INVITATION_SENT"
   | "NEED_TO_KNOW_ACCESS_CHANGED"
   | "NEED_TO_KNOW_ACCESS_GRANTED"
   | "NEED_TO_KNOW_ACCESS_REVOKED"
+  | "QUOTA_EXCEEDED"
+  | "ROLE_ASSIGNED"
+  | "ROLE_CHANGED"
+  | "ROLE_REVOKED"
   | "RESTRICTED_ACCESS_ATTEMPT"
+  | "SUBSCRIPTION_ACTIVATED"
+  | "SUBSCRIPTION_CHANGED"
+  | "SUBSCRIPTION_DOWNGRADE"
+  | "SUBSCRIPTION_UPGRADE"
   | "TEMPORARY_ACCESS_EXPIRED"
   | "WORKSPACE_LAYOUT_CREATED"
   | "WORKSPACE_NAVIGATION_GENERATED"
@@ -89,6 +98,73 @@ export type WorkspaceAccessGrantStatus = "ACTIVE" | "EXPIRED" | "REVOKED";
 export type WorkspaceInvitationStatus = "ACCEPTED" | "EXPIRED" | "REVOKED" | "SENT";
 
 export type WorkspaceNeedToKnowDecision = "ALLOW" | "DENY";
+
+export type WorkspaceOperationalRole =
+  | "ADMINISTRATOR"
+  | "PROJECT_MANAGER"
+  | "EDITOR"
+  | "TRANSLATOR"
+  | "REVIEWER"
+  | "DESIGNER"
+  | "AUDIO_NARRATOR"
+  | "AUTHOR"
+  | "COLLABORATOR"
+  | "READER"
+  | "GUEST";
+
+export type WorkspaceRoleAssignmentScope =
+  | "ORGANIZATION"
+  | "PROJECT"
+  | "DOCUMENT"
+  | "CHAPTER"
+  | "SEGMENT";
+
+export type WorkspaceSubscriptionPlan =
+  | "FREE"
+  | "PREMIUM"
+  | "BUSINESS"
+  | "ENTERPRISE_RESERVED";
+
+export type WorkspaceEntitlementFeature =
+  | "ADVANCED_EDITORIAL_TOOLS"
+  | "AI_AGENT"
+  | "API_ACCESS"
+  | "AUDIT_RETENTION"
+  | "BACKUP_RETENTION"
+  | "COLLABORATION"
+  | "DISTRIBUTION_CHANNELS"
+  | "EXPORT_DOCX"
+  | "EXPORT_EPUB"
+  | "EXPORT_JSON_MASTER"
+  | "EXPORT_MOBI"
+  | "EXPORT_PDF"
+  | "EXPORT_PRINT"
+  | "PRIORITY_PROCESSING"
+  | "PUBLISHING_CHANNELS"
+  | "TEAM_ADMINISTRATION"
+  | "TRANSLATION_VOLUME";
+
+export type WorkspacePlanQuotaKey =
+  | "activeProjects"
+  | "aiUsage"
+  | "collaborators"
+  | "storageMb"
+  | "translationSegments";
+
+export type WorkspaceEffectiveAccessAction =
+  | "ADMINISTRATION_ACTION"
+  | "AI_EXECUTION"
+  | "API_USAGE"
+  | "DISTRIBUTION"
+  | "DOCUMENT_EDIT"
+  | "EXPORT"
+  | "PROJECT_CREATE"
+  | "PUBLISHING"
+  | "REVIEW"
+  | "ROLE_ASSIGNMENT"
+  | "STORAGE_UPLOAD"
+  | "TRANSLATION"
+  | "USER_INVITATION";
 
 export interface WorkspaceAccessScope {
   projectId: string;
@@ -192,6 +268,77 @@ export interface WorkspaceNeedToKnowAccessResult {
   restrictedMetadataReturned: false;
   mostRestrictiveRuleApplied: true;
   temporaryAccessExpiresAt?: string;
+}
+
+export interface WorkspaceSubscriptionPlanDefinition {
+  plan: WorkspaceSubscriptionPlan;
+  enabled: boolean;
+  includedFeatures: WorkspaceEntitlementFeature[];
+  quotas: Record<WorkspacePlanQuotaKey, number | null>;
+  exportFormats: string[];
+  publishingChannels: string[];
+  distributionChannels: string[];
+  auditRetentionDays: number;
+  backupRetentionDays: number;
+  priorityProcessing: boolean;
+  downgradeBehavior: {
+    preserveExistingContent: true;
+    preserveAuditAndVersions: true;
+    disableUnavailableFutureActionsOnly: true;
+    markOverLimitResourcesReadOnly: true;
+    automaticDeletion: false;
+    remediationSummaryRequired: true;
+  };
+}
+
+export interface WorkspaceSubscriptionUsage {
+  activeProjects: number;
+  collaborators: number;
+  storageMb: number;
+  aiUsage: number;
+  translationSegments: number;
+}
+
+export interface WorkspaceSubscriptionSummary {
+  currentPlan: WorkspaceSubscriptionPlan;
+  plans: WorkspaceSubscriptionPlanDefinition[];
+  currentEntitlements: WorkspaceSubscriptionPlanDefinition;
+  usage: WorkspaceSubscriptionUsage;
+  accountOwnerCanManageSubscription: boolean;
+  roleNamesAreNotPlanNames: true;
+  enterpriseReservedEnabled: false;
+}
+
+export interface WorkspaceEffectiveAccessInput extends WorkspaceNeedToKnowAccessInput {
+  action: WorkspaceEffectiveAccessAction;
+  requiredFeature?: WorkspaceEntitlementFeature;
+  quotaKey?: WorkspacePlanQuotaKey;
+  requestedAmount?: number;
+}
+
+export interface WorkspaceEffectiveAccessResult {
+  decision: WorkspaceNeedToKnowDecision;
+  reason: string;
+  roleAllowed: boolean;
+  subscriptionAllowed: boolean;
+  needToKnowAllowed: boolean;
+  explicitDenialApplied: boolean;
+  mostRestrictiveRuleApplied: true;
+  operationalRole: WorkspaceOperationalRole;
+  roleAssignmentScopes: WorkspaceRoleAssignmentScope[];
+  subscriptionPlan: WorkspaceSubscriptionPlan;
+  requiredPlan?: WorkspaceSubscriptionPlan;
+  requiredFeature?: WorkspaceEntitlementFeature;
+  quotaKey?: WorkspacePlanQuotaKey;
+  quotaLimit?: number | null;
+  quotaUsage?: number;
+  requestedAmount: number;
+  dataDestroyed: false;
+  existingWorkRemoved: false;
+  restrictedNewActionOnly: true;
+  readOnlyOverLimit: boolean;
+  remediationSummary?: string[];
+  needToKnow: WorkspaceNeedToKnowAccessResult;
 }
 
 export interface WorkspaceAgentDataAccessInput {
