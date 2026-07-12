@@ -3192,3 +3192,106 @@ Administration is organized into these high-level sections:
 - Critical administration changes must remain disabled until confirmed by an
   authorized human.
 - Reversibility and auditability are mandatory for administration changes.
+
+## Phase 7 Step 14.1 - Roles, Permissions and Subscription Entitlements
+
+Status: Implemented as an additive Workspace/Administration access-policy
+refinement.
+
+### Core Rule
+
+Effective access is:
+
+```text
+Role permissions × Subscription entitlements × Need-to-Know scope
+```
+
+A user may perform an action only when:
+
+- The assigned role permits it.
+- The subscription plan includes the required feature, capacity, or quota.
+- The user has access to the relevant project, document, chapter, section, or
+  segment.
+
+The most restrictive valid result wins.
+
+### Role Model
+
+Roles define what a person may do operationally. The official roles are:
+
+- Administrator.
+- Project Manager.
+- Editor.
+- Translator.
+- Reviewer.
+- Designer.
+- Audio Narrator.
+- Author.
+- Collaborator.
+- Reader.
+- Guest.
+
+Roles may be assigned at organization, project, document, chapter, and segment
+scope. Authorized account owners, administrators, or project managers may assign
+and revoke roles.
+
+### Subscription Model
+
+Subscription plans define available features, limits, and resources. Plans are:
+
+- `FREE`.
+- `PREMIUM`.
+- `BUSINESS`.
+- `ENTERPRISE_RESERVED`.
+
+Subscription plans are not user roles. `ENTERPRISE_RESERVED` remains disabled
+until explicitly activated later.
+
+Plans may control active projects, storage quota, collaborators, AI agent
+availability, AI usage, translation volume, export formats, advanced editorial
+tools, collaboration features, team administration, audit retention, backup
+retention, publishing channels, distribution channels, API access, and priority
+processing.
+
+### Plan Limit Behavior
+
+When a plan limit is reached:
+
+- Do not destroy data.
+- Do not remove existing work.
+- Block only the restricted new action.
+- Explain the limit clearly.
+- Show the required plan.
+- Audit the blocked attempt.
+
+On downgrade:
+
+- Preserve all existing content.
+- Preserve audit and versions.
+- Disable only unavailable future actions.
+- Mark over-limit resources read-only where necessary.
+- Do not delete projects, files, or collaborators automatically.
+- Show a remediation summary.
+
+### Administration UI
+
+Administration must separate:
+
+- Users and Roles: users, invitations, role assignment, project scope,
+  temporary access, and revocation.
+- Subscription and Usage: current plan, included features, usage, quotas,
+  upgrade/downgrade, billing status, and limit warnings.
+
+Plan names must never be mixed with editorial role names.
+
+### Server Enforcement and Audit
+
+The model is enforced server-side through the Workspace access-resolution
+policy. It evaluates authentication status, ownership/admin authority,
+organization role, project role, document scope, task, workflow stage,
+Need-to-Know grants, subscription plan, quota, temporary access, and explicit
+denial.
+
+Audit covers role assigned, changed, and revoked; subscription activated and
+changed; quota exceeded; feature blocked; upgrade; downgrade; temporary access
+granted and expired; and human override where permitted.
