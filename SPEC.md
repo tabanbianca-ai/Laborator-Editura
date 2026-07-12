@@ -3145,3 +3145,50 @@ alignment, synchronized scrolling, and individual accept/reject decisions.
 
 The workspace must remain usable for large books, large magazines, thousands of
 pages, high-resolution illustrations, and multiple collaborators.
+
+## Phase 7 Step 14 - Administration Review and Simplification
+
+Status: Implemented as a frontend configuration-center refinement.
+
+### Goal
+
+Administration is a platform configuration center. It is not a daily editorial
+production workspace.
+
+### Principles
+
+- Simple and logical.
+- Maximum two levels of navigation.
+- No duplicate administration options.
+- Access is role-based.
+- All changes are audited.
+- Critical changes require explicit confirmation.
+
+### Administration Sections
+
+Administration is organized into these high-level sections:
+
+- Organization: organization data, logo, branding, timezone, and currency.
+- Users: users, invitations, teams, and groups.
+- Roles and permissions: roles, permissions, Need-to-Know policies, and
+  temporary access.
+- AI agents: activation, priorities, AI models, limits, costs, and monitoring.
+- Linguistic resources: languages, dictionaries, glossaries, approved sources,
+  and updates.
+- Editorial templates: book formats, magazine formats, styles, templates, and
+  exports.
+- Publishing and distribution: ISBN, marketplace, channels, and export profiles.
+- Security: authentication, MFA, sessions, and API keys.
+- Audit and backup: audit, backup, restore, and retention.
+- Integrations: AI, email, cloud, and API.
+- System: updates, versions, diagnostics, and platform health.
+
+### Access Rules
+
+- Administrators may see every Administration section.
+- Editors do not enter Administration for daily work.
+- Production users work in Editorial Workspace, Pipeline, and module-specific
+  production pages.
+- Critical administration changes must remain disabled until confirmed by an
+  authorized human.
+- Reversibility and auditability are mandatory for administration changes.
