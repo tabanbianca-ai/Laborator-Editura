@@ -336,6 +336,30 @@ Rules:
   and detect blockers, but it must not approve, publish, grant rights, or
   bypass workflow.
 
+### Administration Review and Simplification Directive
+
+Purpose:
+
+- Keep Administration as a platform configuration center, not a daily editorial
+  workspace.
+
+Rules:
+
+- This is a frontend simplification and governance refinement, not a new
+  enterprise module.
+- Administration navigation must remain simple, logical, and limited to a
+  maximum of two levels.
+- Do not duplicate administration options across multiple admin surfaces.
+- Administrator roles may see all administration sections.
+- Editors and production users should work in production workspaces rather than
+  Administration.
+- Administration sections cover organization, users, roles and permissions, AI
+  agents, linguistic resources, editorial templates, publishing and
+  distribution, security, audit and backup, integrations, and system health.
+- Each section must include short explanatory text.
+- All administration changes must be reversible where possible and audited.
+- Critical changes must require explicit confirmation.
+
 ### ChatGPT
 
 Role: System Architect.
