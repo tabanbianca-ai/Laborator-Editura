@@ -696,6 +696,54 @@ Report:
 
 - `docs/PHASE_7_STEP_14_ADMINISTRATION_SIMPLIFICATION_REPORT.md`.
 
+## Phase 7 Step 14.1 - Roles, Permissions and Subscription Entitlements
+
+Status: Implemented as an additive Workspace/Administration access-policy
+refinement.
+
+Scope:
+
+- No new enterprise modules.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+- Reuses Workspace, Administration, IAM/RBAC, Need-to-Know access, audit, and
+  existing subscription/billing placeholders.
+
+Implemented capabilities:
+
+- Central effective access policy:
+  `Role permissions × Subscription entitlements × Need-to-Know scope`.
+- Additive Workspace endpoints:
+  - `GET /workspace/subscription`.
+  - `POST /workspace/access/resolve`.
+- Official operational role model separated from subscription plans.
+- Subscription plan model for `FREE`, `PREMIUM`, `BUSINESS`, and disabled
+  `ENTERPRISE_RESERVED`.
+- Plan entitlement and quota metadata for projects, collaborators, storage, AI
+  usage, translation volume, export formats, team administration, retention,
+  publishing, distribution, API access, and priority processing.
+- Safe plan-limit behavior: existing content is preserved and only restricted
+  new actions are blocked.
+- Downgrade behavior: preserve content/audit/versions and mark over-limit
+  resources read-only where necessary.
+- Administration UI separates Users and Roles from Subscription and Usage.
+- Audit actions for role changes, subscription changes, feature blocks, quota
+  exceeded events, upgrades, downgrades, temporary access, and human override.
+
+Validation coverage:
+
+- No new subscription or billing module.
+- Endpoint coverage.
+- Role/plan separation.
+- Effective access formula.
+- Feature and quota blocking.
+- Downgrade without data loss.
+- Administration separation between roles and subscription usage.
+
+Report:
+
+- `docs/PHASE_7_STEP_14_1_ROLES_SUBSCRIPTION_ENTITLEMENTS_REPORT.md`.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
