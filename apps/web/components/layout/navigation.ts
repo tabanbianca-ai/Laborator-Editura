@@ -39,6 +39,10 @@ export function getCurrentNavigationLabel(
   items: NavigationItem[],
   platformLanguage?: string | null
 ) {
+  if (pathname === "/workspace") {
+    return translateRouteLabel("/workspace", platformLanguage, "Editorial Workspace");
+  }
+
   if (pathname === "/pipeline" || pathname.startsWith("/pipeline/")) {
     return translateRouteLabel("/pipeline", platformLanguage, "Production Pipeline");
   }
