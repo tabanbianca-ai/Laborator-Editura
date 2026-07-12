@@ -29,13 +29,16 @@ export function TopNav({ currentPath, navigation, preferences }: TopNavProps) {
       </div>
 
       <div className="top-nav-meta" aria-label="Workspace status">
+        <Link className="ui-button ui-button-primary ui-button-sm" href="/workspace">
+          {ui.t("label.editorialWorkspace")}
+        </Link>
         <Link className="ui-button ui-button-primary ui-button-sm" href="/pipeline">
           {ui.t("label.productionPipeline")}
         </Link>
         <Link className="ui-button ui-button-secondary ui-button-sm" href="/distribution">
           {ui.t("label.distribution")}
         </Link>
-        <Button disabled size="sm" variant="secondary">
+        <Button disabled size="sm" variant="ghost">
           {ui.t("label.workspace")}
         </Button>
         <Button disabled size="sm" variant="ghost">
