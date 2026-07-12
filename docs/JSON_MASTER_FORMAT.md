@@ -716,9 +716,163 @@ Priority rules:
       "humanApprovalStatus": "pending",
       "auditRefs": []
     }
-  ]
+  ],
+  "needToKnowAccess": [
+    {
+      "accessGrantId": "workspace-grant-a",
+      "userId": "user-translator-001",
+      "role": "TRANSLATOR",
+      "projectId": "project-001",
+      "scope": {
+        "manuscriptIds": ["manuscript-ro"],
+        "documentIds": ["document-ro-001"],
+        "chapterIds": ["chapter-ro-001"],
+        "sectionIds": ["section-ro-001"],
+        "segmentIds": ["segment-ro-001"]
+      },
+      "permittedTools": ["TRANSLATION", "LEXICOGRAPHIC", "COLLABORATION"],
+      "confidentialClassification": "INTERNAL",
+      "temporary": true,
+      "startsAt": "2026-01-01T00:00:00.000Z",
+      "expiresAt": "2026-02-01T00:00:00.000Z",
+      "grantedBy": "user-admin-001",
+      "mostRestrictiveRuleApplied": true,
+      "hiddenDataLoadedThroughApi": false,
+      "auditRefs": ["workspace-audit-need-to-know-001"]
+    }
+  ],
+  "agentDataAccess": [
+    {
+      "agentDataAccessId": "agent-access-001",
+      "agent": "Quality Agent",
+      "task": "publication readiness validation",
+      "accessScope": {
+        "projectId": "project-001",
+        "documentIds": ["document-ro-001"],
+        "exportArtifactIds": ["export-ro-pdf-001"]
+      },
+      "accessedResources": ["document-ro-001", "export-ro-pdf-001"],
+      "decision": "ALLOW",
+      "result": "minimum necessary publication readiness data provided",
+      "agentMayExpandOwnAccess": false,
+      "timestamp": "2026-01-01T00:05:00.000Z",
+      "auditRefs": ["workspace-audit-agent-access-001"]
+    }
+  ],
+  "editorialWorkspace": {
+    "workspaceVersion": "phase-7-step-13",
+    "primaryEnvironment": true,
+    "centralObject": "manuscript",
+    "supportedPublicationTypes": [
+      "Book",
+      "Children's Book",
+      "Magazine",
+      "Poetry",
+      "Dictionary",
+      "Course",
+      "Audiobook",
+      "Video"
+    ],
+    "commonActionClickTarget": "2-3",
+    "publicationFormat": {
+      "formatFamily": "Custom",
+      "formatName": "A5",
+      "orientation": "portrait",
+      "width": null,
+      "height": null,
+      "bleed": "3mm",
+      "spine": "auto",
+      "insideMargin": "20mm",
+      "outsideMargin": "18mm",
+      "topMargin": "18mm",
+      "bottomMargin": "20mm",
+      "gutter": "6mm",
+      "safeArea": "configured",
+      "columns": 1
+    },
+    "automaticFormatAdaptation": [
+      "layout",
+      "templates",
+      "styles",
+      "guides",
+      "imagePlacement",
+      "pageNumbering",
+      "exportSettings",
+      "previews"
+    ],
+    "productionTools": [
+      "dragDrop",
+      "pageThumbnails",
+      "paragraphStyles",
+      "characterStyles",
+      "objectStyles",
+      "masterPagesTemplates",
+      "pageGuides",
+      "rulers",
+      "grids",
+      "snapping",
+      "alignment",
+      "pageNumbering",
+      "headers",
+      "footers",
+      "tableOfContents",
+      "footnotes",
+      "endnotes",
+      "hyperlinks",
+      "anchors",
+      "imagePlacement",
+      "imageFitting",
+      "imageReplacement",
+      "layers",
+      "preflight",
+      "packageProject",
+      "livePreview"
+    ],
+    "reviewInterface": {
+      "defaultColumns": 2,
+      "optionalColumns": [3, 4],
+      "sentenceAlignment": true,
+      "paragraphAlignment": true,
+      "synchronizedScrolling": true,
+      "immutableOriginal": true,
+      "acceptRejectProposals": true
+    },
+    "panelBehavior": {
+      "collapsible": true,
+      "dockable": true,
+      "resizable": true,
+      "restorable": true,
+      "favorites": true,
+      "universalSearch": true,
+      "configurableShortcuts": true,
+      "recentlyUsedTools": true
+    },
+    "collaboration": {
+      "individualFirst": true,
+      "instantCollaboration": true,
+      "roleAssignment": true,
+      "chapterAssignment": true,
+      "segmentAssignment": true,
+      "comments": true,
+      "mentions": true,
+      "suggestions": true,
+      "acceptReject": true,
+      "synchronizedUpdates": true,
+      "audit": true,
+      "versionHistory": true
+    }
+  }
 }
 ```
+
+Need-to-know access metadata is optional and records visibility scope,
+temporary grants, AI data access, and audit references. It must not include
+restricted content for unauthorized recipients.
+
+Editorial Workspace metadata is optional and records the active production
+workspace configuration. It does not duplicate manuscripts, translations,
+review data, publishing artifacts, rights records, or audit records; it only
+references and organizes existing canonical objects.
 
 This document defines the canonical organization requirement only. It does not
 change runtime validators, database schema, APIs, or UI.
