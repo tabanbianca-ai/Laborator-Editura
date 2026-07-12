@@ -653,6 +653,49 @@ Report:
 
 - `docs/PHASE_7_STEP_13_EDITORIAL_WORKSPACE_FINAL_REPORT.md`.
 
+## Phase 7 Step 14 - Administration Review and Simplification
+
+Status: Implemented as a frontend simplification and launch-readiness polish
+step.
+
+Scope:
+
+- No new enterprise modules.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+- Reuses existing Administration, IAM/RBAC, Need-to-Know, AI governance, audit,
+  backup, security, integration, and system metadata concepts.
+
+Implemented capabilities:
+
+- `/admin` and `/administration` now use the same Administration configuration
+  center.
+- Administration is positioned as a platform configuration area, not a daily
+  production workspace.
+- Configuration is limited to two visible navigation levels: section and
+  settings.
+- Eleven approved sections are surfaced: organization, users, roles and
+  permissions, AI agents, linguistic resources, editorial templates,
+  publishing and distribution, security, audit and backup, integrations, and
+  system.
+- Role guidance makes administrator access explicit and keeps editors in
+  production workspaces.
+- Critical configuration areas are marked as requiring confirmation.
+- Audit, reversibility, and Need-to-Know governance are visible.
+
+Validation coverage:
+
+- Administration routes.
+- Approved section list.
+- Two-level navigation rule.
+- Role access guidance.
+- Audit and critical confirmation safeguards.
+- Responsive administration layout classes.
+
+Report:
+
+- `docs/PHASE_7_STEP_14_ADMINISTRATION_SIMPLIFICATION_REPORT.md`.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
