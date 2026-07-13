@@ -5,6 +5,7 @@ interface LibraryRouteProps {
   searchParams?: Promise<{
     error?: string | string[];
     itemId?: string | string[];
+    publicationId?: string | string[];
     status?: string | string[];
   }>;
 }
@@ -16,7 +17,8 @@ function getQueryValue(value: string | string[] | undefined): string | undefined
 export default async function LibraryRoute({ searchParams }: LibraryRouteProps) {
   const params = await searchParams;
   const workspace = await getLibraryWorkspaceData({
-    itemId: getQueryValue(params?.itemId)
+    itemId: getQueryValue(params?.itemId),
+    publicationId: getQueryValue(params?.publicationId)
   });
 
   return (
