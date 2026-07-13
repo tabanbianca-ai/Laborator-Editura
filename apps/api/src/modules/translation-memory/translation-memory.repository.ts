@@ -1,5 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { getDefaultRuntimeDatabase, type FileBackedRuntimeDatabase } from "@laborator/db";
 import { randomUUID } from "node:crypto";
+import { RUNTIME_DATABASE } from "../runtime-database.provider";
 import {
   type ListTranslationMemoryInput,
   type SearchTranslationMemoryInput,
@@ -10,38 +12,40 @@ import {
 
 @Injectable()
 export class InMemoryTranslationMemoryRepository implements TranslationMemoryRepository {
-  private readonly entries = new Map<string, TranslationMemoryEntry>();
-  private readonly auditEvents: TranslationMemoryAuditEvent[] = [];
+  constructor(
+    @Inject(RUNTIME_DATABASE)
+    private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
+  ) {}
 
   async createEntry(entry: TranslationMemoryEntry): Promise<TranslationMemoryEntry> {
-    this.entries.set(entry.id, entry);
-    return entry;
+    return this.database.insert("translation_memory_entries", entry);
   }
 
   async updateEntry(entry: TranslationMemoryEntry): Promise<TranslationMemoryEntry> {
-    this.entries.set(entry.id, entry);
-    return entry;
+    return this.database.upsert("translation_memory_entries", entry);
   }
 
   async findEntryById(
     id: string,
     organizationId: string
   ): Promise<TranslationMemoryEntry | null> {
-    const entry = this.entries.get(id);
-
-    if (!entry || entry.organizationId !== organizationId) {
-      return null;
-    }
-
-    return entry;
+    return this.database.findByIdForTenant<TranslationMemoryEntry>(
+      "translation_memory_entries",
+      id,
+      organizationId
+    );
   }
 
   async searchEntries(
     input: SearchTranslationMemoryInput & { organizationId: string }
   ): Promise<TranslationMemoryEntry[]> {
-    return [...this.entries.values()].filter((entry) => {
+    return this.database
+      .selectForTenant<TranslationMemoryEntry>(
+        "translation_memory_entries",
+        input.organizationId
+      )
+      .filter((entry) => {
       return (
-        entry.organizationId === input.organizationId &&
         entry.sourceLanguage === input.sourceLanguage &&
         entry.targetLanguage === input.targetLanguage &&
         (input.domain === undefined || entry.domain === input.domain)
@@ -52,12 +56,16 @@ export class InMemoryTranslationMemoryRepository implements TranslationMemoryRep
   async listEntries(
     input: ListTranslationMemoryInput & { organizationId: string }
   ): Promise<TranslationMemoryEntry[]> {
-    return [...this.entries.values()].filter((entry) => {
+    return this.database
+      .selectForTenant<TranslationMemoryEntry>(
+        "translation_memory_entries",
+        input.organizationId
+      )
+      .filter((entry) => {
       const approvalAllowed = input.includePending || entry.approvalStatus === "APPROVED";
 
       return (
         approvalAllowed &&
-        entry.organizationId === input.organizationId &&
         entry.sourceLanguage === input.sourceLanguage &&
         entry.targetLanguage === input.targetLanguage &&
         (input.domain === undefined || entry.domain === input.domain)
@@ -66,7 +74,7 @@ export class InMemoryTranslationMemoryRepository implements TranslationMemoryRep
   }
 
   async appendAuditEvent(event: TranslationMemoryAuditEvent): Promise<void> {
-    this.auditEvents.push(event);
+    this.database.insert("translation_memory_audit_events", event);
   }
 
   createId(): string {
@@ -74,6 +82,6 @@ export class InMemoryTranslationMemoryRepository implements TranslationMemoryRep
   }
 
   getAuditEvents(): TranslationMemoryAuditEvent[] {
-    return [...this.auditEvents];
+    return this.database.select<TranslationMemoryAuditEvent>("translation_memory_audit_events");
   }
 }
