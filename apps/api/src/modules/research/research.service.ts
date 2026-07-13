@@ -562,7 +562,10 @@ export class ResearchService {
   }
 
   private hasRole(actor: ResearchActor, role: string): boolean {
-    return (actor.roles ?? []).some((actorRole) => actorRole.toUpperCase() === role);
+    return (actor.roles ?? []).some((actorRole) =>
+      actorRole.toUpperCase() === role ||
+      (role === "ADMIN" && actorRole.toUpperCase() === "PLATFORM_CREATOR")
+    );
   }
 
   private validateActor(actor: ResearchActor): void {
