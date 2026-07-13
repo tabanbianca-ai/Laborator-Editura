@@ -505,11 +505,39 @@ export type AiCostPolicyStatus = "DRAFT" | "ACTIVE" | "DISABLED";
 
 export type AiOverrideStatus = "PENDING_HUMAN_APPROVAL" | "APPROVED" | "REJECTED";
 
+export type AiProviderName = "OPENAI" | "ANTHROPIC";
+
+export type AiProviderRole = "PRIMARY" | "FALLBACK";
+
+export type AiProviderStatus =
+  | "AVAILABLE"
+  | "TIMEOUT"
+  | "UNAVAILABLE"
+  | "API_ERROR"
+  | "CONFIGURED_OUTAGE";
+
+export type AiProviderFallbackStatus =
+  | "USING_PRIMARY"
+  | "FALLBACK_ACTIVE"
+  | "RECOVERED";
+
+export type AiModelSelectionMode = "AUTOMATIC" | "MANUAL";
+
+export type AiBudgetWarningThreshold = 80 | 90 | 100;
+
 export type AiCostAuditAction =
+  | "AI_PROVIDER_CHANGED"
+  | "AI_FALLBACK_ACTIVATED"
+  | "AI_FALLBACK_RECOVERED"
   | "AI_USAGE_RECORDED"
   | "AI_BUDGET_CREATED"
   | "AI_QUOTA_CREATED"
   | "AI_COST_POLICY_CREATED"
+  | "AI_BUDGET_WARNING"
+  | "AI_BUDGET_EXCEEDED"
+  | "AI_ACTION_BLOCKED"
+  | "AI_SUBSCRIPTION_UPGRADED"
+  | "AI_SUBSCRIPTION_DOWNGRADED"
   | "AI_BUDGET_OVERRIDE_REQUEST_CREATED"
   | "AI_BUDGET_OVERRIDE_APPROVED"
   | "AI_BUDGET_OVERRIDE_REJECTED";
@@ -528,6 +556,38 @@ export interface AiProviderModelMetadata {
   pricingReference?: string;
 }
 
+export interface AiProviderStatusRecord {
+  id: string;
+  organizationId: string;
+  provider: AiProviderName;
+  displayName: string;
+  providerRole: AiProviderRole;
+  status: AiProviderStatus;
+  active: boolean;
+  priority: number;
+  configured: boolean;
+  supportedModels: string[];
+  defaultModel: string;
+  modelSelectionMode: AiModelSelectionMode;
+  fallbackToProvider?: AiProviderName;
+  outageReason?: string;
+  lastCheckedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface AiProviderSummary {
+  configuredProviders: AiProviderStatusRecord[];
+  primaryProvider: "OPENAI";
+  fallbackProvider: "ANTHROPIC";
+  activeProvider: AiProviderName;
+  fallbackStatus: AiProviderFallbackStatus;
+  automaticModelSelection: true;
+  manualModelSelectionRequiresRoleAndSubscription: true;
+  extensibleProviderArchitecture: true;
+}
+
 export interface AiUsageRecord {
   id: string;
   organizationId: string;
@@ -541,12 +601,20 @@ export interface AiUsageRecord {
   outputTokens: number;
   totalTokens: number;
   estimatedCost: number;
+  actualCost?: number;
   currency: string;
   status: AiUsageStatus;
   costPolicyEvaluation: {
     softLimitWarning: boolean;
     hardLimitReached: boolean;
     approvalRequiredOverThreshold: boolean;
+    warningThreshold?: AiBudgetWarningThreshold;
+    monthlyBudget?: number;
+    monthlyConsumption?: number;
+    remainingBudget?: number;
+    blockedActionOnly: boolean;
+    dataDeleted: false;
+    platformCreatorUnlimited: boolean;
   };
   externalBillingIntegration: "NOT_CONFIGURED";
   createdAt: string;
@@ -602,6 +670,7 @@ export interface AiCostPolicy {
   softLimitWarningThreshold?: number;
   hardLimitMetadata?: Record<string, unknown>;
   approvalRequiredOverThreshold?: number;
+  warningThresholds: AiBudgetWarningThreshold[];
   humanOverrideAllowed: boolean;
   aiMayEstimateCost: true;
   aiMaySuggestOptimizations: true;
@@ -647,6 +716,7 @@ export interface AiCostAuditEvent {
   action: AiCostAuditAction;
   actorId: string;
   usageRecordId?: string;
+  providerStatusId?: string;
   budgetId?: string;
   quotaId?: string;
   policyId?: string;
@@ -668,6 +738,7 @@ export interface CreateAiUsageRecordInput {
   outputTokens?: number;
   totalTokens?: number;
   estimatedCost?: number;
+  actualCost?: number;
   currency?: string;
   status?: AiUsageStatus;
   metadata?: Record<string, unknown>;
@@ -708,6 +779,7 @@ export interface CreateAiCostPolicyInput {
   softLimitWarningThreshold?: number;
   hardLimitMetadata?: Record<string, unknown>;
   approvalRequiredOverThreshold?: number;
+  warningThresholds?: AiBudgetWarningThreshold[];
   humanOverrideAllowed?: boolean;
   aiInitiatedPolicyChange?: boolean;
   metadata?: Record<string, unknown>;
@@ -730,7 +802,29 @@ export interface AiOverrideDecisionInput {
   metadata?: Record<string, unknown>;
 }
 
+export interface UpdateAiProviderStatusInput {
+  status: AiProviderStatus;
+  outageReason?: string;
+  supportedModels?: string[];
+  defaultModel?: string;
+  modelSelectionMode?: AiModelSelectionMode;
+  metadata?: Record<string, unknown>;
+}
+
+export interface AiCostSummary {
+  monthlyBudget: number | null;
+  monthlyConsumption: number;
+  remainingBudget: number | null;
+  warningThresholds: AiBudgetWarningThreshold[];
+  consumptionByAgent: Array<{ agentName: string; estimatedCost: number; actualCost: number }>;
+  consumptionByProject: Array<{ projectId: string; estimatedCost: number; actualCost: number }>;
+  platformCreatorUnlimited: boolean;
+}
+
 export interface AiGovernanceRepository {
+  upsertProviderStatus(provider: AiProviderStatusRecord): Promise<AiProviderStatusRecord>;
+  findProviderStatusByProvider(provider: AiProviderName, organizationId: string): Promise<AiProviderStatusRecord | null>;
+  listProviderStatuses(organizationId: string): Promise<AiProviderStatusRecord[]>;
   createUsageRecord(record: AiUsageRecord): Promise<AiUsageRecord>;
   listUsageRecords(organizationId: string): Promise<AiUsageRecord[]>;
   createBudget(budget: AiBudget): Promise<AiBudget>;
