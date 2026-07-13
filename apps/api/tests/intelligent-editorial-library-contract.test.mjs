@@ -179,7 +179,7 @@ test("Library Agent Quality Agent rights and audit actions are represented throu
   }
 
   assert.match(service, /completeLifecycleManagedByLibrary: true/);
-  assert.match(service, /noSeparateArchiveModule: true/);
+  assert.match(service, /singleLibraryLifecycle: true/);
 });
 
 test("runtime persistence and backup include intelligent editorial library data", () => {
