@@ -6,7 +6,15 @@ export type TranslationMemoryApprovalStatus =
 
 export type TranslationMemoryOrigin = "HUMAN" | "AI" | "IMPORT";
 
-export type TranslationMemoryAuditAction = "CREATE" | "UPDATE" | "APPROVE";
+export type TranslationMemoryAuditAction =
+  | "CREATE"
+  | "UPDATE"
+  | "APPROVE"
+  | "TRANSLATION_MEMORY_ENTRY_ADDED"
+  | "TRANSLATION_MEMORY_REUSED"
+  | "CONFIDENCE_RECALCULATED";
+
+export type TranslationMemoryMatchType = "CONTEXT" | "EXACT" | "FUZZY";
 
 export interface TranslationMemoryActor {
   userId: string;
@@ -21,9 +29,16 @@ export interface TranslationMemoryEntry {
   sourceSegmentId?: string;
   sourceText: string;
   targetText: string;
+  sourceSegment?: string;
+  translatedSegment?: string;
   sourceLanguage: string;
   targetLanguage: string;
   domain?: string;
+  context?: string;
+  author?: string;
+  reviewer?: string;
+  approvalDate?: string;
+  version?: number;
   confidenceScore: number;
   approvalStatus: TranslationMemoryApprovalStatus;
   origin: TranslationMemoryOrigin;
@@ -55,6 +70,11 @@ export interface CreateTranslationMemoryEntryInput {
   sourceLanguage: string;
   targetLanguage: string;
   domain?: string;
+  context?: string;
+  author?: string;
+  reviewer?: string;
+  approvalDate?: string;
+  version?: number;
   confidenceScore?: number;
   approvalStatus?: TranslationMemoryApprovalStatus;
   origin?: TranslationMemoryOrigin;
@@ -74,6 +94,7 @@ export interface SearchTranslationMemoryInput {
   sourceLanguage: string;
   targetLanguage: string;
   domain?: string;
+  context?: string;
   limit?: number;
   similarityThreshold?: number;
 }
@@ -88,7 +109,25 @@ export interface ListTranslationMemoryInput {
 export interface TranslationMemoryMatch {
   entry: TranslationMemoryEntry;
   similarityScore: number;
+  matchType: TranslationMemoryMatchType;
   authoritative: boolean;
+  automaticReplacement: false;
+  proposalOnly: true;
+}
+
+export interface TranslationMemoryProposal {
+  id: string;
+  sourceText: string;
+  proposedTargetText: string;
+  confidenceScore: number;
+  consultedSources: string[];
+  glossaryUsed?: string;
+  translationMemoryMatch: TranslationMemoryMatch;
+  terminologyStatus: "NOT_CHECKED" | "REQUIRES_REVIEW" | "VALIDATED";
+  semanticValidation: "NOT_CHECKED" | "SUPPORTING_EVIDENCE";
+  explanation: string;
+  automaticReplacement: false;
+  humanFinalAuthority: true;
 }
 
 export interface TranslationMemoryRepository {
