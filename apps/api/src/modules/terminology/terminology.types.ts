@@ -26,12 +26,29 @@ export type TerminologySource =
 export type TerminologyAuditAction =
   | "CREATE"
   | "UPDATE"
+  | "GLOSSARY_CREATED"
+  | "GLOSSARY_UPDATED"
+  | "GLOSSARY_CONFLICT"
+  | "SOURCE_PRIORITY_CHANGED"
+  | "CONFIDENCE_RECALCULATED"
   | "EVALUATE"
   | "MARK_UNDER_REVIEW"
   | "VALIDATE"
   | "REJECT"
   | "SUSPEND"
   | "ARCHIVE";
+
+export type GlossaryScope = "PERSONAL" | "PLATFORM" | "PROJECT";
+
+export type LinguisticSourcePriorityKind =
+  | "BILINGUAL_DICTIONARY"
+  | "CORPUS_EXAMPLES"
+  | "EXPLANATORY_DICTIONARY"
+  | "OFFICIAL_NORMATIVE_SOURCE"
+  | "PLATFORM_GLOSSARY"
+  | "PROJECT_GLOSSARY"
+  | "SPECIALIZED_GLOSSARY"
+  | "TRANSLATION_MEMORY";
 
 export interface TerminologyActor {
   userId: string;
@@ -64,6 +81,9 @@ export interface TerminologyTerm {
   organizationId: string;
   language: string;
   domain?: string;
+  projectId?: string;
+  ownerUserId?: string;
+  glossaryScope: GlossaryScope;
   source: TerminologySource;
   term: string;
   definition?: string;
@@ -106,14 +126,17 @@ export interface TerminologyAuditEvent {
   termId: string;
   action: TerminologyAuditAction;
   actorId: string;
-  beforeState?: TerminologyTerm;
-  afterState?: TerminologyTerm;
+  beforeState?: object;
+  afterState?: object;
   createdAt: string;
 }
 
 export interface CreateTerminologyTermInput {
   language: string;
   domain?: string;
+  projectId?: string;
+  ownerUserId?: string;
+  glossaryScope?: GlossaryScope;
   source?: TerminologySource;
   term: string;
   definition?: string;
@@ -131,6 +154,9 @@ export interface CreateTerminologyTermInput {
 
 export interface UpdateTerminologyTermInput {
   domain?: string;
+  projectId?: string;
+  ownerUserId?: string;
+  glossaryScope?: GlossaryScope;
   source?: TerminologySource;
   term?: string;
   definition?: string;
@@ -152,6 +178,8 @@ export interface RejectTerminologyTermInput {
 export interface SearchTerminologyInput {
   language: string;
   domain?: string;
+  projectId?: string;
+  ownerUserId?: string;
   status?: TerminologyTermStatus;
   query?: string;
   limit?: number;
@@ -162,6 +190,8 @@ export interface CheckSegmentTerminologyInput {
   targetLanguage?: string;
   language: string;
   domain?: string;
+  projectId?: string;
+  ownerUserId?: string;
   sourceText: string;
   targetText: string;
 }
@@ -205,10 +235,60 @@ export interface TerminologyViolation {
   priority: "TERMINOLOGY_GOVERNANCE" | "TERMINOLOGY_VALIDATED";
 }
 
+export interface GlossaryConflict {
+  term: string;
+  termIds: string[];
+  glossaryScopes: GlossaryScope[];
+  message: string;
+  humanReviewRequired: true;
+}
+
+export interface LinguisticSourcePriorityItem {
+  id: string;
+  sourceType: LinguisticSourcePriorityKind;
+  label: string;
+  order: number;
+  enabled: boolean;
+}
+
+export interface ProjectLinguisticSourcePriority {
+  id: string;
+  organizationId: string;
+  projectId: string;
+  items: LinguisticSourcePriorityItem[];
+  dragDropOrderingSupported: true;
+  updatedBy: string;
+  updatedAt: string;
+}
+
+export interface UpdateProjectSourcePriorityInput {
+  projectId: string;
+  items: LinguisticSourcePriorityItem[];
+}
+
+export interface LinguisticProposalExplanation {
+  confidenceScore: number;
+  consultedSources: string[];
+  glossaryUsed?: GlossaryScope;
+  translationMemoryMatch?: {
+    entryId: string;
+    matchType: string;
+    similarityScore: number;
+  };
+  terminologyStatus: "CONFLICT_REVIEW_REQUIRED" | "NO_MATCH" | "VALIDATED";
+  semanticValidation: "NOT_RUN" | "SUPPORTING_EVIDENCE";
+  explanation: string;
+  humanFinalAuthority: true;
+}
+
 export interface TerminologyCheckResult {
   valid: boolean;
   violations: TerminologyViolation[];
   dictionaryEvidence?: TerminologyDictionaryEvidence[];
+  glossaryConflicts?: GlossaryConflict[];
+  glossaryPriority?: GlossaryScope[];
+  sourcePriority?: LinguisticSourcePriorityItem[];
+  proposalExplanation?: LinguisticProposalExplanation;
 }
 
 export interface TerminologyRepository {
@@ -217,7 +297,9 @@ export interface TerminologyRepository {
   findTermById(id: string, organizationId: string): Promise<TerminologyTerm | null>;
   searchTerms(input: SearchTerminologyInput & { organizationId: string }): Promise<TerminologyTerm[]>;
   listTermsRequiringReview(organizationId: string): Promise<TerminologyTerm[]>;
-  listValidatedTerms(input: { organizationId: string; language: string; domain?: string }): Promise<TerminologyTerm[]>;
-  listTermsForGovernanceCheck(input: { organizationId: string; language: string; domain?: string }): Promise<TerminologyTerm[]>;
+  listValidatedTerms(input: { organizationId: string; language: string; domain?: string; projectId?: string; ownerUserId?: string }): Promise<TerminologyTerm[]>;
+  listTermsForGovernanceCheck(input: { organizationId: string; language: string; domain?: string; projectId?: string; ownerUserId?: string }): Promise<TerminologyTerm[]>;
+  getSourcePriority(projectId: string, organizationId: string): Promise<ProjectLinguisticSourcePriority | null>;
+  upsertSourcePriority(priority: ProjectLinguisticSourcePriority): Promise<ProjectLinguisticSourcePriority>;
   appendAuditEvent(event: TerminologyAuditEvent): Promise<void>;
 }
