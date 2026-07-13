@@ -99,6 +99,8 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "policy_exception_requests",
     "policy_audit_events",
     "compliance_records",
+    "admin_organizations",
+    "admin_teams",
     "admin_users",
     "admin_roles",
     "admin_permissions",
@@ -415,6 +417,12 @@ function sampleSnapshot() {
     { id: "policy-audit-b", organizationId: "org-a", action: "POLICY_EVALUATED", actorId: "user-a", evaluationId: "policy-evaluation-a", afterState: { id: "policy-evaluation-a" }, createdAt: "2026-01-01T00:00:07.122Z" },
     { id: "policy-audit-c", organizationId: "org-a", action: "COMPLIANCE_RECORD_CREATED", actorId: "user-a", evaluationId: "policy-evaluation-a", complianceRecordId: "compliance-record-a", afterState: { id: "compliance-record-a" }, createdAt: "2026-01-01T00:00:07.123Z" },
     { id: "policy-audit-d", organizationId: "org-a", action: "POLICY_EXCEPTION_APPROVED", actorId: "user-a", exceptionRequestId: "policy-exception-a", afterState: { id: "policy-exception-a" }, createdAt: "2026-01-01T00:00:07.141Z" }
+  );
+  snapshot.admin_organizations.push(
+    { id: "admin-organization-a", organizationId: "org-a", organizationName: "Closed Beta Organization", organizationType: "PERSOANA_FIZICA", workspaces: [], environments: [], projects: [], teams: ["Echipa Revizie"], departments: [], projectIds: [], teamIds: ["team-editorial"], departmentIds: [], status: "ACTIVE", active: true, suspended: false, archived: false, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.140Z", updatedAt: "2026-01-01T00:00:07.140Z", profile: { timezone: "Europe/Madrid", currency: "EUR" }, metadata: { platformCreatorRoleSeparateFromAdministrator: true } }
+  );
+  snapshot.admin_teams.push(
+    { id: "team-editorial", organizationId: "org-a", name: "Echipa Revizie", description: "Default editorial review team.", projectIds: ["project-a"], taskIds: [], documentIds: ["document-a"], workflowResponsibilities: ["review"], status: "ACTIVE", defaultTeam: true, createdBy: "user-a", createdAt: "2026-01-01T00:00:07.141Z", updatedAt: "2026-01-01T00:00:07.141Z", metadata: { createdByDefaultOrganizationSetup: true } }
   );
   snapshot.admin_users.push(
     { id: "admin-user-a", organizationId: "org-a", email: "closed.beta.user@example.test", displayName: "Closed Beta User", status: "ACTIVE", mfaMetadata: { configured: false, provider: "NOT_CONFIGURED" }, lastLoginMetadata: { lastLoginAt: "2026-01-01T00:00:07.145Z" }, organizationMembershipIds: ["admin-membership-a"], teamMembershipIds: ["team-editorial"], createdBy: "user-a", createdAt: "2026-01-01T00:00:07.142Z", updatedAt: "2026-01-01T00:00:07.146Z", metadata: { authBehaviorPreserved: true } }
