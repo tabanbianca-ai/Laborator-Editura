@@ -1,4 +1,8 @@
 import { type AuthenticatedRequestContext } from "../auth/request-context.types";
+import {
+  type ParallelReviewLanguageColumn,
+  type UnifiedLanguageManagementModel
+} from "@laborator/shared";
 
 export type WorkspaceActor = AuthenticatedRequestContext;
 
@@ -41,9 +45,13 @@ export type WorkspaceAuditAction =
   | "FEATURE_BLOCKED"
   | "INVITATION_ACCEPTED"
   | "INVITATION_SENT"
+  | "AUTHORING_LANGUAGE_CHANGED"
+  | "LANGUAGE_RESOURCES_UPDATED"
   | "NEED_TO_KNOW_ACCESS_CHANGED"
   | "NEED_TO_KNOW_ACCESS_GRANTED"
   | "NEED_TO_KNOW_ACCESS_REVOKED"
+  | "ORIGINAL_LANGUAGE_CHANGED"
+  | "PLATFORM_LANGUAGE_CHANGED"
   | "QUOTA_EXCEEDED"
   | "ROLE_ASSIGNED"
   | "ROLE_CHANGED"
@@ -53,6 +61,8 @@ export type WorkspaceAuditAction =
   | "SUBSCRIPTION_CHANGED"
   | "SUBSCRIPTION_DOWNGRADE"
   | "SUBSCRIPTION_UPGRADE"
+  | "TARGET_LANGUAGE_ADDED"
+  | "TARGET_LANGUAGE_REMOVED"
   | "TEMPORARY_ACCESS_EXPIRED"
   | "WORKSPACE_LAYOUT_CREATED"
   | "WORKSPACE_NAVIGATION_GENERATED"
@@ -435,11 +445,63 @@ export interface WorkspacePreferences {
   metadata?: object;
 }
 
+export interface WorkspaceLanguageManagement {
+  model: UnifiedLanguageManagementModel;
+  administration: {
+    installedLanguages: string[];
+    enabledLanguages: string[];
+    defaultPlatformLanguage: string;
+    fallbackLanguage: string;
+    translationCompleteness: Record<string, number>;
+    linguisticResources: string[];
+    dictionaries: string[];
+    glossaries: string[];
+  };
+  aiAgents: {
+    conversationLanguage: string;
+    explanationsLanguage: string;
+    translationDirection: string[];
+    platformLanguageControlsUserCommunication: true;
+    aiMayChangeLanguageConfiguration: false;
+  };
+  parallelReview: {
+    defaultColumns: ParallelReviewLanguageColumn[];
+    supportsThreeColumns: true;
+    supportsFourColumns: true;
+    eachColumnSelectsLanguageAndVersion: true;
+  };
+  auditActions: Array<
+    | "PLATFORM_LANGUAGE_CHANGED"
+    | "ORIGINAL_LANGUAGE_CHANGED"
+    | "AUTHORING_LANGUAGE_CHANGED"
+    | "TARGET_LANGUAGE_ADDED"
+    | "TARGET_LANGUAGE_REMOVED"
+    | "LANGUAGE_RESOURCES_UPDATED"
+  >;
+}
+
+export interface SaveWorkspaceLanguageManagementInput {
+  platformLanguage?: string;
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguages?: Array<{
+    language: string;
+    locale?: string;
+    enabled?: boolean;
+  }>;
+  fallbackLanguage?: string;
+  authorizedOriginalLanguageChange?: boolean;
+  resourcesUpdated?: boolean;
+}
+
 export interface WorkspaceDashboard {
   layout: WorkspaceLayout;
   navigation: WorkspaceNavigationItem[];
   widgets: WorkspaceWidget[];
   preferences: WorkspacePreferences;
+  languageManagement?: WorkspaceLanguageManagement;
   needToKnow: {
     defaultAccess: "ASSIGNED_SCOPE_ONLY";
     hiddenDataLoadedThroughApi: false;
