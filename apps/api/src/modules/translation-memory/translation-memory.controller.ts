@@ -39,6 +39,26 @@ export class TranslationMemoryController {
     return this.translationMemoryService.searchMatches(actor, input);
   }
 
+  @Get("proposals")
+  buildProposals(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Query() query: Record<string, string | undefined>
+  ) {
+    const input: SearchTranslationMemoryInput = {
+      sourceText: query.sourceText ?? "",
+      sourceLanguage: query.sourceLanguage ?? "",
+      targetLanguage: query.targetLanguage ?? "",
+      domain: query.domain,
+      context: query.context,
+      limit: query.limit ? Number(query.limit) : undefined,
+      similarityThreshold: query.similarityThreshold
+        ? Number(query.similarityThreshold)
+        : undefined
+    };
+
+    return this.translationMemoryService.buildProposals(actor, input);
+  }
+
   @Post(":id/approve")
   approveEntry(
     @CurrentActor() actor: AuthenticatedRequestContext,
