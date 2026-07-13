@@ -133,6 +133,11 @@ const users = [
 
 const roleAccess = [
   {
+    role: "Creatorul platformei",
+    access: "Acces nelimitat, separat de Administrator",
+    tone: "success" as const
+  },
+  {
     role: "Administrator",
     access: "Vede toate secțiunile",
     tone: "success" as const
@@ -148,6 +153,44 @@ const roleAccess = [
     tone: "neutral" as const
   }
 ];
+
+const organizationManagement = {
+  defaultType: "Persoană fizică",
+  organizationTypes: [
+    "Persoană fizică",
+    "Editură",
+    "Asociație / ONG",
+    "Companie",
+    "Instituție"
+  ],
+  defaultTeams: [
+    "Echipa Traducere",
+    "Echipa Revizie",
+    "Echipa Machetare",
+    "Echipa Ilustrații",
+    "Echipa Multimedia",
+    "Echipa Publicare",
+    "Echipa Marketing",
+    "Echipa Publicitate"
+  ],
+  teamScopes: ["Proiecte", "Task-uri", "Documente", "Responsabilități workflow"],
+  creatorProtections: [
+    "Nu poate fi eliminat",
+    "Nu poate fi retrogradat",
+    "Nu poate fi modificat de alți administratori",
+    "Nu este disponibil pentru utilizatori obișnuiți",
+    "Independent de abonament"
+  ],
+  auditActions: [
+    "ADMIN_ORGANIZATION_CREATED",
+    "ADMIN_ORGANIZATION_MODIFIED",
+    "ADMIN_TEAM_CREATED",
+    "ADMIN_TEAM_MODIFIED",
+    "ADMIN_MEMBER_ADDED",
+    "ADMIN_MEMBER_REMOVED",
+    "ADMIN_PLATFORM_CREATOR_ACCESS"
+  ]
+};
 
 const auditLogs = [
   {
@@ -200,6 +243,60 @@ const effectiveAccessRules = [
   "Subscription entitlements",
   "Need-to-Know scope"
 ];
+
+const centralLanguageManagement = {
+  platformLanguage: "Romanian (ro-RO)",
+  originalLanguage: "French (fr-FR)",
+  authoringLanguage: "Romanian (ro-RO)",
+  targetLanguages: ["English (en-US)", "Spanish (es-ES)", "Portuguese (pt-PT)", "Italian (it-IT)"],
+  fallbackLanguage: "English (en-US)",
+  translationCompleteness: ["Romanian 100%", "English 100%"],
+  resources: [
+    "Dictionaries by Source Language -> Target Language",
+    "Glossaries by Source Language -> Target Language",
+    "Terminology by Source Language -> Target Language",
+    "Phraseology by Source Language -> Target Language"
+  ],
+  auditActions: [
+    "PLATFORM_LANGUAGE_CHANGED",
+    "ORIGINAL_LANGUAGE_CHANGED",
+    "AUTHORING_LANGUAGE_CHANGED",
+    "TARGET_LANGUAGE_ADDED",
+    "TARGET_LANGUAGE_REMOVED",
+    "LANGUAGE_RESOURCES_UPDATED"
+  ]
+};
+
+const advancedLinguisticResources = {
+  sourcePriority: [
+    "Official normative source",
+    "Project glossary",
+    "Specialized glossary",
+    "Translation Memory",
+    "Bilingual dictionary",
+    "Explanatory dictionary",
+    "Corpus/examples"
+  ],
+  glossaryHierarchy: ["Project Glossary", "Platform Glossary", "Personal Glossary suggestions"],
+  proposalSignals: [
+    "Confidence score",
+    "Consulted sources",
+    "Glossary used",
+    "Translation Memory match",
+    "Terminology status",
+    "Semantic validation",
+    "Explanation"
+  ],
+  auditActions: [
+    "GLOSSARY_CREATED",
+    "GLOSSARY_UPDATED",
+    "GLOSSARY_CONFLICT",
+    "TRANSLATION_MEMORY_ENTRY_ADDED",
+    "TRANSLATION_MEMORY_REUSED",
+    "SOURCE_PRIORITY_CHANGED",
+    "CONFIDENCE_RECALCULATED"
+  ]
+};
 
 function getAdminViewState(): AdminViewState {
   return "ready";
@@ -370,6 +467,176 @@ export function AdministrationPage() {
               <div className="page-header-actions admin-subscription-actions">
                 <Button disabled variant="secondary">Upgrade plan</Button>
                 <Button disabled variant="ghost">Downgrade plan</Button>
+              </div>
+            </div>
+          </section>
+
+          <section className="content-panel" aria-label="Organization Management">
+            <div className="section-heading">
+              <div>
+                <p className="section-kicker">Organization Management</p>
+                <h2>Organizație, echipe și Creatorul platformei</h2>
+              </div>
+              <Badge tone="success">Audit enabled</Badge>
+            </div>
+            <div className="admin-language-grid">
+              <div className="stack-list">
+                <strong>Tip organizație</strong>
+                <div className="signal-row">
+                  <span>Implicit</span>
+                  <Badge tone="info">{organizationManagement.defaultType}</Badge>
+                </div>
+                <div className="admin-config-items" aria-label="Organization types">
+                  {organizationManagement.organizationTypes.map((type) => (
+                    <span key={type}>{type}</span>
+                  ))}
+                </div>
+                <strong>Scop echipe</strong>
+                <div className="admin-config-items" aria-label="Team assignment scopes">
+                  {organizationManagement.teamScopes.map((scope) => (
+                    <span key={scope}>{scope}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="stack-list">
+                <strong>Dosare de echipă implicite</strong>
+                <div className="admin-config-items" aria-label="Default organization teams">
+                  {organizationManagement.defaultTeams.map((team) => (
+                    <span key={team}>{team}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="stack-list">
+                <strong>Creatorul platformei</strong>
+                {organizationManagement.creatorProtections.map((rule) => (
+                  <div className="signal-row" key={rule}>
+                    <span>{rule}</span>
+                    <Badge tone="success">Protected</Badge>
+                  </div>
+                ))}
+                <strong>Audit</strong>
+                <div className="admin-config-items" aria-label="Organization audit actions">
+                  {organizationManagement.auditActions.map((action) => (
+                    <span key={action}>{action}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="blocking-warning" role="status">
+              Creatorul platformei este rol de sistem unic pentru proprietarul
+              platformei. Este complet separat de Administrator și nu poate fi
+              atribuit utilizatorilor obișnuiți.
+            </div>
+          </section>
+
+          <section className="content-panel" aria-label="Central Language Management">
+            <div className="section-heading">
+              <div>
+                <p className="section-kicker">Central Language Management</p>
+                <h2>Un singur model pentru toate limbile platformei</h2>
+              </div>
+              <Badge tone="success">No duplicate settings</Badge>
+            </div>
+            <div className="admin-language-grid">
+              <div className="stack-list">
+                <div className="signal-row">
+                  <span>Platform Language</span>
+                  <Badge tone="info">{centralLanguageManagement.platformLanguage}</Badge>
+                </div>
+                <div className="signal-row">
+                  <span>Original Language</span>
+                  <Badge tone="warning">{centralLanguageManagement.originalLanguage}</Badge>
+                </div>
+                <div className="signal-row">
+                  <span>Authoring Language</span>
+                  <Badge tone="success">{centralLanguageManagement.authoringLanguage}</Badge>
+                </div>
+                <div className="signal-row">
+                  <span>Language fallback</span>
+                  <Badge tone="neutral">{centralLanguageManagement.fallbackLanguage}</Badge>
+                </div>
+              </div>
+              <div className="stack-list">
+                <strong>Target Languages</strong>
+                <div className="admin-config-items" aria-label="Target Languages">
+                  {centralLanguageManagement.targetLanguages.map((language) => (
+                    <span key={language}>{language}</span>
+                  ))}
+                </div>
+                <strong>Automatic linguistic resources</strong>
+                <div className="admin-config-items" aria-label="Source Language to Target Language resources">
+                  {centralLanguageManagement.resources.map((resource) => (
+                    <span key={resource}>{resource}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="stack-list">
+                <strong>Translation completeness</strong>
+                {centralLanguageManagement.translationCompleteness.map((item) => (
+                  <div className="signal-row" key={item}>
+                    <span>{item}</span>
+                    <Badge tone="success">Complete</Badge>
+                  </div>
+                ))}
+                <strong>Audit</strong>
+                <div className="admin-config-items" aria-label="Language audit actions">
+                  {centralLanguageManagement.auditActions.map((action) => (
+                    <span key={action}>{action}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="blocking-warning" role="status">
+              Changing Platform Language updates menus, administration, dashboard,
+              workflow names, AI conversations and workspace labels only. It does
+              not change Original Language, Authoring Language or Target Language.
+            </div>
+          </section>
+
+          <section className="content-panel" aria-label="Advanced Linguistic Resources and Translation Memory">
+            <div className="section-heading">
+              <div>
+                <p className="section-kicker">Resurse lingvistice avansate</p>
+                <h2>Prioritate surse, glosare și Translation Memory</h2>
+              </div>
+              <Badge tone="success">Integrated</Badge>
+            </div>
+            <div className="admin-language-grid">
+              <div className="stack-list">
+                <strong>Source priority</strong>
+                {advancedLinguisticResources.sourcePriority.map((source, index) => (
+                  <div className="signal-row" key={source}>
+                    <span>{index + 1}. {source}</span>
+                    <Badge tone="info">Drag/drop order</Badge>
+                  </div>
+                ))}
+              </div>
+              <div className="stack-list">
+                <strong>Glossary hierarchy</strong>
+                <div className="admin-config-items" aria-label="Glossary hierarchy">
+                  {advancedLinguisticResources.glossaryHierarchy.map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+                <strong>Proposal transparency</strong>
+                <div className="admin-config-items" aria-label="Linguistic proposal transparency">
+                  {advancedLinguisticResources.proposalSignals.map((signal) => (
+                    <span key={signal}>{signal}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="stack-list">
+                <strong>Audit events</strong>
+                <div className="admin-config-items" aria-label="Advanced linguistic audit actions">
+                  {advancedLinguisticResources.auditActions.map((action) => (
+                    <span key={action}>{action}</span>
+                  ))}
+                </div>
+                <div className="blocking-warning" role="status">
+                  Translation Memory never replaces text automatically. It proposes
+                  only validated entries, and conflicting glossary evidence requires
+                  human review.
+                </div>
               </div>
             </div>
           </section>
