@@ -6,12 +6,50 @@ import {
   type AssignAdminRoleInput,
   type CreateAdminInvitationInput,
   type CreateAdminRoleInput,
-  type CreateAdminUserInput
+  type CreateAdminTeamInput,
+  type CreateAdminUserInput,
+  type UpdateAdminOrganizationInput,
+  type UpdateAdminTeamInput
 } from "./enterprise-admin.types";
 
 @Controller("admin")
 export class EnterpriseAdminController {
   constructor(private readonly enterpriseAdminService: EnterpriseAdminService) {}
+
+  @Get("organization")
+  getOrganizationProfile(@CurrentActor() actor: AuthenticatedRequestContext) {
+    return this.enterpriseAdminService.getOrganizationProfile(actor);
+  }
+
+  @Post("organization")
+  updateOrganizationProfile(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: UpdateAdminOrganizationInput
+  ) {
+    return this.enterpriseAdminService.updateOrganizationProfile(actor, input);
+  }
+
+  @Get("teams")
+  listTeams(@CurrentActor() actor: AuthenticatedRequestContext) {
+    return this.enterpriseAdminService.listTeams(actor);
+  }
+
+  @Post("teams")
+  createTeam(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: CreateAdminTeamInput
+  ) {
+    return this.enterpriseAdminService.createTeam(actor, input);
+  }
+
+  @Post("teams/:id")
+  updateTeam(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string,
+    @Body() input: UpdateAdminTeamInput
+  ) {
+    return this.enterpriseAdminService.updateTeam(actor, id, input);
+  }
 
   @Get("users")
   listUsers(@CurrentActor() actor: AuthenticatedRequestContext) {
@@ -51,6 +89,14 @@ export class EnterpriseAdminController {
     @Body() input: AssignAdminRoleInput
   ) {
     return this.enterpriseAdminService.assignRole(actor, id, input);
+  }
+
+  @Post("memberships/:id/remove")
+  removeMember(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string
+  ) {
+    return this.enterpriseAdminService.removeMember(actor, id);
   }
 
   @Post("invitations")
