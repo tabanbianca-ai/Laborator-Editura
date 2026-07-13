@@ -29,7 +29,7 @@ test("Administration surfaces plans usage quotas and downgrade-safe actions with
   const page = readSource("components/pages/administration-page.tsx");
   const css = readSource("app/globals.css");
 
-  for (const plan of ["FREE", "PREMIUM", "BUSINESS", "ENTERPRISE_RESERVED"]) {
+  for (const plan of ["FREE", "BASIC", "PREMIUM", "BUSINESS"]) {
     assert.match(page, new RegExp(plan));
   }
 
