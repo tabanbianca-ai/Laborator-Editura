@@ -88,6 +88,7 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "disaster_recovery_plans",
     "preservation_records",
     "backup_audit_events",
+    "ai_provider_statuses",
     "ai_usage_records",
     "ai_budgets",
     "ai_quotas",
