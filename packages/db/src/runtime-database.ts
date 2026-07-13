@@ -47,6 +47,8 @@ const TABLE_NAMES = [
   "policy_exception_requests",
   "policy_audit_events",
   "compliance_records",
+  "admin_organizations",
+  "admin_teams",
   "admin_users",
   "admin_roles",
   "admin_permissions",
@@ -86,6 +88,7 @@ const TABLE_NAMES = [
   "foundation_audit_events",
   "translation_memory_entries",
   "translation_memory_audit_events",
+  "linguistic_source_priorities",
   "terminology_terms",
   "terminology_audit_events",
   "qa_reports",
@@ -223,6 +226,8 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "policy_exception_requests",
   "policy_audit_events",
   "compliance_records",
+  "admin_organizations",
+  "admin_teams",
   "admin_users",
   "admin_roles",
   "admin_permissions",
@@ -260,6 +265,7 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "foundation_audit_events",
   "translation_memory_entries",
   "translation_memory_audit_events",
+  "linguistic_source_priorities",
   "terminology_terms",
   "terminology_audit_events",
   "qa_reports",
@@ -663,7 +669,11 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
   validateReferenceTenant(data, issues, "policy_audit_events", "complianceRecordId", "compliance_records");
   validateReferenceTenant(data, issues, "admin_memberships", "userId", "admin_users");
   validateReferenceTenant(data, issues, "admin_memberships", "roleId", "admin_roles");
+  validateReferenceTenant(data, issues, "admin_memberships", "teamId", "admin_teams");
   validateReferenceTenant(data, issues, "admin_invitations", "roleId", "admin_roles");
+  validateReferenceTenant(data, issues, "admin_invitations", "teamId", "admin_teams");
+  validateReferenceTenant(data, issues, "admin_audit_events", "organizationMetadataId", "admin_organizations");
+  validateReferenceTenant(data, issues, "admin_audit_events", "teamId", "admin_teams");
   validateReferenceTenant(data, issues, "admin_audit_events", "userId", "admin_users");
   validateReferenceTenant(data, issues, "admin_audit_events", "roleId", "admin_roles");
   validateReferenceTenant(data, issues, "admin_audit_events", "permissionId", "admin_permissions");
