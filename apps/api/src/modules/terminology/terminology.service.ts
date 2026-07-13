@@ -11,6 +11,11 @@ import { InMemoryTerminologyRepository } from "./terminology.repository";
 import {
   type CheckSegmentTerminologyInput,
   type CreateTerminologyTermInput,
+  type GlossaryConflict,
+  type GlossaryScope,
+  type LinguisticProposalExplanation,
+  type LinguisticSourcePriorityItem,
+  type ProjectLinguisticSourcePriority,
   type RejectTerminologyTermInput,
   type SearchTerminologyInput,
   type TerminologyActor,
@@ -19,6 +24,7 @@ import {
   type TerminologyDictionaryEvidence,
   type TerminologyTerm,
   type TerminologyViolation,
+  type UpdateProjectSourcePriorityInput,
   type UpdateTerminologyTermInput
 } from "./terminology.types";
 import {
@@ -27,7 +33,17 @@ import {
 } from "./terminology-governance.utils";
 import { includesNormalized, uniqueStrings } from "./terminology.utils";
 
-const HUMAN_TERMINOLOGY_GOVERNANCE_ROLES = new Set(["ADMIN", "REVIEWER"]);
+const HUMAN_TERMINOLOGY_GOVERNANCE_ROLES = new Set(["PLATFORM_CREATOR", "ADMIN", "REVIEWER"]);
+const GLOSSARY_PRIORITY: GlossaryScope[] = ["PROJECT", "PLATFORM", "PERSONAL"];
+const DEFAULT_SOURCE_PRIORITY: LinguisticSourcePriorityItem[] = [
+  { id: "official-normative-source", sourceType: "OFFICIAL_NORMATIVE_SOURCE", label: "Official normative source", order: 1, enabled: true },
+  { id: "project-glossary", sourceType: "PROJECT_GLOSSARY", label: "Project glossary", order: 2, enabled: true },
+  { id: "specialized-glossary", sourceType: "SPECIALIZED_GLOSSARY", label: "Specialized glossary", order: 3, enabled: true },
+  { id: "translation-memory", sourceType: "TRANSLATION_MEMORY", label: "Translation Memory", order: 4, enabled: true },
+  { id: "bilingual-dictionary", sourceType: "BILINGUAL_DICTIONARY", label: "Bilingual dictionary", order: 5, enabled: true },
+  { id: "explanatory-dictionary", sourceType: "EXPLANATORY_DICTIONARY", label: "Explanatory dictionary", order: 6, enabled: true },
+  { id: "corpus-examples", sourceType: "CORPUS_EXAMPLES", label: "Corpus/examples", order: 7, enabled: true }
+];
 
 @Injectable()
 export class TerminologyService {
@@ -62,6 +78,9 @@ export class TerminologyService {
       organizationId: actor.organizationId,
       language: input.language,
       domain: input.domain,
+      projectId: input.projectId,
+      ownerUserId: input.ownerUserId,
+      glossaryScope: input.glossaryScope ?? "PLATFORM",
       source: input.source ?? "GLOSSARY",
       term: input.term,
       definition: input.definition,
@@ -92,6 +111,7 @@ export class TerminologyService {
 
     const created = await this.repository.createTerm(term);
     await this.audit("CREATE", actor, created.id, undefined, created);
+    await this.audit("GLOSSARY_CREATED", actor, created.id, undefined, created);
 
     return created;
   }
@@ -107,6 +127,9 @@ export class TerminologyService {
     const updated: TerminologyTerm = {
       ...existing,
       domain: input.domain ?? existing.domain,
+      projectId: input.projectId ?? existing.projectId,
+      ownerUserId: input.ownerUserId ?? existing.ownerUserId,
+      glossaryScope: input.glossaryScope ?? existing.glossaryScope,
       source: input.source ?? existing.source,
       term: input.term ?? existing.term,
       definition: input.definition ?? existing.definition,
@@ -141,6 +164,7 @@ export class TerminologyService {
 
     const saved = await this.repository.updateTerm(evaluated);
     await this.audit("UPDATE", actor, saved.id, existing, saved);
+    await this.audit("GLOSSARY_UPDATED", actor, saved.id, existing, saved);
 
     return saved;
   }
@@ -284,6 +308,74 @@ export class TerminologyService {
     });
   }
 
+  async getProjectSourcePriority(
+    actor: TerminologyActor,
+    projectId: string
+  ): Promise<ProjectLinguisticSourcePriority> {
+    this.validateActor(actor);
+
+    if (!projectId) {
+      throw new BadRequestException("projectId is required.");
+    }
+
+    const existing = await this.repository.getSourcePriority(projectId, actor.organizationId);
+
+    if (existing) {
+      return {
+        ...existing,
+        items: this.normalizeSourcePriorityItems(existing.items)
+      };
+    }
+
+    return {
+      id: `source-priority:${actor.organizationId}:${projectId}`,
+      organizationId: actor.organizationId,
+      projectId,
+      items: this.normalizeSourcePriorityItems(DEFAULT_SOURCE_PRIORITY),
+      dragDropOrderingSupported: true,
+      updatedBy: actor.userId,
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  async updateProjectSourcePriority(
+    actor: TerminologyActor,
+    input: UpdateProjectSourcePriorityInput
+  ): Promise<ProjectLinguisticSourcePriority> {
+    this.validateActor(actor);
+
+    if (!input.projectId || !Array.isArray(input.items) || input.items.length === 0) {
+      throw new BadRequestException("projectId and ordered source priority items are required.");
+    }
+
+    const beforeState = await this.repository.getSourcePriority(
+      input.projectId,
+      actor.organizationId
+    );
+    const saved = await this.repository.upsertSourcePriority({
+      id: beforeState?.id ?? `source-priority:${actor.organizationId}:${input.projectId}`,
+      organizationId: actor.organizationId,
+      projectId: input.projectId,
+      items: this.normalizeSourcePriorityItems(input.items),
+      dragDropOrderingSupported: true,
+      updatedBy: actor.userId,
+      updatedAt: new Date().toISOString()
+    });
+
+    await this.repository.appendAuditEvent({
+      id: randomUUID(),
+      organizationId: actor.organizationId,
+      termId: saved.id,
+      action: "SOURCE_PRIORITY_CHANGED",
+      actorId: actor.userId,
+      beforeState: beforeState ?? undefined,
+      afterState: saved,
+      createdAt: new Date().toISOString()
+    });
+
+    return saved;
+  }
+
   async listTermsRequiringReview(actor: TerminologyActor): Promise<TerminologyTerm[]> {
     this.validateActor(actor);
 
@@ -303,13 +395,23 @@ export class TerminologyService {
     const terms = await this.repository.listTermsForGovernanceCheck({
       organizationId: actor.organizationId,
       language: input.language,
-      domain: input.domain
+      domain: input.domain,
+      projectId: input.projectId,
+      ownerUserId: input.ownerUserId
     });
     const dictionaryEvidence = await this.collectDictionaryEvidence(actor, input, terms);
+    const glossaryConflicts = this.detectGlossaryConflicts(terms);
+    const sourcePriority = input.projectId
+      ? (await this.getProjectSourcePriority(actor, input.projectId)).items
+      : this.normalizeSourcePriorityItems(DEFAULT_SOURCE_PRIORITY);
 
     const violations: TerminologyViolation[] = [];
 
     for (const term of terms) {
+      if (term.glossaryScope === "PERSONAL" && term.status === "VALIDATED") {
+        continue;
+      }
+
       if (term.status === "REJECTED" || term.governanceDecisionStatus === "REJECTED") {
         const rejectedValues = [
           term.term,
@@ -400,10 +502,41 @@ export class TerminologyService {
       }
     }
 
+    for (const conflict of glossaryConflicts) {
+      await this.repository.appendAuditEvent({
+        id: randomUUID(),
+        organizationId: actor.organizationId,
+        termId: conflict.termIds[0] ?? "glossary-conflict",
+        action: "GLOSSARY_CONFLICT",
+        actorId: actor.userId,
+        afterState: conflict,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    const proposalExplanation = this.buildProposalExplanation(
+      terms,
+      dictionaryEvidence,
+      glossaryConflicts
+    );
+    await this.repository.appendAuditEvent({
+      id: randomUUID(),
+      organizationId: actor.organizationId,
+      termId: "linguistic-proposal-confidence",
+      action: "CONFIDENCE_RECALCULATED",
+      actorId: actor.userId,
+      afterState: proposalExplanation,
+      createdAt: new Date().toISOString()
+    });
+
     return {
-      valid: violations.length === 0,
+      valid: violations.length === 0 && glossaryConflicts.length === 0,
       violations,
-      dictionaryEvidence
+      dictionaryEvidence,
+      glossaryConflicts,
+      glossaryPriority: GLOSSARY_PRIORITY,
+      sourcePriority,
+      proposalExplanation
     };
   }
 
@@ -499,6 +632,104 @@ export class TerminologyService {
     };
   }
 
+  private detectGlossaryConflicts(terms: TerminologyTerm[]): GlossaryConflict[] {
+    const validatedTerms = terms.filter((term) => term.status === "VALIDATED");
+    const byTerm = new Map<string, TerminologyTerm[]>();
+
+    for (const term of validatedTerms) {
+      const key = term.term.trim().toLocaleLowerCase();
+      const existing = byTerm.get(key) ?? [];
+      existing.push(term);
+      byTerm.set(key, existing);
+    }
+
+    return [...byTerm.entries()].flatMap(([term, groupedTerms]) => {
+      const translations = new Set(
+        groupedTerms
+          .map((entry) => entry.approvedTranslation)
+          .filter((value): value is string => Boolean(value))
+          .map((value) => value.trim().toLocaleLowerCase())
+      );
+      const scopes = new Set(groupedTerms.map((entry) => entry.glossaryScope));
+
+      if (translations.size <= 1 || scopes.size <= 1) {
+        return [];
+      }
+
+      return [{
+        term,
+        termIds: groupedTerms.map((entry) => entry.id),
+        glossaryScopes: [...scopes],
+        message:
+          "Glossary conflict requires review because Project, Platform, or Personal glossary entries disagree.",
+        humanReviewRequired: true as const
+      }];
+    });
+  }
+
+  private buildProposalExplanation(
+    terms: TerminologyTerm[],
+    dictionaryEvidence: TerminologyDictionaryEvidence[],
+    conflicts: GlossaryConflict[]
+  ): LinguisticProposalExplanation {
+    const authoritativeTerm = terms.find((term) =>
+      term.status === "VALIDATED" && term.glossaryScope !== "PERSONAL"
+    );
+    const glossaryUsed = authoritativeTerm?.glossaryScope;
+    const confidenceScore = this.calculateLinguisticConfidence(
+      Boolean(authoritativeTerm),
+      dictionaryEvidence.length,
+      conflicts.length
+    );
+    const terminologyStatus = conflicts.length > 0
+      ? "CONFLICT_REVIEW_REQUIRED"
+      : authoritativeTerm
+        ? "VALIDATED"
+        : "NO_MATCH";
+
+    return {
+      confidenceScore,
+      consultedSources: [
+        ...(authoritativeTerm ? [`${authoritativeTerm.glossaryScope} glossary`] : []),
+        ...(dictionaryEvidence.length > 0 ? ["Lexicographic dictionary evidence"] : [])
+      ],
+      glossaryUsed,
+      terminologyStatus,
+      semanticValidation: "NOT_RUN",
+      explanation:
+        "Linguistic proposal confidence is calculated from glossary hierarchy, consulted dictionary evidence, terminology status, and conflict review requirements.",
+      humanFinalAuthority: true
+    };
+  }
+
+  private calculateLinguisticConfidence(
+    hasAuthoritativeGlossary: boolean,
+    dictionaryEvidenceCount: number,
+    conflictCount: number
+  ): number {
+    const base = hasAuthoritativeGlossary ? 0.82 : 0.45;
+    const evidenceBonus = Math.min(dictionaryEvidenceCount * 0.04, 0.12);
+    const conflictPenalty = Math.min(conflictCount * 0.25, 0.5);
+
+    return Math.max(0, Math.min(1, Math.round((base + evidenceBonus - conflictPenalty) * 10000) / 10000));
+  }
+
+  private normalizeSourcePriorityItems(
+    items: LinguisticSourcePriorityItem[]
+  ): LinguisticSourcePriorityItem[] {
+    return [...items]
+      .map((item, index) => ({
+        ...item,
+        order: Number.isFinite(item.order) ? item.order : index + 1,
+        enabled: item.enabled !== false
+      }))
+      .sort((left, right) => left.order - right.order)
+      .map((item, index) => ({
+        ...item,
+        order: index + 1
+      }));
+  }
+
   private async transitionTerm(
     actor: TerminologyActor,
     termId: string,
@@ -576,6 +807,9 @@ export class TerminologyService {
       organizationId: "validation-only",
       language: input.language,
       domain: input.domain,
+      projectId: input.projectId,
+      ownerUserId: input.ownerUserId,
+      glossaryScope: input.glossaryScope ?? "PLATFORM",
       source: input.source ?? "GLOSSARY",
       term: input.term,
       definition: input.definition,
