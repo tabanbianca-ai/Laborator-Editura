@@ -717,8 +717,8 @@ Implemented capabilities:
   - `GET /workspace/subscription`.
   - `POST /workspace/access/resolve`.
 - Official operational role model separated from subscription plans.
-- Subscription plan model for `FREE`, `PREMIUM`, `BUSINESS`, and disabled
-  `ENTERPRISE_RESERVED`.
+- Subscription plan model for `FREE`, `BASIC`, `PREMIUM`, `BUSINESS`, and
+  disabled `ENTERPRISE_RESERVED`.
 - Plan entitlement and quota metadata for projects, collaborators, storage, AI
   usage, translation volume, export formats, team administration, retention,
   publishing, distribution, API access, and priority processing.
@@ -902,6 +902,55 @@ Validation coverage:
 Report:
 
 - `docs/PHASE_7_STEP_14_4_ORGANIZATION_TEAMS_PLATFORM_CREATOR_REPORT.md`.
+
+## Phase 7 Step 14.5 - AI Providers & Cost Management
+
+Status: Implemented as an additive AI Governance and Administration
+refinement.
+
+Scope:
+
+- No new enterprise module.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+- Reuses AI Governance, AI Orchestrator, Administration, Subscription Plans,
+  Audit, Organization Management, and Workspace.
+
+Implemented capabilities:
+
+- OpenAI is modeled as the primary v1.0 AI provider.
+- Anthropic is modeled as the fallback v1.0 AI provider.
+- Provider status records persist in the runtime database and backup/restore
+  set.
+- Automatic fallback activates when the primary provider times out, is
+  unavailable, returns an API error, or is in configured outage.
+- Fallback recovery is auditable when the active provider returns to OpenAI.
+- Model selection defaults to automatic, with manual selection guarded by role
+  and subscription entitlement.
+- Subscription plan model includes `FREE`, `BASIC`, `PREMIUM`, `BUSINESS`, and
+  disabled `ENTERPRISE_RESERVED`.
+- AI cost summary tracks monthly budget, remaining budget, monthly
+  consumption, consumption by AI agent, and consumption by project.
+- Budget warnings are tracked at 80%, 90%, and 100%.
+- Reaching a limit blocks only the restricted AI action and never deletes data.
+- Platform Creator remains unrestricted for AI usage, testing, and monitoring.
+- Administration displays configured providers, active provider, fallback
+  status, budget, consumption, remaining budget, usage history, and audit
+  actions.
+
+Validation coverage:
+
+- Provider fallback and recovery.
+- Automatic/manual model selection metadata.
+- Budget limits and warning thresholds.
+- Subscription plan model.
+- Platform Creator unlimited access.
+- Audit event coverage.
+- Runtime backup/restore coverage.
+
+Report:
+
+- `docs/PHASE_7_STEP_14_5_AI_PROVIDERS_COST_MANAGEMENT_REPORT.md`.
 
 ## Documentation-Only Governance Requirements
 
