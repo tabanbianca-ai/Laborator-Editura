@@ -12,9 +12,12 @@ import {
 import type {
   LibraryItemRecord,
   LibraryItemType,
+  LibraryPublicationLifecycleStatus,
+  LibraryPublicationRecord,
+  LibraryPublicationVisibility,
   LibraryWorkspaceData
 } from "../../lib/library-workspace-client";
-import { Badge, Button, Card, EmptyState, ErrorState, Input, PageHeader } from "../ui";
+import { Badge, Button, Card, EmptyState, ErrorState, Input, PageHeader, Table } from "../ui";
 
 type BadgeTone = ComponentProps<typeof Badge>["tone"];
 
@@ -37,6 +40,7 @@ export function LibraryWorkspacePage({
 
       {error ? <ErrorState message={error} /> : null}
       {workspace.itemsError ? <ErrorState message={workspace.itemsError} /> : null}
+      {workspace.publicationsError ? <ErrorState message={workspace.publicationsError} /> : null}
       {status ? (
         <Card>
           <Badge tone="success">{status.replace(/_/g, " ")} saved privately</Badge>
@@ -44,6 +48,12 @@ export function LibraryWorkspacePage({
       ) : null}
 
       <LibraryDashboard items={workspace.items} />
+
+      <IntelligentEditorialLibrary
+        publications={workspace.publications}
+        selectedPublication={workspace.selectedPublication}
+        viewMode={workspace.viewPreference.viewMode}
+      />
 
       {workspace.items.length === 0 ? (
         <EmptyState title="No saved library items" />
@@ -116,6 +126,273 @@ function LibraryDashboard({ items }: { items: LibraryItemRecord[] }) {
         </div>
       </Card>
     </section>
+  );
+}
+
+function IntelligentEditorialLibrary({
+  publications,
+  selectedPublication,
+  viewMode
+}: {
+  publications: LibraryPublicationRecord[];
+  selectedPublication: LibraryPublicationRecord | null;
+  viewMode: "GRID" | "LIST";
+}) {
+  const stocReal = publications.filter((publication) => publication.lifecycleStatus === "STOC_REAL").length;
+  const inLucru = publications.filter((publication) => publication.lifecycleStatus === "IN_LUCRU").length;
+  const publicat = publications.filter((publication) => publication.lifecycleStatus === "PUBLICAT").length;
+
+  return (
+    <section className="content-panel" aria-label="Intelligent Editorial Library">
+      <div className="section-heading">
+        <div>
+          <p className="section-kicker">Intelligent Editorial Library</p>
+          <h2>Centru editorial unic pentru ciclul complet al publicațiilor</h2>
+        </div>
+        <Badge tone="success">Unified Library</Badge>
+      </div>
+
+      <div className="library-search-toolbar" aria-label="Library smart search and view preferences">
+        <Input label="Search title, author, ISBN, language, series or metadata" name="librarySearch" />
+        <div className="library-badge-row">
+          <Badge tone="info">Exact</Badge>
+          <Badge tone="info">Normalized</Badge>
+          <Badge tone="info">Fuzzy</Badge>
+          <Badge tone="info">Multilingual metadata</Badge>
+        </div>
+        <div className="page-header-actions">
+          <Button disabled variant={viewMode === "GRID" ? "primary" : "secondary"}>Grid view</Button>
+          <Button disabled variant={viewMode === "LIST" ? "primary" : "secondary"}>List view</Button>
+        </div>
+      </div>
+
+      <div className="admin-config-items" aria-label="Active Library filter chips">
+        {[
+          "Author",
+          "Language",
+          "Editorial domain",
+          "Publication type",
+          "Lifecycle status",
+          "Publication year",
+          "Original publication year",
+          "Rights status",
+          "Format",
+          "Series",
+          "Collection"
+        ].map((filter) => (
+          <span key={filter}>{filter}</span>
+        ))}
+      </div>
+
+      <details className="content-panel">
+        <summary>Advanced filters</summary>
+        <div className="admin-config-items" aria-label="Collapsible advanced Library filters">
+          <span>Rights and provenance</span>
+          <span>Available formats</span>
+          <span>Original edition</span>
+          <span>Visibility</span>
+          <span>Project relationship</span>
+          <span>Manuscript relationship</span>
+          <span>Duplicate candidates</span>
+        </div>
+      </details>
+
+      <section className="metric-grid" aria-label="Library lifecycle overview">
+        <Card>
+          <div className="metric-card">
+            <span>Stoc real</span>
+            <strong>{stocReal}</strong>
+            <Badge tone="neutral">Stored source</Badge>
+          </div>
+        </Card>
+        <Card>
+          <div className="metric-card">
+            <span>În lucru</span>
+            <strong>{inLucru}</strong>
+            <Badge tone="info">Editorial workflow</Badge>
+          </div>
+        </Card>
+        <Card>
+          <div className="metric-card">
+            <span>Publicat</span>
+            <strong>{publicat}</strong>
+            <Badge tone="success">Published</Badge>
+          </div>
+        </Card>
+        <Card>
+          <div className="metric-card">
+            <span>View preference</span>
+            <strong>{viewMode}</strong>
+            <Badge tone="info">Persistent</Badge>
+          </div>
+        </Card>
+      </section>
+
+      {publications.length === 0 ? (
+        <EmptyState title="No editorial publication records" />
+      ) : (
+        <section className="library-workspace-grid library-workspace-grid-wide" aria-label="Library grid and list views">
+          <PublicationGrid publications={publications} />
+          <PublicationList publications={publications} />
+        </section>
+      )}
+
+      <section className="library-workspace-grid" aria-label="Publication record preview and lifecycle actions">
+        <PublicationPreview publication={selectedPublication} />
+        <LibraryLifecycleActions publication={selectedPublication} />
+        <BulkActionsPanel />
+      </section>
+    </section>
+  );
+}
+
+function PublicationGrid({ publications }: { publications: LibraryPublicationRecord[] }) {
+  return (
+    <Card className="library-panel-card" title="Grid view">
+      <div className="library-item-list">
+        {publications.map((publication) => (
+          <Link
+            className="library-item-link"
+            href={`/library?publicationId=${encodeURIComponent(publication.id)}`}
+            key={publication.id}
+          >
+            <div className="library-item-heading">
+              <strong>{publication.title}</strong>
+              <Badge tone={toneForLifecycle(publication.lifecycleStatus)}>{labelForLifecycle(publication.lifecycleStatus)}</Badge>
+            </div>
+            <span>{publication.author} · {formatOptionalLanguage(publication.language, publication.locale)}</span>
+            <div className="library-badge-row">
+              <Badge tone="neutral">{publication.publicationType}</Badge>
+              <Badge tone={toneForVisibility(publication.visibility)}>{publication.visibility}</Badge>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+function PublicationList({ publications }: { publications: LibraryPublicationRecord[] }) {
+  return (
+    <Card className="library-panel-card" title="List view">
+      <Table ariaLabel="Sortable editorial library list">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Type</th>
+            <th>Language</th>
+            <th>Status</th>
+            <th>Year</th>
+            <th>Rights</th>
+            <th>Formats</th>
+            <th>Last update</th>
+            <th>Project</th>
+          </tr>
+        </thead>
+        <tbody>
+          {publications.map((publication) => (
+            <tr key={publication.id}>
+              <td>{publication.title}</td>
+              <td>{publication.author}</td>
+              <td>{publication.publicationType}</td>
+              <td>{formatOptionalLanguage(publication.language, publication.locale)}</td>
+              <td><Badge tone={toneForLifecycle(publication.lifecycleStatus)}>{labelForLifecycle(publication.lifecycleStatus)}</Badge></td>
+              <td>{publication.publicationYear ?? publication.firstPublicationYear ?? "Not recorded"}</td>
+              <td>{publication.rightsStatus ?? "Pending"}</td>
+              <td>{publication.availableFormats.join(", ") || "None"}</td>
+              <td>{formatDate(publication.updatedAt)}</td>
+              <td>{publication.projectId ?? "Not linked"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Card>
+  );
+}
+
+function PublicationPreview({ publication }: { publication: LibraryPublicationRecord | null }) {
+  if (!publication) {
+    return (
+      <Card className="library-panel-card" title="Quick preview">
+        <EmptyState title="No publication selected" />
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="library-panel-card" title="Quick preview">
+      <div className="reference-stack">
+        <ReferenceItem label="Cover" text={publication.metadata?.coverRef ? "Available" : "Cover pending"} />
+        <ReferenceItem label="Title" text={publication.title} />
+        <ReferenceItem label="Author" text={publication.author} />
+        <ReferenceItem label="Table of contents" text="Preview without restricted content" />
+        <ReferenceItem label="Formats" text={publication.availableFormats.join(", ") || "No formats"} />
+        <ReferenceItem label="Associated project" text={publication.projectId ?? "Not linked"} />
+        <ReferenceItem label="Manuscript" text={publication.manuscriptId ?? "Not linked"} />
+        <ReferenceItem label="Rights and provenance" text={publication.rightsStatus ?? "Needs validation"} />
+      </div>
+    </Card>
+  );
+}
+
+function LibraryLifecycleActions({ publication }: { publication: LibraryPublicationRecord | null }) {
+  return (
+    <Card className="library-panel-card" title="Contextual quick actions">
+      {!publication ? (
+        <EmptyState title="Select a publication for actions" />
+      ) : (
+        <div className="admin-config-items" aria-label="Library contextual quick actions">
+          {[
+            "Open publication",
+            "Open manuscript",
+            "Open project",
+            "Continue editorial work",
+            "Start new edition",
+            "Add translation",
+            "View rights",
+            "View versions",
+            "Preview",
+            "Export",
+            "Move status",
+            "Publish when permitted",
+            "Add to collection",
+            "Edit metadata"
+          ].map((action) => (
+            <span key={action}>{action}</span>
+          ))}
+        </div>
+      )}
+      <p className="library-privacy-note">
+        Common actions stay within 2-3 clicks. Historical versions are never destroyed.
+      </p>
+    </Card>
+  );
+}
+
+function BulkActionsPanel() {
+  return (
+    <Card className="library-panel-card" title="Bulk actions">
+      <div className="admin-config-items" aria-label="Library bulk actions">
+        {[
+          "Change status",
+          "Assign collection",
+          "Assign series",
+          "Add tags",
+          "Export metadata",
+          "Update selected metadata",
+          "Assign project",
+          "Mark public/private",
+          "Validate rights status",
+          "Generate report"
+        ].map((action) => (
+          <span key={action}>{action}</span>
+        ))}
+      </div>
+      <div className="blocking-warning" role="status">
+        Bulk actions respect permissions, subscription entitlements, Need-to-Know scope and rights restrictions.
+      </div>
+    </Card>
   );
 }
 
@@ -397,6 +674,42 @@ function toneForItemType(itemType: LibraryItemType): BadgeTone {
   }
 
   return "neutral";
+}
+
+function toneForLifecycle(status: LibraryPublicationLifecycleStatus): BadgeTone {
+  if (status === "PUBLICAT") {
+    return "success";
+  }
+
+  if (status === "IN_LUCRU") {
+    return "info";
+  }
+
+  return "neutral";
+}
+
+function toneForVisibility(visibility: LibraryPublicationVisibility): BadgeTone {
+  if (visibility === "PUBLIC") {
+    return "success";
+  }
+
+  if (visibility === "INTERNAL_WORKING_PUBLICATION") {
+    return "info";
+  }
+
+  return "neutral";
+}
+
+function labelForLifecycle(status: LibraryPublicationLifecycleStatus): string {
+  if (status === "STOC_REAL") {
+    return "Stoc real";
+  }
+
+  if (status === "IN_LUCRU") {
+    return "În lucru";
+  }
+
+  return "Publicat";
 }
 
 function formatDate(value: string): string {
