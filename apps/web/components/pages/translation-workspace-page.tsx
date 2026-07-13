@@ -244,6 +244,10 @@ function ReferencePanels({
 }) {
   const lexicographicSupport = latestTranslation?.metadata?.lexicographicSupport ?? [];
   const dictionaryEvidence = workspace.terminology?.dictionaryEvidence ?? [];
+  const tmProposals =
+    workspace.translationMemoryProposals.length > 0
+      ? workspace.translationMemoryProposals
+      : latestTranslation?.metadata?.translationMemoryProposals ?? [];
 
   return (
     <aside className="translation-reference-panels" aria-label="Translation references">
@@ -266,10 +270,48 @@ function ReferencePanels({
               ))
             )}
             <EvidenceList entries={dictionaryEvidence} title="Dictionary evidence" />
+            {workspace.terminology.proposalExplanation ? (
+              <ReferenceItem
+                label={`Confidence ${Math.round(workspace.terminology.proposalExplanation.confidenceScore * 100)}%`}
+                text={workspace.terminology.proposalExplanation.explanation}
+              />
+            ) : null}
+            {workspace.terminology.glossaryPriority ? (
+              <ReferenceItem
+                label="Glossary priority"
+                text={workspace.terminology.glossaryPriority.join(" > ")}
+              />
+            ) : null}
+            {workspace.terminology.glossaryConflicts?.map((conflict) => (
+              <ReferenceItem
+                key={`${conflict.term}-${conflict.termIds.join("-")}`}
+                label="Glossary conflict"
+                text={conflict.message}
+              />
+            ))}
           </div>
         ) : (
           <EmptyState title="No terminology data" />
         )}
+      </Card>
+
+      <Card title="Translation Memory proposals">
+        {workspace.translationMemoryProposalsError ? (
+          <ErrorState message={workspace.translationMemoryProposalsError} />
+        ) : null}
+        <div className="reference-stack">
+          {tmProposals.length === 0 ? (
+            <EmptyState title="No TM proposals" />
+          ) : (
+            tmProposals.map((proposal) => (
+              <ReferenceItem
+                key={proposal.id}
+                label={`${proposal.translationMemoryMatch.matchType} ${Math.round(proposal.confidenceScore * 100)}%`}
+                text={`${proposal.proposedTargetText} - proposal only`}
+              />
+            ))
+          )}
+        </div>
       </Card>
 
       <Card title="Lexicographic references">
