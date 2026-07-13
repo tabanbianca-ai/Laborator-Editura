@@ -225,9 +225,9 @@ const governanceSignals = [
 
 const subscriptionPlans = [
   { plan: "FREE", status: "Current", tone: "info" as const },
+  { plan: "BASIC", status: "Available", tone: "neutral" as const },
   { plan: "PREMIUM", status: "Available", tone: "neutral" as const },
-  { plan: "BUSINESS", status: "Available", tone: "neutral" as const },
-  { plan: "ENTERPRISE_RESERVED", status: "Disabled", tone: "warning" as const }
+  { plan: "BUSINESS", status: "Available", tone: "neutral" as const }
 ];
 
 const subscriptionUsage = [
@@ -243,6 +243,37 @@ const effectiveAccessRules = [
   "Subscription entitlements",
   "Need-to-Know scope"
 ];
+
+const aiProvidersCostManagement = {
+  providers: [
+    { provider: "OpenAI", role: "Primary", status: "Active", tone: "success" as const },
+    { provider: "Anthropic", role: "Fallback", status: "Standby", tone: "info" as const }
+  ],
+  activeProvider: "OpenAI",
+  fallbackStatus: "Anthropic fallback ready",
+  modelSelection: "Automatic by default",
+  manualModelSelection: "Role and subscription gated",
+  monthlyBudget: "100 EUR",
+  remainingBudget: "82 EUR",
+  consumption: "18 EUR",
+  warningThresholds: ["80%", "90%", "100%"],
+  usageHistory: [
+    "Translation Agent: 8 EUR",
+    "Review Agent: 4 EUR",
+    "Quality Agent: 3 EUR",
+    "Research AI: 3 EUR"
+  ],
+  auditActions: [
+    "AI_PROVIDER_CHANGED",
+    "AI_FALLBACK_ACTIVATED",
+    "AI_FALLBACK_RECOVERED",
+    "AI_BUDGET_WARNING",
+    "AI_BUDGET_EXCEEDED",
+    "AI_ACTION_BLOCKED",
+    "AI_SUBSCRIPTION_UPGRADED",
+    "AI_SUBSCRIPTION_DOWNGRADED"
+  ]
+};
 
 const centralLanguageManagement = {
   platformLanguage: "Romanian (ro-RO)",
@@ -468,6 +499,83 @@ export function AdministrationPage() {
                 <Button disabled variant="secondary">Upgrade plan</Button>
                 <Button disabled variant="ghost">Downgrade plan</Button>
               </div>
+            </div>
+          </section>
+
+          <section className="content-panel" aria-label="AI Providers and Cost Management">
+            <div className="section-heading">
+              <div>
+                <p className="section-kicker">AI Providers & Cost Management</p>
+                <h2>OpenAI primar, Anthropic fallback și bugete AI</h2>
+              </div>
+              <Badge tone="success">Provider fallback ready</Badge>
+            </div>
+            <div className="admin-language-grid">
+              <div className="stack-list">
+                <strong>Configured providers</strong>
+                {aiProvidersCostManagement.providers.map((provider) => (
+                  <div className="signal-row" key={provider.provider}>
+                    <span>{provider.provider} - {provider.role}</span>
+                    <Badge tone={provider.tone}>{provider.status}</Badge>
+                  </div>
+                ))}
+                <div className="signal-row">
+                  <span>Active provider</span>
+                  <Badge tone="success">{aiProvidersCostManagement.activeProvider}</Badge>
+                </div>
+                <div className="signal-row">
+                  <span>Fallback status</span>
+                  <Badge tone="info">{aiProvidersCostManagement.fallbackStatus}</Badge>
+                </div>
+              </div>
+              <div className="stack-list">
+                <strong>Model selection and budget</strong>
+                <div className="signal-row">
+                  <span>{aiProvidersCostManagement.modelSelection}</span>
+                  <Badge tone="info">Automatic</Badge>
+                </div>
+                <div className="signal-row">
+                  <span>{aiProvidersCostManagement.manualModelSelection}</span>
+                  <Badge tone="warning">Advanced only</Badge>
+                </div>
+                <div className="signal-row">
+                  <span>Monthly budget</span>
+                  <Badge tone="info">{aiProvidersCostManagement.monthlyBudget}</Badge>
+                </div>
+                <div className="signal-row">
+                  <span>Remaining budget</span>
+                  <Badge tone="success">{aiProvidersCostManagement.remainingBudget}</Badge>
+                </div>
+                <div className="signal-row">
+                  <span>Consumption</span>
+                  <Badge tone="neutral">{aiProvidersCostManagement.consumption}</Badge>
+                </div>
+              </div>
+              <div className="stack-list">
+                <strong>Warning thresholds</strong>
+                <div className="admin-config-items" aria-label="AI cost warning thresholds">
+                  {aiProvidersCostManagement.warningThresholds.map((threshold) => (
+                    <span key={threshold}>{threshold}</span>
+                  ))}
+                </div>
+                <strong>AI usage history</strong>
+                <div className="admin-config-items" aria-label="AI usage history">
+                  {aiProvidersCostManagement.usageHistory.map((entry) => (
+                    <span key={entry}>{entry}</span>
+                  ))}
+                </div>
+                <strong>Audit</strong>
+                <div className="admin-config-items" aria-label="AI provider and cost audit actions">
+                  {aiProvidersCostManagement.auditActions.map((action) => (
+                    <span key={action}>{action}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="blocking-warning" role="status">
+              Platform Creator has unlimited AI access and testing capacity.
+              Subscription limits never delete data; they block only the
+              restricted AI action until reset or upgrade.
             </div>
           </section>
 
