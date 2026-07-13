@@ -8,6 +8,7 @@ import {
   type RejectTerminologyTermInput,
   type SearchTerminologyInput,
   type TerminologyTermStatus,
+  type UpdateProjectSourcePriorityInput,
   type UpdateTerminologyTermInput
 } from "./terminology.types";
 
@@ -108,6 +109,22 @@ export class TerminologyController {
   @Get("terms/requiring-review")
   listTermsRequiringReview(@CurrentActor() actor: AuthenticatedRequestContext) {
     return this.terminologyService.listTermsRequiringReview(actor);
+  }
+
+  @Get("source-priority")
+  getProjectSourcePriority(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Query("projectId") projectId = ""
+  ) {
+    return this.terminologyService.getProjectSourcePriority(actor, projectId);
+  }
+
+  @Post("source-priority")
+  updateProjectSourcePriority(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: UpdateProjectSourcePriorityInput
+  ) {
+    return this.terminologyService.updateProjectSourcePriority(actor, input);
   }
 
   @Post("check-segment")
