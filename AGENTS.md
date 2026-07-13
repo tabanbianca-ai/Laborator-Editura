@@ -415,7 +415,7 @@ Rules:
   concept.
 - Official roles are Administrator, Project Manager, Editor, Translator,
   Reviewer, Designer, Audio Narrator, Author, Collaborator, Reader, and Guest.
-- Subscription plans are `FREE`, `PREMIUM`, `BUSINESS`, and
+- Subscription plans are `FREE`, `BASIC`, `PREMIUM`, `BUSINESS`, and
   `ENTERPRISE_RESERVED`.
 - `ENTERPRISE_RESERVED` remains disabled until explicitly activated later.
 - Plan limits must not destroy data, remove existing work, or delete
@@ -500,6 +500,49 @@ Rules:
 - Administrator users may manage organization profile, organization type,
   teams, members, and invitations.
 - Creator access and all organization/team/member changes must be audited.
+
+### AI Providers & Cost Management Directive
+
+Purpose:
+
+- Finalize provider fallback, model selection, subscription-aware AI usage,
+  budget governance, and administrative monitoring through existing AI
+  Governance, AI Orchestrator, Administration, Subscription Plans, Audit,
+  Organization Management, and Workspace infrastructure.
+
+Rules:
+
+- This is an AI Governance and Administration refinement, not a new enterprise
+  module.
+- Supported v1.0 providers are OpenAI as primary provider and Anthropic as
+  fallback provider.
+- Provider architecture must remain extensible for future providers without
+  major code changes.
+- OpenAI is the default provider. If it times out, is unavailable, returns an
+  API error, or is placed in configured outage, the platform may automatically
+  switch to Anthropic.
+- When OpenAI becomes available again, the platform may automatically recover
+  to OpenAI.
+- Provider changes, fallback activation, and fallback recovery must be audited.
+- Model selection is automatic by default. Manual model selection is available
+  only when role and subscription entitlement permit it.
+- Subscription plans for v1.0 are `FREE`, `BASIC`, `PREMIUM`, and `BUSINESS`.
+  `ENTERPRISE_RESERVED` remains disabled unless explicitly activated later.
+- Subscription may control AI access, quotas, collaborators, projects, storage,
+  exports, advanced AI capabilities, and team functionality.
+- AI budgets may be tracked for user, project, and organization scopes.
+- Cost monitoring tracks estimated cost, actual cost, monthly consumption,
+  consumption by AI agent, and consumption by project.
+- Budget warning thresholds are 80%, 90%, and 100%.
+- Reaching a limit must never delete data. It may block only the restricted AI
+  action until quota reset or subscription upgrade.
+- `PLATFORM_CREATOR` remains unrestricted for AI access, testing, and
+  monitoring regardless of subscription plan.
+- Administration must display configured providers, active provider, fallback
+  status, consumption, monthly budget, remaining budget, and AI usage history.
+- Audit must cover provider changed, fallback activated, fallback recovered,
+  budget warning, budget exceeded, AI blocked, subscription upgraded, and
+  subscription downgraded.
 
 ### ChatGPT
 
