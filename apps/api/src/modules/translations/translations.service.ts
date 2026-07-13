@@ -54,26 +54,21 @@ export class TranslationsService {
       actor,
       lexicographicEntries
     );
-    const tmEntry = await this.translationMemoryService.createEntry(actor, {
-      projectId: segment.projectId,
-      documentId: segment.documentId,
-      sourceSegmentId: segment.id,
+    const translationMemoryProposals = await this.translationMemoryService.buildProposals(actor, {
       sourceText: segment.sourceText,
-      targetText: input.targetText,
       sourceLanguage: segment.sourceLanguage,
       targetLanguage: segment.targetLanguage,
       domain: input.domain,
-      confidenceScore: 1,
-      approvalStatus: "PENDING",
-      origin: "HUMAN",
-      metadata: {
-        translationId
-      }
+      context: `${segment.documentId}:${segment.id}`,
+      limit: 3,
+      similarityThreshold: 0.2
     });
     const terminology = await this.terminologyService.checkSegmentText(actor, {
       sourceLanguage: segment.sourceLanguage,
       language: segment.targetLanguage,
       domain: input.domain,
+      projectId: segment.projectId,
+      ownerUserId: actor.userId,
       sourceText: segment.sourceText,
       targetText: input.targetText
     });
@@ -97,6 +92,37 @@ export class TranslationsService {
       targetLanguage: segment.targetLanguage,
       domain: input.domain
     });
+    const translationStatus =
+      terminology.valid &&
+      qaReport.issueCount === 0 &&
+      semanticReport.issueCount === 0
+        ? "VALIDATED"
+        : "SUBMITTED";
+    const tmEntry = translationStatus === "VALIDATED"
+      ? await this.translationMemoryService.createEntry(actor, {
+        projectId: segment.projectId,
+        documentId: segment.documentId,
+        sourceSegmentId: segment.id,
+        sourceText: segment.sourceText,
+        targetText: input.targetText,
+        sourceLanguage: segment.sourceLanguage,
+        targetLanguage: segment.targetLanguage,
+        domain: input.domain,
+        context: `${segment.documentId}:${segment.id}`,
+        author: this.readStringMetadata(input.metadata, "originalAuthorName"),
+        reviewer: actor.userId,
+        approvalDate: now,
+        confidenceScore: 1,
+        approvalStatus: "APPROVED",
+        origin: "HUMAN",
+        version: 1,
+        metadata: {
+          translationId,
+          validatedTranslationOnly: true,
+          proposalOnlyReuse: true
+        }
+      })
+      : null;
     const translation = await this.repository.createTranslation({
       id: translationId,
       organizationId: actor.organizationId,
@@ -109,12 +135,7 @@ export class TranslationsService {
       sourceLocale: segment.sourceLocale,
       targetLanguage: segment.targetLanguage,
       targetLocale: segment.targetLocale,
-      status:
-        terminology.valid &&
-        qaReport.issueCount === 0 &&
-        semanticReport.issueCount === 0
-          ? "VALIDATED"
-          : "SUBMITTED",
+      status: translationStatus,
       createdBy: actor.userId,
       createdAt: now,
       updatedAt: now,
@@ -122,11 +143,13 @@ export class TranslationsService {
       translatorName: input.translatorName ?? this.readStringMetadata(input.metadata, "translatorName"),
       originalAuthorId: this.readStringMetadata(input.metadata, "originalAuthorId"),
       originalAuthorName: this.readStringMetadata(input.metadata, "originalAuthorName"),
-      tmEntryId: tmEntry.id,
+      tmEntryId: tmEntry?.id,
       qaReportId: qaReport.id,
       semanticReportId: semanticReport.id,
       metadata: {
         terminologyValid: terminology.valid,
+        terminologyProposalExplanation: terminology.proposalExplanation,
+        translationMemoryProposals,
         lexicographicSupport: this.mapLexicographicSupport(lexicographicSupport),
         languagePolicyVersion: "v1.0",
         originalLanguage: segment.sourceLanguage,
