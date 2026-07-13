@@ -45,7 +45,8 @@ test("translation persistence submits text and invokes validation engines", () =
   assert.match(source, /segmentsService\.getSegment/);
   assert.match(source, /segmentsService\.markTranslated/);
   assert.match(source, /translationMemoryService\.createEntry/);
-  assert.match(source, /approvalStatus: "PENDING"/);
+  assert.match(source, /translationStatus === "VALIDATED"/);
+  assert.match(source, /approvalStatus: "APPROVED"/);
   assert.match(source, /terminologyService\.checkSegmentText/);
   assert.match(source, /qaService\.runQaOnSegment/);
   assert.match(source, /semanticFidelityService\.runCheckOnSegment/);
