@@ -11,6 +11,7 @@ import {
   type WorkspaceAgentDataAccessInput,
   type WorkspaceEffectiveAccessInput,
   type WorkspaceNeedToKnowAccessInput,
+  type SaveWorkspaceLanguageManagementInput,
   type SaveWorkspacePreferencesInput
 } from "./workspace.types";
 
@@ -44,6 +45,19 @@ export class WorkspaceController {
     @Body() input: SaveWorkspacePreferencesInput
   ) {
     return this.workspaceService.savePreferences(actor, input);
+  }
+
+  @Get("language-management")
+  getLanguageManagement(@CurrentActor() actor: AuthenticatedRequestContext) {
+    return this.workspaceService.getLanguageManagement(actor);
+  }
+
+  @Post("language-management")
+  saveLanguageManagement(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: SaveWorkspaceLanguageManagementInput
+  ) {
+    return this.workspaceService.saveLanguageManagement(actor, input);
   }
 
   @Get("widgets")
