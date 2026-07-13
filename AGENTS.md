@@ -255,6 +255,43 @@ Rules:
   imported, source consulted, terminology decision, dictionary conflict, human
   override, and resource disabled events.
 
+### Advanced Linguistic Resources & Translation Memory Directive
+
+Purpose:
+
+- Complete the existing Linguistic Knowledge Base with configurable source
+  priority, integrated Translation Memory, glossary hierarchy, transparent
+  confidence scoring, and auditability.
+
+Rules:
+
+- This extends existing Linguistic Knowledge Base, Translation, Terminology &
+  Lexicography, Semantic Fidelity, Review, AI Governance, and Audit
+  infrastructure. It is not a new enterprise module.
+- Each project may define source consultation priority. The default order is
+  official normative source, project glossary, specialized glossary,
+  Translation Memory, bilingual dictionary, explanatory dictionary, and
+  corpus/examples.
+- Source priority changes must be auditable.
+- Translation Memory stores only validated translations as reusable proposal
+  evidence.
+- Translation Memory entries must preserve source segment, translated segment,
+  language pair, project, domain, context, author, reviewer, approval date,
+  confidence, and version.
+- Translation Memory supports exact match, fuzzy match, and context match.
+- Translation Memory must never replace text automatically. It always proposes.
+- Glossary hierarchy is Project Glossary > Platform Glossary > Personal
+  Glossary.
+- Personal Glossary entries are optional suggestions only and must not override
+  project or platform glossary decisions.
+- Glossary conflicts require authorized human review and audit.
+- Every linguistic proposal must expose confidence score, consulted sources,
+  glossary used, Translation Memory match, terminology status, semantic
+  validation, and explanation.
+- Audit must cover glossary created, glossary updated, glossary conflict,
+  Translation Memory entry added, Translation Memory reused, source priority
+  changed, and confidence recalculated.
+
 ### Platform-Wide Need-to-Know Access Model Directive
 
 Purpose:
@@ -393,6 +430,76 @@ Rules:
 - Role assignments, subscription changes, quota exceeded events, feature
   blocks, upgrades, downgrades, temporary access changes, and permitted human
   overrides must be audited.
+
+### Unified Language Management Directive
+
+Purpose:
+
+- Centralize platform language, original publication language, authoring
+  language, target translation languages, language resources, AI conversation
+  language, review comparison language columns, and language audit.
+
+Rules:
+
+- Every module must use one centralized Language Management model.
+- No duplicate language settings may be introduced in Projects, Translation,
+  Review, Workspace, AI Governance, Linguistic Knowledge Base,
+  Administration, Audit, Publishing, Distribution, or Public Portal metadata.
+- The four official language attributes are `platformLanguage`,
+  `originalLanguage`, `authoringLanguage`, and `targetLanguage`.
+- `platformLanguage` controls UI labels, menus, administration, dashboard,
+  workflow names, AI conversations, notifications, dialogs, and workspace
+  text.
+- Changing `platformLanguage` must not change `originalLanguage`,
+  `authoringLanguage`, or `targetLanguage`.
+- `originalLanguage` is immutable after project creation unless an authorized
+  user explicitly changes it.
+- `authoringLanguage` supports multilingual manuscript authoring.
+- Projects may have one Original Language, one Authoring Language, and one or
+  more Target Languages.
+- Translation uses Original Language to Target Language. Documentation and
+  Review explanations use Platform Language.
+- AI agents communicate with the user in Platform Language and may not change
+  language configuration by themselves.
+- Parallel review defaults to Original and Translation columns and may support
+  three or four columns, each with independently selected language and version.
+- The Linguistic Knowledge Base loads dictionaries, glossaries, terminology,
+  phraseology, and linguistic resources by Source Language to Target Language.
+- Administration owns installed languages, enabled languages, default Platform
+  Language, fallback, translation completeness, linguistic resources,
+  dictionaries, and glossaries as central configuration.
+- Audit must cover Platform Language changed, Original Language changed,
+  Authoring Language changed, Target Language added, Target Language removed,
+  and language resources updated.
+
+### Organization, Teams and Platform Creator Directive
+
+Purpose:
+
+- Finalize the organizational model with a simple, scalable structure that
+  reuses Administration, Users, Roles, Permissions, Need-to-Know access, and
+  Audit.
+
+Rules:
+
+- This is an Administration and access-governance refinement, not a new
+  enterprise module.
+- Supported organization types are `PERSOANA_FIZICA`, `EDITURA`,
+  `ASOCIATIE_ONG`, `COMPANIE`, and `INSTITUTIE`.
+- `PERSOANA_FIZICA` remains the default organization type.
+- Organizations may create teams and sub-assign projects, tasks, documents,
+  and workflow responsibilities to teams.
+- Default teams are Translation, Review, Layout, Illustrations, Multimedia,
+  Publishing, Marketing, and Advertising.
+- `PLATFORM_CREATOR` / `Creatorul platformei` is a unique protected system
+  role for platform ownership, development, maintenance, testing, and
+  configuration.
+- `PLATFORM_CREATOR` is separate from `ADMIN`, cannot be removed, downgraded,
+  assigned to normal users, modified by other administrators, or limited by
+  subscription plans.
+- Administrator users may manage organization profile, organization type,
+  teams, members, and invitations.
+- Creator access and all organization/team/member changes must be audited.
 
 ### ChatGPT
 
