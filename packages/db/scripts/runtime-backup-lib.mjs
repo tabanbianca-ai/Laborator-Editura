@@ -35,6 +35,7 @@ export const TABLE_NAMES = [
   "disaster_recovery_plans",
   "preservation_records",
   "backup_audit_events",
+  "ai_provider_statuses",
   "ai_usage_records",
   "ai_budgets",
   "ai_quotas",
@@ -187,6 +188,7 @@ const TENANT_SCOPED_TABLES = new Set([
   "disaster_recovery_plans",
   "preservation_records",
   "backup_audit_events",
+  "ai_provider_statuses",
   "ai_usage_records",
   "ai_budgets",
   "ai_quotas",
@@ -521,6 +523,7 @@ function validateTenantBoundaries(data, issues) {
     "disaster_recovery_plans"
   );
   validateReferenceTenant(data, issues, "backup_audit_events", "preservationRecordId", "preservation_records");
+  validateReferenceTenant(data, issues, "ai_cost_audit_events", "providerStatusId", "ai_provider_statuses");
   validateReferenceTenant(data, issues, "ai_budget_override_requests", "budgetId", "ai_budgets");
   validateReferenceTenant(data, issues, "ai_budget_override_requests", "quotaId", "ai_quotas");
   validateReferenceTenant(data, issues, "ai_cost_audit_events", "usageRecordId", "ai_usage_records");
