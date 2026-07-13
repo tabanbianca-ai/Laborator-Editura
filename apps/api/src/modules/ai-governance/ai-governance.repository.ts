@@ -7,6 +7,8 @@ import {
   type AiCostAuditEvent,
   type AiCostPolicy,
   type AiGovernanceRepository,
+  type AiProviderName,
+  type AiProviderStatusRecord,
   type AiQuota,
   type AiUsageRecord
 } from "./ai-governance.types";
@@ -17,6 +19,25 @@ export class DatabaseAiGovernanceRepository implements AiGovernanceRepository {
     @Inject(RUNTIME_DATABASE)
     private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
   ) {}
+
+  async upsertProviderStatus(provider: AiProviderStatusRecord): Promise<AiProviderStatusRecord> {
+    return this.database.upsert("ai_provider_statuses", provider);
+  }
+
+  async findProviderStatusByProvider(
+    provider: AiProviderName,
+    organizationId: string
+  ): Promise<AiProviderStatusRecord | null> {
+    return this.database.selectForTenant<AiProviderStatusRecord>(
+      "ai_provider_statuses",
+      organizationId,
+      (status) => status.provider === provider
+    )[0] ?? null;
+  }
+
+  async listProviderStatuses(organizationId: string): Promise<AiProviderStatusRecord[]> {
+    return this.database.selectForTenant<AiProviderStatusRecord>("ai_provider_statuses", organizationId);
+  }
 
   async createUsageRecord(record: AiUsageRecord): Promise<AiUsageRecord> {
     return this.database.insert("ai_usage_records", record);
