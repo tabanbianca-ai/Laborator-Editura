@@ -110,7 +110,7 @@ export interface LibraryPublicationRecord {
   metadata?: {
     coverRef?: string;
     completeLifecycleManagedByLibrary?: boolean;
-    noSeparateArchiveModule?: boolean;
+    singleLibraryLifecycle?: boolean;
     [key: string]: unknown;
   };
 }
