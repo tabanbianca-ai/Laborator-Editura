@@ -21,8 +21,8 @@ refinement.
   - `GET /workspace/subscription`.
   - `POST /workspace/access/resolve`.
 - Official operational roles are modeled separately from commercial plans.
-- Subscription plans are modeled as `FREE`, `PREMIUM`, `BUSINESS`, and disabled
-  `ENTERPRISE_RESERVED`.
+- Subscription plans are modeled as `FREE`, `BASIC`, `PREMIUM`, `BUSINESS`,
+  and disabled `ENTERPRISE_RESERVED`.
 - Plan entitlements cover active projects, storage, collaborators, AI
   availability, AI usage, translation volume, export formats, editorial tools,
   collaboration, team administration, audit retention, backup retention,
