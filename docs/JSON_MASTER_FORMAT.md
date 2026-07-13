@@ -1015,5 +1015,85 @@ workspace configuration. It does not duplicate manuscripts, translations,
 review data, publishing artifacts, rights records, or audit records; it only
 references and organizes existing canonical objects.
 
-This document defines the canonical organization requirement only. It does not
-change runtime validators, database schema, APIs, or UI.
+AI Providers and Cost Management metadata is optional and records provider
+state, fallback policy, model selection policy, budget state, consumption
+summaries, and audit references without storing provider secrets.
+
+Example:
+
+```json
+{
+  "aiGovernance": {
+    "providers": [
+      {
+        "provider": "OPENAI",
+        "displayName": "OpenAI",
+        "providerRole": "PRIMARY",
+        "status": "AVAILABLE",
+        "active": true,
+        "priority": 1,
+        "configured": true,
+        "defaultModel": "automatic",
+        "modelSelectionMode": "AUTOMATIC",
+        "fallbackToProvider": "ANTHROPIC",
+        "auditRefs": ["ai-provider-audit-001"]
+      },
+      {
+        "provider": "ANTHROPIC",
+        "displayName": "Anthropic",
+        "providerRole": "FALLBACK",
+        "status": "AVAILABLE",
+        "active": false,
+        "priority": 2,
+        "configured": true,
+        "defaultModel": "automatic",
+        "modelSelectionMode": "AUTOMATIC",
+        "auditRefs": ["ai-provider-audit-002"]
+      }
+    ],
+    "fallbackPolicy": {
+      "primaryProvider": "OPENAI",
+      "fallbackProvider": "ANTHROPIC",
+      "activationConditions": [
+        "TIMEOUT",
+        "UNAVAILABLE",
+        "API_ERROR",
+        "CONFIGURED_OUTAGE"
+      ],
+      "recoverToPrimary": true
+    },
+    "costManagement": {
+      "budgetScopes": ["USER", "PROJECT", "ORGANIZATION"],
+      "warningThresholds": [80, 90, 100],
+      "monthlyBudget": 100,
+      "monthlyConsumption": 18,
+      "remainingBudget": 82,
+      "consumptionByAgent": [
+        {
+          "agentName": "Translation Agent",
+          "estimatedCost": 8,
+          "actualCost": 8
+        }
+      ],
+      "consumptionByProject": [
+        {
+          "projectId": "project-001",
+          "estimatedCost": 18,
+          "actualCost": 18
+        }
+      ],
+      "limitReachedBehavior": {
+        "deleteData": false,
+        "blockedActionOnly": true,
+        "recoveryOptions": ["quotaReset", "subscriptionUpgrade"]
+      },
+      "platformCreatorUnlimited": true,
+      "auditRefs": ["ai-cost-audit-001"]
+    }
+  }
+}
+```
+
+This document defines canonical JSON Master guidance for the implemented
+metadata areas above. It does not by itself change runtime validators, database
+schema, APIs, or UI.
