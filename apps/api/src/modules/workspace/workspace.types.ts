@@ -131,6 +131,7 @@ export type WorkspaceRoleAssignmentScope =
 
 export type WorkspaceSubscriptionPlan =
   | "FREE"
+  | "BASIC"
   | "PREMIUM"
   | "BUSINESS"
   | "ENTERPRISE_RESERVED";
