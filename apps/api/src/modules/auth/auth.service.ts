@@ -26,6 +26,7 @@ import {
 
 const DEFAULT_ROLES: MvpRole[] = ["TRANSLATOR"];
 const FOUNDER_RECOVERY_ROLES: MvpRole[] = ["ADMIN", "REVIEWER", "TRANSLATOR"];
+const PLATFORM_CREATOR_ROLE: MvpRole = "PLATFORM_CREATOR";
 const FOUNDER_TRANSFER_EXPIRATION_DAYS = 30;
 const FOUNDER_TRANSFER_EXPIRATION_MS = FOUNDER_TRANSFER_EXPIRATION_DAYS * 24 * 60 * 60 * 1000;
 const MAX_FAILED_LOGIN_ATTEMPTS = 5;
@@ -59,7 +60,9 @@ export class AuthService {
       organization = await this.repository.createOrganization({
         id: randomUUID(),
         name: input.organizationName ?? "Default Organization",
-        createdAt: now
+        organizationType: input.organizationType ?? "PERSOANA_FIZICA",
+        createdAt: now,
+        updatedAt: now
       });
     }
 
@@ -75,11 +78,18 @@ export class AuthService {
       });
     }
 
-    const roles = await this.repository.assignRoles(
+    let roles = await this.repository.assignRoles(
       organization.id,
       user.id,
       DEFAULT_ROLES
     );
+
+    const platformCreatorAccess = this.isConfiguredPlatformCreatorEmail(email);
+
+    if (platformCreatorAccess) {
+      roles = await this.repository.assignRoles(organization.id, user.id, [PLATFORM_CREATOR_ROLE]);
+    }
+
     const founderProtection = organizationCreated
       ? await this.repository.createFounderProtection({
           id: randomUUID(),
@@ -140,6 +150,24 @@ export class AuthService {
       userId: user.id,
       roles
     });
+
+    if (platformCreatorAccess) {
+      await this.audit(
+        "CREATOR_ROLE_ACCESS",
+        actor,
+        "PLATFORM_CREATOR_ROLE",
+        user.id,
+        undefined,
+        {
+          organizationId: organization.id,
+          userId: user.id,
+          role: PLATFORM_CREATOR_ROLE,
+          unrestrictedAccess: true,
+          subscriptionIndependent: true
+        }
+      );
+    }
+
     await this.audit("CREATE", actor, "AUTH_SESSION", session.id, undefined, session);
 
     return result;
@@ -647,6 +675,7 @@ export class AuthService {
 
     if (
       protection.founderUserId !== actor.userId &&
+      !roles.has("PLATFORM_CREATOR") &&
       !roles.has("ADMIN") &&
       !roles.has("REVIEWER")
     ) {
@@ -658,6 +687,17 @@ export class AuthService {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("userId and organizationId are required.");
     }
+  }
+
+  private isConfiguredPlatformCreatorEmail(email: string): boolean {
+    const configuredEmails = (process.env.LABORATOR_PLATFORM_CREATOR_EMAILS ??
+      process.env.LABORATOR_PLATFORM_CREATOR_EMAIL ??
+      "")
+      .split(",")
+      .map((value) => this.normalizeEmail(value))
+      .filter((value) => value.length > 0);
+
+    return configuredEmails.includes(email);
   }
 
 }
