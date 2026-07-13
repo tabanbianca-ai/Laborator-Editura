@@ -176,7 +176,7 @@ export class LibraryService {
       metadata: {
         ...(input.metadata ?? {}),
         completeLifecycleManagedByLibrary: true,
-        noSeparateArchiveModule: true,
+        singleLibraryLifecycle: true,
         commonActionsClickTarget: "2-3"
       },
       createdBy: actor.userId,
