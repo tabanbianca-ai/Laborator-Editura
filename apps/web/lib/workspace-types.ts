@@ -70,6 +70,79 @@ export interface WorkspacePreferences {
   notificationPreferences: object;
 }
 
+export interface WorkspaceLanguageTarget {
+  language: string;
+  locale?: string;
+  enabled: boolean;
+}
+
+export interface WorkspaceLanguageManagement {
+  model: {
+    platformLanguage: string;
+    platformLocale?: string;
+    defaultPlatformLanguage: string;
+    fallbackLanguage: string;
+    installedLanguages: string[];
+    enabledLanguages: string[];
+    translationCompleteness: Record<string, number>;
+    project: {
+      originalLanguage: string;
+      originalLocale?: string;
+      authoringLanguage: string;
+      authoringLocale?: string;
+      targetLanguages: WorkspaceLanguageTarget[];
+      originalLanguageImmutable: true;
+      multilingualAuthoringSupported: true;
+      multipleTargetLanguagesSupported: true;
+    };
+    linguisticResourceLoading: Array<{
+      sourceLanguage: string;
+      sourceLocale?: string;
+      targetLanguage: string;
+      targetLocale?: string;
+      resources: Record<string, {
+        enabled: true;
+        authoritative: false;
+        loadedByLanguagePair: true;
+      }>;
+    }>;
+    uiLocalizedByPlatformLanguage: true;
+    aiAgentsUsePlatformLanguage: true;
+    translationUsesOriginalToTarget: true;
+    noMixedLanguageInterface: true;
+  };
+  administration: {
+    installedLanguages: string[];
+    enabledLanguages: string[];
+    defaultPlatformLanguage: string;
+    fallbackLanguage: string;
+    translationCompleteness: Record<string, number>;
+    linguisticResources: string[];
+    dictionaries: string[];
+    glossaries: string[];
+  };
+  aiAgents: {
+    conversationLanguage: string;
+    explanationsLanguage: string;
+    translationDirection: string[];
+    platformLanguageControlsUserCommunication: true;
+    aiMayChangeLanguageConfiguration: false;
+  };
+  parallelReview: {
+    defaultColumns: Array<{
+      columnId: string;
+      label: "Original" | "Translation" | "Comparison";
+      language: string;
+      locale?: string;
+      versionId?: string;
+    }>;
+    supportsThreeColumns: true;
+    supportsFourColumns: true;
+    eachColumnSelectsLanguageAndVersion: true;
+  };
+  auditActions: string[];
+}
+
 export interface WorkspaceDashboard {
   layout: {
     id: string;
@@ -79,6 +152,7 @@ export interface WorkspaceDashboard {
   navigation: WorkspaceNavigationItem[];
   widgets: WorkspaceWidget[];
   preferences: WorkspacePreferences;
+  languageManagement?: WorkspaceLanguageManagement;
   generatedFor: {
     userId: string;
     organizationId: string;
