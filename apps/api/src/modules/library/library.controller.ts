@@ -6,7 +6,16 @@ import {
   type AddBookmarkInput,
   type AddHighlightInput,
   type AddLibraryItemInput,
+  type AddLibraryPublicationFileInput,
   type AddNoteInput,
+  type CreateLibraryPublicationEditionInput,
+  type CreateLibraryPublicationInput,
+  type CreateLibraryPublicationVersionInput,
+  type LibraryBulkActionInput,
+  type LibraryPublicationSearchInput,
+  type SaveLibraryViewPreferenceInput,
+  type UpdateLibraryPublicationStatusInput,
+  type UpdateLibraryPublicationVisibilityInput,
   type UpdateReadingProgressInput
 } from "./library.types";
 
@@ -25,6 +34,99 @@ export class LibraryController {
     @Body() input: AddLibraryItemInput
   ) {
     return this.libraryService.addItem(actor, input);
+  }
+
+  @Post("publications/search")
+  listPublications(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: LibraryPublicationSearchInput
+  ) {
+    return this.libraryService.listPublications(actor, input);
+  }
+
+  @Post("publications")
+  createPublication(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: CreateLibraryPublicationInput
+  ) {
+    return this.libraryService.createPublication(actor, input);
+  }
+
+  @Post("publications/:id/status")
+  updatePublicationStatus(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string,
+    @Body() input: UpdateLibraryPublicationStatusInput
+  ) {
+    return this.libraryService.updatePublicationStatus(actor, id, input);
+  }
+
+  @Post("publications/:id/visibility")
+  updatePublicationVisibility(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string,
+    @Body() input: UpdateLibraryPublicationVisibilityInput
+  ) {
+    return this.libraryService.updatePublicationVisibility(actor, id, input);
+  }
+
+  @Post("publications/:id/editions")
+  createPublicationEdition(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string,
+    @Body() input: CreateLibraryPublicationEditionInput
+  ) {
+    return this.libraryService.createEdition(actor, id, input);
+  }
+
+  @Post("publications/:id/versions")
+  createPublicationVersion(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string,
+    @Body() input: CreateLibraryPublicationVersionInput
+  ) {
+    return this.libraryService.createVersion(actor, id, input);
+  }
+
+  @Post("publications/:id/files")
+  addPublicationFile(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string,
+    @Body() input: AddLibraryPublicationFileInput
+  ) {
+    return this.libraryService.addPublicationFile(actor, id, input);
+  }
+
+  @Post("publications/:id/preview")
+  previewPublication(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string
+  ) {
+    return this.libraryService.previewPublication(actor, id);
+  }
+
+  @Post("publications/bulk-actions")
+  runPublicationBulkAction(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: LibraryBulkActionInput
+  ) {
+    return this.libraryService.runBulkAction(actor, input);
+  }
+
+  @Post("publications/duplicates")
+  detectPublicationDuplicates(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: CreateLibraryPublicationInput
+  ) {
+    return this.libraryService.detectDuplicates(actor, input);
+  }
+
+  @Post("preferences")
+  saveViewPreference(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: SaveLibraryViewPreferenceInput
+  ) {
+    return this.libraryService.saveViewPreference(actor, input);
   }
 
   @Post("items/:id/progress")
