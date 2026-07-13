@@ -5,8 +5,15 @@ export type EnterpriseAdminActor = AuthenticatedRequestContext;
 export type AdminEntityStatus = "ACTIVE" | "SUSPENDED" | "ARCHIVED";
 export type AdminUserStatus = "ACTIVE" | "SUSPENDED" | "INVITED" | "ARCHIVED";
 export type AdminInvitationStatus = "PENDING" | "ACCEPTED" | "EXPIRED" | "REVOKED";
+export type AdminOrganizationType =
+  | "PERSOANA_FIZICA"
+  | "EDITURA"
+  | "ASOCIATIE_ONG"
+  | "COMPANIE"
+  | "INSTITUTIE";
 
 export type AdminBuiltInRole =
+  | "PLATFORM_CREATOR"
   | "ADMIN"
   | "EDITOR"
   | "TRANSLATOR"
@@ -29,6 +36,13 @@ export type AdminPermissionScope =
   | "AI";
 
 export type AdminAuditAction =
+  | "ADMIN_ORGANIZATION_CREATED"
+  | "ADMIN_ORGANIZATION_MODIFIED"
+  | "ADMIN_TEAM_CREATED"
+  | "ADMIN_TEAM_MODIFIED"
+  | "ADMIN_MEMBER_ADDED"
+  | "ADMIN_MEMBER_REMOVED"
+  | "ADMIN_PLATFORM_CREATOR_ACCESS"
   | "ADMIN_USER_CREATED"
   | "ADMIN_ROLE_CREATED"
   | "ADMIN_ROLE_ASSIGNED"
@@ -40,6 +54,8 @@ export type AdminAuditAction =
 export interface AdminOrganizationMetadata {
   id: string;
   organizationId: string;
+  organizationName: string;
+  organizationType: AdminOrganizationType;
   workspaces: string[];
   environments: string[];
   projects: string[];
@@ -54,6 +70,29 @@ export interface AdminOrganizationMetadata {
   active: boolean;
   suspended: boolean;
   archived: boolean;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  profile: {
+    logoUrl?: string;
+    branding?: object;
+    timezone?: string;
+    currency?: string;
+  };
+  metadata?: object;
+}
+
+export interface AdminTeam {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string;
+  projectIds: string[];
+  taskIds: string[];
+  documentIds: string[];
+  workflowResponsibilities: string[];
+  status: AdminEntityStatus;
+  defaultTeam: boolean;
   createdBy: string;
   createdAt: string;
   updatedAt: string;
@@ -151,6 +190,8 @@ export interface AdminAuditEvent {
   userId?: string;
   roleId?: string;
   permissionId?: string;
+  organizationMetadataId?: string;
+  teamId?: string;
   membershipId?: string;
   invitationId?: string;
   beforeState?: object;
@@ -165,6 +206,37 @@ export interface CreateAdminUserInput {
   status?: AdminUserStatus;
   mfaMetadata?: object;
   lastLoginMetadata?: object;
+  metadata?: object;
+}
+
+export interface UpdateAdminOrganizationInput {
+  organizationName?: string;
+  organizationType?: AdminOrganizationType;
+  logoUrl?: string;
+  branding?: object;
+  timezone?: string;
+  currency?: string;
+  metadata?: object;
+}
+
+export interface CreateAdminTeamInput {
+  name: string;
+  description?: string;
+  projectIds?: string[];
+  taskIds?: string[];
+  documentIds?: string[];
+  workflowResponsibilities?: string[];
+  metadata?: object;
+}
+
+export interface UpdateAdminTeamInput {
+  name?: string;
+  description?: string;
+  projectIds?: string[];
+  taskIds?: string[];
+  documentIds?: string[];
+  workflowResponsibilities?: string[];
+  status?: AdminEntityStatus;
   metadata?: object;
 }
 
@@ -204,6 +276,13 @@ export interface CreateAdminInvitationInput {
 }
 
 export interface EnterpriseAdminRepository {
+  upsertOrganizationMetadata(organization: AdminOrganizationMetadata): Promise<AdminOrganizationMetadata>;
+  findOrganizationMetadata(organizationId: string): Promise<AdminOrganizationMetadata | null>;
+  createTeam(team: AdminTeam): Promise<AdminTeam>;
+  findTeamById(id: string, organizationId: string): Promise<AdminTeam | null>;
+  findTeamByName(name: string, organizationId: string): Promise<AdminTeam | null>;
+  listTeams(organizationId: string): Promise<AdminTeam[]>;
+  updateTeam(team: AdminTeam): Promise<AdminTeam>;
   createUser(user: AdminUser): Promise<AdminUser>;
   findUserById(id: string, organizationId: string): Promise<AdminUser | null>;
   listUsers(organizationId: string): Promise<AdminUser[]>;
@@ -215,6 +294,8 @@ export interface EnterpriseAdminRepository {
   listPermissions(organizationId: string): Promise<AdminPermission[]>;
   upsertPermission(permission: AdminPermission): Promise<AdminPermission>;
   createMembership(membership: AdminMembership): Promise<AdminMembership>;
+  findMembershipById(id: string, organizationId: string): Promise<AdminMembership | null>;
+  updateMembership(membership: AdminMembership): Promise<AdminMembership>;
   createInvitation(invitation: AdminInvitation): Promise<AdminInvitation>;
   appendAuditEvent(event: AdminAuditEvent): Promise<void>;
   listAuditEvents(organizationId: string): Promise<AdminAuditEvent[]>;
