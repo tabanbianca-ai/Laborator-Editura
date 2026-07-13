@@ -3586,3 +3586,160 @@ Audit covers:
 - `AI_ACTION_BLOCKED`.
 - `AI_SUBSCRIPTION_UPGRADED`.
 - `AI_SUBSCRIPTION_DOWNGRADED`.
+
+## Phase 7 Step 15 - Intelligent Editorial Library & UX Finalization
+
+Status: Implemented as an additive extension of the existing Library.
+
+### Purpose
+
+The Library is a unified intelligent editorial center for the complete
+publication lifecycle. It is not only a file repository and must not become a
+separate Archive module.
+
+### Lifecycle Model
+
+Publication lifecycle statuses:
+
+- `STOC_REAL` - publication or source stored in the Library but not currently
+  in editorial production.
+- `IN_LUCRU` - publication connected to an active editorial project or
+  workflow.
+- `PUBLICAT` - final publication approved and published.
+
+Allowed transitions:
+
+- `STOC_REAL` to `IN_LUCRU`.
+- `IN_LUCRU` to `PUBLICAT`.
+- `PUBLICAT` to `IN_LUCRU` when a new edition or revision is created.
+
+Historical versions must never be destroyed during status changes.
+
+### Publication Types
+
+Publication type is metadata and a filter, not a separate Library module.
+Supported types include Book, Children's Book, Magazine, Poetry, Dictionary,
+Course, Audiobook, Video, and other configured publication types.
+
+### Essential Functions
+
+The Library supports:
+
+- Alphabetical organization by title.
+- Ascending and descending sorting.
+- Fast search across title, subtitle, author, ISBN, language, series,
+  collection, and metadata.
+- Exact, normalized, fuzzy, partial-title, author, multilingual metadata, ISBN,
+  series, and collection search.
+- Filters by author, language, editorial domain, publication type, lifecycle
+  status, publication year, original publication year, rights status, format,
+  series, and collection.
+- Grid and list views.
+- Persistent user view preferences and persistent filters.
+- Cover, title, author, status, language, year, and quick actions visible in
+  the main view.
+- Access to editions, versions, available formats, manuscripts, editorial
+  projects, original edition metadata, rights, provenance, publishing history,
+  and distribution status.
+- PDF, EPUB, MOBI, print-ready PDF, audio, video, accessible formats, and
+  source/working/final files where supported.
+- Status movement between Stoc real, În lucru, and Publicat.
+- Bulk actions for multiple titles.
+
+### Publication Record
+
+Each publication has one unified record containing:
+
+- General information: title, subtitle, author, contributors, description,
+  publication type, domain, language, series, collection, and volume.
+- Original edition: original title, original language, original author, first
+  edition, first publication year, publisher, source reference, and source
+  acquisition metadata where available.
+- Editorial relationships: manuscript, project, active workflow, translations,
+  review, layout, and publishing records.
+- Files and formats: source files, working files, final files, PDF, EPUB,
+  MOBI, print-ready PDF, audio, video, accessibility variants, and print
+  formats.
+- Editions and versions: edition number, version history, edition status,
+  publication date, revision date, and change summary.
+- Rights and provenance: rights status, license, contracts, source provenance,
+  asset provenance, and publication restrictions.
+- Publishing history: published channels, publication dates, distribution
+  status, withdrawn or superseded edition metadata, and associated identifiers.
+
+### Visibility
+
+Visibility is independent from lifecycle status:
+
+- `PUBLIC`.
+- `PRIVATE`.
+- `INTERNAL_WORKING_PUBLICATION`.
+
+A publication may be `PUBLICAT` and still `PRIVATE`.
+
+### Preview, Actions and Bulk Operations
+
+Preview is available inside the Library and may include cover, metadata, table
+of contents, selected pages, audio sample, video sample, formats, publication
+status, and associated project. Restricted content must not be exposed.
+
+Contextual actions include open publication, open manuscript, open project,
+continue editorial work, start new edition, add translation, view rights, view
+versions, preview, export, move status, publish when permitted, add to
+collection, and edit metadata.
+
+Bulk operations may change status, assign collection, assign series, add tags,
+export metadata, update selected metadata, assign project, mark public/private,
+validate rights status, or generate a report. Bulk actions must respect role
+permissions, subscription entitlements, Need-to-Know scope, project/document
+scope, visibility, and rights restrictions.
+
+### Duplicate Detection
+
+Potential duplicates are detected using title, normalized title, author, ISBN,
+original title, edition, and source file fingerprint. The Library must never
+merge automatically; it must show comparison evidence and require authorized
+human confirmation.
+
+### Agent Integration
+
+Library Agent responsibilities:
+
+- Classify publications.
+- Validate metadata completeness.
+- Detect duplicate records.
+- Connect editions and versions.
+- Maintain relationships with projects and manuscripts.
+- Suggest missing metadata.
+- Preserve status consistency.
+- Never delete historical versions automatically.
+
+Quality Agent checks publication completeness, required formats, metadata,
+rights, accessibility, and readiness issues.
+
+Rights & Provenance Agent validates source and rights information before
+publication.
+
+### Audit and Backup
+
+Audit covers:
+
+- `LIBRARY_PUBLICATION_CREATED`.
+- `LIBRARY_METADATA_CHANGED`.
+- `LIBRARY_STATUS_CHANGED`.
+- `LIBRARY_VISIBILITY_CHANGED`.
+- `LIBRARY_MANUSCRIPT_LINKED`.
+- `LIBRARY_PROJECT_LINKED`.
+- `LIBRARY_EDITION_CREATED`.
+- `LIBRARY_VERSION_CREATED`.
+- `LIBRARY_FILE_ADDED`.
+- `LIBRARY_FILE_REPLACED`.
+- `LIBRARY_BULK_ACTION`.
+- `LIBRARY_PUBLICATION_PUBLISHED`.
+- `LIBRARY_PUBLICATION_WITHDRAWN`.
+- `LIBRARY_DUPLICATE_REVIEWED`.
+- `LIBRARY_RIGHTS_STATUS_CHANGED`.
+
+Backup and restore include publications, metadata, editions, versions, files,
+relationships, rights, statuses, visibility, and audit references. Restore must
+not break project or manuscript links.
