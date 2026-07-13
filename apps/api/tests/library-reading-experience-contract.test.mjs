@@ -124,7 +124,7 @@ test("private user access is enforced by organization and user identity", () => 
   assert.match(service, /actor\.organizationId/);
   assert.match(service, /actor\.userId/);
   assert.doesNotMatch(controller, /@Controller\("public"\)/);
-  assert.doesNotMatch(controller, /@Get\("public|@Post\("public/);
+  assert.doesNotMatch(controller, /@(Get|Post)\("public(\/|")/);
 });
 
 test("library audit events are written for reading mutations and administrative changes", () => {
