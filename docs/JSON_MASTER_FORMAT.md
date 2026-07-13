@@ -1094,6 +1094,152 @@ Example:
 }
 ```
 
+Intelligent Editorial Library metadata records the unified publication lifecycle
+without creating a separate archive. It references canonical projects,
+manuscripts, workflow, rights, export, publishing, and distribution objects
+instead of duplicating their content.
+
+Example:
+
+```json
+{
+  "library": {
+    "publications": [
+      {
+        "publicationId": "library-publication-001",
+        "title": "Cartea Spiritelor",
+        "subtitle": "Ediție de lucru",
+        "author": "Allan Kardec",
+        "contributors": [
+          {
+            "name": "Translator A",
+            "role": "TRANSLATOR",
+            "userId": "user-001"
+          }
+        ],
+        "publicationType": "BOOK",
+        "editorialDomain": "Spiritism",
+        "language": "ro",
+        "locale": "ro-RO",
+        "series": "Works of Allan Kardec",
+        "collection": "Spiritist Library",
+        "volume": "Volume I",
+        "lifecycleStatus": "IN_LUCRU",
+        "visibility": "INTERNAL_WORKING_PUBLICATION",
+        "publicationYear": 2026,
+        "originalEdition": {
+          "originalTitle": "Le Livre des Esprits",
+          "originalLanguage": "fr",
+          "originalAuthor": "Allan Kardec",
+          "firstEdition": "1860",
+          "firstPublicationYear": 1860,
+          "publisher": "Didier et Cie",
+          "sourceReference": "Original publication",
+          "sourceAcquisition": "documented metadata only"
+        },
+        "relationships": {
+          "manuscriptId": "manuscript-001",
+          "projectId": "project-001",
+          "activeWorkflowId": "workflow-001",
+          "translationRefs": ["translation-001"],
+          "reviewRefs": ["review-001"],
+          "layoutRefs": ["layout-001"],
+          "publishingRecordRefs": ["publishing-001"]
+        },
+        "formats": [
+          "PDF",
+          "EPUB",
+          "MOBI",
+          "PRINT_READY_PDF",
+          "AUDIO",
+          "VIDEO",
+          "ACCESSIBLE"
+        ],
+        "rightsAndProvenance": {
+          "rightsStatus": "RIGHTS_OBTAINED",
+          "license": "Editorial license",
+          "contractRefs": ["contract-001"],
+          "sourceProvenanceRef": "provenance-001",
+          "assetProvenance": "documented",
+          "publicationRestrictions": []
+        },
+        "publishingHistory": {
+          "publishedChannels": ["PUBLIC_PORTAL"],
+          "publicationDates": ["2026-01-01"],
+          "distributionStatus": "READY",
+          "associatedIdentifiers": ["ISBN-TEST"]
+        },
+        "editionRefs": ["library-edition-001"],
+        "versionRefs": ["library-version-001"],
+        "fileRefs": ["library-file-001"],
+        "auditRefs": ["library-audit-001"]
+      }
+    ],
+    "editions": [
+      {
+        "editionId": "library-edition-001",
+        "publicationId": "library-publication-001",
+        "editionNumber": "1",
+        "editionStatus": "DRAFT",
+        "publicationDate": "2026-01-01",
+        "revisionDate": "2026-01-02",
+        "changeSummary": "Initial editorial edition."
+      }
+    ],
+    "versions": [
+      {
+        "versionId": "library-version-001",
+        "publicationId": "library-publication-001",
+        "editionId": "library-edition-001",
+        "versionNumber": "1.0",
+        "immutableHistoricalVersion": true,
+        "changeSummary": "Initial version."
+      }
+    ],
+    "files": [
+      {
+        "fileId": "library-file-001",
+        "publicationId": "library-publication-001",
+        "editionId": "library-edition-001",
+        "fileType": "PDF",
+        "artifactRef": "export-001",
+        "visibility": "PRIVATE",
+        "restricted": false
+      }
+    ],
+    "viewPreferences": [
+      {
+        "userId": "user-001",
+        "viewMode": "GRID",
+        "sortBy": "title",
+        "sortDirection": "ASC",
+        "persistentFilters": {
+          "lifecycleStatus": "IN_LUCRU",
+          "publicationType": "BOOK"
+        },
+        "recentSearches": ["kardec"],
+        "savedSearches": [
+          {
+            "name": "Spiritism",
+            "query": "spirit",
+            "filters": {
+              "editorialDomain": "Spiritism"
+            }
+          }
+        ]
+      }
+    ],
+    "rules": {
+      "noSeparateArchiveModule": true,
+      "statusChangesPreserveHistoricalVersions": true,
+      "visibilityIndependentFromLifecycle": true,
+      "duplicateDetectionRequiresHumanConfirmation": true,
+      "previewMustNotExposeRestrictedContent": true
+    }
+  }
+}
+```
+
 This document defines canonical JSON Master guidance for the implemented
 metadata areas above. It does not by itself change runtime validators, database
 schema, APIs, or UI.
