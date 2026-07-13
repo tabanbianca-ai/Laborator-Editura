@@ -53,6 +53,118 @@ Each manuscript must contain:
   language-specific media versions, original media links, and source
   manuscript/article/book/project links.
 
+## Unified Language Management Representation
+
+JSON Master must represent language metadata through the centralized Language
+Management model. It must not create independent, conflicting language settings
+for individual modules.
+
+Official fields:
+
+- `platformLanguage`: UI language used for menus, labels, dialogs,
+  administration, dashboard, workflow names, and AI/user conversation text.
+- `originalLanguage`: original publication language. It remains linked to the
+  original work and is immutable unless an authorized change is audited.
+- `originalLocale`: regional variant of the original publication when known.
+- `authoringLanguage`: current manuscript editing language.
+- `authoringLocale`: regional variant used while authoring.
+- `targetLanguages`: array of translation target language records.
+- `targetLocale`: regional translation variant for a target manuscript,
+  translation, edition, export, or media version.
+
+Project-level language example:
+
+```json
+{
+  "languageManagement": {
+    "platformLanguage": "ro-RO",
+    "fallbackLanguage": "en-US",
+    "originalLanguage": "fr",
+    "originalLocale": "fr-FR",
+    "authoringLanguage": "ro",
+    "authoringLocale": "ro-RO",
+    "targetLanguages": [
+      { "language": "en", "locale": "en-US", "enabled": true },
+      { "language": "es", "locale": "es-ES", "enabled": true },
+      { "language": "pt", "locale": "pt-PT", "enabled": true },
+      { "language": "it", "locale": "it-IT", "enabled": true }
+    ]
+  }
+}
+```
+
+Rules:
+
+- Changing `platformLanguage` never changes original, authoring, or target
+  languages.
+- Translation alignment uses Original Language to Target Language.
+- Review comparison columns must record their selected language and version.
+- Dictionaries, glossaries, terminology, phraseology, and linguistic resources
+  are loaded by Source Language to Target Language.
+- AI agent explanations and documentation text use Platform Language.
+- Audit references must preserve Platform Language changed, Original Language
+  changed, Authoring Language changed, Target Language added, Target Language
+  removed, and Language resources updated events.
+
+## Organization, Teams and Platform Creator Representation
+
+JSON Master may reference organization and access-governance metadata through a
+central Administration representation. It must not duplicate organization,
+team, membership, or protected system-role settings across individual modules.
+
+Project-level organization example:
+
+```json
+{
+  "administration": {
+    "organization": {
+      "organizationId": "org_001",
+      "organizationName": "Laboratorul Editurii",
+      "organizationType": "PERSOANA_FIZICA",
+      "profile": {
+        "timezone": "Europe/Madrid",
+        "currency": "EUR",
+        "logoUrl": null,
+        "branding": {}
+      }
+    },
+    "teams": [
+      {
+        "teamId": "team_translation",
+        "name": "Echipa Traducere",
+        "projectIds": ["project_001"],
+        "taskIds": [],
+        "documentIds": [],
+        "workflowResponsibilities": ["translation"]
+      }
+    ],
+    "systemRoles": {
+      "platformCreator": {
+        "role": "PLATFORM_CREATOR",
+        "displayName": "Creatorul platformei",
+        "protected": true,
+        "assignableThroughAdministration": false,
+        "subscriptionIndependent": true
+      }
+    }
+  }
+}
+```
+
+Rules:
+
+- Organization types are `PERSOANA_FIZICA`, `EDITURA`, `ASOCIATIE_ONG`,
+  `COMPANIE`, and `INSTITUTIE`.
+- `PERSOANA_FIZICA` is the default organization type.
+- Teams are organization-scoped and may reference projects, tasks, documents,
+  and workflow responsibilities.
+- `PLATFORM_CREATOR` is a protected system role and must remain separate from
+  `ADMIN`.
+- Creator role access is auditable and cannot be removed, downgraded, assigned
+  to normal users, or limited by subscription plans.
+- Audit references must preserve organization created/modified, team
+  created/modified, member added/removed, and Creator role access events.
+
 ## Magazine Publication Representation
 
 Magazine Platform Vision is a future documentation-only requirement. JSON
@@ -241,6 +353,18 @@ Recommended optional fields:
   agent action that consulted the source.
 - `linguisticConflicts`: conflicting definitions, source authorities, affected
   terms, required human review, and final human decision refs.
+- `linguisticSourcePriority`: ordered project-level consultation priority for
+  official normative sources, project glossary, specialized glossary,
+  Translation Memory, bilingual dictionaries, explanatory dictionaries, and
+  corpus/examples.
+- `glossaryHierarchy`: Project Glossary, Platform Glossary, and optional
+  Personal Glossary suggestion metadata.
+- `translationMemoryProposals`: proposal-only TM evidence containing match type,
+  confidence, consulted sources, context, approval version, and human final
+  authority metadata.
+- `linguisticProposalExplanations`: confidence score, consulted sources,
+  glossary used, Translation Memory match, terminology status, semantic
+  validation, and explanation.
 - `linguisticAuditRefs`: audit event references for resource added, resource
   updated, license changed, entry imported, source consulted, terminology
   decision, dictionary conflict, human override, and resource disabled.
@@ -272,6 +396,23 @@ Resource metadata fields:
 - `permittedExcerpts`.
 - `accessRestrictions`.
 - `licenseNotes`.
+
+Advanced linguistic fields:
+
+- `sourcePriorityId`.
+- `sourcePriorityItems`.
+- `dragDropOrderingSupported`.
+- `glossaryScope`: `PROJECT`, `PLATFORM`, or `PERSONAL`.
+- `glossaryPriority`: `PROJECT > PLATFORM > PERSONAL`.
+- `translationMemoryMatchType`: `EXACT`, `FUZZY`, or `CONTEXT`.
+- `translationMemoryProposalOnly`.
+- `automaticReplacement`: always `false` for TM proposals.
+- `confidenceScore`.
+- `consultedSources`.
+- `glossaryUsed`.
+- `terminologyStatus`.
+- `semanticValidation`.
+- `proposalExplanation`.
 
 Access rules:
 
