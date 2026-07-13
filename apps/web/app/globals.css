@@ -1193,6 +1193,13 @@ textarea {
   padding: 14px 14px 0;
 }
 
+.admin-language-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 16px 20px;
+}
+
 .admin-access-formula {
   background: #f7f9f6;
   border: 1px solid #e1e7e2;
@@ -2836,12 +2843,14 @@ textarea {
 
   .status-grid,
   .format-grid,
+  .admin-language-grid,
   .admin-section-grid,
   .manuscript-detail-grid {
     grid-template-columns: 1fr 1fr;
   }
 
   .admin-guidance-grid,
+  .admin-language-grid,
   .manuscript-workspace,
   .editorial-workspace-hero,
   .translation-selector-grid,
@@ -3053,6 +3062,7 @@ textarea {
   }
 
   .status-grid,
+  .admin-language-grid,
   .admin-section-grid,
   .format-grid {
     grid-template-columns: 1fr;
