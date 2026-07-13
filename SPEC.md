@@ -393,6 +393,42 @@ Search requirements:
   grammatical category, source, edition, and authority level.
 - Support exact, normalized, fuzzy, and morphological search modes.
 
+Advanced Linguistic Resources & Translation Memory requirements:
+
+- This capability extends the existing Linguistic Knowledge Base, Translation,
+  Terminology & Lexicography, Semantic Fidelity, Review, AI Governance, and
+  Audit systems. It is not a new enterprise module.
+- Each project may define a configurable source consultation priority. The
+  default order is:
+  1. Official normative source.
+  2. Project glossary.
+  3. Specialized glossary.
+  4. Translation Memory.
+  5. Bilingual dictionary.
+  6. Explanatory dictionary.
+  7. Corpus/examples.
+- Source priority must support ordered, drag-and-drop-ready configuration and
+  must be auditable when changed.
+- Integrated Translation Memory stores only validated translations as reusable
+  proposal evidence. Each entry preserves source segment, translated segment,
+  language pair, project, domain, context, author, reviewer, approval date,
+  confidence, and version.
+- Translation Memory supports exact match, fuzzy match, and context match.
+- Translation Memory must never replace text automatically. It always proposes
+  and authorized humans retain final authority.
+- Glossaries have three levels: Project Glossary, Platform Glossary, and
+  Personal Glossary.
+- Glossary priority is Project > Platform > Personal. Personal glossary entries
+  are optional suggestions only and must not become authoritative over project
+  or platform terminology.
+- Conflicts between glossary levels require human review and audit.
+- Every linguistic proposal must expose confidence score, consulted sources,
+  glossary used, Translation Memory match, terminology status, semantic
+  validation, and an explanation so the user understands why it exists.
+- Audit must cover glossary created, glossary updated, glossary conflict,
+  Translation Memory entry added, Translation Memory reused, source priority
+  changed, and confidence recalculated.
+
 #### Layout & Editorial Production Agent
 
 Purpose: reserve professional editorial production support for print and
@@ -3295,3 +3331,156 @@ denial.
 Audit covers role assigned, changed, and revoked; subscription activated and
 changed; quota exceeded; feature blocked; upgrade; downgrade; temporary access
 granted and expired; and human override where permitted.
+
+## Phase 7 Step 14.2 - Unified Language Management
+
+Status: Implemented as an additive centralized language architecture.
+
+### Core Rule
+
+Every module uses one centralized Language Management model. Language settings
+must not be duplicated across Projects, Translation, Review, Workspace, AI
+Governance, Linguistic Knowledge Base, Administration, Audit, or publication
+metadata.
+
+The official language attributes are:
+
+- `platformLanguage`: language of menus, buttons, labels, dialogs,
+  notifications, administration, dashboard, editorial workspace, and AI
+  conversations with the user.
+- `originalLanguage`: language of the original publication. It is immutable
+  after project creation unless an authorized user explicitly changes it.
+- `authoringLanguage`: language currently used while editing a manuscript. It
+  supports multilingual authoring.
+- `targetLanguage`: language of each translation. A project may contain
+  multiple target languages.
+
+Changing `platformLanguage` must update UI labels immediately and must not
+change `originalLanguage`, `authoringLanguage`, or any `targetLanguage`.
+
+### Project Language Configuration
+
+Each project may contain:
+
+- One Original Language.
+- One Authoring Language.
+- One or more Target Languages.
+
+Example:
+
+- Original: French.
+- Authoring: Romanian.
+- Target languages: English, Spanish, Portuguese, and Italian.
+
+Multiple translations of the same original work are supported. Translation
+always follows Original Language to Target Language. Documentation, review
+explanations, administration text, workflow labels, AI agent labels, and user
+messages use Platform Language.
+
+### Review and Linguistic Resources
+
+Parallel review defaults to two columns:
+
+- Original.
+- Translation.
+
+Optional comparison modes may use three or four columns. Each column selects
+language and version independently.
+
+The Linguistic Knowledge Base automatically loads dictionaries, glossaries,
+terminology, phraseology, and linguistic resources by Source Language to Target
+Language. These resources remain supporting evidence unless a validated glossary
+or authorized editorial decision gives them authority.
+
+### Administration and Audit
+
+Administration exposes Central Language Management for:
+
+- Installed languages.
+- Enabled languages.
+- Default Platform Language.
+- Language fallback.
+- Translation completeness.
+- Linguistic resources.
+- Dictionaries.
+- Glossaries.
+
+Audit covers:
+
+- `PLATFORM_LANGUAGE_CHANGED`.
+- `ORIGINAL_LANGUAGE_CHANGED`.
+- `AUTHORING_LANGUAGE_CHANGED`.
+- `TARGET_LANGUAGE_ADDED`.
+- `TARGET_LANGUAGE_REMOVED`.
+- `LANGUAGE_RESOURCES_UPDATED`.
+
+## Phase 7 Step 14.4 - Organization, Teams and Platform Creator
+
+Status: Implemented as an additive Administration and access-governance
+refinement.
+
+### Organization Model
+
+Every organization has a simple profile and one organization type.
+
+Supported organization types:
+
+- `PERSOANA_FIZICA` - Persoană fizică.
+- `EDITURA` - Editură.
+- `ASOCIATIE_ONG` - Asociație / ONG.
+- `COMPANIE` - Companie.
+- `INSTITUTIE` - Instituție.
+
+`PERSOANA_FIZICA` is the default organization type.
+
+Organization Management in Administration covers organization profile,
+organization type, teams, members, and invitations.
+
+### Teams
+
+Organizations may create teams and assign projects, tasks, documents, and
+workflow responsibilities to those teams.
+
+Default teams:
+
+- Echipa Traducere.
+- Echipa Revizie.
+- Echipa Machetare.
+- Echipa Ilustrații.
+- Echipa Multimedia.
+- Echipa Publicare.
+- Echipa Marketing.
+- Echipa Publicitate.
+
+Teams remain organization-scoped and must not become a global file manager or a
+separate enterprise module.
+
+### Platform Creator
+
+`PLATFORM_CREATOR` / `Creatorul platformei` is a unique protected system role
+for platform ownership, development, maintenance, testing, and configuration.
+
+Rules:
+
+- Completely separate from Administrator.
+- Unrestricted access to platform functionality, Administration, AI agents,
+  testing, and configuration.
+- Independent from subscription limits.
+- Cannot be removed.
+- Cannot be downgraded.
+- Cannot be modified by other administrators.
+- Cannot be assigned to normal users through Administration.
+- Exists only for the platform owner.
+
+### Audit
+
+Audit covers:
+
+- `ADMIN_ORGANIZATION_CREATED`.
+- `ADMIN_ORGANIZATION_MODIFIED`.
+- `ADMIN_TEAM_CREATED`.
+- `ADMIN_TEAM_MODIFIED`.
+- `ADMIN_MEMBER_ADDED`.
+- `ADMIN_MEMBER_REMOVED`.
+- `ADMIN_PLATFORM_CREATOR_ACCESS`.
+- `CREATOR_ROLE_ACCESS`.
