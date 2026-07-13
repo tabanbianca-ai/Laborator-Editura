@@ -7,19 +7,26 @@ import {
   type AdminBuiltInRole,
   type AdminInvitation,
   type AdminMembership,
+  type AdminOrganizationMetadata,
+  type AdminOrganizationType,
   type AdminPermission,
   type AdminPermissionScope,
   type AdminRole,
   type AdminRoleName,
+  type AdminTeam,
   type AdminUser,
   type AssignAdminRoleInput,
   type CreateAdminInvitationInput,
   type CreateAdminRoleInput,
+  type CreateAdminTeamInput,
   type CreateAdminUserInput,
-  type EnterpriseAdminActor
+  type EnterpriseAdminActor,
+  type UpdateAdminOrganizationInput,
+  type UpdateAdminTeamInput
 } from "./enterprise-admin.types";
 
 const BUILT_IN_ROLES: AdminBuiltInRole[] = [
+  "PLATFORM_CREATOR",
   "ADMIN",
   "EDITOR",
   "TRANSLATOR",
@@ -31,6 +38,19 @@ const BUILT_IN_ROLES: AdminBuiltInRole[] = [
   "READER",
   "GUEST"
 ];
+
+const PLATFORM_CREATOR_ROLE: AdminBuiltInRole = "PLATFORM_CREATOR";
+const DEFAULT_ORGANIZATION_TYPE: AdminOrganizationType = "PERSOANA_FIZICA";
+const DEFAULT_TEAM_NAMES = [
+  "Echipa Traducere",
+  "Echipa Revizie",
+  "Echipa Machetare",
+  "Echipa Ilustrații",
+  "Echipa Multimedia",
+  "Echipa Publicare",
+  "Echipa Marketing",
+  "Echipa Publicitate"
+] as const;
 
 const DEFAULT_PERMISSIONS: Array<{
   key: string;
@@ -49,6 +69,122 @@ const DEFAULT_PERMISSIONS: Array<{
 @Injectable()
 export class EnterpriseAdminService {
   constructor(private readonly repository: DatabaseEnterpriseAdminRepository) {}
+
+  async getOrganizationProfile(actor: EnterpriseAdminActor): Promise<AdminOrganizationMetadata> {
+    this.assertAdminActor(actor);
+    await this.ensureDefaultTeams(actor);
+
+    return this.ensureOrganizationMetadata(actor);
+  }
+
+  async updateOrganizationProfile(
+    actor: EnterpriseAdminActor,
+    input: UpdateAdminOrganizationInput
+  ): Promise<AdminOrganizationMetadata> {
+    this.assertAdminActor(actor);
+    const existing = await this.ensureOrganizationMetadata(actor);
+    const updated: AdminOrganizationMetadata = {
+      ...existing,
+      organizationName: input.organizationName ?? existing.organizationName,
+      organizationType: input.organizationType ?? existing.organizationType,
+      profile: {
+        ...existing.profile,
+        logoUrl: input.logoUrl ?? existing.profile.logoUrl,
+        branding: input.branding ?? existing.profile.branding,
+        timezone: input.timezone ?? existing.profile.timezone,
+        currency: input.currency ?? existing.profile.currency
+      },
+      metadata: {
+        ...(existing.metadata ?? {}),
+        ...(input.metadata ?? {})
+      },
+      updatedAt: new Date().toISOString()
+    };
+    const saved = await this.repository.upsertOrganizationMetadata(updated);
+    await this.audit(
+      "ADMIN_ORGANIZATION_MODIFIED",
+      actor,
+      { organizationMetadataId: saved.id },
+      saved,
+      existing
+    );
+
+    return saved;
+  }
+
+  async listTeams(actor: EnterpriseAdminActor): Promise<AdminTeam[]> {
+    this.assertAdminActor(actor);
+    await this.ensureDefaultTeams(actor);
+
+    return this.repository.listTeams(actor.organizationId);
+  }
+
+  async createTeam(actor: EnterpriseAdminActor, input: CreateAdminTeamInput): Promise<AdminTeam> {
+    this.assertAdminActor(actor);
+    this.validateRequired(input.name, "name");
+
+    const existing = await this.repository.findTeamByName(input.name, actor.organizationId);
+
+    if (existing) {
+      throw new BadRequestException("team name already exists.");
+    }
+
+    const now = new Date().toISOString();
+    const team: AdminTeam = {
+      id: randomUUID(),
+      organizationId: actor.organizationId,
+      name: input.name,
+      description: input.description,
+      projectIds: input.projectIds ?? [],
+      taskIds: input.taskIds ?? [],
+      documentIds: input.documentIds ?? [],
+      workflowResponsibilities: input.workflowResponsibilities ?? [],
+      status: "ACTIVE",
+      defaultTeam: false,
+      createdBy: actor.userId,
+      createdAt: now,
+      updatedAt: now,
+      metadata: input.metadata
+    };
+    const created = await this.repository.createTeam(team);
+    await this.audit("ADMIN_TEAM_CREATED", actor, { teamId: created.id }, created);
+
+    return created;
+  }
+
+  async updateTeam(
+    actor: EnterpriseAdminActor,
+    teamId: string,
+    input: UpdateAdminTeamInput
+  ): Promise<AdminTeam> {
+    this.assertAdminActor(actor);
+    this.validateRequired(teamId, "teamId");
+    const existing = await this.repository.findTeamById(teamId, actor.organizationId);
+
+    if (!existing) {
+      throw new NotFoundException("admin team not found.");
+    }
+
+    const updated: AdminTeam = {
+      ...existing,
+      name: input.name ?? existing.name,
+      description: input.description ?? existing.description,
+      projectIds: input.projectIds ?? existing.projectIds,
+      taskIds: input.taskIds ?? existing.taskIds,
+      documentIds: input.documentIds ?? existing.documentIds,
+      workflowResponsibilities: input.workflowResponsibilities ?? existing.workflowResponsibilities,
+      status: input.status ?? existing.status,
+      metadata: {
+        ...(existing.metadata ?? {}),
+        ...(input.metadata ?? {})
+      },
+      updatedAt: new Date().toISOString()
+    };
+    const saved = await this.repository.updateTeam(updated);
+    await this.audit("ADMIN_TEAM_MODIFIED", actor, { teamId: saved.id }, saved, existing);
+
+    return saved;
+  }
 
   async listUsers(actor: EnterpriseAdminActor): Promise<AdminUser[]> {
     this.assertAdminActor(actor);
@@ -94,6 +230,10 @@ export class EnterpriseAdminService {
   async createRole(actor: EnterpriseAdminActor, input: CreateAdminRoleInput): Promise<AdminRole> {
     this.assertAdminActor(actor);
     this.validateRequired(input.name, "name");
+
+    if (input.name === PLATFORM_CREATOR_ROLE) {
+      throw new BadRequestException("Platform Creator is a protected system role.");
+    }
 
     if (input.name === "ADMIN" && input.aiInitiatedAdminGrant) {
       throw new BadRequestException("AI cannot auto grant ADMIN.");
@@ -166,8 +306,16 @@ export class EnterpriseAdminService {
     this.assertAdminActor(actor);
     this.validateRequired(userId, "userId");
 
+    if (input.roleName === PLATFORM_CREATOR_ROLE) {
+      throw new BadRequestException("Platform Creator is not assignable through Administration.");
+    }
+
     const user = await this.requireUser(actor, userId);
     const role = await this.resolveRole(actor, input.roleId, input.roleName);
+
+    if (role.name === PLATFORM_CREATOR_ROLE) {
+      throw new BadRequestException("Platform Creator is not assignable through Administration.");
+    }
 
     if (role.name === "ADMIN" && input.aiInitiatedAdminGrant) {
       throw new BadRequestException("AI cannot auto grant ADMIN.");
@@ -208,8 +356,50 @@ export class EnterpriseAdminService {
       roleId: role.id,
       membershipId: created.id
     }, created);
+    await this.audit("ADMIN_MEMBER_ADDED", actor, {
+      userId: user.id,
+      roleId: role.id,
+      membershipId: created.id,
+      teamId: created.teamId
+    }, created);
 
     return created;
+  }
+
+  async removeMember(
+    actor: EnterpriseAdminActor,
+    membershipId: string
+  ): Promise<AdminMembership> {
+    this.assertAdminActor(actor);
+    this.validateRequired(membershipId, "membershipId");
+    const existing = await this.repository.findMembershipById(membershipId, actor.organizationId);
+
+    if (!existing) {
+      throw new NotFoundException("admin membership not found.");
+    }
+
+    if (existing.roleName === PLATFORM_CREATOR_ROLE) {
+      throw new BadRequestException("Platform Creator membership cannot be removed.");
+    }
+
+    const updated: AdminMembership = {
+      ...existing,
+      memberStatus: "ARCHIVED",
+      metadata: {
+        ...(existing.metadata ?? {}),
+        removedBy: actor.userId,
+        removedAt: new Date().toISOString()
+      }
+    };
+    const saved = await this.repository.updateMembership(updated);
+    await this.audit("ADMIN_MEMBER_REMOVED", actor, {
+      userId: saved.userId,
+      roleId: saved.roleId,
+      membershipId: saved.id,
+      teamId: saved.teamId
+    }, saved, existing);
+
+    return saved;
   }
 
   async createInvitation(
@@ -219,9 +409,17 @@ export class EnterpriseAdminService {
     this.assertAdminActor(actor);
     this.validateRequired(input.email, "email");
 
+    if (input.roleName === PLATFORM_CREATOR_ROLE) {
+      throw new BadRequestException("Platform Creator is not available for invitation.");
+    }
+
     const role = input.roleId || input.roleName
       ? await this.resolveRole(actor, input.roleId, input.roleName)
       : undefined;
+
+    if (role?.name === PLATFORM_CREATOR_ROLE) {
+      throw new BadRequestException("Platform Creator is not available for invitation.");
+    }
 
     if ((role?.name === "ADMIN" || input.roleName === "ADMIN") && input.aiInitiatedAdminGrant) {
       throw new BadRequestException("AI cannot auto grant ADMIN.");
@@ -298,6 +496,8 @@ export class EnterpriseAdminService {
       userId?: string;
       roleId?: string;
       permissionId?: string;
+      organizationMetadataId?: string;
+      teamId?: string;
       membershipId?: string;
       invitationId?: string;
     },
@@ -322,8 +522,90 @@ export class EnterpriseAdminService {
   }
 
   private assertAdminActor(actor: EnterpriseAdminActor): void {
-    if (!actor.roles.includes("ADMIN")) {
+    if (!actor.roles.includes("PLATFORM_CREATOR") && !actor.roles.includes("ADMIN")) {
       throw new ForbiddenException("Enterprise admin endpoints require an authorized admin.");
+    }
+  }
+
+  private async ensureOrganizationMetadata(
+    actor: EnterpriseAdminActor
+  ): Promise<AdminOrganizationMetadata> {
+    const existing = await this.repository.findOrganizationMetadata(actor.organizationId);
+
+    if (existing) {
+      return existing;
+    }
+
+    const teams = await this.repository.listTeams(actor.organizationId);
+    const now = new Date().toISOString();
+    const organization: AdminOrganizationMetadata = {
+      id: `${actor.organizationId}:organization-profile`,
+      organizationId: actor.organizationId,
+      organizationName: "Default Organization",
+      organizationType: DEFAULT_ORGANIZATION_TYPE,
+      workspaces: [],
+      environments: [],
+      projects: [],
+      teams: teams.map((team) => team.name),
+      departments: [],
+      workspaceId: undefined,
+      environmentId: undefined,
+      projectIds: [],
+      teamIds: teams.map((team) => team.id),
+      departmentIds: [],
+      status: "ACTIVE",
+      active: true,
+      suspended: false,
+      archived: false,
+      createdBy: actor.userId,
+      createdAt: now,
+      updatedAt: now,
+      profile: {
+        timezone: "Europe/Madrid",
+        currency: "EUR"
+      },
+      metadata: {
+        defaultOrganizationType: DEFAULT_ORGANIZATION_TYPE,
+        platformCreatorRoleSeparateFromAdministrator: true
+      }
+    };
+    const created = await this.repository.upsertOrganizationMetadata(organization);
+    await this.audit("ADMIN_ORGANIZATION_CREATED", actor, {
+      organizationMetadataId: created.id
+    }, created);
+
+    return created;
+  }
+
+  private async ensureDefaultTeams(actor: EnterpriseAdminActor): Promise<void> {
+    const now = new Date().toISOString();
+
+    for (const name of DEFAULT_TEAM_NAMES) {
+      const existing = await this.repository.findTeamByName(name, actor.organizationId);
+
+      if (existing) {
+        continue;
+      }
+
+      const created = await this.repository.createTeam({
+        id: randomUUID(),
+        organizationId: actor.organizationId,
+        name,
+        description: "Default editorial team.",
+        projectIds: [],
+        taskIds: [],
+        documentIds: [],
+        workflowResponsibilities: [],
+        status: "ACTIVE",
+        defaultTeam: true,
+        createdBy: actor.userId,
+        createdAt: now,
+        updatedAt: now,
+        metadata: {
+          createdByDefaultOrganizationSetup: true
+        }
+      });
+      await this.audit("ADMIN_TEAM_CREATED", actor, { teamId: created.id }, created);
     }
   }
 
