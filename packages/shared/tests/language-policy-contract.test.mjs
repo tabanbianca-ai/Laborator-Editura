@@ -45,6 +45,44 @@ test("language policy keeps manuscript ISO language validation separate from tra
   assert.doesNotMatch(source, /SUPPORTED_AUTHORING_LANGUAGES|AUTHORING_LANGUAGE_ALLOWLIST/);
 });
 
+test("unified language management exposes one centralized language model", () => {
+  for (const field of [
+    "OfficialLanguageAttribute",
+    "platformLanguage",
+    "originalLanguage",
+    "authoringLanguage",
+    "targetLanguage",
+    "UnifiedLanguageManagementModel",
+    "createUnifiedLanguageManagementModel",
+    "createProjectLanguageConfiguration"
+  ]) {
+    assert.match(source, new RegExp(field));
+  }
+
+  assert.match(source, /originalLanguageImmutable: true/);
+  assert.match(source, /multipleTargetLanguagesSupported: true/);
+  assert.match(source, /uiLocalizedByPlatformLanguage: true/);
+  assert.match(source, /aiAgentsUsePlatformLanguage: true/);
+  assert.match(source, /translationUsesOriginalToTarget: true/);
+});
+
+test("unified language management supports parallel review and resource loading by language pair", () => {
+  for (const field of [
+    "createParallelReviewColumns",
+    "supportsThreeColumns",
+    "supportsFourColumns",
+    "createLinguisticResourceLoadingPlan",
+    "DICTIONARY",
+    "GLOSSARY",
+    "TERMINOLOGY",
+    "PHRASEOLOGY",
+    "LINGUISTIC_RESOURCE",
+    "loadedByLanguagePair"
+  ]) {
+    assert.match(source, new RegExp(field));
+  }
+});
+
 test("JSON Master exposes separate original authoring and target language metadata", () => {
   for (const field of [
     "originalLanguage",
