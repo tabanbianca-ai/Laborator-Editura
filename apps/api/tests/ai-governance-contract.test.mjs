@@ -33,6 +33,9 @@ test("AI governance module is registered with required authenticated admin endpo
   assert.match(moduleSource, /DatabaseAiGovernanceRepository/);
   assert.match(moduleSource, /AiGovernanceService/);
   assert.match(controller, /@Controller\("ai-governance"\)/);
+  assert.match(controller, /@Get\("providers"\)/);
+  assert.match(controller, /@Post\("providers\/:provider\/status"\)/);
+  assert.match(controller, /@Get\("cost-summary"\)/);
   assert.match(controller, /@Get\("usage"\)/);
   assert.match(controller, /@Post\("usage"\)/);
   assert.match(controller, /@Get\("budgets"\)/);
@@ -64,6 +67,7 @@ test("usage records capture agent execution provider tokens cost currency and st
     "outputTokens",
     "totalTokens",
     "estimatedCost",
+    "actualCost",
     "currency",
     "status",
     "createdAt"
@@ -121,6 +125,7 @@ test("cost policies include soft warnings hard limit metadata approvals and huma
     "softLimitWarningThreshold",
     "hardLimitMetadata",
     "approvalRequiredOverThreshold",
+    "warningThresholds",
     "humanOverrideAllowed",
     "costPolicyEvaluation"
   ]) {
@@ -131,7 +136,86 @@ test("cost policies include soft warnings hard limit metadata approvals and huma
   assert.match(service, /softLimitWarning/);
   assert.match(service, /hardLimitReached/);
   assert.match(service, /approvalRequiredOverThreshold/);
+  assert.match(service, /AI_BUDGET_WARNING_THRESHOLDS: AiBudgetWarningThreshold\[\] = \[80, 90, 100\]/);
+  assert.match(service, /AI_BUDGET_WARNING/);
+  assert.match(service, /AI_BUDGET_EXCEEDED/);
+  assert.match(service, /AI_ACTION_BLOCKED/);
+  assert.match(service, /dataDeleted: false/);
+  assert.match(service, /recoveryOptions: \["wait until quota reset", "upgrade subscription"\]/);
   assert.match(service, /AI_COST_POLICY_CREATED/);
+});
+
+test("provider management uses OpenAI primary with Anthropic fallback and audited recovery", () => {
+  const types = readSource("ai-governance.types.ts");
+  const service = readSource("ai-governance.service.ts");
+  const repository = readSource("ai-governance.repository.ts");
+  const controller = readSource("ai-governance.controller.ts");
+
+  for (const marker of [
+    '"OPENAI"',
+    '"ANTHROPIC"',
+    '"PRIMARY"',
+    '"FALLBACK"',
+    '"TIMEOUT"',
+    '"UNAVAILABLE"',
+    '"API_ERROR"',
+    '"CONFIGURED_OUTAGE"',
+    '"FALLBACK_ACTIVE"',
+    '"USING_PRIMARY"',
+    "AiProviderStatusRecord",
+    "AiProviderSummary"
+  ]) {
+    assert.match(types + service, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+
+  assert.match(service, /const PRIMARY_AI_PROVIDER = "OPENAI" satisfies AiProviderName/);
+  assert.match(service, /const FALLBACK_AI_PROVIDER = "ANTHROPIC" satisfies AiProviderName/);
+  assert.match(service, /PROVIDER_UNAVAILABLE_STATUSES/);
+  assert.match(service, /fallbackToProvider: FALLBACK_AI_PROVIDER/);
+  assert.match(service, /AI_FALLBACK_ACTIVATED/);
+  assert.match(service, /AI_FALLBACK_RECOVERED/);
+  assert.match(service, /AI_PROVIDER_CHANGED/);
+  assert.match(repository, /ai_provider_statuses/);
+  assert.match(controller, /updateProviderStatus/);
+});
+
+test("model selection defaults to automatic and manual choice requires role and subscription", () => {
+  const types = readSource("ai-governance.types.ts");
+  const service = readSource("ai-governance.service.ts");
+
+  assert.match(types, /export type AiModelSelectionMode = "AUTOMATIC" \| "MANUAL"/);
+  assert.match(service, /modelSelectionMode: "AUTOMATIC"/);
+  assert.match(service, /defaultModel: "automatic"/);
+  assert.match(service, /automaticModelSelection: true/);
+  assert.match(service, /manualModelSelectionRequiresRoleAndSubscription: true/);
+  assert.match(service, /extensibleProviderArchitecture: true/);
+});
+
+test("cost summary monitors monthly budget consumption agents and projects", () => {
+  const types = readSource("ai-governance.types.ts");
+  const service = readSource("ai-governance.service.ts");
+  const controller = readSource("ai-governance.controller.ts");
+
+  assert.match(types, /interface AiCostSummary/);
+  assert.match(types, /monthlyBudget/);
+  assert.match(types, /monthlyConsumption/);
+  assert.match(types, /remainingBudget/);
+  assert.match(types, /consumptionByAgent/);
+  assert.match(types, /consumptionByProject/);
+  assert.match(service, /getCostSummary/);
+  assert.match(service, /groupUsageByAgent/);
+  assert.match(service, /groupUsageByProject/);
+  assert.match(controller, /@Get\("cost-summary"\)/);
+});
+
+test("Platform Creator has unrestricted AI access independent of subscription limits", () => {
+  const service = readSource("ai-governance.service.ts");
+
+  assert.match(service, /roles\.has\("PLATFORM_CREATOR"\)/);
+  assert.match(service, /isPlatformCreator/);
+  assert.match(service, /platformCreatorUnlimited: true/);
+  assert.match(service, /hardLimitReached: false/);
+  assert.match(service, /blockedActionOnly: false/);
 });
 
 test("AI agent integration registry includes approved Phase 2 and Phase 3 agents", () => {
@@ -214,10 +298,18 @@ test("AI cost audit trail and backup restore include all AI governance tables", 
   assert.match(types, /AiCostAuditEvent/);
 
   for (const action of [
+    "AI_PROVIDER_CHANGED",
+    "AI_FALLBACK_ACTIVATED",
+    "AI_FALLBACK_RECOVERED",
     "AI_USAGE_RECORDED",
     "AI_BUDGET_CREATED",
     "AI_QUOTA_CREATED",
     "AI_COST_POLICY_CREATED",
+    "AI_BUDGET_WARNING",
+    "AI_BUDGET_EXCEEDED",
+    "AI_ACTION_BLOCKED",
+    "AI_SUBSCRIPTION_UPGRADED",
+    "AI_SUBSCRIPTION_DOWNGRADED",
     "AI_BUDGET_OVERRIDE_REQUEST_CREATED",
     "AI_BUDGET_OVERRIDE_APPROVED",
     "AI_BUDGET_OVERRIDE_REJECTED"
@@ -227,6 +319,7 @@ test("AI cost audit trail and backup restore include all AI governance tables", 
 
   for (const tableName of [
     "ai_usage_records",
+    "ai_provider_statuses",
     "ai_budgets",
     "ai_quotas",
     "ai_cost_policies",
