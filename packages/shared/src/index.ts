@@ -1,6 +1,6 @@
 export const PRODUCT_NAME = "Laboratorul Editurii";
 
-export type UserRole = "ADMIN" | "TRANSLATOR" | "REVIEWER" | "VIEWER";
+export type UserRole = "PLATFORM_CREATOR" | "ADMIN" | "TRANSLATOR" | "REVIEWER" | "VIEWER";
 
 export interface HealthResponse {
   name?: string;
