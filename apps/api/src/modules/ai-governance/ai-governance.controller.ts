@@ -4,16 +4,37 @@ import { type AuthenticatedRequestContext } from "../auth/request-context.types"
 import { AiGovernanceService } from "./ai-governance.service";
 import {
   type AiOverrideDecisionInput,
+  type AiProviderName,
   type CreateAiBudgetInput,
   type CreateAiBudgetOverrideRequestInput,
   type CreateAiCostPolicyInput,
   type CreateAiQuotaInput,
-  type CreateAiUsageRecordInput
+  type CreateAiUsageRecordInput,
+  type UpdateAiProviderStatusInput
 } from "./ai-governance.types";
 
 @Controller("ai-governance")
 export class AiGovernanceController {
   constructor(private readonly aiGovernanceService: AiGovernanceService) {}
+
+  @Get("providers")
+  listProviders(@CurrentActor() actor: AuthenticatedRequestContext) {
+    return this.aiGovernanceService.listProviders(actor);
+  }
+
+  @Post("providers/:provider/status")
+  updateProviderStatus(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("provider") provider: AiProviderName,
+    @Body() input: UpdateAiProviderStatusInput
+  ) {
+    return this.aiGovernanceService.updateProviderStatus(actor, provider, input);
+  }
+
+  @Get("cost-summary")
+  getCostSummary(@CurrentActor() actor: AuthenticatedRequestContext) {
+    return this.aiGovernanceService.getCostSummary(actor);
+  }
 
   @Get("agents")
   listAgentGovernanceProfiles(@CurrentActor() actor: AuthenticatedRequestContext) {
