@@ -20,6 +20,7 @@ import {
   type LibraryAccessEvent,
   type LibraryActor,
   type LibraryAuditAction,
+  type LibraryAuditEvent,
   type LibraryBookmark,
   type LibraryHighlight,
   type LibraryItem,
@@ -478,8 +479,8 @@ export class LibraryService {
           comparedPublicationId: publication.id,
           reasons,
           score: reasons.length * 25,
-          automaticMerge: false,
-          humanConfirmationRequired: true
+          automaticMerge: false as const,
+          humanConfirmationRequired: true as const
         };
       })
       .filter((candidate) => candidate.reasons.length > 0);
@@ -668,6 +669,267 @@ export class LibraryService {
     await this.audit("ACCESS_EVENT_RECORDED", actor, item.id, "access_event", created.id, undefined, created);
 
     return created;
+  }
+
+  private async requirePublication(
+    actor: LibraryActor,
+    publicationId: string
+  ): Promise<LibraryPublicationRecord> {
+    const publication = await this.repository.findPublicationById(publicationId, actor.organizationId);
+
+    if (!publication) {
+      throw new NotFoundException("Library publication not found.");
+    }
+
+    return publication;
+  }
+
+  private filterPublications(
+    publications: LibraryPublicationRecord[],
+    input: LibraryPublicationSearchInput
+  ): LibraryPublicationRecord[] {
+    const query = this.normalizeSearchText(input.query ?? "");
+
+    return publications.filter((publication) => {
+      const metadataText = this.normalizeSearchText(JSON.stringify(publication.metadata ?? {}));
+      const searchable = [
+        publication.title,
+        publication.subtitle,
+        publication.author,
+        publication.isbn,
+        publication.language,
+        publication.series,
+        publication.collection,
+        publication.originalTitle,
+        publication.originalAuthor,
+        metadataText
+      ].map((value) => this.normalizeSearchText(value ?? "")).join(" ");
+      const queryMatches = !query ||
+        searchable.includes(query) ||
+        this.fuzzyIncludes(searchable, query);
+
+      return queryMatches &&
+        this.matchesFilter(publication.author, input.author) &&
+        this.matchesFilter(publication.language, input.language) &&
+        this.matchesFilter(publication.editorialDomain, input.editorialDomain) &&
+        this.matchesFilter(publication.publicationType, input.publicationType) &&
+        this.matchesFilter(publication.lifecycleStatus, input.lifecycleStatus) &&
+        this.matchesFilter(publication.rightsStatus, input.rightsStatus) &&
+        this.matchesFilter(publication.series, input.series) &&
+        this.matchesFilter(publication.collection, input.collection) &&
+        (!input.publicationYear || publication.publicationYear === input.publicationYear) &&
+        (!input.originalPublicationYear || publication.firstPublicationYear === input.originalPublicationYear) &&
+        (!input.format || publication.availableFormats.includes(input.format));
+    });
+  }
+
+  private sortPublications(
+    publications: LibraryPublicationRecord[],
+    input: LibraryPublicationSearchInput
+  ): LibraryPublicationRecord[] {
+    const sortBy = input.sortBy ?? "title";
+    const direction = input.sortDirection ?? "ASC";
+
+    return [...publications].sort((left, right) => {
+      const leftValue = this.sortValue(left, sortBy);
+      const rightValue = this.sortValue(right, sortBy);
+      const compared = leftValue.localeCompare(rightValue, undefined, { numeric: true });
+
+      return direction === "ASC" ? compared : -compared;
+    });
+  }
+
+  private sortValue(
+    publication: LibraryPublicationRecord,
+    sortBy: NonNullable<LibraryPublicationSearchInput["sortBy"]>
+  ): string {
+    if (sortBy === "author") {
+      return publication.author;
+    }
+
+    if (sortBy === "year") {
+      return String(publication.publicationYear ?? publication.firstPublicationYear ?? "");
+    }
+
+    if (sortBy === "status") {
+      return publication.lifecycleStatus;
+    }
+
+    if (sortBy === "lastUpdate") {
+      return publication.updatedAt;
+    }
+
+    return publication.title;
+  }
+
+  private matchesFilter(value: string | undefined, filter: string | undefined): boolean {
+    return !filter || this.normalizeSearchText(value ?? "") === this.normalizeSearchText(filter);
+  }
+
+  private fuzzyIncludes(searchable: string, query: string): boolean {
+    if (query.length < 3) {
+      return false;
+    }
+
+    return searchable.split(/\s+/).some((token) =>
+      token.startsWith(query) ||
+      query.startsWith(token) ||
+      this.levenshteinDistance(token, query) <= 2
+    );
+  }
+
+  private levenshteinDistance(left: string, right: string): number {
+    const distances = Array.from({ length: left.length + 1 }, (_, index) => index);
+
+    for (let rightIndex = 1; rightIndex <= right.length; rightIndex += 1) {
+      let previous = rightIndex;
+
+      for (let leftIndex = 1; leftIndex <= left.length; leftIndex += 1) {
+        const current = distances[leftIndex - 1] ?? 0;
+        const next = distances[leftIndex] ?? 0;
+        distances[leftIndex - 1] = previous;
+        previous = left[leftIndex - 1] === right[rightIndex - 1]
+          ? current
+          : Math.min(current, previous, next) + 1;
+      }
+
+      distances[left.length] = previous;
+    }
+
+    return distances[left.length] ?? 0;
+  }
+
+  private canTransition(
+    from: LibraryPublicationLifecycleStatus,
+    to: LibraryPublicationLifecycleStatus
+  ): boolean {
+    if (from === to) {
+      return true;
+    }
+
+    return (from === "STOC_REAL" && to === "IN_LUCRU") ||
+      (from === "IN_LUCRU" && to === "PUBLICAT") ||
+      (from === "PUBLICAT" && to === "IN_LUCRU");
+  }
+
+  private applyBulkMutation(
+    publication: LibraryPublicationRecord,
+    input: LibraryBulkActionInput
+  ): LibraryPublicationRecord {
+    const now = new Date().toISOString();
+    const updated: LibraryPublicationRecord = { ...publication, updatedAt: now };
+
+    if (input.action === "CHANGE_STATUS" && input.lifecycleStatus && this.canTransition(publication.lifecycleStatus, input.lifecycleStatus)) {
+      updated.lifecycleStatus = input.lifecycleStatus;
+    }
+
+    if (input.action === "ASSIGN_COLLECTION" && input.collection) {
+      updated.collection = input.collection;
+    }
+
+    if (input.action === "ASSIGN_SERIES" && input.series) {
+      updated.series = input.series;
+    }
+
+    if (input.action === "ADD_TAGS" && input.tags?.length) {
+      updated.tags = [...new Set([...publication.tags, ...input.tags])];
+    }
+
+    if (input.action === "ASSIGN_PROJECT" && input.projectId) {
+      updated.projectId = input.projectId;
+    }
+
+    if (input.action === "MARK_PUBLIC") {
+      updated.visibility = "PUBLIC";
+    }
+
+    if (input.action === "MARK_PRIVATE") {
+      updated.visibility = "PRIVATE";
+    }
+
+    if (input.action === "UPDATE_SELECTED_METADATA" && input.metadata) {
+      updated.metadata = {
+        ...(publication.metadata ?? {}),
+        ...input.metadata
+      };
+    }
+
+    if (input.action === "VALIDATE_RIGHTS_STATUS") {
+      updated.metadata = {
+        ...(updated.metadata ?? {}),
+        rightsValidationRequested: true
+      };
+    }
+
+    if (input.action === "EXPORT_METADATA" || input.action === "GENERATE_REPORT") {
+      updated.metadata = {
+        ...(updated.metadata ?? {}),
+        lastBulkReadOnlyAction: input.action
+      };
+    }
+
+    return updated;
+  }
+
+  private sanitizePublicationForActor(
+    actor: LibraryActor,
+    publication: LibraryPublicationRecord
+  ): LibraryPublicationRecord {
+    if (this.canAccessRestrictedMetadata(actor)) {
+      return publication;
+    }
+
+    const sanitized: LibraryPublicationRecord = {
+      ...publication,
+      restrictedMetadata: undefined,
+      sourceAcquisition: undefined
+    };
+    delete sanitized.restrictedMetadata;
+
+    return sanitized;
+  }
+
+  private canAccessRestrictedMetadata(actor: LibraryActor): boolean {
+    const roles = new Set((actor.roles ?? []).map((role) => role.toUpperCase()));
+
+    return roles.has("PLATFORM_CREATOR") || roles.has("ADMIN") || roles.has("EDITOR");
+  }
+
+  private asStringArray(value: unknown): string[] {
+    return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+  }
+
+  private normalizeSearchText(value: string): string {
+    return value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  private async auditPublication(
+    action: LibraryAuditAction,
+    actor: LibraryActor,
+    publicationId: string | undefined,
+    entityType: LibraryAuditEvent["entityType"],
+    entityId: string,
+    beforeState: object | undefined,
+    afterState: object
+  ): Promise<void> {
+    await this.repository.appendAuditEvent({
+      id: randomUUID(),
+      organizationId: actor.organizationId,
+      userId: actor.userId,
+      publicationId,
+      entityType,
+      entityId,
+      action,
+      actorId: actor.userId,
+      beforeState,
+      afterState,
+      createdAt: new Date().toISOString()
+    });
   }
 
   private async audit(
