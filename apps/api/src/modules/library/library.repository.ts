@@ -8,8 +8,13 @@ import {
   type LibraryHighlight,
   type LibraryItem,
   type LibraryNote,
+  type LibraryPublicationEdition,
+  type LibraryPublicationFile,
+  type LibraryPublicationRecord,
+  type LibraryPublicationVersion,
   type LibraryReadingProgress,
-  type LibraryRepository
+  type LibraryRepository,
+  type LibraryViewPreference
 } from "./library.types";
 
 @Injectable()
@@ -39,6 +44,70 @@ export class DatabaseLibraryRepository implements LibraryRepository {
     const item = this.database.findByIdForTenant<LibraryItem>("library_items", id, organizationId);
 
     return item?.userId === userId ? item : null;
+  }
+
+  async listPublications(organizationId: string): Promise<LibraryPublicationRecord[]> {
+    return this.database.selectForTenant<LibraryPublicationRecord>("library_publications", organizationId);
+  }
+
+  async createPublication(publication: LibraryPublicationRecord): Promise<LibraryPublicationRecord> {
+    return this.database.insert("library_publications", publication);
+  }
+
+  async updatePublication(publication: LibraryPublicationRecord): Promise<LibraryPublicationRecord> {
+    return this.database.upsert("library_publications", publication);
+  }
+
+  async findPublicationById(id: string, organizationId: string): Promise<LibraryPublicationRecord | null> {
+    return this.database.findByIdForTenant<LibraryPublicationRecord>("library_publications", id, organizationId);
+  }
+
+  async createEdition(edition: LibraryPublicationEdition): Promise<LibraryPublicationEdition> {
+    return this.database.insert("library_publication_editions", edition);
+  }
+
+  async listEditions(publicationId: string, organizationId: string): Promise<LibraryPublicationEdition[]> {
+    return this.database.selectForTenant<LibraryPublicationEdition>(
+      "library_publication_editions",
+      organizationId,
+      (edition) => edition.publicationId === publicationId
+    );
+  }
+
+  async createVersion(version: LibraryPublicationVersion): Promise<LibraryPublicationVersion> {
+    return this.database.insert("library_publication_versions", version);
+  }
+
+  async listVersions(publicationId: string, organizationId: string): Promise<LibraryPublicationVersion[]> {
+    return this.database.selectForTenant<LibraryPublicationVersion>(
+      "library_publication_versions",
+      organizationId,
+      (version) => version.publicationId === publicationId
+    );
+  }
+
+  async createPublicationFile(file: LibraryPublicationFile): Promise<LibraryPublicationFile> {
+    return this.database.insert("library_publication_files", file);
+  }
+
+  async listPublicationFiles(publicationId: string, organizationId: string): Promise<LibraryPublicationFile[]> {
+    return this.database.selectForTenant<LibraryPublicationFile>(
+      "library_publication_files",
+      organizationId,
+      (file) => file.publicationId === publicationId
+    );
+  }
+
+  async upsertViewPreference(preference: LibraryViewPreference): Promise<LibraryViewPreference> {
+    return this.database.upsert("library_view_preferences", preference);
+  }
+
+  async findViewPreference(organizationId: string, userId: string): Promise<LibraryViewPreference | null> {
+    return this.database.selectForTenant<LibraryViewPreference>(
+      "library_view_preferences",
+      organizationId,
+      (preference) => preference.userId === userId
+    )[0] ?? null;
   }
 
   async upsertProgress(progress: LibraryReadingProgress): Promise<LibraryReadingProgress> {
