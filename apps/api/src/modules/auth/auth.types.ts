@@ -1,12 +1,26 @@
-export type MvpRole = "ADMIN" | "REVIEWER" | "TRANSLATOR" | "VIEWER";
+export type MvpRole = "PLATFORM_CREATOR" | "ADMIN" | "REVIEWER" | "TRANSLATOR" | "VIEWER";
 
-export type AuthAuditAction = "CREATE" | "UPDATE" | "DELETE" | "APPROVE" | "EXPORT";
+export type OrganizationType =
+  | "PERSOANA_FIZICA"
+  | "EDITURA"
+  | "ASOCIATIE_ONG"
+  | "COMPANIE"
+  | "INSTITUTIE";
+
+export type AuthAuditAction =
+  | "CREATE"
+  | "UPDATE"
+  | "DELETE"
+  | "APPROVE"
+  | "EXPORT"
+  | "CREATOR_ROLE_ACCESS";
 
 export type AuthAuditEntityType =
   | "AUTH_ORGANIZATION"
   | "AUTH_USER"
   | "AUTH_SESSION"
   | "USER_ROLE"
+  | "PLATFORM_CREATOR_ROLE"
   | "AUTH_SECURITY_EVENT"
   | "FOUNDER_PROTECTION"
   | "FOUNDER_RECOVERY"
@@ -32,7 +46,9 @@ export interface AuthActor {
 export interface AuthOrganization {
   id: string;
   name: string;
+  organizationType: OrganizationType;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthUser {
@@ -114,6 +130,7 @@ export interface LoginInput {
   displayName?: string;
   loginSecret?: string;
   organizationName?: string;
+  organizationType?: OrganizationType;
   roles?: MvpRole[];
 }
 
