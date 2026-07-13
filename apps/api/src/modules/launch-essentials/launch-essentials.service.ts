@@ -18,7 +18,7 @@ import {
   type StoreSecretMetadataInput
 } from "./launch-essentials.types";
 
-const SENSITIVE_MFA_ROLES: SensitiveMfaRole[] = ["ADMIN", "REVIEWER", "EDITOR"];
+const SENSITIVE_MFA_ROLES: SensitiveMfaRole[] = ["PLATFORM_CREATOR", "ADMIN", "REVIEWER", "EDITOR"];
 const SECRET_TYPES: SecretVaultType[] = ["JWT", "API_KEY", "SMTP", "OAUTH", "WEBHOOK"];
 
 @Injectable()
@@ -138,7 +138,11 @@ export class LaunchEssentialsService {
       throw new NotFoundException("GDPR consent record not found.");
     }
 
-    if (existing.userId !== actor.userId && !actor.roles.includes("ADMIN")) {
+    if (
+      existing.userId !== actor.userId &&
+      !actor.roles.includes("PLATFORM_CREATOR") &&
+      !actor.roles.includes("ADMIN")
+    ) {
       throw new ForbiddenException("Users may only withdraw their own consent records.");
     }
 
@@ -344,7 +348,7 @@ export class LaunchEssentialsService {
   }
 
   private assertAdminActor(actor: LaunchEssentialsActor): void {
-    if (!actor.roles.includes("ADMIN")) {
+    if (!actor.roles.includes("PLATFORM_CREATOR") && !actor.roles.includes("ADMIN")) {
       throw new ForbiddenException("Public launch essentials administration requires ADMIN.");
     }
   }
