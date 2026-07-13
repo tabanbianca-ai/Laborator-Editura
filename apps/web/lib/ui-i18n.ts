@@ -124,6 +124,27 @@ const englishDictionary = {
   "label.translation": "Translation",
   "label.user": "User",
   "label.workspace": "Workspace",
+  "language.agent.quality": "Quality Agent",
+  "language.agent.review": "Review Agent",
+  "language.agent.translation": "Translation Agent",
+  "language.authoringLanguage": "Authoring Language",
+  "language.centralManagement": "Central Language Management",
+  "language.fallbackLanguage": "Language fallback",
+  "language.linguisticResources": "Linguistic resources",
+  "language.noDuplicateSettings": "No duplicate language settings",
+  "language.originalLanguage": "Original Language",
+  "language.platformLanguage": "Platform Language",
+  "language.targetLanguages": "Target Languages",
+  "language.translationCompleteness": "Translation completeness",
+  "workflow.analysis": "Analysis",
+  "workflow.editing": "Editing",
+  "workflow.export": "Export",
+  "workflow.finalApproval": "Final Approval",
+  "workflow.import": "Import",
+  "workflow.layout": "Layout",
+  "workflow.publication": "Publication",
+  "workflow.review": "Review",
+  "workflow.technicalValidation": "Technical Validation",
   "nav.skipToContent": "Skip to content",
   "nav.unifiedWorkspace": "Unified Workspace",
   "pipeline.activeWarnings": "Active warnings",
@@ -414,6 +435,27 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "label.translation": "Traducere",
   "label.user": "Utilizator",
   "label.workspace": "Spațiu de lucru",
+  "language.agent.quality": "Agent calitate",
+  "language.agent.review": "Agent revizie",
+  "language.agent.translation": "Agent traducere",
+  "language.authoringLanguage": "Limba de lucru",
+  "language.centralManagement": "Management centralizat al limbilor",
+  "language.fallbackLanguage": "Limbă fallback",
+  "language.linguisticResources": "Resurse lingvistice",
+  "language.noDuplicateSettings": "Fără setări duplicate de limbă",
+  "language.originalLanguage": "Limba originală",
+  "language.platformLanguage": "Limba platformei",
+  "language.targetLanguages": "Limbi țintă",
+  "language.translationCompleteness": "Completitudine traducere UI",
+  "workflow.analysis": "Analiză",
+  "workflow.editing": "Editare",
+  "workflow.export": "Export",
+  "workflow.finalApproval": "Aprobare finală",
+  "workflow.import": "Import",
+  "workflow.layout": "Machetare",
+  "workflow.publication": "Publicare",
+  "workflow.review": "Revizie",
+  "workflow.technicalValidation": "Validare tehnică",
   "nav.skipToContent": "Sari la conținut",
   "nav.unifiedWorkspace": "Spațiu de lucru unificat",
   "pipeline.activeWarnings": "Avertizări active",
@@ -641,6 +683,24 @@ const pipelineStepKeys: Record<string, UiTranslationKey> = {
   "Video (optional)": "pipeline.videoProduction"
 };
 
+const agentLabelKeys: Record<string, UiTranslationKey> = {
+  "Quality Agent": "language.agent.quality",
+  "Review Agent": "language.agent.review",
+  "Translation Agent": "language.agent.translation"
+};
+
+const workflowLabelKeys: Record<string, UiTranslationKey> = {
+  Analysis: "workflow.analysis",
+  Editing: "workflow.editing",
+  Export: "workflow.export",
+  "Final Approval": "workflow.finalApproval",
+  Import: "workflow.import",
+  Layout: "workflow.layout",
+  Publication: "workflow.publication",
+  Review: "workflow.review",
+  "Technical Validation": "workflow.technicalValidation"
+};
+
 export function createUiTranslator(platformLanguage?: string | null): UiTranslator {
   const locale = resolveUiLocale(platformLanguage);
 
@@ -690,4 +750,16 @@ export function translatePipelineStepTitle(title: string, platformLanguage?: str
   const key = pipelineStepKeys[title];
 
   return key ? createUiTranslator(platformLanguage).t(key) : title;
+}
+
+export function translateAgentName(agentName: string, platformLanguage?: string | null): string {
+  const key = agentLabelKeys[agentName];
+
+  return key ? createUiTranslator(platformLanguage).t(key) : agentName;
+}
+
+export function translateWorkflowName(workflowName: string, platformLanguage?: string | null): string {
+  const key = workflowLabelKeys[workflowName];
+
+  return key ? createUiTranslator(platformLanguage).t(key) : workflowName;
 }
