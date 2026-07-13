@@ -348,6 +348,7 @@ export class PublicPortalService {
 
     if (
       !permissions.has("review:approve") &&
+      !roles.has("PLATFORM_CREATOR") &&
       !roles.has("ADMIN") &&
       !roles.has("REVIEWER")
     ) {
