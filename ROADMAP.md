@@ -952,6 +952,75 @@ Report:
 
 - `docs/PHASE_7_STEP_14_5_AI_PROVIDERS_COST_MANAGEMENT_REPORT.md`.
 
+## Phase 7 Step 15 - Intelligent Editorial Library & UX Finalization
+
+Status: Implemented as an additive extension of the existing Library.
+
+Scope:
+
+- No new enterprise module.
+- No separate Archive module.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+- Reuses Projects, Manuscripts, Project Dossiers, Translation, Review, Layout,
+  Publishing, Distribution, Rights & Provenance, Unified Language Management,
+  Audit, Versioning, Backup, and Need-to-Know infrastructure.
+
+Implemented capabilities:
+
+- Unified Library publication records for editorial lifecycle management.
+- Lifecycle statuses: `STOC_REAL`, `IN_LUCRU`, and `PUBLICAT`.
+- Status transitions:
+  - Stoc real to În lucru.
+  - În lucru to Publicat.
+  - Publicat to În lucru for new edition/revision.
+- Historical versions are immutable and preserved during status changes.
+- Publication type remains metadata/filter, not a separate Library module.
+- Search supports exact, normalized, fuzzy, partial title, author,
+  multilingual metadata, ISBN, series, and collection matching.
+- Filters cover author, language, editorial domain, publication type,
+  lifecycle status, publication year, original publication year, rights
+  status, format, series, and collection.
+- Grid/list view and persistent user view preference metadata.
+- Publication records connect original edition, manuscript, project, workflow,
+  translations, review, layout, publishing, files, formats, editions, versions,
+  rights, provenance, publishing history, and distribution status.
+- Visibility is independent from lifecycle status and supports `PUBLIC`,
+  `PRIVATE`, and `INTERNAL_WORKING_PUBLICATION`.
+- Library preview returns safe metadata only and does not expose restricted
+  content.
+- Bulk actions support status changes, collections, series, tags, metadata
+  export/update, project assignment, public/private marking, rights validation,
+  and reporting.
+- Duplicate detection compares normalized title, author, ISBN, original title,
+  and source file fingerprint, with no automatic merge.
+- Runtime persistence and backup/restore cover publications, editions,
+  versions, files, preferences, and audit references.
+- Frontend Library workspace exposes primary search, filter chips, advanced
+  filters, grid/list views, quick preview, contextual actions, bulk actions,
+  and lifecycle overview while preserving the existing reader experience.
+
+Validation coverage:
+
+- Alphabetical organization, sorting, title/author/multilingual search, and
+  filters.
+- Grid/list switching and persistent preferences.
+- Lifecycle status transitions and visibility independence.
+- Publication record completeness.
+- Manuscript/project relationships.
+- Edition and version history.
+- Rights metadata and format availability.
+- Preview authorization and restricted metadata protection.
+- Bulk actions.
+- Duplicate detection and no automatic merge.
+- Library Agent and Quality Agent behavior boundaries.
+- Audit completeness.
+- Backup and restore.
+
+Report:
+
+- `docs/PHASE_7_STEP_15_INTELLIGENT_EDITORIAL_LIBRARY_REPORT.md`.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
