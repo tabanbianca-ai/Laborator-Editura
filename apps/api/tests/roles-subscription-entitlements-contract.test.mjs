@@ -79,6 +79,18 @@ test("effective access combines role plan and need-to-know scope server-side", (
   assert.match(service, /Need-to-Know scope does not allow this resource/);
 });
 
+test("platform creator is independent from subscription limits", () => {
+  const authTypes = readApi("src/modules/auth/auth.types.ts");
+  const service = readApi("src/modules/workspace/workspace.service.ts");
+
+  assert.match(authTypes, /"PLATFORM_CREATOR"/);
+  assert.match(service, /const platformCreatorAccess = actor\.roles\.includes\("PLATFORM_CREATOR"\)/);
+  assert.match(service, /const roleAllowed = platformCreatorAccess \|\| ROLE_ACTIONS_ALLOWED/);
+  assert.match(service, /platformCreatorAccess \|\|\s+!requiredFeature/s);
+  assert.match(service, /const quotaAllows =\s+platformCreatorAccess \|\|/s);
+  assert.match(service, /const needToKnowAllowed = platformCreatorAccess \|\| needToKnow\.decision === "ALLOW"/);
+});
+
 test("subscription plans control features limits quotas and exports without data loss", () => {
   const types = readApi("src/modules/workspace/workspace.types.ts");
   const service = readApi("src/modules/workspace/workspace.service.ts");
