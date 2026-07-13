@@ -194,6 +194,7 @@ export class DatabaseAuthRepository {
         event.entityType === "AUTH_USER" ||
         event.entityType === "AUTH_SESSION" ||
         event.entityType === "USER_ROLE" ||
+        event.entityType === "PLATFORM_CREATOR_ROLE" ||
         event.entityType === "AUTH_SECURITY_EVENT" ||
         event.entityType === "FOUNDER_PROTECTION" ||
         event.entityType === "FOUNDER_RECOVERY" ||
