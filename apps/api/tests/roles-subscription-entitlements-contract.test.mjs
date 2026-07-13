@@ -42,11 +42,12 @@ test("official editorial roles are separated from subscription plans", () => {
     assert.match(types + service, new RegExp(role));
   }
 
-  for (const plan of ["FREE", "PREMIUM", "BUSINESS", "ENTERPRISE_RESERVED"]) {
+  for (const plan of ["FREE", "BASIC", "PREMIUM", "BUSINESS", "ENTERPRISE_RESERVED"]) {
     assert.match(types + service, new RegExp(plan));
   }
 
   assert.match(types + service, /roleNamesAreNotPlanNames: true/);
+  assert.match(service, /BASIC:[\s\S]*enabled: true/);
   assert.match(service, /ENTERPRISE_RESERVED:[\s\S]*enabled: false/);
 });
 
