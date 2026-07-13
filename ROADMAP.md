@@ -744,6 +744,165 @@ Report:
 
 - `docs/PHASE_7_STEP_14_1_ROLES_SUBSCRIPTION_ENTITLEMENTS_REPORT.md`.
 
+## Phase 7 Step 14.2 - Unified Language Management
+
+Status: Implemented as an additive Workspace/Administration language-policy
+refinement.
+
+Scope:
+
+- No new enterprise modules.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+- Reuses Projects, Translation, Review, Workspace, AI Governance, Linguistic
+  Knowledge Base, Administration, and Audit.
+
+Implemented capabilities:
+
+- Central shared language policy for the four official attributes:
+  `platformLanguage`, `originalLanguage`, `authoringLanguage`, and
+  `targetLanguage`.
+- Additive Workspace endpoints:
+  - `GET /workspace/language-management`.
+  - `POST /workspace/language-management`.
+- Central language metadata stored through Workspace preferences metadata
+  instead of duplicated per-panel settings.
+- Project language model with one Original Language, one Authoring Language,
+  and multiple Target Languages.
+- Original Language immutability guard unless an authorized user explicitly
+  changes it.
+- UI localization helpers for language labels, workflow names, and AI agent
+  names through Platform Language.
+- Parallel review language-column metadata for default two-column review and
+  optional three/four-column comparisons.
+- Linguistic resource loading plan by Source Language to Target Language for
+  dictionaries, glossaries, terminology, phraseology, and linguistic resources.
+- Administration Central Language Management panel with installed/enabled
+  languages, default Platform Language, fallback, completeness, dictionaries,
+  glossaries, resources, and audit actions.
+- Audit actions for Platform Language, Original Language, Authoring Language,
+  Target Language additions/removals, and language resource updates.
+
+Validation coverage:
+
+- Shared language-policy contract tests.
+- Workspace language-management contract tests.
+- Frontend language-management UI contract tests.
+- Existing language-policy UI and backend contracts remain in place.
+
+Report:
+
+- `docs/PHASE_7_STEP_14_2_UNIFIED_LANGUAGE_MANAGEMENT_REPORT.md`.
+
+## Phase 7 Step 14.3 - Advanced Linguistic Resources & Translation Memory
+
+Status: Implemented as an additive extension of the existing Linguistic
+Knowledge Base, Translation, Terminology & Lexicography, Semantic Fidelity,
+Review, AI Governance, and Audit infrastructure.
+
+Scope:
+
+- No new enterprise modules.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+- Reuses existing Translation Memory, Terminology, Lexicographic Intelligence,
+  runtime database, backup/restore, and frontend Administration/Translation
+  surfaces.
+
+Implemented capabilities:
+
+- Project-configurable source consultation priority with drag-and-drop-ready
+  ordering metadata.
+- Default source priority:
+  official normative source, project glossary, specialized glossary,
+  Translation Memory, bilingual dictionary, explanatory dictionary, and
+  corpus/examples.
+- Runtime persistence and backup coverage for project source priority
+  configuration.
+- Translation Memory entries enriched with source segment, translated segment,
+  language pair, project/document/segment references, domain, context, author,
+  reviewer, approval date, confidence, and version.
+- Translation Memory proposal lookup supports exact, fuzzy, and context match.
+- Translation Memory remains proposal-only and never replaces text
+  automatically.
+- Translation flow stores Translation Memory entries only when the submitted
+  translation passes validation as a validated translation.
+- Glossary hierarchy:
+  Project Glossary > Platform Glossary > Personal Glossary suggestions.
+- Personal glossary entries remain optional suggestions and do not become
+  authoritative over project/platform terminology.
+- Glossary conflict detection requiring human review.
+- Linguistic proposal explanation with confidence score, consulted sources,
+  glossary used, Translation Memory match, terminology status, semantic
+  validation, and rationale.
+- Audit coverage for glossary created/updated/conflict, Translation Memory
+  entry added/reused, source priority changed, and confidence recalculated.
+- Administration and Translation Workspace display source priority, glossary
+  hierarchy, TM proposals, confidence, and proposal-only guidance.
+
+Validation coverage:
+
+- Glossary priority.
+- Translation Memory exact, fuzzy, and context match.
+- Source priority.
+- Confidence score.
+- Conflict detection.
+- Proposal explanation.
+- Audit event coverage.
+
+Report:
+
+- `docs/PHASE_7_STEP_14_3_ADVANCED_LINGUISTIC_RESOURCES_REPORT.md`.
+
+## Phase 7 Step 14.4 - Organization, Teams and Platform Creator
+
+Status: Implemented as an additive Administration and access-governance
+refinement.
+
+Scope:
+
+- No new enterprise module.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+- Reuses Administration, Users, Roles, Permissions, Need-to-Know, Audit, and
+  Workspace access filtering.
+
+Implemented capabilities:
+
+- Organization Management with organization profile, organization type, teams,
+  members, and invitations.
+- Supported organization types:
+  `PERSOANA_FIZICA`, `EDITURA`, `ASOCIATIE_ONG`, `COMPANIE`, and
+  `INSTITUTIE`.
+- Default organization type: `PERSOANA_FIZICA`.
+- Runtime persistence and backup coverage for organization administration
+  metadata and teams.
+- Default teams:
+  Echipa Traducere, Echipa Revizie, Echipa Machetare, Echipa Ilustrații,
+  Echipa Multimedia, Echipa Publicare, Echipa Marketing, and Echipa
+  Publicitate.
+- Teams can carry projects, tasks, documents, and workflow responsibility
+  metadata.
+- Protected `PLATFORM_CREATOR` / `Creatorul platformei` system role.
+- Platform Creator is separate from Administrator, cannot be assigned through
+  normal Administration flows, cannot be removed/downgraded through membership
+  removal, and is independent of subscription limits.
+- Workspace and administrative permission gates recognize Platform Creator as
+  an unrestricted system role.
+- Administration UI displays organization model, teams, Creator protections,
+  and relevant audit actions.
+
+Validation coverage:
+
+- Backend contract coverage for organization types, default teams, protected
+  Platform Creator role, audit actions, runtime persistence, and backup tables.
+- Frontend contract coverage for Organization Management, team labels,
+  Creator protections, and audit actions.
+
+Report:
+
+- `docs/PHASE_7_STEP_14_4_ORGANIZATION_TEAMS_PLATFORM_CREATOR_REPORT.md`.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
