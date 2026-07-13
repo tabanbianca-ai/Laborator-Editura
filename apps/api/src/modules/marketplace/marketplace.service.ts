@@ -438,7 +438,7 @@ export class MarketplaceService {
   }
 
   private assertAdminActor(actor: MarketplaceActor): void {
-    if (!actor.roles.includes("ADMIN")) {
+    if (!actor.roles.includes("PLATFORM_CREATOR") && !actor.roles.includes("ADMIN")) {
       throw new ForbiddenException("Marketplace endpoints require an authorized admin.");
     }
   }
