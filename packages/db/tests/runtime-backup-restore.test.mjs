@@ -160,6 +160,11 @@ test("runtime restore recreates all approved MVP data tables", () => {
     "commerce_print_profiles",
     "commerce_audit_events",
     "library_items",
+    "library_publications",
+    "library_publication_editions",
+    "library_publication_versions",
+    "library_publication_files",
+    "library_view_preferences",
     "library_reading_progress",
     "library_bookmarks",
     "library_highlights",
@@ -673,6 +678,21 @@ function sampleSnapshot() {
   snapshot.library_items.push(
     { id: "library-item-a", organizationId: "org-a", userId: "user-a", publicCatalogItemId: "public-item-a", commerceEditionId: "commerce-edition-a", itemType: "BOOK", title: "Document A", language: "ro", sourceReference: "public-item-a", favorite: true, savedAt: "2026-01-01T00:16:40.000Z", lastAccessedAt: "2026-01-01T00:16:45.000Z", createdAt: "2026-01-01T00:16:40.000Z", updatedAt: "2026-01-01T00:16:45.000Z", metadata: { privacy: "private_by_default" } }
   );
+  snapshot.library_publications.push(
+    { id: "library-publication-a", organizationId: "org-a", title: "Cartea Spiritelor", normalizedTitle: "cartea spiritelor", subtitle: "Ediție de lucru", author: "Allan Kardec", normalizedAuthor: "allan kardec", contributors: [{ name: "Translator A", role: "TRANSLATOR", userId: "user-a" }], description: "Unified editorial publication record.", publicationType: "BOOK", editorialDomain: "Spiritism", language: "ro", locale: "ro-RO", series: "Works of Allan Kardec", collection: "Spiritist Library", volume: "Volume I", lifecycleStatus: "IN_LUCRU", visibility: "INTERNAL_WORKING_PUBLICATION", publicationYear: 2026, originalTitle: "Le Livre des Esprits", originalLanguage: "fr", originalAuthor: "Allan Kardec", firstEdition: "1860", firstPublicationYear: 1860, originalPublisher: "Didier et Cie", sourceReference: "Original publication", sourceAcquisition: "documented purchase metadata", manuscriptId: "author-manuscript-a", projectId: "project-a", activeWorkflowId: "workflow-a", translationRefs: ["translation-a"], reviewRefs: ["review-a"], layoutRefs: ["layout-a"], publishingRecordRefs: ["public-item-a"], rightsStatus: "RIGHTS_OBTAINED", license: "Editorial license", contractRefs: ["rights-contract-a"], sourceProvenance: "rights-provenance-a", assetProvenance: "documented", publicationRestrictions: [], availableFormats: ["PDF", "EPUB", "MOBI", "PRINT_READY_PDF", "AUDIO", "VIDEO", "ACCESSIBLE"], publishedChannels: ["PUBLIC_PORTAL"], publicationDates: ["2026-01-01"], distributionStatus: "READY", associatedIdentifiers: ["ISBN-TEST"], tags: ["spiritism"], isbn: "ISBN-TEST", sourceFileFingerprint: "fingerprint-a", restrictedMetadata: { contracts: "restricted" }, metadata: { completeLifecycleManagedByLibrary: true, noSeparateArchiveModule: true }, createdBy: "user-a", createdAt: "2026-01-01T00:16:41.000Z", updatedAt: "2026-01-01T00:16:42.000Z" }
+  );
+  snapshot.library_publication_editions.push(
+    { id: "library-edition-a", organizationId: "org-a", publicationId: "library-publication-a", editionNumber: "1", editionStatus: "DRAFT", publicationDate: "2026-01-01", revisionDate: "2026-01-02", changeSummary: "Initial editorial edition.", createdBy: "user-a", createdAt: "2026-01-01T00:16:42.000Z", updatedAt: "2026-01-01T00:16:42.000Z" }
+  );
+  snapshot.library_publication_versions.push(
+    { id: "library-version-a", organizationId: "org-a", publicationId: "library-publication-a", editionId: "library-edition-a", versionNumber: "1.0", changeSummary: "Initial version.", immutableHistoricalVersion: true, createdBy: "user-a", createdAt: "2026-01-01T00:16:43.000Z" }
+  );
+  snapshot.library_publication_files.push(
+    { id: "library-file-a", organizationId: "org-a", publicationId: "library-publication-a", editionId: "library-edition-a", fileType: "PDF", fileName: "cartea-spiritelor.pdf", artifactRef: "export-a", checksum: "checksum-a", sourceFileFingerprint: "fingerprint-a", visibility: "PRIVATE", restricted: false, createdBy: "user-a", createdAt: "2026-01-01T00:16:44.000Z", updatedAt: "2026-01-01T00:16:44.000Z" }
+  );
+  snapshot.library_view_preferences.push(
+    { id: "library-view-a", organizationId: "org-a", userId: "user-a", viewMode: "GRID", sortBy: "title", sortDirection: "ASC", persistentFilters: { lifecycleStatus: "IN_LUCRU", publicationType: "BOOK" }, recentSearches: ["kardec"], savedSearches: [{ name: "Spiritism", query: "spirit", filters: { editorialDomain: "Spiritism" } }], updatedAt: "2026-01-01T00:16:44.500Z" }
+  );
   snapshot.library_reading_progress.push(
     { id: "library-progress-a", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", progressPercent: 42, currentChapter: "chapter-1", currentSection: "section-2", position: "page-21", readingSessionId: "session-a", updatedAt: "2026-01-01T00:16:46.000Z" }
   );
@@ -690,7 +710,9 @@ function sampleSnapshot() {
   );
   snapshot.library_audit_events.push(
     { id: "library-audit-a", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", entityType: "library_item", entityId: "library-item-a", action: "LIBRARY_ITEM_ADDED", actorId: "user-a", createdAt: "2026-01-01T00:16:40.000Z" },
-    { id: "library-audit-b", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", entityType: "reading_progress", entityId: "library-progress-a", action: "READING_PROGRESS_UPDATED", actorId: "user-a", createdAt: "2026-01-01T00:16:46.000Z" }
+    { id: "library-audit-b", organizationId: "org-a", userId: "user-a", libraryItemId: "library-item-a", entityType: "reading_progress", entityId: "library-progress-a", action: "READING_PROGRESS_UPDATED", actorId: "user-a", createdAt: "2026-01-01T00:16:46.000Z" },
+    { id: "library-audit-c", organizationId: "org-a", userId: "user-a", publicationId: "library-publication-a", entityType: "library_publication", entityId: "library-publication-a", action: "LIBRARY_PUBLICATION_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:41.000Z" },
+    { id: "library-audit-d", organizationId: "org-a", userId: "user-a", publicationId: "library-publication-a", entityType: "library_publication_edition", entityId: "library-edition-a", action: "LIBRARY_EDITION_CREATED", actorId: "user-a", createdAt: "2026-01-01T00:16:42.000Z" }
   );
   snapshot.author_manuscripts.push(
     { id: "author-manuscript-a", organizationId: "org-a", authorId: "user-a", projectId: "project-a", documentId: "document-a", title: "Author Studio Draft", subtitle: "Working manuscript", language: "ro", genre: "spiritism", manuscriptType: "BOOK", status: "SUBMITTED", synopsis: "A short manuscript synopsis.", outline: "Chapter 1 -> Chapter 2", stylePreferences: ["clear prose"], authorAttribution: { authorId: "user-a", retained: true }, aiSuggestionsAdvisoryOnly: true, publicExposure: false, humanEditorialApprovalRequired: true, createdAt: "2026-01-01T00:16:51.000Z", updatedAt: "2026-01-01T00:16:54.000Z", submittedAt: "2026-01-01T00:16:54.000Z" }
