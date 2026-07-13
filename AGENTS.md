@@ -544,6 +544,67 @@ Rules:
   budget warning, budget exceeded, AI blocked, subscription upgraded, and
   subscription downgraded.
 
+### Intelligent Editorial Library & UX Finalization Directive
+
+Purpose:
+
+- Transform the existing Library into a unified intelligent editorial center
+  that manages the complete lifecycle of every publication while remaining
+  simple, fast, intuitive, and optimized for minimum clicks.
+
+Rules:
+
+- This extends the existing Library, Projects, Manuscripts, Project Dossiers,
+  Translation, Review, Layout, Publishing, Distribution, Rights & Provenance,
+  Unified Language Management, Audit, Versioning, Backup, and Need-to-Know
+  infrastructure. It is not a new enterprise module.
+- Do not create a separate Archive module.
+- Library lifecycle statuses are `STOC_REAL`, `IN_LUCRU`, and `PUBLICAT`.
+  These are statuses, not separate libraries.
+- Supported lifecycle transitions are Stoc real to În lucru, În lucru to
+  Publicat, and Publicat to În lucru when a new edition or revision is created.
+- Status changes must never destroy historical versions.
+- Publication types are filters and metadata, not separate Library modules.
+- Library must support all existing publication types and other configured
+  publication types.
+- The primary Library experience must include one search field, clear filter
+  chips, collapsible advanced filters, grid/list toggle, status labels,
+  quick preview, contextual actions, minimal clutter, responsive layout,
+  keyboard accessibility, and clear empty/loading/error states.
+- Search must support exact, normalized, fuzzy, partial title, author,
+  multilingual metadata, ISBN, series, and collection search.
+- Filters must include author, language, editorial domain, publication type,
+  lifecycle status, publication year, original publication year, rights status,
+  format, series, and collection.
+- Grid and list view preferences and filters should persist per user.
+- Publication records must connect general metadata, original edition,
+  manuscripts, projects, workflow, translations, review, layout, publishing,
+  files/formats, editions, versions, rights, provenance, publishing history,
+  and distribution status.
+- Visibility is independent from lifecycle status and may be `PUBLIC`,
+  `PRIVATE`, or `INTERNAL_WORKING_PUBLICATION`.
+- Preview must not expose restricted content.
+- Bulk actions must respect role permissions, subscription entitlements,
+  Need-to-Know scope, project/document scope, visibility, and rights
+  restrictions.
+- Duplicate detection may compare title, normalized title, author, ISBN,
+  original title, edition, and source file fingerprint, but must never merge
+  automatically.
+- Library Agent may classify publications, validate metadata completeness,
+  detect duplicates, connect editions and versions, maintain project/manuscript
+  relationships, suggest missing metadata, and preserve status consistency.
+  It must never delete historical versions automatically.
+- Quality Agent checks completeness, required formats, metadata, rights,
+  accessibility, and readiness issues.
+- Rights & Provenance Agent validates source and rights information before
+  publication.
+- Audit must cover publication created, metadata changed, status changed,
+  visibility changed, manuscript linked, project linked, edition created,
+  version created, file added/replaced, bulk action, publication published,
+  publication withdrawn, duplicate reviewed, and rights status changed.
+- Library data must be included in backup/restore without breaking project or
+  manuscript links.
+
 ### ChatGPT
 
 Role: System Architect.
