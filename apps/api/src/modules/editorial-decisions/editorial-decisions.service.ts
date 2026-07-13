@@ -51,6 +51,8 @@ export class EditorialDecisionService {
       targetLanguage: input.targetLanguage,
       language: input.targetLanguage,
       domain: input.domain,
+      projectId: input.projectId,
+      ownerUserId: actor.userId,
       sourceText: input.sourceText,
       targetText: input.targetText
     });
@@ -461,6 +463,7 @@ export class EditorialDecisionService {
 
     if (
       !permissions.has("review:approve") &&
+      !roles.has("PLATFORM_CREATOR") &&
       !roles.has("ADMIN") &&
       !roles.has("REVIEWER")
     ) {
