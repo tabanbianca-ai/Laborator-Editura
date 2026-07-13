@@ -21,6 +21,25 @@ export function sortTermsByAuthority(terms: TerminologyTerm[]): TerminologyTerm[
       return leftPriority - rightPriority;
     }
 
+    const leftGlossaryPriority = glossaryScopePriority(left);
+    const rightGlossaryPriority = glossaryScopePriority(right);
+
+    if (leftGlossaryPriority !== rightGlossaryPriority) {
+      return leftGlossaryPriority - rightGlossaryPriority;
+    }
+
     return right.updatedAt.localeCompare(left.updatedAt);
   });
+}
+
+function glossaryScopePriority(term: TerminologyTerm): number {
+  if (term.glossaryScope === "PROJECT") {
+    return 0;
+  }
+
+  if (term.glossaryScope === "PLATFORM") {
+    return 1;
+  }
+
+  return 2;
 }
