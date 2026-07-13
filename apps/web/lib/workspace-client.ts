@@ -1,6 +1,7 @@
 import { apiGet, apiPost, type ApiResult } from "./api-client";
 import type {
   WorkspaceDashboard,
+  WorkspaceLanguageManagement,
   WorkspaceNavigationItem,
   WorkspacePreferences,
   WorkspaceWidget
@@ -16,6 +17,10 @@ export function getWorkspaceDashboard(): Promise<ApiResult<WorkspaceDashboard>> 
 
 export function getWorkspacePreferences(): Promise<ApiResult<WorkspacePreferences>> {
   return apiGet<WorkspacePreferences>("/workspace/preferences");
+}
+
+export function getWorkspaceLanguageManagement(): Promise<ApiResult<WorkspaceLanguageManagement>> {
+  return apiGet<WorkspaceLanguageManagement>("/workspace/language-management");
 }
 
 export function getWorkspaceWidgets(): Promise<ApiResult<WorkspaceWidget[]>> {
