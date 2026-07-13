@@ -27,8 +27,8 @@ import {
   type UpdateAiProviderStatusInput
 } from "./ai-governance.types";
 
-const PRIMARY_AI_PROVIDER: AiProviderName = "OPENAI";
-const FALLBACK_AI_PROVIDER: AiProviderName = "ANTHROPIC";
+const PRIMARY_AI_PROVIDER = "OPENAI" satisfies AiProviderName;
+const FALLBACK_AI_PROVIDER = "ANTHROPIC" satisfies AiProviderName;
 const AI_BUDGET_WARNING_THRESHOLDS: AiBudgetWarningThreshold[] = [80, 90, 100];
 const PROVIDER_UNAVAILABLE_STATUSES = new Set<AiProviderStatus>([
   "TIMEOUT",
@@ -92,7 +92,8 @@ export class AiGovernanceService {
 
     if (
       beforeSummary.activeProvider !== afterSummary.activeProvider &&
-      afterSummary.fallbackStatus === "RECOVERED"
+      beforeSummary.activeProvider === FALLBACK_AI_PROVIDER &&
+      afterSummary.activeProvider === PRIMARY_AI_PROVIDER
     ) {
       await this.audit("AI_FALLBACK_RECOVERED", actor, { providerStatusId: updated.id }, afterSummary, beforeSummary);
     }
@@ -108,16 +109,14 @@ export class AiGovernanceService {
     const organizationBudget = budgets.find((budget) => budget.budgetScope === "ORGANIZATION");
     const monthlyBudget = organizationBudget?.monthlyBudget ?? organizationBudget?.amount ?? null;
     const monthlyConsumption = this.sumCosts(currentMonthUsage);
-    const consumptionByAgent = this.groupUsageBy(currentMonthUsage, "agentName");
-    const consumptionByProject = this.groupUsageBy(currentMonthUsage, "projectId");
 
     return {
       monthlyBudget,
       monthlyConsumption,
       remainingBudget: monthlyBudget === null ? null : Math.max(monthlyBudget - monthlyConsumption, 0),
       warningThresholds: AI_BUDGET_WARNING_THRESHOLDS,
-      consumptionByAgent,
-      consumptionByProject,
+      consumptionByAgent: this.groupUsageByAgent(currentMonthUsage),
+      consumptionByProject: this.groupUsageByProject(currentMonthUsage),
       platformCreatorUnlimited: this.isPlatformCreator(actor)
     };
   }
@@ -431,7 +430,7 @@ export class AiGovernanceService {
         softLimitWarning: false,
         hardLimitReached: false,
         approvalRequiredOverThreshold: false,
-        blockedActionOnly: true,
+        blockedActionOnly: false,
         dataDeleted: false,
         platformCreatorUnlimited: true
       };
@@ -593,9 +592,7 @@ export class AiGovernanceService {
       activeProvider,
       fallbackStatus: activeProvider === FALLBACK_AI_PROVIDER
         ? "FALLBACK_ACTIVE"
-        : openAi?.status === "AVAILABLE"
-          ? "RECOVERED"
-          : "USING_PRIMARY",
+        : "USING_PRIMARY",
       automaticModelSelection: true,
       manualModelSelectionRequiresRoleAndSubscription: true,
       extensibleProviderArchitecture: true
@@ -658,14 +655,11 @@ export class AiGovernanceService {
     return usageRecords.reduce((sum, record) => sum + (record.actualCost ?? record.estimatedCost), 0);
   }
 
-  private groupUsageBy(
-    usageRecords: AiUsageRecord[],
-    key: "agentName" | "projectId"
-  ): Array<{ agentName: string; estimatedCost: number; actualCost: number }> | Array<{ projectId: string; estimatedCost: number; actualCost: number }> {
+  private groupUsageByAgent(usageRecords: AiUsageRecord[]): AiCostSummary["consumptionByAgent"] {
     const grouped = new Map<string, { estimatedCost: number; actualCost: number }>();
 
     for (const record of usageRecords) {
-      const value = key === "agentName" ? record.agentName : record.projectId ?? "UNASSIGNED";
+      const value = record.agentName;
       const existing = grouped.get(value) ?? { estimatedCost: 0, actualCost: 0 };
       existing.estimatedCost += record.estimatedCost;
       existing.actualCost += record.actualCost ?? record.estimatedCost;
@@ -673,11 +667,28 @@ export class AiGovernanceService {
     }
 
     return [...grouped.entries()].map(([value, costs]) => ({
-      [key]: value,
+      agentName: value,
       estimatedCost: costs.estimatedCost,
       actualCost: costs.actualCost
-    })) as Array<{ agentName: string; estimatedCost: number; actualCost: number }> |
-      Array<{ projectId: string; estimatedCost: number; actualCost: number }>;
+    }));
+  }
+
+  private groupUsageByProject(usageRecords: AiUsageRecord[]): AiCostSummary["consumptionByProject"] {
+    const grouped = new Map<string, { estimatedCost: number; actualCost: number }>();
+
+    for (const record of usageRecords) {
+      const value = record.projectId ?? "UNASSIGNED";
+      const existing = grouped.get(value) ?? { estimatedCost: 0, actualCost: 0 };
+      existing.estimatedCost += record.estimatedCost;
+      existing.actualCost += record.actualCost ?? record.estimatedCost;
+      grouped.set(value, existing);
+    }
+
+    return [...grouped.entries()].map(([value, costs]) => ({
+      projectId: value,
+      estimatedCost: costs.estimatedCost,
+      actualCost: costs.actualCost
+    }));
   }
 
   private isPlatformCreator(actor: AiGovernanceActor): boolean {
