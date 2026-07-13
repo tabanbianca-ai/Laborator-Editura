@@ -33,12 +33,18 @@ test("enterprise admin module is registered with required authenticated admin en
   assert.match(moduleSource, /DatabaseEnterpriseAdminRepository/);
   assert.match(moduleSource, /EnterpriseAdminService/);
   assert.match(controller, /@Controller\("admin"\)/);
+  assert.match(controller, /@Get\("organization"\)/);
+  assert.match(controller, /@Post\("organization"\)/);
+  assert.match(controller, /@Get\("teams"\)/);
+  assert.match(controller, /@Post\("teams"\)/);
+  assert.match(controller, /@Post\("teams\/:id"\)/);
   assert.match(controller, /@Get\("users"\)/);
   assert.match(controller, /@Post\("users"\)/);
   assert.match(controller, /@Get\("roles"\)/);
   assert.match(controller, /@Post\("roles"\)/);
   assert.match(controller, /@Get\("permissions"\)/);
   assert.match(controller, /@Post\("users\/:id\/roles"\)/);
+  assert.match(controller, /@Post\("memberships\/:id\/remove"\)/);
   assert.match(controller, /@Post\("invitations"\)/);
   assert.match(controller, /@Get\("audit"\)/);
   assert.match(controller, /CurrentActor/);
@@ -73,11 +79,50 @@ test("organization and user administration metadata is modeled without changing 
   assert.doesNotMatch(service, /AuthService|AuthModule|user_roles|auth_sessions/);
 });
 
+test("organization management supports required organization types and default teams", () => {
+  const types = readSource("enterprise-admin.types.ts");
+  const service = readSource("enterprise-admin.service.ts");
+  const controller = readSource("enterprise-admin.controller.ts");
+
+  for (const organizationType of [
+    "PERSOANA_FIZICA",
+    "EDITURA",
+    "ASOCIATIE_ONG",
+    "COMPANIE",
+    "INSTITUTIE"
+  ]) {
+    assert.match(types + service, new RegExp(`"${organizationType}"`));
+  }
+
+  for (const teamName of [
+    "Echipa Traducere",
+    "Echipa Revizie",
+    "Echipa Machetare",
+    "Echipa Ilustrații",
+    "Echipa Multimedia",
+    "Echipa Publicare",
+    "Echipa Marketing",
+    "Echipa Publicitate"
+  ]) {
+    assert.match(service, new RegExp(teamName));
+  }
+
+  assert.match(types, /interface AdminTeam/);
+  assert.match(types, /projectIds: string\[\]/);
+  assert.match(types, /taskIds: string\[\]/);
+  assert.match(types, /documentIds: string\[\]/);
+  assert.match(types, /workflowResponsibilities: string\[\]/);
+  assert.match(controller, /getOrganizationProfile/);
+  assert.match(controller, /createTeam/);
+  assert.match(controller, /updateTeam/);
+});
+
 test("role management supports required built-in roles and custom roles", () => {
   const types = readSource("enterprise-admin.types.ts");
   const service = readSource("enterprise-admin.service.ts");
 
   for (const role of [
+    "PLATFORM_CREATOR",
     "ADMIN",
     "EDITOR",
     "TRANSLATOR",
@@ -95,6 +140,25 @@ test("role management supports required built-in roles and custom roles", () => 
   assert.match(types, /type AdminRoleName = AdminBuiltInRole \| \(string & \{\}\)/);
   assert.match(service, /builtIn: this\.isBuiltInRole/);
   assert.match(service, /custom: !this\.isBuiltInRole/);
+});
+
+test("platform creator is protected and separate from administrator", () => {
+  const authTypes = readFileSync(join(__dirname, "..", "src", "modules", "auth", "auth.types.ts"), "utf8");
+  const requestContext = readFileSync(join(__dirname, "..", "src", "modules", "auth", "request-context.types.ts"), "utf8");
+  const authService = readFileSync(join(__dirname, "..", "src", "modules", "auth", "auth.service.ts"), "utf8");
+  const service = readSource("enterprise-admin.service.ts");
+  const types = readSource("enterprise-admin.types.ts");
+
+  assert.match(authTypes, /"PLATFORM_CREATOR"/);
+  assert.match(requestContext, /role === "PLATFORM_CREATOR" \|\| role === "ADMIN"/);
+  assert.match(authService, /LABORATOR_PLATFORM_CREATOR_EMAIL/);
+  assert.match(authService, /CREATOR_ROLE_ACCESS/);
+  assert.match(types, /"ADMIN_PLATFORM_CREATOR_ACCESS"/);
+  assert.match(service, /Platform Creator is a protected system role/);
+  assert.match(service, /Platform Creator is not assignable through Administration/);
+  assert.match(service, /Platform Creator is not available for invitation/);
+  assert.match(service, /Platform Creator membership cannot be removed/);
+  assert.match(service, /roles\.includes\("PLATFORM_CREATOR"\).*roles\.includes\("ADMIN"\)/s);
 });
 
 test("permission matrix supports module project document admin API and AI scopes", () => {
@@ -168,6 +232,8 @@ test("admin runtime persistence and backup restore include all administration ta
   const repository = readSource("enterprise-admin.repository.ts");
 
   for (const table of [
+    "admin_organizations",
+    "admin_teams",
     "admin_users",
     "admin_roles",
     "admin_permissions",
@@ -180,6 +246,9 @@ test("admin runtime persistence and backup restore include all administration ta
 
   assert.match(runtimeDatabase, /validateReferenceTenant\(data, issues, "admin_memberships", "userId", "admin_users"\)/);
   assert.match(runtimeDatabase, /validateReferenceTenant\(data, issues, "admin_memberships", "roleId", "admin_roles"\)/);
+  assert.match(runtimeDatabase, /validateReferenceTenant\(data, issues, "admin_memberships", "teamId", "admin_teams"\)/);
+  assert.match(runtimeDatabase, /validateReferenceTenant\(data, issues, "admin_audit_events", "organizationMetadataId", "admin_organizations"\)/);
+  assert.match(runtimeDatabase, /validateReferenceTenant\(data, issues, "admin_audit_events", "teamId", "admin_teams"\)/);
   assert.match(runtimeDatabase, /validateReferenceTenant\(data, issues, "admin_audit_events", "membershipId", "admin_memberships"\)/);
 });
 
