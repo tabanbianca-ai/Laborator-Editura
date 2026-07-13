@@ -371,7 +371,7 @@ export class AiGovernanceService {
 
     const roles = new Set((actor.roles ?? []).map((role) => role.toUpperCase()));
 
-    if (!roles.has("ADMIN")) {
+    if (!roles.has("PLATFORM_CREATOR") && !roles.has("ADMIN")) {
       throw new ForbiddenException("AI governance endpoints require an authorized admin.");
     }
   }
