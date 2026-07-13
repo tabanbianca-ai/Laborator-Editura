@@ -342,7 +342,10 @@ export class AuthorStudioService {
   }
 
   private hasRole(actor: AuthorStudioActor, role: string): boolean {
-    return (actor.roles ?? []).some((actorRole) => actorRole.toUpperCase() === role);
+    return (actor.roles ?? []).some((actorRole) =>
+      actorRole.toUpperCase() === role ||
+      (role === "ADMIN" && actorRole.toUpperCase() === "PLATFORM_CREATOR")
+    );
   }
 
   private countWords(content: string): number {
