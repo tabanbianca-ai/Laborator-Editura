@@ -231,6 +231,8 @@ export class SemanticFidelityService {
       sourceLanguage: segment.sourceLanguage,
       language: segment.targetLanguage,
       domain: segment.domain,
+      projectId: segment.projectId,
+      ownerUserId: actor.userId,
       sourceText: segment.sourceText,
       targetText: segment.targetText
     });
