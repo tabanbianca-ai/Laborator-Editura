@@ -271,6 +271,38 @@ const SUBSCRIPTION_PLANS: Record<WorkspaceSubscriptionPlan, WorkspaceSubscriptio
       remediationSummaryRequired: true
     }
   },
+  BASIC: {
+    plan: "BASIC",
+    enabled: true,
+    includedFeatures: [
+      "AI_AGENT",
+      "COLLABORATION",
+      "EXPORT_JSON_MASTER",
+      "EXPORT_PDF",
+      "TRANSLATION_VOLUME"
+    ],
+    quotas: {
+      activeProjects: 3,
+      aiUsage: 200,
+      collaborators: 3,
+      storageMb: 2048,
+      translationSegments: 5000
+    },
+    exportFormats: ["JSON_MASTER", "PDF"],
+    publishingChannels: ["INTERNAL_EXPORT"],
+    distributionChannels: ["LOCAL_DOWNLOAD"],
+    auditRetentionDays: 60,
+    backupRetentionDays: 14,
+    priorityProcessing: false,
+    downgradeBehavior: {
+      preserveExistingContent: true,
+      preserveAuditAndVersions: true,
+      disableUnavailableFutureActionsOnly: true,
+      markOverLimitResourcesReadOnly: true,
+      automaticDeletion: false,
+      remediationSummaryRequired: true
+    }
+  },
   PREMIUM: {
     plan: "PREMIUM",
     enabled: true,
@@ -381,11 +413,11 @@ const SUBSCRIPTION_PLANS: Record<WorkspaceSubscriptionPlan, WorkspaceSubscriptio
 
 const FEATURE_MINIMUM_PLAN: Record<WorkspaceEntitlementFeature, WorkspaceSubscriptionPlan> = {
   ADVANCED_EDITORIAL_TOOLS: "PREMIUM",
-  AI_AGENT: "PREMIUM",
+  AI_AGENT: "BASIC",
   API_ACCESS: "BUSINESS",
   AUDIT_RETENTION: "BUSINESS",
   BACKUP_RETENTION: "BUSINESS",
-  COLLABORATION: "PREMIUM",
+  COLLABORATION: "BASIC",
   DISTRIBUTION_CHANNELS: "BUSINESS",
   EXPORT_DOCX: "PREMIUM",
   EXPORT_EPUB: "PREMIUM",
