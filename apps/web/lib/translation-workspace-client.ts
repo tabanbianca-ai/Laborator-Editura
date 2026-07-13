@@ -26,6 +26,8 @@ export interface WorkspaceTranslationMetadata {
   lexicographicSupport?: LexicographicReference[];
   qaScore?: number;
   semanticScore?: number;
+  terminologyProposalExplanation?: LinguisticProposalExplanation;
+  translationMemoryProposals?: TranslationMemoryProposal[];
   terminologyValid?: boolean;
 }
 
@@ -82,8 +84,55 @@ export interface TerminologyViolation {
 
 export interface TerminologyCheckResult {
   dictionaryEvidence?: LexicographicReference[];
+  glossaryConflicts?: Array<{
+    humanReviewRequired: true;
+    message: string;
+    term: string;
+    termIds: string[];
+  }>;
+  glossaryPriority?: string[];
+  proposalExplanation?: LinguisticProposalExplanation;
+  sourcePriority?: Array<{
+    enabled: boolean;
+    id: string;
+    label: string;
+    order: number;
+    sourceType: string;
+  }>;
   valid: boolean;
   violations: TerminologyViolation[];
+}
+
+export interface LinguisticProposalExplanation {
+  confidenceScore: number;
+  consultedSources: string[];
+  explanation: string;
+  glossaryUsed?: string;
+  humanFinalAuthority: true;
+  semanticValidation: string;
+  terminologyStatus: string;
+  translationMemoryMatch?: {
+    entryId: string;
+    matchType: string;
+    similarityScore: number;
+  };
+}
+
+export interface TranslationMemoryProposal {
+  automaticReplacement: false;
+  confidenceScore: number;
+  consultedSources: string[];
+  explanation: string;
+  humanFinalAuthority: true;
+  id: string;
+  proposedTargetText: string;
+  sourceText: string;
+  translationMemoryMatch: {
+    authoritative: boolean;
+    matchType: "CONTEXT" | "EXACT" | "FUZZY";
+    proposalOnly: true;
+    similarityScore: number;
+  };
 }
 
 export interface DictionaryEntry {
@@ -125,6 +174,8 @@ export interface TranslationWorkspaceData {
   segmentsError: string | null;
   terminology: TerminologyCheckResult | null;
   terminologyError: string | null;
+  translationMemoryProposals: TranslationMemoryProposal[];
+  translationMemoryProposalsError: string | null;
   translations: WorkspaceTranslationRecord[];
   translationsError: string | null;
 }
@@ -186,16 +237,19 @@ export async function getTranslationWorkspaceData({
       segmentsError: segmentsResult.error,
       terminology: null,
       terminologyError: null,
+      translationMemoryProposals: [],
+      translationMemoryProposalsError: null,
       translations,
       translationsError: translationsResult.error
     };
   }
 
   const targetText = latestTranslation?.targetText ?? activeSegment.latestTargetText ?? "";
-  const [terminologyResult, lexicographicResult, semanticResult] = await Promise.all([
+  const [terminologyResult, lexicographicResult, semanticResult, tmProposalResult] = await Promise.all([
     checkTerminology({
       domain: selectedProject?.domain,
       language: activeSegment.targetLanguage,
+      projectId: activeSegment.projectId,
       sourceLanguage: activeSegment.sourceLanguage,
       sourceText: activeSegment.sourceText,
       targetLanguage: activeSegment.targetLanguage,
@@ -209,6 +263,13 @@ export async function getTranslationWorkspaceData({
     listSemanticIssues({
       documentId: selectedDocument.id,
       segmentId: activeSegment.id
+    }),
+    listTranslationMemoryProposals({
+      context: `${activeSegment.documentId}:${activeSegment.id}`,
+      domain: selectedProject?.domain,
+      sourceLanguage: activeSegment.sourceLanguage,
+      sourceText: activeSegment.sourceText,
+      targetLanguage: activeSegment.targetLanguage
     })
   ]);
 
@@ -229,6 +290,8 @@ export async function getTranslationWorkspaceData({
     segmentsError: segmentsResult.error,
     terminology: terminologyResult.data,
     terminologyError: terminologyResult.error,
+    translationMemoryProposals: tmProposalResult.data ?? [],
+    translationMemoryProposalsError: tmProposalResult.error,
     translations,
     translationsError: translationsResult.error
   };
@@ -256,12 +319,34 @@ function listWorkspaceTranslations(documentId: string): Promise<ApiResult<Worksp
 function checkTerminology(input: {
   domain?: string;
   language: string;
+  projectId: string;
   sourceLanguage: string;
   sourceText: string;
   targetLanguage: string;
   targetText: string;
 }): Promise<ApiResult<TerminologyCheckResult>> {
   return apiPost<TerminologyCheckResult, typeof input>("/terminology/check-segment", input);
+}
+
+function listTranslationMemoryProposals(input: {
+  context: string;
+  domain?: string;
+  sourceLanguage: string;
+  sourceText: string;
+  targetLanguage: string;
+}): Promise<ApiResult<TranslationMemoryProposal[]>> {
+  const query = new URLSearchParams({
+    context: input.context,
+    sourceLanguage: input.sourceLanguage,
+    sourceText: input.sourceText,
+    targetLanguage: input.targetLanguage
+  });
+
+  if (input.domain) {
+    query.set("domain", input.domain);
+  }
+
+  return apiGet<TranslationMemoryProposal[]>(`/translation-memory/proposals?${query.toString()}`);
 }
 
 function searchLexicographicReferences(input: {
@@ -344,6 +429,8 @@ function emptyWorkspace(input: {
     segmentsError: null,
     terminology: null,
     terminologyError: null,
+    translationMemoryProposals: [],
+    translationMemoryProposalsError: null,
     translations: [],
     translationsError: null
   };
