@@ -26,7 +26,7 @@ export function permissionsForRoles(roles: MvpRole[]): MvpPermission[] {
   const permissions = new Set<MvpPermission>(["read"]);
 
   for (const role of roles) {
-    if (role === "ADMIN") {
+    if (role === "PLATFORM_CREATOR" || role === "ADMIN") {
       permissions.add("project:write");
       permissions.add("document:write");
       permissions.add("segment:write");
