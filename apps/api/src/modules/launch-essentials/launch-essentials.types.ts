@@ -2,7 +2,7 @@ import { type AuthenticatedRequestContext } from "../auth/request-context.types"
 
 export type LaunchEssentialsActor = AuthenticatedRequestContext;
 
-export type SensitiveMfaRole = "ADMIN" | "REVIEWER" | "EDITOR";
+export type SensitiveMfaRole = "PLATFORM_CREATOR" | "ADMIN" | "REVIEWER" | "EDITOR";
 export type LaunchMfaStatus = "ENABLED" | "DISABLED";
 export type GdprConsentStatus = "ACCEPTED" | "WITHDRAWN";
 export type GdprRequestType = "PERSONAL_DATA_EXPORT" | "ACCOUNT_DELETION";
