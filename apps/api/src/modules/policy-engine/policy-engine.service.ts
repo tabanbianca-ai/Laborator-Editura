@@ -428,7 +428,7 @@ export class PolicyEngineService {
   }
 
   private assertAdminActor(actor: PolicyEngineActor): void {
-    if (!actor.roles.includes("ADMIN")) {
+    if (!actor.roles.includes("PLATFORM_CREATOR") && !actor.roles.includes("ADMIN")) {
       throw new ForbiddenException("Policy engine endpoints require an authorized admin.");
     }
   }
