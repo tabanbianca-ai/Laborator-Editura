@@ -5,9 +5,11 @@ import {
   type AdminAuditEvent,
   type AdminInvitation,
   type AdminMembership,
+  type AdminOrganizationMetadata,
   type AdminPermission,
   type AdminRole,
   type AdminRoleName,
+  type AdminTeam,
   type AdminUser,
   type EnterpriseAdminRepository
 } from "./enterprise-admin.types";
@@ -18,6 +20,43 @@ export class DatabaseEnterpriseAdminRepository implements EnterpriseAdminReposit
     @Inject(RUNTIME_DATABASE)
     private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
   ) {}
+
+  async upsertOrganizationMetadata(
+    organization: AdminOrganizationMetadata
+  ): Promise<AdminOrganizationMetadata> {
+    return this.database.upsert("admin_organizations", organization);
+  }
+
+  async findOrganizationMetadata(organizationId: string): Promise<AdminOrganizationMetadata | null> {
+    return this.database.selectForTenant<AdminOrganizationMetadata>(
+      "admin_organizations",
+      organizationId
+    )[0] ?? null;
+  }
+
+  async createTeam(team: AdminTeam): Promise<AdminTeam> {
+    return this.database.insert("admin_teams", team);
+  }
+
+  async findTeamById(id: string, organizationId: string): Promise<AdminTeam | null> {
+    return this.database.findByIdForTenant<AdminTeam>("admin_teams", id, organizationId);
+  }
+
+  async findTeamByName(name: string, organizationId: string): Promise<AdminTeam | null> {
+    return this.database.selectForTenant<AdminTeam>(
+      "admin_teams",
+      organizationId,
+      (team) => team.name.toLocaleLowerCase() === name.toLocaleLowerCase()
+    )[0] ?? null;
+  }
+
+  async listTeams(organizationId: string): Promise<AdminTeam[]> {
+    return this.database.selectForTenant<AdminTeam>("admin_teams", organizationId);
+  }
+
+  async updateTeam(team: AdminTeam): Promise<AdminTeam> {
+    return this.database.upsert("admin_teams", team);
+  }
 
   async createUser(user: AdminUser): Promise<AdminUser> {
     return this.database.insert("admin_users", user);
@@ -65,6 +104,14 @@ export class DatabaseEnterpriseAdminRepository implements EnterpriseAdminReposit
 
   async createMembership(membership: AdminMembership): Promise<AdminMembership> {
     return this.database.insert("admin_memberships", membership);
+  }
+
+  async findMembershipById(id: string, organizationId: string): Promise<AdminMembership | null> {
+    return this.database.findByIdForTenant<AdminMembership>("admin_memberships", id, organizationId);
+  }
+
+  async updateMembership(membership: AdminMembership): Promise<AdminMembership> {
+    return this.database.upsert("admin_memberships", membership);
   }
 
   async createInvitation(invitation: AdminInvitation): Promise<AdminInvitation> {
