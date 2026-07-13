@@ -284,8 +284,12 @@ export class QaService {
     }
 
     const terminologyResult = await this.terminologyService.checkSegmentText(actor, {
+      sourceLanguage: segment.sourceLanguage,
+      targetLanguage: segment.targetLanguage,
       language: segment.targetLanguage,
       domain: segment.domain,
+      projectId: segment.projectId,
+      ownerUserId: actor.userId,
       sourceText: segment.sourceText,
       targetText
     });
