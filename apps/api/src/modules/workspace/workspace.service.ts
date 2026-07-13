@@ -1,5 +1,10 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
-import { normalizeLanguageLocale, validateIsoCompatibleLanguageTag } from "@laborator/shared";
+import {
+  createParallelReviewColumns,
+  createUnifiedLanguageManagementModel,
+  normalizeLanguageLocale,
+  validateIsoCompatibleLanguageTag
+} from "@laborator/shared";
 import { randomUUID } from "node:crypto";
 import { DatabaseWorkspaceRepository } from "./workspace.repository";
 import {
@@ -9,6 +14,7 @@ import {
   type InviteWorkspaceCollaboratorInput,
   type RevokeWorkspaceAccessInput,
   type SaveWorkspacePreferencesInput,
+  type SaveWorkspaceLanguageManagementInput,
   type WorkspaceActor,
   type WorkspaceAccessAuditInput,
   type WorkspaceAccessResourceType,
@@ -20,6 +26,7 @@ import {
   type WorkspaceEffectiveAccessResult,
   type WorkspaceEntitlementFeature,
   type WorkspaceLayout,
+  type WorkspaceLanguageManagement,
   type WorkspaceModule,
   type WorkspaceNavigationItem,
   type WorkspaceNeedToKnowAccessInput,
@@ -38,6 +45,24 @@ import {
   type WorkspaceSubscriptionUsage,
   type WorkspaceWidget
 } from "./workspace.types";
+
+interface StoredLanguageManagementMetadata {
+  originalLanguage?: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguages?: Array<{
+    language: string;
+    locale?: string;
+    enabled?: boolean;
+  }>;
+  fallbackLanguage?: string;
+  resourcesVersion?: number;
+}
+
+interface WorkspacePreferencesMetadata {
+  unifiedLanguageManagement?: StoredLanguageManagementMetadata;
+}
 
 const DEFAULT_NAVIGATION: Array<Omit<
   WorkspaceNavigationItem,
@@ -426,12 +451,14 @@ export class WorkspaceService {
       this.getWidgets(actor),
       this.getPreferences(actor)
     ]);
+    const languageManagement = this.buildLanguageManagement(preferences);
 
     return {
       layout,
       navigation,
       widgets,
       preferences,
+      languageManagement,
       needToKnow: {
         defaultAccess: "ASSIGNED_SCOPE_ONLY",
         hiddenDataLoadedThroughApi: false,
@@ -446,6 +473,65 @@ export class WorkspaceService {
         permissions: actor.permissions
       }
     };
+  }
+
+  async getLanguageManagement(actor: WorkspaceActor): Promise<WorkspaceLanguageManagement> {
+    return this.buildLanguageManagement(await this.getPreferences(actor));
+  }
+
+  async saveLanguageManagement(
+    actor: WorkspaceActor,
+    input: SaveWorkspaceLanguageManagementInput
+  ): Promise<WorkspaceLanguageManagement> {
+    const existingPreferences = await this.getPreferences(actor);
+    const before = this.buildLanguageManagement(existingPreferences);
+    const beforeMetadata = this.languageMetadataFromPreferences(existingPreferences);
+
+    if (
+      input.originalLanguage &&
+      input.originalLanguage !== before.model.project.originalLanguage &&
+      !input.authorizedOriginalLanguageChange
+    ) {
+      throw new ForbiddenException("Original Language is immutable unless changed by an authorized user.");
+    }
+
+    if (input.originalLanguage && input.originalLanguage !== before.model.project.originalLanguage) {
+      this.assertCanManageAccess(actor);
+    }
+
+    const platformLanguage = input.platformLanguage ?? existingPreferences.platformLanguage;
+    const nextMetadata: StoredLanguageManagementMetadata = {
+      ...beforeMetadata,
+      originalLanguage: input.originalLanguage ?? beforeMetadata.originalLanguage ?? before.model.project.originalLanguage,
+      originalLocale: input.originalLocale ?? beforeMetadata.originalLocale ?? before.model.project.originalLocale,
+      authoringLanguage: input.authoringLanguage ?? beforeMetadata.authoringLanguage ?? before.model.project.authoringLanguage,
+      authoringLocale: input.authoringLocale ?? beforeMetadata.authoringLocale ?? before.model.project.authoringLocale,
+      targetLanguages: input.targetLanguages ?? beforeMetadata.targetLanguages ?? before.model.project.targetLanguages,
+      fallbackLanguage: input.fallbackLanguage ?? beforeMetadata.fallbackLanguage ?? before.model.fallbackLanguage,
+      resourcesVersion: input.resourcesUpdated
+        ? (beforeMetadata.resourcesVersion ?? 0) + 1
+        : beforeMetadata.resourcesVersion
+    };
+
+    await this.savePreferences(actor, {
+      platformLanguage,
+      metadata: {
+        ...(this.objectMetadata(existingPreferences.metadata)),
+        unifiedLanguageManagement: nextMetadata
+      }
+    });
+
+    const updatedPreferences = await this.getPreferences(actor);
+    const after = this.buildLanguageManagement(updatedPreferences);
+    await this.auditLanguageChanges(
+      actor,
+      before,
+      after,
+      Boolean(input.resourcesUpdated),
+      Boolean(input.platformLanguage)
+    );
+
+    return after;
   }
 
   async getSubscriptionSummary(actor: WorkspaceActor): Promise<WorkspaceSubscriptionSummary> {
@@ -468,10 +554,12 @@ export class WorkspaceService {
   ): Promise<WorkspaceEffectiveAccessResult> {
     const subscription = await this.getSubscriptionSummary(actor);
     const operationalRole = this.operationalRoleFromActor(actor);
-    const roleAllowed = ROLE_ACTIONS_ALLOWED[operationalRole].includes(input.action);
+    const platformCreatorAccess = actor.roles.includes("PLATFORM_CREATOR");
+    const roleAllowed = platformCreatorAccess || ROLE_ACTIONS_ALLOWED[operationalRole].includes(input.action);
     const needToKnow = await this.evaluateNeedToKnowAccess(actor, input);
     const requiredFeature = input.requiredFeature ?? this.defaultFeatureForAction(input.action);
     const planAllowsFeature =
+      platformCreatorAccess ||
       !requiredFeature ||
       (subscription.currentEntitlements.enabled &&
         subscription.currentEntitlements.includedFeatures.includes(requiredFeature));
@@ -480,12 +568,13 @@ export class WorkspaceService {
     const quotaLimit = quotaKey ? subscription.currentEntitlements.quotas[quotaKey] : undefined;
     const quotaUsage = quotaKey ? subscription.usage[quotaKey] : undefined;
     const quotaAllows =
+      platformCreatorAccess ||
       !quotaKey ||
       quotaLimit === null ||
       quotaLimit === undefined ||
       (quotaUsage ?? 0) + requestedAmount <= quotaLimit;
     const subscriptionAllowed = planAllowsFeature && quotaAllows;
-    const needToKnowAllowed = needToKnow.decision === "ALLOW";
+    const needToKnowAllowed = platformCreatorAccess || needToKnow.decision === "ALLOW";
     const decision: "ALLOW" | "DENY" =
       roleAllowed && subscriptionAllowed && needToKnowAllowed ? "ALLOW" : "DENY";
     const requiredPlan = requiredFeature ? FEATURE_MINIMUM_PLAN[requiredFeature] : undefined;
@@ -610,6 +699,16 @@ export class WorkspaceService {
       saved,
       existing ?? undefined
     );
+
+    if (existing && existing.platformLanguage !== saved.platformLanguage) {
+      await this.audit(
+        "PLATFORM_LANGUAGE_CHANGED",
+        actor,
+        { preferenceId: saved.id },
+        { platformLanguage: saved.platformLanguage },
+        { platformLanguage: existing.platformLanguage }
+      );
+    }
 
     return saved;
   }
@@ -1079,10 +1178,18 @@ export class WorkspaceService {
   }
 
   private hasRole(actor: WorkspaceActor, allowedRoles: string[]): boolean {
+    if (actor.roles.includes("PLATFORM_CREATOR")) {
+      return true;
+    }
+
     return allowedRoles.length === 0 || actor.roles.some((role) => allowedRoles.includes(role));
   }
 
   private hasPermissions(actor: WorkspaceActor, requiredPermissions: string[]): boolean {
+    if (actor.roles.includes("PLATFORM_CREATOR")) {
+      return true;
+    }
+
     return requiredPermissions.length === 0 ||
       requiredPermissions.every((permission) => actor.permissions.includes(permission as never));
   }
@@ -1102,11 +1209,11 @@ export class WorkspaceService {
   }
 
   private isAccountOwnerOrAdmin(actor: WorkspaceActor): boolean {
-    return actor.roles.includes("ADMIN");
+    return actor.roles.includes("PLATFORM_CREATOR") || actor.roles.includes("ADMIN");
   }
 
   private operationalRoleFromActor(actor: WorkspaceActor): WorkspaceOperationalRole {
-    if (actor.roles.includes("ADMIN")) {
+    if (actor.roles.includes("PLATFORM_CREATOR") || actor.roles.includes("ADMIN")) {
       return "ADMINISTRATOR";
     }
 
@@ -1216,6 +1323,179 @@ export class WorkspaceService {
     ];
   }
 
+  private buildLanguageManagement(preferences: WorkspacePreferences): WorkspaceLanguageManagement {
+    const metadata = this.languageMetadataFromPreferences(preferences);
+    const model = createUnifiedLanguageManagementModel({
+      platformLanguage: preferences.platformLanguage ?? preferences.language,
+      originalLanguage: metadata.originalLanguage ?? "fr",
+      originalLocale: metadata.originalLocale ?? "fr-FR",
+      authoringLanguage: metadata.authoringLanguage ?? "ro",
+      authoringLocale: metadata.authoringLocale ?? "ro-RO",
+      targetLanguages: metadata.targetLanguages ?? [
+        { language: "en", locale: "en-US", enabled: true },
+        { language: "es", locale: "es-ES", enabled: true },
+        { language: "pt", locale: "pt-PT", enabled: true },
+        { language: "it", locale: "it-IT", enabled: true }
+      ],
+      fallbackLanguage: metadata.fallbackLanguage ?? "en-US"
+    });
+    const primaryTarget = model.project.targetLanguages[0] ?? {
+      language: model.project.authoringLanguage,
+      locale: model.project.authoringLocale,
+      enabled: true
+    };
+
+    return {
+      model,
+      administration: {
+        installedLanguages: model.installedLanguages,
+        enabledLanguages: model.enabledLanguages,
+        defaultPlatformLanguage: model.defaultPlatformLanguage,
+        fallbackLanguage: model.fallbackLanguage,
+        translationCompleteness: model.translationCompleteness,
+        linguisticResources: ["dictionaries", "glossaries", "terminology", "phraseology", "linguistic resources"],
+        dictionaries: model.linguisticResourceLoading.map((plan) => this.languagePairKey(plan.sourceLanguage, plan.targetLanguage)),
+        glossaries: model.linguisticResourceLoading.map((plan) => this.languagePairKey(plan.sourceLanguage, plan.targetLanguage))
+      },
+      aiAgents: {
+        conversationLanguage: this.languagePairKey(model.platformLanguage, model.platformLocale),
+        explanationsLanguage: this.languagePairKey(model.platformLanguage, model.platformLocale),
+        translationDirection: model.project.targetLanguages.map((target) =>
+          `${this.languagePairKey(model.project.originalLanguage, model.project.originalLocale)} -> ${this.languagePairKey(target.language, target.locale)}`
+        ),
+        platformLanguageControlsUserCommunication: true,
+        aiMayChangeLanguageConfiguration: false
+      },
+      parallelReview: {
+        defaultColumns: createParallelReviewColumns({
+          originalLanguage: model.project.originalLanguage,
+          originalLocale: model.project.originalLocale,
+          targetLanguage: primaryTarget.language,
+          targetLocale: primaryTarget.locale
+        }),
+        supportsThreeColumns: true,
+        supportsFourColumns: true,
+        eachColumnSelectsLanguageAndVersion: true
+      },
+      auditActions: [
+        "PLATFORM_LANGUAGE_CHANGED",
+        "ORIGINAL_LANGUAGE_CHANGED",
+        "AUTHORING_LANGUAGE_CHANGED",
+        "TARGET_LANGUAGE_ADDED",
+        "TARGET_LANGUAGE_REMOVED",
+        "LANGUAGE_RESOURCES_UPDATED"
+      ]
+    };
+  }
+
+  private async auditLanguageChanges(
+    actor: WorkspaceActor,
+    before: WorkspaceLanguageManagement,
+    after: WorkspaceLanguageManagement,
+    resourcesUpdated: boolean,
+    platformLanguageAlreadyAudited = false
+  ): Promise<void> {
+    const beforeModel = before.model;
+    const afterModel = after.model;
+
+    if (!platformLanguageAlreadyAudited &&
+      this.languagePairKey(beforeModel.platformLanguage, beforeModel.platformLocale) !==
+      this.languagePairKey(afterModel.platformLanguage, afterModel.platformLocale)) {
+      await this.audit("PLATFORM_LANGUAGE_CHANGED", actor, {}, afterModel, beforeModel);
+    }
+
+    if (this.languagePairKey(beforeModel.project.originalLanguage, beforeModel.project.originalLocale) !==
+      this.languagePairKey(afterModel.project.originalLanguage, afterModel.project.originalLocale)) {
+      await this.audit("ORIGINAL_LANGUAGE_CHANGED", actor, {}, afterModel.project, beforeModel.project);
+    }
+
+    if (this.languagePairKey(beforeModel.project.authoringLanguage, beforeModel.project.authoringLocale) !==
+      this.languagePairKey(afterModel.project.authoringLanguage, afterModel.project.authoringLocale)) {
+      await this.audit("AUTHORING_LANGUAGE_CHANGED", actor, {}, afterModel.project, beforeModel.project);
+    }
+
+    const beforeTargets = new Set(beforeModel.project.targetLanguages.map((target) =>
+      this.languagePairKey(target.language, target.locale)
+    ));
+    const afterTargets = new Set(afterModel.project.targetLanguages.map((target) =>
+      this.languagePairKey(target.language, target.locale)
+    ));
+
+    for (const target of afterTargets) {
+      if (!beforeTargets.has(target)) {
+        await this.audit("TARGET_LANGUAGE_ADDED", actor, {}, { targetLanguage: target }, beforeModel.project);
+      }
+    }
+
+    for (const target of beforeTargets) {
+      if (!afterTargets.has(target)) {
+        await this.audit("TARGET_LANGUAGE_REMOVED", actor, {}, { targetLanguage: target }, beforeModel.project);
+      }
+    }
+
+    if (resourcesUpdated) {
+      await this.audit(
+        "LANGUAGE_RESOURCES_UPDATED",
+        actor,
+        {},
+        after.administration,
+        before.administration
+      );
+    }
+  }
+
+  private languageMetadataFromPreferences(preferences: WorkspacePreferences): StoredLanguageManagementMetadata {
+    const metadata = this.objectMetadata(preferences.metadata) as WorkspacePreferencesMetadata;
+    const languageMetadata = metadata.unifiedLanguageManagement;
+
+    if (!languageMetadata) {
+      return {};
+    }
+
+    return {
+      originalLanguage: this.optionalIsoLanguage(languageMetadata.originalLanguage),
+      originalLocale: this.optionalIsoLanguage(languageMetadata.originalLocale),
+      authoringLanguage: this.optionalIsoLanguage(languageMetadata.authoringLanguage),
+      authoringLocale: this.optionalIsoLanguage(languageMetadata.authoringLocale),
+      targetLanguages: Array.isArray(languageMetadata.targetLanguages)
+        ? languageMetadata.targetLanguages.filter((target) => this.isStoredTargetLanguage(target))
+        : undefined,
+      fallbackLanguage: this.optionalIsoLanguage(languageMetadata.fallbackLanguage),
+      resourcesVersion: typeof languageMetadata.resourcesVersion === "number"
+        ? languageMetadata.resourcesVersion
+        : undefined
+    };
+  }
+
+  private objectMetadata(metadata?: object): Record<string, unknown> {
+    return metadata ? { ...(metadata as Record<string, unknown>) } : {};
+  }
+
+  private optionalIsoLanguage(language?: string): string | undefined {
+    return language && validateIsoCompatibleLanguageTag(language).valid ? language : undefined;
+  }
+
+  private isStoredTargetLanguage(value: unknown): value is NonNullable<StoredLanguageManagementMetadata["targetLanguages"]>[number] {
+    if (!value || typeof value !== "object") {
+      return false;
+    }
+
+    const target = value as {
+      language?: unknown;
+      locale?: unknown;
+      enabled?: unknown;
+    };
+
+    return typeof target.language === "string" &&
+      validateIsoCompatibleLanguageTag(target.language).valid &&
+      (target.locale === undefined || typeof target.locale === "string") &&
+      (target.enabled === undefined || typeof target.enabled === "boolean");
+  }
+
+  private languagePairKey(language: string, locale?: string): string {
+    return locale ?? language;
+  }
+
   private normalizePlatformLanguage(language: string): string {
     const validation = validateIsoCompatibleLanguageTag(language);
 
@@ -1227,7 +1507,11 @@ export class WorkspaceService {
   }
 
   private assertCanManageAccess(actor: WorkspaceActor): void {
-    if (!actor.roles.includes("ADMIN") && !actor.roles.includes("REVIEWER")) {
+    if (
+      !actor.roles.includes("PLATFORM_CREATOR") &&
+      !actor.roles.includes("ADMIN") &&
+      !actor.roles.includes("REVIEWER")
+    ) {
       throw new ForbiddenException("Only authorized human roles may manage workspace access.");
     }
   }
@@ -1342,7 +1626,7 @@ export class WorkspaceService {
   }
 
   private roleFromActor(actor: WorkspaceActor): WorkspaceNeedToKnowRole {
-    if (actor.roles.includes("ADMIN")) {
+    if (actor.roles.includes("PLATFORM_CREATOR") || actor.roles.includes("ADMIN")) {
       return "ADMINISTRATOR";
     }
 
