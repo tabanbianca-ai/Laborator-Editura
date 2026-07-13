@@ -3276,6 +3276,7 @@ and revoke roles.
 Subscription plans define available features, limits, and resources. Plans are:
 
 - `FREE`.
+- `BASIC`.
 - `PREMIUM`.
 - `BUSINESS`.
 - `ENTERPRISE_RESERVED`.
@@ -3484,3 +3485,104 @@ Audit covers:
 - `ADMIN_MEMBER_REMOVED`.
 - `ADMIN_PLATFORM_CREATOR_ACCESS`.
 - `CREATOR_ROLE_ACCESS`.
+
+## Phase 7 Step 14.5 - AI Providers & Cost Management
+
+Status: Implemented as an additive AI Governance and Administration
+refinement.
+
+### AI Providers
+
+Supported providers for v1.0:
+
+- OpenAI as primary provider.
+- Anthropic as fallback provider.
+
+The provider architecture remains extensible for future providers without major
+code changes.
+
+Default provider: OpenAI.
+
+Automatic fallback may switch to Anthropic when OpenAI has:
+
+- Timeout.
+- Unavailable service.
+- API error.
+- Configured outage.
+
+When OpenAI becomes available again, the platform may recover to OpenAI.
+Provider changes, fallback activation, and fallback recovery are auditable.
+
+### Model Selection
+
+Model selection is automatic by default. Advanced users may choose a model only
+when role and subscription entitlement permit manual selection.
+
+### Subscription Plans
+
+Visible v1.0 subscription plans:
+
+- `FREE`.
+- `BASIC`.
+- `PREMIUM`.
+- `BUSINESS`.
+
+`ENTERPRISE_RESERVED` remains disabled until explicitly activated later.
+
+Subscription controls AI access, quotas, collaborators, projects, storage,
+exports, advanced AI capabilities, and team functionality. Subscription plans
+remain separate from operational editorial roles.
+
+### AI Cost Policy
+
+AI cost management supports budgets for:
+
+- User.
+- Project.
+- Organization.
+
+The platform tracks:
+
+- Estimated cost.
+- Actual cost.
+- Monthly consumption.
+- Consumption by AI agent.
+- Consumption by project.
+
+Budget warning thresholds:
+
+- 80%.
+- 90%.
+- 100%.
+
+When a limit is reached, the platform must never delete data. It blocks only
+the restricted AI action and allows the user to wait until quota reset or
+upgrade subscription.
+
+### Platform Creator
+
+`PLATFORM_CREATOR` has unlimited AI access, unlimited testing, full monitoring
+access, and is not limited by subscription plans.
+
+### Administration and Audit
+
+Administration displays:
+
+- Configured providers.
+- Active provider.
+- Fallback status.
+- Consumption.
+- Monthly budget.
+- Remaining budget.
+- AI usage history.
+
+Audit covers:
+
+- `AI_PROVIDER_CHANGED`.
+- `AI_FALLBACK_ACTIVATED`.
+- `AI_FALLBACK_RECOVERED`.
+- `AI_BUDGET_WARNING`.
+- `AI_BUDGET_EXCEEDED`.
+- `AI_ACTION_BLOCKED`.
+- `AI_SUBSCRIPTION_UPGRADED`.
+- `AI_SUBSCRIPTION_DOWNGRADED`.
