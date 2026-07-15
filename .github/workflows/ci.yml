@@ -133,6 +133,12 @@ jobs:
         continue-on-error: true
         run: pnpm audit --audit-level high
 
+      - name: Document skipped typecheck
+        if: steps.dependencies.outputs.available != 'true'
+        run: |
+          echo "Typecheck skipped because dependencies were unavailable in this CI run."
+          echo "Required follow-up when package access is available: pnpm install && pnpm typecheck"
+
   vulnerability-scan:
     name: Filesystem vulnerability scan
     runs-on: ubuntu-latest
@@ -153,9 +159,3 @@ jobs:
           format: table
           exit-code: "0"
           severity: HIGH,CRITICAL
-
-      - name: Document skipped typecheck
-        if: steps.dependencies.outputs.available != 'true'
-        run: |
-          echo "Typecheck skipped because dependencies were unavailable in this CI run."
-          echo "Required follow-up when package access is available: pnpm install && pnpm typecheck"
