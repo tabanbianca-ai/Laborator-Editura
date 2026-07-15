@@ -1,0 +1,13 @@
+[Unit]
+Description=Laborator Editura staging backup
+Wants=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+Environment=LABORATOR_INFRA_CONFIG=/etc/laborator/infrastructure.env
+ExecStart=/opt/Laborator-Editura/infrastructure/backup/backup-laborator.sh --config /etc/laborator/infrastructure.env
+User=root
+Group=root
+UMask=0077
+
