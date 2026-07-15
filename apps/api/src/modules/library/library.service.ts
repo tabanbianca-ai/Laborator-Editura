@@ -33,7 +33,6 @@ import {
   type LibraryPublicationRecord,
   type LibraryPublicationSearchInput,
   type LibraryPublicationVersion,
-  type LibraryPublicationVisibility,
   type LibraryReadingProgress,
   type LibraryViewPreference,
   type SaveLibraryViewPreferenceInput,
