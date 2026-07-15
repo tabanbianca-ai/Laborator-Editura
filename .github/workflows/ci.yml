@@ -10,7 +10,48 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  repository-validation:
+    name: Repository and infrastructure validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.12.1 --activate
+
+      - name: Scan for committed secrets
+        run: bash infrastructure/validation/scan-secrets.sh
+
+      - name: Validate shell syntax
+        run: |
+          find infrastructure deploy/staging/scripts -type f -name '*.sh' -print0 | xargs -0 -r bash -n
+
+      - name: Validate Docker Compose config
+        run: |
+          cp deploy/staging/.env.staging.example /tmp/laborator-ci.env
+          docker compose --env-file /tmp/laborator-ci.env -f deploy/staging/docker-compose.staging.yml config
+
+      - name: Validate systemd unit syntax
+        run: systemd-analyze verify infrastructure/systemd/*.service infrastructure/systemd/*.timer || true
+
+      - name: Validate Nginx template
+        run: bash infrastructure/validation/validate-nginx-template.sh infrastructure/nginx/laborator-staging.conf.template
+
   mvp-validation:
     name: MVP contract validation
     runs-on: ubuntu-latest
@@ -74,6 +115,44 @@ jobs:
       - name: Run TypeScript checks
         if: steps.dependencies.outputs.available == 'true'
         run: pnpm typecheck
+
+      - name: Run lint
+        if: steps.dependencies.outputs.available == 'true'
+        run: pnpm lint
+
+      - name: Run tests
+        if: steps.dependencies.outputs.available == 'true'
+        run: pnpm test
+
+      - name: Run build
+        if: steps.dependencies.outputs.available == 'true'
+        run: pnpm build
+
+      - name: Vulnerability scan
+        if: steps.dependencies.outputs.available == 'true'
+        continue-on-error: true
+        run: pnpm audit --audit-level high
+
+  vulnerability-scan:
+    name: Filesystem vulnerability scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: table
+          exit-code: "0"
+          severity: HIGH,CRITICAL
 
       - name: Document skipped typecheck
         if: steps.dependencies.outputs.available != 'true'
