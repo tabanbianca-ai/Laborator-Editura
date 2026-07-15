@@ -23,6 +23,9 @@
     "staging:smoke": "node deploy/staging/scripts/staging-smoke-test.mjs",
     "staging:validate": "node deploy/staging/scripts/validate-staging.mjs",
     "staging:validate-env": "node deploy/staging/scripts/validate-env.mjs",
+    "infra:validate": "bash infrastructure/validation/validate-infrastructure.sh",
+    "infra:scan-secrets": "bash infrastructure/validation/scan-secrets.sh",
+    "infra:backup:dry-run": "bash infrastructure/backup/backup-laborator.sh --config infrastructure/backup/laborator-backup.env.example --dry-run",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\""
   },
   "devDependencies": {
