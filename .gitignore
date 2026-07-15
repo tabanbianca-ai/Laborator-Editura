@@ -6,6 +6,18 @@ coverage
 .env.local
 deploy/staging/.env.staging
 deploy/staging/.env.staging.local
+deploy/staging/.env.production
+deploy/staging/.env.production.local
+infrastructure/**/*.local
+infrastructure/**/*.secret
+infrastructure/**/*.key
+infrastructure/**/rclone.conf
+*.pem
+*.key
+*.agekey
+*.tar
+*.tar.gz
+*.sha256
 .turbo
 *.log
 __pycache__
@@ -15,6 +27,7 @@ __pycache__
 .DS_Store
 .data
 backups
+laborator-backups
 .deps
 work_audio
 render_translation
