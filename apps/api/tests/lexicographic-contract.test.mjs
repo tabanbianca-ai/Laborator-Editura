@@ -103,8 +103,8 @@ test("lexicographic priority rule prevents AI from overriding validated sources"
   const types = readSource("lexicographic.types.ts");
   const service = readSource("lexicographic.service.ts");
 
-  assert.match(types, /"VALIDATED_PLATFORM_GLOSSARY",\n  "DOCUMENTED_EDITORIAL_DECISION"/);
-  assert.match(types, /"SPECIALIZED_DICTIONARY",\n  "ACADEMIC_DICTIONARY"/);
+  assert.match(types, /"VALIDATED_PLATFORM_GLOSSARY",\n {2}"DOCUMENTED_EDITORIAL_DECISION"/);
+  assert.match(types, /"SPECIALIZED_DICTIONARY",\n {2}"ACADEMIC_DICTIONARY"/);
   assert.match(types, /"AI_SUGGESTION"/);
   assert.match(service, /selectHighestPriorityEvidence/);
   assert.match(service, /priorityRank\(left\.authority\) - this\.priorityRank\(right\.authority\)/);
