@@ -162,8 +162,8 @@ test("validated glossary remains above dictionary evidence and AI suggestions", 
   const semantic = readModule("semantic-fidelity", "semantic-fidelity.service.ts");
   const lexicographicTypes = readModule("lexicographic", "lexicographic.types.ts");
 
-  assert.match(lexicographicTypes, /"VALIDATED_PLATFORM_GLOSSARY",\n  "DOCUMENTED_EDITORIAL_DECISION"/);
-  assert.match(lexicographicTypes, /"SPECIALIZED_DICTIONARY",\n  "ACADEMIC_DICTIONARY"/);
+  assert.match(lexicographicTypes, /"VALIDATED_PLATFORM_GLOSSARY",\n {2}"DOCUMENTED_EDITORIAL_DECISION"/);
+  assert.match(lexicographicTypes, /"SPECIALIZED_DICTIONARY",\n {2}"ACADEMIC_DICTIONARY"/);
   assert.match(lexicographicTypes, /"AI_SUGGESTION"/);
   assert.match(terminology, /priority: "TERMINOLOGY_VALIDATED"/);
   assert.match(terminology, /DICTIONARY_EVIDENCE_AFTER_VALIDATED_GLOSSARY/);
