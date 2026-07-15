@@ -1,0 +1,41 @@
+limit_req_zone $binary_remote_addr zone=laborator_api:10m rate=10r/s;
+limit_req_zone $binary_remote_addr zone=laborator_web:10m rate=30r/s;
+
+server {
+    listen 80;
+    server_name _;
+
+    client_max_body_size ${NGINX_CLIENT_MAX_BODY_SIZE};
+
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' http://127.0.0.1:3001;" always;
+
+    access_log /var/log/nginx/laborator-staging.access.log;
+    error_log /var/log/nginx/laborator-staging.error.log warn;
+
+    location / {
+        limit_req zone=laborator_web burst=60 nodelay;
+        proxy_pass http://127.0.0.1:${STAGING_WEB_PORT};
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    location /api/ {
+        limit_req zone=laborator_api burst=20 nodelay;
+        proxy_pass http://127.0.0.1:${STAGING_API_PORT}/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
