@@ -2,7 +2,7 @@ import type { QaIssue, QaIssueSeverity, QaIssueType, QaSegmentInput } from "./qa
 
 const TERMINAL_PUNCTUATION = /[.!?;:]+$/u;
 const NUMBER_PATTERN = /[-+]?\d+(?:[.,]\d+)?/gu;
-const DATE_PATTERN = /\b(?:\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}|\d{4}[\/.-]\d{1,2}[\/.-]\d{1,2})\b/gu;
+const DATE_PATTERN = /\b(?:\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}|\d{4}[/.-]\d{1,2}[/.-]\d{1,2})\b/gu;
 
 export function normalizeQaText(value: string | undefined): string {
   return (value ?? "").trim().replace(/\s+/g, " ");
