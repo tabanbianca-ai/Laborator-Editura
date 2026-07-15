@@ -222,20 +222,6 @@ const ALWAYS_RESTRICTED_RESOURCE_TYPES = new Set<WorkspaceAccessResourceType>([
   "RIGHTS_RECORD"
 ]);
 
-const OFFICIAL_OPERATIONAL_ROLES: WorkspaceOperationalRole[] = [
-  "ADMINISTRATOR",
-  "PROJECT_MANAGER",
-  "EDITOR",
-  "TRANSLATOR",
-  "REVIEWER",
-  "DESIGNER",
-  "AUDIO_NARRATOR",
-  "AUTHOR",
-  "COLLABORATOR",
-  "READER",
-  "GUEST"
-];
-
 const ROLE_ASSIGNMENT_SCOPES = [
   "ORGANIZATION",
   "PROJECT",
@@ -1586,7 +1572,7 @@ export class WorkspaceService {
 
   private buildNeedToKnowPreview(
     role: WorkspaceNeedToKnowRole,
-    permittedTools: WorkspaceModule[]
+    _permittedTools: WorkspaceModule[]
   ): WorkspaceNeedToKnowPreview {
     const roleResourceTypes = new Set(ROLE_RESOURCE_TYPES[role]);
     const restrictedResourceTypes = ROLE_RESOURCE_TYPES.ADMINISTRATOR.filter(
