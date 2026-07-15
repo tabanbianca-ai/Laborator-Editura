@@ -129,9 +129,9 @@ test("source priority covers normative academic specialized editorial descriptiv
   const service = readModule("lexicographic", "lexicographic.service.ts");
 
   assert.match(types, /LINGUISTIC_SOURCE_PRIORITY_RULE/);
-  assert.match(types, /"OFFICIAL_NORMATIVE",\n  "ACADEMIC"/);
-  assert.match(types, /"VALIDATED_SPECIALIZED",\n  "EDITORIAL_GUIDE"/);
-  assert.match(types, /"DESCRIPTIVE",\n  "INFORMATIVE"/);
+  assert.match(types, /"OFFICIAL_NORMATIVE",\n {2}"ACADEMIC"/);
+  assert.match(types, /"VALIDATED_SPECIALIZED",\n {2}"EDITORIAL_GUIDE"/);
+  assert.match(types, /"DESCRIPTIVE",\n {2}"INFORMATIVE"/);
   assert.match(service, /defaultAuthorityLevelForSourceType/);
   assert.match(service, /GRAMMAR_RULES/);
   assert.match(service, /ORTHOGRAPHIC_DICTIONARY/);
