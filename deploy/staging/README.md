@@ -57,6 +57,27 @@ Or run only Docker Compose:
 pnpm staging:docker:up
 ```
 
+## Public Exposure
+
+Docker Compose binds `web` and `api` to loopback by default:
+
+- `127.0.0.1:3000`
+- `127.0.0.1:3001`
+
+Nginx should remain the only public entry point on ports `80` and `443`.
+After applying this on the VPS, verify:
+
+```bash
+docker compose --env-file deploy/staging/.env.staging -f deploy/staging/docker-compose.staging.yml ps
+ss -ltnp | grep -E ':3000|:3001'
+curl http://127.0.0.1:3000
+curl http://127.0.0.1:3001/health
+curl http://<staging-ip-or-domain>
+```
+
+The `ss` output should show `127.0.0.1:3000` and `127.0.0.1:3001`, not
+`0.0.0.0:3000` or `0.0.0.0:3001`.
+
 ## Health Check
 
 ```bash
