@@ -231,7 +231,7 @@ export class AuthService {
 
   async recoverFounderProtection(actor: AuthActor): Promise<FounderRecoveryResult> {
     this.validateActor(actor);
-    let protection = await this.loadFounderProtection(actor.organizationId);
+    const protection = await this.loadFounderProtection(actor.organizationId);
     this.assertCurrentFounder(actor, protection);
 
     if (!protection.recoveryEnabled) {
