@@ -50,8 +50,8 @@ test("glossary overrides AI in editorial priority order", () => {
   const service = readSource("editorial-decisions.service.ts");
   const types = readSource("editorial-decisions.types.ts");
 
-  assert.match(types, /"VALIDATED_GLOSSARY",\n  "DOCUMENTED_EDITORIAL_DECISION"/);
-  assert.match(types, /"TRANSLATION_MEMORY",\n  "AI_SUGGESTION"/);
+  assert.match(types, /"VALIDATED_GLOSSARY",\n {2}"DOCUMENTED_EDITORIAL_DECISION"/);
+  assert.match(types, /"TRANSLATION_MEMORY",\n {2}"AI_SUGGESTION"/);
   assert.match(service, /VALIDATED_GLOSSARY: 1/);
   assert.match(service, /AI_REASONING: 6/);
   assert.match(service, /Revise according to validated glossary/);
