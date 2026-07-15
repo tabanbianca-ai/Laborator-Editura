@@ -14,7 +14,7 @@ services:
       LABORATOR_RUNTIME_DB_PATH: /var/lib/laborator/runtime-db.json
       STAGING_BACKUP_DIR: /var/backups/laborator/staging
     ports:
-      - "${STAGING_API_PORT:-3001}:${API_PORT:-3001}"
+      - "${STAGING_API_BIND_ADDRESS:-127.0.0.1}:${STAGING_API_PORT:-3001}:${API_PORT:-3001}"
     volumes:
       - runtime-db:/var/lib/laborator
       - runtime-backups:/var/backups/laborator/staging
@@ -43,7 +43,7 @@ services:
       API_BASE_URL: http://api:${API_PORT:-3001}
       NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:3001}
     ports:
-      - "${STAGING_WEB_PORT:-3000}:${WEB_PORT:-3000}"
+      - "${STAGING_WEB_BIND_ADDRESS:-127.0.0.1}:${STAGING_WEB_PORT:-3000}:${WEB_PORT:-3000}"
     depends_on:
       api:
         condition: service_healthy
