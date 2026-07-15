@@ -1,0 +1,102 @@
+name: Staging Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref or commit SHA to deploy
+        required: true
+        default: main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: staging-deploy
+  cancel-in-progress: false
+
+jobs:
+  validate-before-deploy:
+    name: Validate before deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout requested ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.12.1 --activate
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Validate repository and infrastructure
+        run: |
+          pnpm infra:scan-secrets
+          bash -n infrastructure/deploy/deploy-staging.sh
+          bash -n infrastructure/deploy/rollback-staging.sh
+          cp deploy/staging/.env.staging.example /tmp/laborator-ci.env
+          docker compose --env-file /tmp/laborator-ci.env -f deploy/staging/docker-compose.staging.yml config
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  deploy:
+    name: Deploy to staging VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs:
+      - validate-before-deploy
+    environment: staging
+
+    steps:
+      - name: Prepare SSH
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "${{ secrets.VPS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_laborator_deploy
+          chmod 600 ~/.ssh/id_laborator_deploy
+          printf '%s\n' "${{ secrets.VPS_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy remotely with backup and rollback
+        shell: bash
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          TARGET_REF: ${{ github.sha }}
+        run: |
+          set -Eeuo pipefail
+          ssh -i ~/.ssh/id_laborator_deploy -p "${VPS_PORT:-22}" "${VPS_USER}@${VPS_HOST}" \
+            "cd '${DEPLOY_PATH}' && infrastructure/deploy/deploy-staging.sh --ref '${TARGET_REF}'"
+
+      - name: Summary
+        run: |
+          {
+            echo "## Staging deploy"
+            echo ""
+            echo "- Requested ref: ${{ inputs.ref }}"
+            echo "- Deployed commit: ${{ github.sha }}"
+            echo "- Deploy includes pre-deploy backup and health checks."
+            echo "- Rollback command is documented in infrastructure/docs/DEPLOYMENT_RUNBOOK.md."
+          } >> "$GITHUB_STEP_SUMMARY"
+
