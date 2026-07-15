@@ -22,7 +22,6 @@ import {
   calculateSemanticScore,
   hasReinterpretationMarker,
   lengthRatio,
-  normalizeSemanticText,
   overallRiskLevel,
   riskForIssue
 } from "./semantic-fidelity.utils";
