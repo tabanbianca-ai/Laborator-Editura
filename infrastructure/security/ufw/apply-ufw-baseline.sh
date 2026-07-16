@@ -19,6 +19,10 @@ while [[ $# -gt 0 ]]; do
       CONFIRM="$2"
       shift 2
       ;;
+    --verbose)
+      enable_verbose
+      shift
+      ;;
     *)
       die "Unknown argument: $1"
       ;;
@@ -39,3 +43,4 @@ run_or_dry ufw allow 443/tcp
 run_or_dry ufw --force enable
 run_or_dry ufw status verbose
 
+success "UFW baseline validation completed."

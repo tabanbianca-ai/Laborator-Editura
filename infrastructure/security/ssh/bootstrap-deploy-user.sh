@@ -25,6 +25,10 @@ while [[ $# -gt 0 ]]; do
       CONFIRM="$2"
       shift 2
       ;;
+    --verbose)
+      enable_verbose
+      shift
+      ;;
     *)
       die "Unknown argument: $1"
       ;;
@@ -54,5 +58,4 @@ if [[ -n "$AUTHORIZED_KEY_FILE" ]]; then
   fi
 fi
 
-log "Deploy user bootstrap completed. Verify SSH key login before hardening SSH."
-
+success "Deploy user bootstrap completed. Verify SSH key login before hardening SSH."

@@ -19,6 +19,10 @@ while [[ $# -gt 0 ]]; do
       KEEP_TEMP=true
       shift
       ;;
+    --verbose)
+      enable_verbose
+      shift
+      ;;
     *)
       die "Unknown argument: $1"
       ;;
@@ -64,5 +68,4 @@ restore_temp_volume() {
 log "Testing restore into temporary Docker volumes."
 restore_temp_volume "$db_volume" "runtime-db.tar.gz"
 restore_temp_volume "$backups_volume" "runtime-backups.tar.gz"
-log "Restore dry-run OK. Live volumes were not touched."
-
+success "Restore dry-run OK. Live volumes were not touched."

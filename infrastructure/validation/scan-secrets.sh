@@ -8,6 +8,18 @@ source "$REPO_ROOT/infrastructure/scripts/common.sh"
 
 cd "$REPO_ROOT"
 
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --verbose)
+      enable_verbose
+      shift
+      ;;
+    *)
+      die "Unknown argument: $1"
+      ;;
+  esac
+done
+
 forbidden_files=(
   "deploy/staging/.env.staging"
   "deploy/staging/.env.production"
@@ -30,5 +42,4 @@ if git grep -n -I -E '(BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY|ghp_[A-Za-z0-9_]{2
   die "Potential secret detected. Review output above."
 fi
 
-log "Secret scan completed."
-
+success "Secret scan completed."

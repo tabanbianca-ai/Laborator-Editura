@@ -6,7 +6,9 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 # shellcheck source=../scripts/common.sh
 source "$REPO_ROOT/infrastructure/scripts/common.sh"
 
-CONFIG_FILE="${LABORATOR_INFRA_CONFIG:-/etc/laborator/infrastructure.env}"
+CONFIG_DIR="${CONFIG_DIR:-${LABORATOR_CONFIG_DIR:-/etc/laborator}}"
+CONFIG_FILE="${LABORATOR_INFRA_CONFIG:-$CONFIG_DIR/infrastructure.env}"
+CONFIG_EXAMPLE="$REPO_ROOT/infrastructure/backup/laborator-backup.env.example"
 DRY_RUN=false
 
 while [[ $# -gt 0 ]]; do
@@ -19,25 +21,35 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=true
       shift
       ;;
+    --verbose)
+      enable_verbose
+      shift
+      ;;
     *)
       die "Unknown argument: $1"
       ;;
   esac
 done
 
-load_config_file "$CONFIG_FILE"
+load_or_bootstrap_config_file "$CONFIG_FILE" "$CONFIG_EXAMPLE" "$DRY_RUN"
+normalize_path_aliases
 
-: "${APP_ROOT:=/opt/Laborator-Editura}"
-: "${COMPOSE_FILE:=$APP_ROOT/deploy/staging/docker-compose.staging.yml}"
+: "${PROJECT_ROOT:=$APP_ROOT}"
+: "${APP_ROOT:=$PROJECT_ROOT}"
+: "${DOCKER_COMPOSE_PATH:=$APP_ROOT/deploy/staging/docker-compose.staging.yml}"
+: "${COMPOSE_FILE:=$DOCKER_COMPOSE_PATH}"
 : "${ENV_FILE:=$APP_ROOT/deploy/staging/.env.staging}"
-: "${BACKUP_ROOT:=/opt/laborator-backups}"
+: "${BACKUP_DIR:=$BACKUP_ROOT}"
+: "${BACKUP_ROOT:=$BACKUP_DIR}"
 : "${BACKUP_RETENTION_DAYS:=30}"
 : "${BACKUP_MIN_FREE_MB:=1024}"
 : "${BACKUP_LOCK_DIR:=/tmp/laborator-backup.lock}"
 : "${RUNTIME_DB_VOLUME:=laborator-staging_runtime-db}"
 : "${RUNTIME_BACKUPS_VOLUME:=laborator-staging_runtime-backups}"
-: "${NGINX_CONFIG_DIR:=/etc/nginx}"
-: "${SYSTEMD_CONFIG_DIR:=/etc/systemd/system}"
+: "${NGINX_DIR:=$NGINX_CONFIG_DIR}"
+: "${NGINX_CONFIG_DIR:=$NGINX_DIR}"
+: "${SYSTEMD_DIR:=$SYSTEMD_CONFIG_DIR}"
+: "${SYSTEMD_CONFIG_DIR:=$SYSTEMD_DIR}"
 : "${BACKUP_INCLUDE_ENV:=false}"
 : "${BACKUP_ENCRYPTION:=none}"
 
@@ -82,6 +94,10 @@ cleanup() {
 trap cleanup EXIT
 
 log "Starting Laborator backup: $backup_name"
+debug "Config file: $CONFIG_FILE"
+debug "Project root: $APP_ROOT"
+debug "Docker Compose path: $COMPOSE_FILE"
+debug "Backup directory: $BACKUP_ROOT"
 
 git_commit="unknown"
 git_dirty="unknown"
@@ -180,4 +196,4 @@ if [[ "$DRY_RUN" == "false" && "$BACKUP_RETENTION_DAYS" =~ ^[0-9]+$ ]]; then
   find "$BACKUP_ROOT" -maxdepth 1 -type f -name 'laborator-staging-*.tar.gz.sha256' -mtime "+$BACKUP_RETENTION_DAYS" -print -delete
 fi
 
-log "Backup completed: $archive_path"
+success "Backup completed: $archive_path"

@@ -7,7 +7,8 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 source "$REPO_ROOT/infrastructure/scripts/common.sh"
 
 DEPLOY_USER="${DEPLOY_USER:-deploy}"
-DROP_IN="/etc/ssh/sshd_config.d/99-laborator-hardening.conf"
+SSH_CONFIG_DIR="${SSH_CONFIG_DIR:-/etc/ssh/sshd_config.d}"
+DROP_IN="${SSH_HARDENING_DROP_IN:-$SSH_CONFIG_DIR/99-laborator-hardening.conf}"
 DRY_RUN=true
 CONFIRM=""
 
@@ -20,6 +21,10 @@ while [[ $# -gt 0 ]]; do
     --confirm)
       CONFIRM="$2"
       shift 2
+      ;;
+    --verbose)
+      enable_verbose
+      shift
       ;;
     *)
       die "Unknown argument: $1"
@@ -49,5 +54,4 @@ else
   systemctl reload ssh || systemctl reload sshd
 fi
 
-log "Keep an active SSH session open until a new key-based login is verified."
-
+success "SSH hardening validation completed. Keep an active SSH session open until a new key-based login is verified."

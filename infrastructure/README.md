@@ -43,6 +43,12 @@ infrastructure/
 
 ## First Install On VPS
 
+Most scripts can run before manual configuration. When
+`/etc/laborator/infrastructure.env` is missing, backup/deploy/restore scripts
+bootstrap it from `infrastructure/backup/laborator-backup.env.example` when
+they can write to `/etc/laborator`. Dry-runs use the example defaults without
+writing system files.
+
 ```bash
 sudo install -d -m 700 /etc/laborator
 sudo cp infrastructure/backup/laborator-backup.env.example /etc/laborator/infrastructure.env
@@ -64,11 +70,24 @@ sudo systemctl enable --now laborator-backup.timer laborator-monitor.timer
 
 ```bash
 infrastructure/validation/validate-infrastructure.sh
+infrastructure/validation/validate-nginx-template.sh
+infrastructure/validation/scan-secrets.sh
+infrastructure/backup/backup-laborator.sh --dry-run
 pnpm typecheck
 pnpm test
 pnpm build
 docker compose --env-file deploy/staging/.env.staging.example -f deploy/staging/docker-compose.staging.yml config
 ```
+
+`validate-infrastructure.sh` validates shell scripts with `bash -n`, validates
+`.mjs` files with `node --check` when Node.js is available, validates GitHub
+Actions YAML with Ruby when available, validates Docker Compose when Docker is
+available, and calls the secret scan and Nginx template validator.
+
+`validate-nginx-template.sh` renders the selected template into a temporary
+complete `nginx.conf` containing both `events` and `http` sections. This keeps
+`limit_req_zone` in the correct `http` context on Ubuntu 24.04 with standard
+Nginx.
 
 Optional tools:
 
@@ -77,6 +96,20 @@ Optional tools:
 - `nginx` or Docker for Nginx template validation
 - `gitleaks`
 - `trivy`
+
+All infrastructure scripts use UTC timestamps and `INFO`, `WARNING`, `ERROR`,
+and `SUCCESS` log levels. Pass `--verbose` to supported scripts for extra
+diagnostic output.
+
+Main path settings are configurable in `/etc/laborator/infrastructure.env`:
+
+- `CONFIG_DIR`
+- `PROJECT_ROOT` / `APP_ROOT`
+- `DOCKER_COMPOSE_PATH` / `COMPOSE_FILE`
+- `BACKUP_DIR` / `BACKUP_ROOT`
+- `LOG_DIR`
+- `NGINX_DIR` / `NGINX_CONFIG_DIR`
+- `SYSTEMD_DIR` / `SYSTEMD_CONFIG_DIR`
 
 ## Manual Actions After Commit And Push
 
@@ -102,4 +135,3 @@ Optional tools:
 - [Domain and SSL](docs/DOMAIN_SSL_RUNBOOK.md)
 - [Maintenance](docs/MAINTENANCE_RUNBOOK.md)
 - [Troubleshooting](docs/TROUBLESHOOTING_RUNBOOK.md)
-

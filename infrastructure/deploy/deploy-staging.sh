@@ -6,8 +6,10 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 # shellcheck source=../scripts/common.sh
 source "$REPO_ROOT/infrastructure/scripts/common.sh"
 
-CONFIG_FILE="${LABORATOR_INFRA_CONFIG:-/etc/laborator/infrastructure.env}"
-TARGET_REF="${1:-}"
+CONFIG_DIR="${CONFIG_DIR:-${LABORATOR_CONFIG_DIR:-/etc/laborator}}"
+CONFIG_FILE="${LABORATOR_INFRA_CONFIG:-$CONFIG_DIR/infrastructure.env}"
+CONFIG_EXAMPLE="$REPO_ROOT/infrastructure/backup/laborator-backup.env.example"
+TARGET_REF=""
 DRY_RUN=false
 
 while [[ $# -gt 0 ]]; do
@@ -24,15 +26,27 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=true
       shift
       ;;
-    *)
+    --verbose)
+      enable_verbose
       shift
+      ;;
+    *)
+      if [[ -z "$TARGET_REF" ]]; then
+        TARGET_REF="$1"
+        shift
+      else
+        die "Unknown argument: $1"
+      fi
       ;;
   esac
 done
 
-load_config_file "$CONFIG_FILE"
-: "${APP_ROOT:=/opt/Laborator-Editura}"
-: "${COMPOSE_FILE:=$APP_ROOT/deploy/staging/docker-compose.staging.yml}"
+load_or_bootstrap_config_file "$CONFIG_FILE" "$CONFIG_EXAMPLE" "$DRY_RUN"
+normalize_path_aliases
+: "${PROJECT_ROOT:=$APP_ROOT}"
+: "${APP_ROOT:=$PROJECT_ROOT}"
+: "${DOCKER_COMPOSE_PATH:=$APP_ROOT/deploy/staging/docker-compose.staging.yml}"
+: "${COMPOSE_FILE:=$DOCKER_COMPOSE_PATH}"
 : "${ENV_FILE:=$APP_ROOT/deploy/staging/.env.staging}"
 : "${DEPLOY_HEALTH_URL:=http://127.0.0.1:3000}"
 : "${DEPLOY_API_HEALTH_URL:=http://127.0.0.1:3001/health}"
@@ -81,4 +95,4 @@ if [[ "$DRY_RUN" == "false" ]]; then
 fi
 
 trap - ERR
-log "Staging deploy completed for $TARGET_REF"
+success "Staging deploy completed for $TARGET_REF"

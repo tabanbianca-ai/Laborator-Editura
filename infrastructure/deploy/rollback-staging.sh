@@ -6,7 +6,9 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 # shellcheck source=../scripts/common.sh
 source "$REPO_ROOT/infrastructure/scripts/common.sh"
 
-CONFIG_FILE="${LABORATOR_INFRA_CONFIG:-/etc/laborator/infrastructure.env}"
+CONFIG_DIR="${CONFIG_DIR:-${LABORATOR_CONFIG_DIR:-/etc/laborator}}"
+CONFIG_FILE="${LABORATOR_INFRA_CONFIG:-$CONFIG_DIR/infrastructure.env}"
+CONFIG_EXAMPLE="$REPO_ROOT/infrastructure/backup/laborator-backup.env.example"
 ROLLBACK_REF=""
 CONFIRM=""
 DRY_RUN=false
@@ -29,15 +31,22 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=true
       shift
       ;;
+    --verbose)
+      enable_verbose
+      shift
+      ;;
     *)
       die "Unknown argument: $1"
       ;;
   esac
 done
 
-load_config_file "$CONFIG_FILE"
-: "${APP_ROOT:=/opt/Laborator-Editura}"
-: "${COMPOSE_FILE:=$APP_ROOT/deploy/staging/docker-compose.staging.yml}"
+load_or_bootstrap_config_file "$CONFIG_FILE" "$CONFIG_EXAMPLE" "$DRY_RUN"
+normalize_path_aliases
+: "${PROJECT_ROOT:=$APP_ROOT}"
+: "${APP_ROOT:=$PROJECT_ROOT}"
+: "${DOCKER_COMPOSE_PATH:=$APP_ROOT/deploy/staging/docker-compose.staging.yml}"
+: "${COMPOSE_FILE:=$DOCKER_COMPOSE_PATH}"
 : "${ENV_FILE:=$APP_ROOT/deploy/staging/.env.staging}"
 
 [[ -n "$ROLLBACK_REF" ]] || die "Pass --ref <previous-commit>"
@@ -56,5 +65,4 @@ if [[ "$DRY_RUN" == "false" ]]; then
   "$APP_ROOT/infrastructure/validation/wait-for-health.sh" --timeout 120
 fi
 
-log "Rollback completed."
-
+success "Rollback completed."

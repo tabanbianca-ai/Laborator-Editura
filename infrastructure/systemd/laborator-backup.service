@@ -5,9 +5,8 @@ After=docker.service
 
 [Service]
 Type=oneshot
-Environment=LABORATOR_INFRA_CONFIG=/etc/laborator/infrastructure.env
-ExecStart=/opt/Laborator-Editura/infrastructure/backup/backup-laborator.sh --config /etc/laborator/infrastructure.env
+EnvironmentFile=-/etc/laborator/infrastructure.env
+ExecStart=/usr/bin/env bash -lc 'CONFIG_DIR="${CONFIG_DIR:-/etc/laborator}"; PROJECT_ROOT="${PROJECT_ROOT:-${APP_ROOT:-/opt/Laborator-Editura}}"; "$PROJECT_ROOT/infrastructure/backup/backup-laborator.sh" --config "${LABORATOR_INFRA_CONFIG:-$CONFIG_DIR/infrastructure.env}"'
 User=root
 Group=root
 UMask=0077
-

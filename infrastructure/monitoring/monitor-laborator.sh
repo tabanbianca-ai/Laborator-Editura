@@ -6,13 +6,34 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 # shellcheck source=../scripts/common.sh
 source "$REPO_ROOT/infrastructure/scripts/common.sh"
 
-CONFIG_FILE="${LABORATOR_MONITORING_CONFIG:-/etc/laborator/monitoring.env}"
-load_config_file "$CONFIG_FILE"
+CONFIG_DIR="${CONFIG_DIR:-${LABORATOR_CONFIG_DIR:-/etc/laborator}}"
+CONFIG_FILE="${LABORATOR_MONITORING_CONFIG:-$CONFIG_DIR/monitoring.env}"
+CONFIG_EXAMPLE="$REPO_ROOT/infrastructure/monitoring/monitoring.env.example"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --config)
+      CONFIG_FILE="$2"
+      shift 2
+      ;;
+    --verbose)
+      enable_verbose
+      shift
+      ;;
+    *)
+      die "Unknown argument: $1"
+      ;;
+  esac
+done
+
+load_or_bootstrap_config_file "$CONFIG_FILE" "$CONFIG_EXAMPLE" "false"
+normalize_path_aliases
 
 : "${MONITORING_ENABLED:=true}"
 : "${WEB_HEALTH_URL:=http://127.0.0.1:3000}"
 : "${API_HEALTH_URL:=http://127.0.0.1:3001/health}"
-: "${BACKUP_ROOT:=/opt/laborator-backups}"
+: "${BACKUP_DIR:=$BACKUP_ROOT}"
+: "${BACKUP_ROOT:=$BACKUP_DIR}"
 : "${MAX_BACKUP_AGE_HOURS:=30}"
 : "${DISK_WARN_PERCENT:=80}"
 : "${DISK_CRIT_PERCENT:=90}"
@@ -156,3 +177,5 @@ if [[ "$status" != "ok" ]]; then
   maybe_alert "$payload"
   exit 1
 fi
+
+success "Monitoring checks passed."

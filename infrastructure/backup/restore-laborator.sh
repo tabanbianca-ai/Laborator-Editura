@@ -6,7 +6,9 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 # shellcheck source=../scripts/common.sh
 source "$REPO_ROOT/infrastructure/scripts/common.sh"
 
-CONFIG_FILE="${LABORATOR_INFRA_CONFIG:-/etc/laborator/infrastructure.env}"
+CONFIG_DIR="${CONFIG_DIR:-${LABORATOR_CONFIG_DIR:-/etc/laborator}}"
+CONFIG_FILE="${LABORATOR_INFRA_CONFIG:-$CONFIG_DIR/infrastructure.env}"
+CONFIG_EXAMPLE="$REPO_ROOT/infrastructure/backup/laborator-backup.env.example"
 BACKUP_FILE=""
 FORCE=false
 CONFIRM=""
@@ -39,16 +41,23 @@ while [[ $# -gt 0 ]]; do
       SKIP_PRE_RESTORE_BACKUP=true
       shift
       ;;
+    --verbose)
+      enable_verbose
+      shift
+      ;;
     *)
       die "Unknown argument: $1"
       ;;
   esac
 done
 
-load_config_file "$CONFIG_FILE"
+load_or_bootstrap_config_file "$CONFIG_FILE" "$CONFIG_EXAMPLE" "$DRY_RUN"
+normalize_path_aliases
 
-: "${APP_ROOT:=/opt/Laborator-Editura}"
-: "${COMPOSE_FILE:=$APP_ROOT/deploy/staging/docker-compose.staging.yml}"
+: "${PROJECT_ROOT:=$APP_ROOT}"
+: "${APP_ROOT:=$PROJECT_ROOT}"
+: "${DOCKER_COMPOSE_PATH:=$APP_ROOT/deploy/staging/docker-compose.staging.yml}"
+: "${COMPOSE_FILE:=$DOCKER_COMPOSE_PATH}"
 : "${ENV_FILE:=$APP_ROOT/deploy/staging/.env.staging}"
 : "${RUNTIME_DB_VOLUME:=laborator-staging_runtime-db}"
 : "${RUNTIME_BACKUPS_VOLUME:=laborator-staging_runtime-backups}"
@@ -100,5 +109,4 @@ restore_volume "$RUNTIME_DB_VOLUME" "runtime-db.tar.gz"
 restore_volume "$RUNTIME_BACKUPS_VOLUME" "runtime-backups.tar.gz"
 docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up -d
 
-log "Restore completed. Run health checks before returning traffic."
-
+success "Restore completed. Run health checks before returning traffic."

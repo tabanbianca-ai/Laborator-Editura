@@ -24,6 +24,10 @@ while [[ $# -gt 0 ]]; do
       TIMEOUT_SECONDS="$2"
       shift 2
       ;;
+    --verbose)
+      enable_verbose
+      shift
+      ;;
     *)
       die "Unknown argument: $1"
       ;;
@@ -37,8 +41,8 @@ until curl -fsS --max-time 5 "$API_URL" >/dev/null && curl -fsS --max-time 5 "$W
   if [[ "$SECONDS" -ge "$deadline" ]]; then
     die "Timed out waiting for healthy web/API endpoints."
   fi
+  debug "Waiting for healthy endpoints: $WEB_URL $API_URL"
   sleep 5
 done
 
-log "Health checks passed: $WEB_URL $API_URL"
-
+success "Health checks passed: $WEB_URL $API_URL"

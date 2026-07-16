@@ -5,6 +5,23 @@
 - Review backup logs and verify at least one recent restore dry-run.
 - Review monitoring logs and repeated alerts.
 - Review Nginx 5xx counts.
+- Run infrastructure validators:
+
+```bash
+infrastructure/validation/validate-infrastructure.sh --verbose
+infrastructure/validation/validate-nginx-template.sh
+infrastructure/validation/scan-secrets.sh
+infrastructure/backup/backup-laborator.sh --dry-run
+```
+
+`validate-infrastructure.sh` validates `.sh` files with Bash, `.mjs` files with
+Node.js, GitHub Actions YAML with Ruby when available, Docker Compose when
+Docker is installed, secret scanning, and Nginx template rendering.
+
+`validate-nginx-template.sh` creates a complete temporary `nginx.conf` with
+`events` and `http` sections so standard Ubuntu 24.04 Nginx validates
+`limit_req_zone` in the correct context.
+
 - Review Docker disk usage:
 
 ```bash
@@ -44,4 +61,3 @@ Rotate:
 
 Never commit secret values. Store them in the VPS secret location and GitHub
 Actions Secrets.
-

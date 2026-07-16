@@ -6,7 +6,9 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 # shellcheck source=../scripts/common.sh
 source "$REPO_ROOT/infrastructure/scripts/common.sh"
 
-CONFIG_FILE="${LABORATOR_INFRA_CONFIG:-/etc/laborator/infrastructure.env}"
+CONFIG_DIR="${CONFIG_DIR:-${LABORATOR_CONFIG_DIR:-/etc/laborator}}"
+CONFIG_FILE="${LABORATOR_INFRA_CONFIG:-$CONFIG_DIR/infrastructure.env}"
+CONFIG_EXAMPLE="$REPO_ROOT/infrastructure/backup/laborator-backup.env.example"
 BACKUP_FILE=""
 CONFIRM=""
 DRY_RUN=true
@@ -29,6 +31,10 @@ while [[ $# -gt 0 ]]; do
       CONFIRM="$2"
       shift 2
       ;;
+    --verbose)
+      enable_verbose
+      shift
+      ;;
     *)
       die "Unknown argument: $1"
       ;;
@@ -41,15 +47,18 @@ if [[ "$DRY_RUN" == "false" ]]; then
   require_confirm "DR_RESTORE" "$CONFIRM"
 fi
 
-load_config_file "$CONFIG_FILE"
-: "${APP_ROOT:=/opt/Laborator-Editura}"
-: "${COMPOSE_FILE:=$APP_ROOT/deploy/staging/docker-compose.staging.yml}"
+load_or_bootstrap_config_file "$CONFIG_FILE" "$CONFIG_EXAMPLE" "$DRY_RUN"
+normalize_path_aliases
+: "${PROJECT_ROOT:=$APP_ROOT}"
+: "${APP_ROOT:=$PROJECT_ROOT}"
+: "${DOCKER_COMPOSE_PATH:=$APP_ROOT/deploy/staging/docker-compose.staging.yml}"
+: "${COMPOSE_FILE:=$DOCKER_COMPOSE_PATH}"
 : "${ENV_FILE:=$APP_ROOT/deploy/staging/.env.staging}"
 
 "$APP_ROOT/infrastructure/backup/restore-dry-run.sh" --backup "$BACKUP_FILE"
 
 if [[ "$DRY_RUN" == "true" ]]; then
-  log "DR dry-run completed. Re-run with --apply --confirm DR_RESTORE to restore live volumes."
+  success "DR dry-run completed. Re-run with --apply --confirm DR_RESTORE to restore live volumes."
   exit 0
 fi
 
@@ -62,5 +71,4 @@ fi
 docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up -d --build
 "$APP_ROOT/infrastructure/validation/wait-for-health.sh" --timeout 180
 
-log "Disaster recovery restore completed."
-
+success "Disaster recovery restore completed."

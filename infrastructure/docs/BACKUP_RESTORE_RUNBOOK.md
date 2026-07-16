@@ -18,6 +18,15 @@ stored with restrictive permissions, and encrypted whenever possible.
 
 ## Install
 
+The first backup run does not require a manually prepared config file. If
+`/etc/laborator/infrastructure.env` is missing, the backup script creates it
+from `infrastructure/backup/laborator-backup.env.example` when it has
+permission to write to `/etc/laborator`, sets restrictive permissions, and
+prints a warning asking the operator to review the file.
+
+During `--dry-run`, the script does not write system config files. If the config
+file is missing, it uses the example defaults for that validation run.
+
 ```bash
 sudo install -d -m 700 /etc/laborator
 sudo cp infrastructure/backup/laborator-backup.env.example /etc/laborator/infrastructure.env
@@ -37,10 +46,27 @@ sudo /opt/Laborator-Editura/infrastructure/backup/backup-laborator.sh \
 Dry-run:
 
 ```bash
-sudo /opt/Laborator-Editura/infrastructure/backup/backup-laborator.sh \
-  --config /etc/laborator/infrastructure.env \
-  --dry-run
+sudo /opt/Laborator-Editura/infrastructure/backup/backup-laborator.sh --dry-run
 ```
+
+Use `--verbose` when diagnosing path or Docker volume configuration.
+
+## Configuration
+
+The main config file is `/etc/laborator/infrastructure.env` by default. It can
+be moved with `LABORATOR_INFRA_CONFIG` or the `--config` option.
+
+Important configurable paths:
+
+- `CONFIG_DIR`
+- `PROJECT_ROOT` / `APP_ROOT`
+- `DOCKER_COMPOSE_PATH` / `COMPOSE_FILE`
+- `BACKUP_DIR` / `BACKUP_ROOT`
+- `LOG_DIR`
+- `NGINX_DIR` / `NGINX_CONFIG_DIR`
+- `SYSTEMD_DIR` / `SYSTEMD_CONFIG_DIR`
+
+The old names remain supported for compatibility.
 
 ## Verify Backup
 
@@ -86,4 +112,3 @@ Recommended external storage options:
 - S3-compatible object storage.
 - Hostinger Object Storage.
 - Backblaze B2.
-

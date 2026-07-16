@@ -19,6 +19,10 @@ while [[ $# -gt 0 ]]; do
       CONFIRM="$2"
       shift 2
       ;;
+    --verbose)
+      enable_verbose
+      shift
+      ;;
     *)
       die "Unknown argument: $1"
       ;;
@@ -38,5 +42,4 @@ if ! command -v docker >/dev/null 2>&1; then
   log "Docker is not installed. Install Docker Engine using the official Docker repository before restore."
 fi
 
-log "Bootstrap baseline completed. Next: create deploy user, restore secrets, clone repository, restore backup."
-
+success "Bootstrap baseline completed. Next: create deploy user, restore secrets, clone repository, restore backup."
