@@ -108,6 +108,9 @@ const TABLE_NAMES = [
   "editorial_decisions",
   "editorial_decision_audit_events",
   "layout_publication_plans",
+  "layout_publishing_preflight_results",
+  "layout_publishing_records",
+  "layout_publishing_distribution_records",
   "layout_publication_audit_events",
   "media_localization_projects",
   "media_localization_assets",
@@ -291,6 +294,9 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "editorial_decisions",
   "editorial_decision_audit_events",
   "layout_publication_plans",
+  "layout_publishing_preflight_results",
+  "layout_publishing_records",
+  "layout_publishing_distribution_records",
   "layout_publication_audit_events",
   "media_localization_projects",
   "media_localization_assets",
@@ -737,6 +743,59 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
     "layout_publication_audit_events",
     "layoutPublicationPlanId",
     "layout_publication_plans"
+  );
+  validateReferenceTenant(data, issues, "layout_publishing_preflight_results", "publicationId", "library_publications");
+  validateReferenceTenant(
+    data,
+    issues,
+    "layout_publishing_preflight_results",
+    "editionId",
+    "library_publication_editions"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "layout_publishing_preflight_results",
+    "versionId",
+    "library_publication_versions"
+  );
+  validateReferenceTenant(data, issues, "layout_publishing_records", "publicationId", "library_publications");
+  validateReferenceTenant(data, issues, "layout_publishing_records", "editionId", "library_publication_editions");
+  validateReferenceTenant(data, issues, "layout_publishing_records", "versionId", "library_publication_versions");
+  validateReferenceTenant(
+    data,
+    issues,
+    "layout_publishing_records",
+    "preflightResultId",
+    "layout_publishing_preflight_results"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "layout_publishing_distribution_records",
+    "publishingRecordId",
+    "layout_publishing_records"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "layout_publication_audit_events",
+    "preflightResultId",
+    "layout_publishing_preflight_results"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "layout_publication_audit_events",
+    "publishingRecordId",
+    "layout_publishing_records"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "layout_publication_audit_events",
+    "distributionRecordId",
+    "layout_publishing_distribution_records"
   );
   validateReferenceTenant(
     data,
