@@ -1240,6 +1240,107 @@ Example:
 }
 ```
 
+## Phase 7 Step 16 - Publishing Workflow, Final Preflight and Distribution Tracking
+
+Publishing workflow metadata records the official publication release state
+without replacing Library, Export, Rights & Provenance, Quality, or Workflow
+records.
+
+```json
+{
+  "publishingWorkflow": {
+    "records": [
+      {
+        "publishingRecordId": "publishing-record-001",
+        "publicationId": "library-publication-001",
+        "editionId": "library-edition-001",
+        "versionId": "library-version-001",
+        "preflightResultId": "publishing-preflight-001",
+        "publishingState": "GATA_PENTRU_PUBLICARE",
+        "selectedChannels": ["INTERNAL_LIBRARY", "PUBLIC_PORTAL"],
+        "formatsMadeAvailable": ["JSON_MASTER", "PDF", "EPUB"],
+        "selectedArtifactRefs": ["export-artifact-001"],
+        "visibility": "PUBLIC",
+        "immutableOfficialEdition": true,
+        "metadataDuplicated": false,
+        "publicationMetadataOwner": "LIBRARY",
+        "versionOwner": "LIBRARY",
+        "formatsOwner": "EXPORT",
+        "rightsOwner": "RIGHTS_PROVENANCE",
+        "createdBy": "user-001",
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "updatedAt": "2026-01-01T00:00:00.000Z"
+      }
+    ],
+    "preflightResults": [
+      {
+        "preflightResultId": "publishing-preflight-001",
+        "publicationId": "library-publication-001",
+        "editionId": "library-edition-001",
+        "versionId": "library-version-001",
+        "selectedChannels": ["INTERNAL_LIBRARY", "PUBLIC_PORTAL"],
+        "readinessPercentage": 100,
+        "blocked": false,
+        "checks": [
+          {
+            "checkId": "check-001",
+            "key": "RIGHTS_VALIDATED",
+            "status": "PASS",
+            "sourceComponent": "RIGHTS_PROVENANCE",
+            "severity": "CRITICAL",
+            "message": "Rights & Provenance validated publication rights.",
+            "remediationLink": "/rights",
+            "overridable": false
+          }
+        ],
+        "ownershipBoundaries": {
+          "metadata": "LIBRARY",
+          "rights": "RIGHTS_PROVENANCE",
+          "formats": "EXPORT",
+          "workflow": "WORKFLOW",
+          "quality": "QUALITY_AGENT",
+          "layout": "LAYOUT",
+          "distribution": "LAYOUT_PUBLISHING"
+        },
+        "noDuplicateValidationLogic": true,
+        "humanFinalAuthorityRequired": true
+      }
+    ],
+    "distributionRecords": [
+      {
+        "distributionRecordId": "distribution-record-001",
+        "publishingRecordId": "publishing-record-001",
+        "publicationId": "library-publication-001",
+        "editionId": "library-edition-001",
+        "channel": "PUBLIC_PORTAL",
+        "status": "PENDING",
+        "artifactRefs": ["export-artifact-001"],
+        "deliveryTargetRef": "public-catalog-item-001",
+        "history": [
+          {
+            "status": "PENDING",
+            "changedBy": "user-001",
+            "changedAt": "2026-01-01T00:00:00.000Z",
+            "note": "Distribution record created after human approval."
+          }
+        ],
+        "metadataOwner": "LIBRARY",
+        "filesOwner": "EXPORT",
+        "rightsOwner": "RIGHTS_PROVENANCE"
+      }
+    ],
+    "rules": {
+      "preflightIsAggregationOnly": true,
+      "libraryIsSingleSourceOfTruth": true,
+      "officialEditionsAreImmutable": true,
+      "withdrawalPreservesHistory": true,
+      "socialPromotionOutOfScope": true,
+      "humanFinalAuthorityRequired": true
+    }
+  }
+}
+```
+
 This document defines canonical JSON Master guidance for the implemented
 metadata areas above. It does not by itself change runtime validators, database
 schema, APIs, or UI.
