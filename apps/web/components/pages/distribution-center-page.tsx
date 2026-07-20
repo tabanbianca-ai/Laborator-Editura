@@ -83,6 +83,8 @@ export function DistributionCenterPage({
 }
 
 function DistributionOverview({ data, ui }: { data: DistributionCenterData; ui: UiTranslator }) {
+  const publishingStateLabel = formatPublishingState(data.publishingState, ui);
+
   return (
     <section className="metric-grid" aria-label="Preflight overview">
       <Card>
@@ -111,6 +113,13 @@ function DistributionOverview({ data, ui }: { data: DistributionCenterData; ui: 
           <span>{ui.t("distribution.channels")}</span>
           <strong>{data.channels.length}</strong>
           <Badge tone="info">{ui.t("badge.distribution")}</Badge>
+        </div>
+      </Card>
+      <Card>
+        <div className="metric-card">
+          <span>{ui.t("distribution.publishReadiness")}</span>
+          <strong>{data.readinessPercentage}%</strong>
+          <Badge tone={data.blockedCount > 0 ? "danger" : "success"}>{publishingStateLabel}</Badge>
         </div>
       </Card>
     </section>
@@ -171,8 +180,16 @@ function PreflightValidationPanel({
       <div className="reference-stack">
         {checks.map((check) => (
           <div className="signal-row" key={check.label}>
-            <span>{check.label}</span>
-            <Badge tone={toneForPreflight(check.status)}>{check.status}</Badge>
+            <div>
+              <span>{check.label}</span>
+              <p className="muted-copy">
+                {check.sourceComponent} · {check.severity} · {check.message}
+              </p>
+              <Link className="inline-link" href={check.remediationLink}>
+                {ui.t("action.openWorkspace")}
+              </Link>
+            </div>
+            <Badge tone={toneForPreflight(check.status)}>{check.officialStatus}</Badge>
           </div>
         ))}
       </div>
@@ -181,12 +198,18 @@ function PreflightValidationPanel({
 }
 
 function PublicationGatePanel({ data, ui }: { data: DistributionCenterData; ui: UiTranslator }) {
+  const publishingStateLabel = formatPublishingState(data.publishingState, ui);
+
   return (
     <Card title={ui.t("distribution.publicationGate")}>
       <div className="reference-stack">
         <ReferenceItem
           label={ui.t("distribution.workflow")}
           value={data.workspace.workflow?.status?.replace(/_/g, " ") ?? ui.t("distribution.noWorkflowLinked")}
+        />
+        <ReferenceItem
+          label={ui.t("distribution.publishingState")}
+          value={publishingStateLabel}
         />
         <ReferenceItem
           label={ui.t("distribution.rightsProvenance")}
@@ -336,6 +359,18 @@ function formatRightsStatus(status: ProjectRightsStatus, ui: UiTranslator): stri
   };
 
   return ui.t(labels[status]);
+}
+
+function formatPublishingState(state: DistributionCenterData["publishingState"], ui: UiTranslator): string {
+  const labels: Record<DistributionCenterData["publishingState"], UiTranslationKey> = {
+    GATA_PENTRU_PUBLICARE: "publishingState.gataPentruPublicare",
+    IN_PREGATIRE: "publishingState.inPregatire",
+    PUBLICAT: "publishingState.publicat",
+    REPUBLICAT: "publishingState.republicat",
+    RETRAS_DIN_PUBLICARE: "publishingState.retrasDinPublicare"
+  };
+
+  return ui.t(labels[state]);
 }
 
 function toneForPreflight(status: PreflightStatus): BadgeTone {
