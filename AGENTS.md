@@ -605,6 +605,54 @@ Rules:
 - Library data must be included in backup/restore without breaking project or
   manuscript links.
 
+### Publishing Workflow, Final Preflight and Distribution Tracking Directive
+
+Purpose:
+
+- Finalize publication release readiness while preserving Library as the single
+  source of truth and avoiding duplicate Export, Quality, Rights, Workflow, or
+  Distribution responsibilities.
+
+Rules:
+
+- This extends the existing Layout & Publishing, Library, Export, Rights &
+  Provenance, Workflow, Quality, Audit, and Backup infrastructure. It is not a
+  new enterprise module.
+- Do not create a separate Preflight module, separate Distribution module,
+  separate Archive module, or social-media promotion workflow.
+- Library owns publication identity, lifecycle, editions, versions, metadata,
+  files, rights/provenance references, and historical publication records.
+- Publishing owns official edition selection, readiness state, human release
+  gates, publication timestamps, selected channels, and immutable publication
+  snapshots.
+- Export owns generated files and format artifacts.
+- Rights & Provenance owns rights warnings and authorization records.
+- Quality Agent owns quality findings. Preflight only aggregates these signals.
+- Distribution tracks channel delivery status and history only. It must not
+  duplicate publication metadata, generated files, rights data, or Library
+  records.
+- Publishing states are `IN_PREGATIRE`,
+  `GATA_PENTRU_PUBLICARE`, `PUBLICAT`, `REPUBLICAT`, and
+  `RETRAS_DIN_PUBLICARE`.
+- Final preflight statuses are `PASS`, `WARNING`, `ERROR`,
+  `NOT_APPLICABLE`, and `PENDING`; severities are `INFORMATIONAL`, `WARNING`,
+  and `CRITICAL`.
+- Approved publication channels are `INTERNAL_LIBRARY`, `PUBLIC_PORTAL`,
+  `DIGITAL_BOOKSTORE`, `EXTERNAL_EXPORT`, and `PRINT_ON_DEMAND`.
+- Critical preflight errors block publication. Warnings may be accepted only by
+  authorized humans and must be audited.
+- Official published editions are immutable. Corrections require a new edition,
+  version, or republication record; historical versions must remain auditable.
+- Withdrawal from publication must preserve Library records, generated files,
+  audit, versions, and distribution history.
+- AI may summarize readiness, detect blockers, and suggest remediation, but it
+  may not approve, publish, withdraw, distribute, bypass rights, or override
+  human final authority.
+- Audit must cover preflight generated/refreshed, warnings accepted,
+  overrides, official edition selected, publication state changes, publication,
+  republication, withdrawal, distribution initiated, delivered, failed, and
+  channel withdrawal.
+
 ### ChatGPT
 
 Role: System Architect.
