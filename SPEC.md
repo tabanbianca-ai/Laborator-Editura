@@ -3743,3 +3743,100 @@ Audit covers:
 Backup and restore include publications, metadata, editions, versions, files,
 relationships, rights, statuses, visibility, and audit references. Restore must
 not break project or manuscript links.
+
+## Phase 7 Step 16 - Publishing Workflow, Final Preflight and Distribution Tracking
+
+### Goal
+
+Phase 7 Step 16 finalizes the publication release flow without duplicating
+Library, Export, Quality, Rights, Translation, Review, Layout, Workflow, or
+Audit responsibilities.
+
+### Ownership Boundaries
+
+- Library is the single source of truth for publication identity, lifecycle,
+  metadata, editions, versions, files, rights/provenance references, and
+  publication history.
+- Publishing selects the official edition/version, manages publication
+  readiness state, records human publication decisions, and creates immutable
+  official publication snapshots.
+- Export owns generated files and format artifacts.
+- Rights & Provenance owns rights warnings and authorization records.
+- Quality Agent owns quality findings. Preflight aggregates signals only.
+- Distribution tracks delivery history per approved publication channel. It
+  must not duplicate metadata, generated files, rights, or Library records.
+
+### Publishing States
+
+- `IN_PREGATIRE`.
+- `GATA_PENTRU_PUBLICARE`.
+- `PUBLICAT`.
+- `REPUBLICAT`.
+- `RETRAS_DIN_PUBLICARE`.
+
+Allowed transitions:
+
+- `IN_PREGATIRE` to `GATA_PENTRU_PUBLICARE`.
+- `GATA_PENTRU_PUBLICARE` to `PUBLICAT`.
+- `PUBLICAT` to `REPUBLICAT`.
+- `PUBLICAT` to `RETRAS_DIN_PUBLICARE`.
+- `REPUBLICAT` to `RETRAS_DIN_PUBLICARE`.
+
+### Final Preflight
+
+Final Preflight is an aggregation layer inside Publishing, not a separate
+module. It checks signals from Library, Rights & Provenance, Export, Workflow,
+Layout, Review, Translation, and Quality Agent.
+
+Checklist statuses:
+
+- `PASS`.
+- `WARNING`.
+- `ERROR`.
+- `NOT_APPLICABLE`.
+- `PENDING`.
+
+Severity levels:
+
+- `INFORMATIONAL`.
+- `WARNING`.
+- `CRITICAL`.
+
+Critical preflight errors block publication. Warnings may be accepted only by
+authorized humans and must be audited.
+
+### Publication Channels
+
+Approved channels:
+
+- `INTERNAL_LIBRARY`.
+- `PUBLIC_PORTAL`.
+- `DIGITAL_BOOKSTORE`.
+- `EXTERNAL_EXPORT`.
+- `PRINT_ON_DEMAND`.
+
+Distribution records channel delivery, status, timestamps, blockers, and
+history only. Social media promotion is out of scope.
+
+### Edition Immutability
+
+Official published editions are immutable. Corrections require a new edition,
+new version, or republication record. Withdrawal preserves Library records,
+generated files, audit, versions, and distribution history.
+
+### Human Final Authority
+
+AI may summarize readiness, detect blockers, and suggest remediation. AI must
+not approve, publish, withdraw, distribute, bypass rights, or override human
+final authority.
+
+### Audit and Backup
+
+Audit covers preflight generation/refresh, warning acceptance, overrides,
+official edition selection, publishing state transitions, publication,
+republication, withdrawal, distribution initiated, delivered, failed, and
+channel withdrawal.
+
+Backup and restore include publishing preflight results, publishing records,
+distribution records, and their references to Library editions, versions,
+exports, and audit history.
