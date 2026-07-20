@@ -1021,6 +1021,59 @@ Report:
 
 - `docs/PHASE_7_STEP_15_INTELLIGENT_EDITORIAL_LIBRARY_REPORT.md`.
 
+## Phase 7 Step 16 - Publishing Workflow, Final Preflight and Distribution Tracking
+
+Status: Implemented as an additive refinement of the existing Layout &
+Publishing, Library, Export, Rights & Provenance, Workflow, Quality, Audit, and
+Backup infrastructure.
+
+Scope:
+
+- No new enterprise module.
+- No separate Preflight module.
+- No separate Archive module.
+- No social-media promotion implementation.
+- No Docker or staging configuration changes.
+- No breaking API changes.
+
+Implemented capabilities:
+
+- Publishing states: `IN_PREGATIRE`, `GATA_PENTRU_PUBLICARE`, `PUBLICAT`,
+  `REPUBLICAT`, and `RETRAS_DIN_PUBLICARE`.
+- Final preflight aggregation with statuses `PASS`, `WARNING`, `ERROR`,
+  `NOT_APPLICABLE`, and `PENDING`.
+- Preflight severities `INFORMATIONAL`, `WARNING`, and `CRITICAL`.
+- Approved publication channels: `INTERNAL_LIBRARY`, `PUBLIC_PORTAL`,
+  `DIGITAL_BOOKSTORE`, `EXTERNAL_EXPORT`, and `PRINT_ON_DEMAND`.
+- Official edition/version selection from Library records.
+- Immutable published edition snapshots.
+- Critical preflight errors block publication.
+- Distribution history records delivery state and channel events without
+  duplicating Library metadata, export files, or rights records.
+- Withdrawal and republication preserve audit, versions, generated artifacts,
+  and distribution history.
+- Runtime database and deterministic backup/restore support for publishing
+  preflight results, publishing records, and publishing distribution records.
+- Distribution Center UI displays publishing state, readiness percentage,
+  official preflight status, source component, severity, remediation link, and
+  approved publication channels.
+
+Validation coverage:
+
+- Publishing state transitions.
+- Readiness/preflight aggregation.
+- Rights/provenance blocking.
+- Immutable official edition records.
+- Distribution history.
+- Audit event coverage.
+- Backup/restore compatibility.
+- No duplicate Preflight or Distribution module.
+- No social-media promotion workflow.
+
+Report:
+
+- `docs/PHASE_7_STEP_16_PUBLISHING_PREFLIGHT_DISTRIBUTION_REPORT.md`.
+
 ## Documentation-Only Governance Requirements
 
 The following requirements are approved for specification and JSON Master Format
