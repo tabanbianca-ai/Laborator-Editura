@@ -109,6 +109,45 @@ export class LibraryService {
     );
   }
 
+  async getPublication(
+    actor: LibraryActor,
+    publicationId: string
+  ): Promise<LibraryPublicationRecord> {
+    this.validateActor(actor);
+
+    return this.sanitizePublicationForActor(actor, await this.requirePublication(actor, publicationId));
+  }
+
+  async listPublicationEditions(
+    actor: LibraryActor,
+    publicationId: string
+  ): Promise<LibraryPublicationEdition[]> {
+    this.validateActor(actor);
+    await this.requirePublication(actor, publicationId);
+
+    return this.repository.listEditions(publicationId, actor.organizationId);
+  }
+
+  async listPublicationVersions(
+    actor: LibraryActor,
+    publicationId: string
+  ): Promise<LibraryPublicationVersion[]> {
+    this.validateActor(actor);
+    await this.requirePublication(actor, publicationId);
+
+    return this.repository.listVersions(publicationId, actor.organizationId);
+  }
+
+  async listPublicationFiles(
+    actor: LibraryActor,
+    publicationId: string
+  ): Promise<LibraryPublicationFile[]> {
+    this.validateActor(actor);
+    await this.requirePublication(actor, publicationId);
+
+    return this.repository.listPublicationFiles(publicationId, actor.organizationId);
+  }
+
   async createPublication(
     actor: LibraryActor,
     input: CreateLibraryPublicationInput
