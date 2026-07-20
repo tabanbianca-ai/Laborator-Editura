@@ -27,6 +27,18 @@ test("distribution client reuses publishing export rights and workflow data only
 
   assert.match(client, /getPublishingWorkspaceData/);
   assert.match(client, /PreflightStatus = "READY" \| "WARNING" \| "BLOCKED"/);
+  assert.match(client, /OfficialPreflightStatus = "PASS" \| "WARNING" \| "ERROR" \| "NOT_APPLICABLE" \| "PENDING"/);
+  assert.match(client, /PublishingState =/);
+  assert.match(client, /"IN_PREGATIRE"/);
+  assert.match(client, /"GATA_PENTRU_PUBLICARE"/);
+  assert.match(client, /"PUBLICAT"/);
+  assert.match(client, /"REPUBLICAT"/);
+  assert.match(client, /"RETRAS_DIN_PUBLICARE"/);
+  assert.match(client, /"INTERNAL_LIBRARY"/);
+  assert.match(client, /"PUBLIC_PORTAL"/);
+  assert.match(client, /"DIGITAL_BOOKSTORE"/);
+  assert.match(client, /"EXTERNAL_EXPORT"/);
+  assert.match(client, /"PRINT_ON_DEMAND"/);
   assert.match(client, /ISBN/);
   assert.match(client, /metadata/);
   assert.match(client, /Rights\/provenance/);
@@ -70,6 +82,10 @@ test("distribution page renders preflight panel channels blockers and human auth
   assert.match(page, /ui\.t\("distribution\.blockers"\)/);
   assert.match(page, /ui\.t\("distribution\.lastExportDate"\)/);
   assert.match(page, /ui\.t\("distribution\.publishReadiness"\)/);
+  assert.match(page, /ui\.t\("distribution\.publishingState"\)/);
+  assert.match(page, /formatPublishingState/);
+  assert.match(i18n, /publishingState\.inPregatire/);
+  assert.match(i18n, /publishingState\.gataPentruPublicare/);
   assert.match(page, /ui\.t\("distribution\.autoPublish"\)/);
   assert.match(page, /ui\.t\("distribution\.autoApprove"\)/);
   assert.match(page, /cannot approve, publish, bypass rights/);
