@@ -137,5 +137,8 @@ Deliverables:
 Module 3 - Proofreading and Editorial Review Module Architecture is now
 documented as the next Phase II specification after Translation.
 
-The next recommended module specification after Editorial Review is Module 4 -
-Publishing Module Architecture.
+Module 4 - Publishing Module Architecture is now documented as the next Phase
+II specification after Editorial Review.
+
+The next recommended module specification after Publishing is Module 5 -
+Rights and Provenance Module Architecture.
