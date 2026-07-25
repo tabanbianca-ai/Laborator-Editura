@@ -164,8 +164,39 @@ Roadmap impact:
   database.
 - No roadmap item may redesign database schema or remove existing Phase 7 Step
   16 validated behavior solely on the basis of Chapter 4.
-- Logical data modeling belongs to Chapter 5 and must be completed before any
-  physical database redesign or migration strategy is implemented.
+- Logical data modeling is governed by Chapter 5 and must remain the mandatory
+  input before any physical database redesign or migration strategy is
+  implemented.
+
+## Official Logical Data Model
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_5.md`.
+- `docs/data/logical-data-model.md`.
+- `docs/data/aggregate-map.md`.
+- `docs/data/entity-relationships.md`.
+- `docs/data/integrity-rules.md`.
+- `docs/data/logical-gap-analysis.md`.
+- `docs/data/logical-migration-plan.md`.
+
+Roadmap impact:
+
+- Chapter 5 defines implementation-ready logical aggregates, aggregate roots,
+  relationships, cardinalities, integrity rules, deletion strategies,
+  versioning strategies, concurrency rules, and ownership boundaries.
+- Future roadmap phases that change persistence, API contracts, cross-module
+  relationships, or entity ownership must first respect the logical aggregate
+  map and integrity rules.
+- Physical database work must not begin until Chapter 6 - Physical Data Model
+  and Database Standards is approved.
+- Chapter 5 does not authorize database-specific schemas, migrations, indexes,
+  runtime persistence changes, API changes, UI changes, Docker changes, or
+  removal of Phase 7 Step 16 validated behavior.
+- Chapter 6 must use Chapter 4 and Chapter 5 together: Chapter 4 defines
+  conceptual meaning, and Chapter 5 defines logical implementation boundaries.
 
 ## MVP Scope
 
