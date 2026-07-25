@@ -10,7 +10,8 @@ Document order:
 2. `docs/DEVELOPMENT_CONVENTIONS.md` - mandatory development conventions.
 3. `SPEC.md`, Chapter 0 - fundamental platform principles.
 4. `docs/ARCHITECTURE_CHAPTER_1.md` - general platform architecture.
-5. The remaining architecture and implementation specifications.
+5. `docs/ARCHITECTURE_CHAPTER_2.md` - application architecture.
+6. The remaining architecture and implementation specifications.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -226,6 +227,28 @@ conformity with:
 
 Any deviation from the general platform architecture requires explicit project
 owner approval before implementation.
+
+## Chapter 2 - Application Architecture
+
+The official application architecture is documented in
+`docs/ARCHITECTURE_CHAPTER_2.md`.
+
+Chapter 2 defines the technical architecture for code organization, frontend,
+backend, API access, module structure, application state, localization,
+authentication, authorization, configuration, file management, AI integration,
+observability, audit, background processing, testing, deployment, performance,
+security, and implementation conventions.
+
+Before implementing any new capability, Codex must verify that the change:
+
+1. Respects the application architecture.
+2. Reuses existing components and services.
+3. Does not introduce circular dependencies.
+4. Does not duplicate existing functionality.
+5. Remains testable, extensible, and documented.
+
+Any deviation from the application architecture requires explicit project owner
+approval before implementation.
 
 ## Architecture Freeze & Governance Requirements
 
