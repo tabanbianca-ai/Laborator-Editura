@@ -153,6 +153,38 @@ Rules:
 - Any deviation from the module architecture requires an approved Architecture
   Decision Record before implementation.
 
+### Conceptual Domain Model Directive
+
+Purpose:
+
+- Define the official Chapter 4 conceptual domain model and baseline audit that
+  guide all future logical data modeling, physical persistence, APIs, and
+  module ownership.
+
+Rules:
+
+- The canonical Chapter 4 conceptual domain model is documented in
+  `docs/ARCHITECTURE_CHAPTER_4.md`.
+- The required domain baseline deliverables are:
+  - `docs/domain/domain-model.md`.
+  - `docs/domain/domain-glossary.md`.
+  - `docs/domain/domain-relationships.md`.
+  - `docs/domain/domain-gap-analysis.md`.
+  - `docs/domain/domain-migration-plan.md`.
+- Chapter 4 is documentation and architecture analysis. It does not authorize
+  database redesign, schema changes, API changes, runtime persistence changes,
+  UI changes, or removal of existing validated functionality.
+- Before adding or changing an entity, Codex must identify its conceptual
+  owner, relationships, lifecycle, versioning needs, audit requirements, and
+  current implementation overlap.
+- Existing duplicated or overlapping entities must be documented and migrated
+  incrementally. They must not be merged, renamed, or removed without an
+  explicit implementation phase.
+- Phase 7 Step 16 validated Publishing Workflow, Final Preflight, and
+  Distribution Tracking behavior must be preserved.
+- Logical data modeling must be handled in a later Chapter 5 document before
+  physical database redesign or migrations are proposed.
+
 ### Development Conventions Directive
 
 Purpose:
@@ -907,10 +939,11 @@ Rules:
 4. `docs/ARCHITECTURE_CHAPTER_1.md`.
 5. `docs/ARCHITECTURE_CHAPTER_2.md`.
 6. `docs/ARCHITECTURE_CHAPTER_3.md`.
-7. `SPEC.md`.
-8. `AGENTS.md`.
-9. `ROADMAP.md`.
-10. Codex implementation.
-11. Lovable UI generation.
+7. `docs/ARCHITECTURE_CHAPTER_4.md`.
+8. `SPEC.md`.
+9. `AGENTS.md`.
+10. `ROADMAP.md`.
+11. Codex implementation.
+12. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
