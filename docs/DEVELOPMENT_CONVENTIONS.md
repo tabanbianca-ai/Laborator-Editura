@@ -1,5 +1,7 @@
 # Development Conventions
 
+Version: 1.0.
+
 ## Purpose
 
 These conventions are the official development standards for Laborator
@@ -86,15 +88,62 @@ Examples:
 
 The same rule applies to every supported platform language.
 
-## Official Terminology
+## User Interface Terminology
 
-Each platform language must use its own official terminology.
+The platform must prioritize established standard interface terminology for
+each supported language.
 
-Romanian UI must not display terms from other languages. The same rule applies
-to all supported languages.
+Terminology priority:
+
+1. International localization standards:
+   - Unicode CLDR.
+   - ICU.
+   - The approved i18n systems used by the application.
+2. Official operating-system translations:
+   - Microsoft Windows.
+   - Apple macOS.
+
+General interface terms must use the already established translations from
+these standards and operating systems. The platform must not reinvent standard
+translations for common UI concepts such as save, cancel, delete, edit,
+settings, profile, user, password, search, confirmation, and help.
+
+Each platform language must use its own official terminology. Romanian UI must
+not display terms from other languages. The same rule applies to all supported
+languages.
 
 Editorial content language, original manuscript language, authoring language,
 and translation target language remain separate from platform UI language.
+
+## Platform Terminology Dictionary
+
+The platform may maintain its own terminology dictionary only for terms that
+are specific to Laborator Editura.
+
+The dictionary is limited to:
+
+- Editorial terms.
+- Doctrinal terms.
+- Official module names.
+- Platform-specific concepts.
+
+Examples include the application name, Library, Workspace, Magazine,
+Translation, Children's Books, Narrator, Intelligent Principle, Spirit, and
+Perispirit, plus other terms that are not defined by international localization
+standards.
+
+## Terminology Rule
+
+Every new user-facing term must follow this process:
+
+1. Check whether the term exists in international localization standards or
+   established operating-system terminology.
+2. If it exists, use the official established translation.
+3. If it does not exist, add the term to the platform terminology dictionary
+   and treat it as an official platform term.
+
+Different variants for the same official term are not allowed unless the
+project owner explicitly approves a terminology change.
 
 ## Architecture Separation
 
@@ -180,3 +229,7 @@ Every implementation for Laborator Editura must respect these conventions.
 
 This document is the official development standard for future work performed by
 Codex, ChatGPT, Lovable, or any other development tool.
+
+If there is ambiguity or more than one possible implementation approach, these
+official development conventions take precedence. No implementation may
+contradict them without explicit project owner approval.
