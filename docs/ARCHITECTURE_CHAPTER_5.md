@@ -554,10 +554,13 @@ database design.
 
 ## Recommended Next Architecture Document
 
-After Chapter 5 is validated, the next recommended document is:
+Chapter 6 - Physical Data Model and Database Standards is now documented in
+`docs/ARCHITECTURE_CHAPTER_6.md`.
 
-- Chapter 6 - Physical Data Model and Database Standards.
+After Chapter 6 is validated, the next recommended document is:
 
-Chapter 6 should translate the logical model into a concrete implementation
-model, including table conventions, primary keys, foreign keys, indexes,
-migrations, retention policies, performance, and optimization.
+- Chapter 7 - Integrations and AI Agent Architecture.
+
+Chapter 7 should define AI orchestration, provider integration, module-agent
+contracts, prompt governance, cost controls, limits, logging, human approval,
+and traceability rules.
