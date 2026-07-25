@@ -216,6 +216,8 @@ Detailed module specifications now begin with:
   Module Architecture.
 - `docs/modules/translation/translation-overview.md` - Phase II Module 2,
   Translation Module Architecture.
+- `docs/modules/editorial-review/editorial-review-overview.md` - Phase II
+  Module 3, Proofreading and Editorial Review Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -225,3 +227,8 @@ Translation is the first major production module that depends on Library. It
 must preserve the original source, create independent translated versions,
 respect terminology and semantic fidelity, and keep AI assistance subordinate
 to human approval.
+
+Proofreading and Editorial Review is the quality gate after Translation. It
+validates linguistic, stylistic, terminological, doctrinal, and editorial
+quality, keeps corrections non-destructive until human acceptance, and ensures
+that review decisions are auditable before Publishing.
