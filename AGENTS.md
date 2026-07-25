@@ -1311,8 +1311,47 @@ Rules:
   outside Library.
 - Future Translation work must be additive and must follow
   `docs/modules/translation/translation-migration-plan.md`.
-- After Translation specification and baseline audit are accepted, the next
-  module specification should be Module 3 - Proofreading and Editorial Review
+- Module 3 - Proofreading and Editorial Review Module Architecture is now
+  documented as the next Phase II specification after Translation.
+
+### Phase II Proofreading and Editorial Review Module Architecture Directive
+
+Purpose:
+
+- Define Proofreading and Editorial Review as the third detailed module
+  specification after Library and Translation and establish the official rules
+  for linguistic validation, style validation, terminology validation,
+  comments, correction proposals, editorial decisions, workflow approval, and
+  review audit.
+
+Rules:
+
+- Editorial Review must validate linguistic, terminological, stylistic,
+  doctrinal, and editorial quality before approval, publication, or
+  distribution.
+- Review changes must be non-destructive until an authorized human accepts a
+  correction proposal.
+- AI may propose corrections, explain issues, identify inconsistencies,
+  suggest reformulations, and signal editorial risk, but it must never approve
+  documents, publish, apply corrections automatically, override validated
+  terminology, or bypass Workflow.
+- Review must reuse Library, Translation, Terminology, Glossary, QA, Semantic
+  Fidelity, Editorial Decisions, Collaboration, Workflow, Audit, and
+  Publishing contracts.
+- Validated terminology remains authoritative over Translation Memory and AI
+  suggestions.
+- Comments, observations, correction proposals, approvals, rejections, version
+  comparisons, and AI-assisted recommendations must be auditable.
+- Editorial Review must not duplicate Translation content ownership, Workflow
+  state ownership, Publishing release authority, or Library source-of-truth
+  responsibilities.
+- Workflow Engine remains responsible for generic transitions and gates.
+  Editorial Review may add review-specific observations and decisions without
+  creating a competing workflow engine.
+- Future Editorial Review work must be additive and must follow
+  `docs/modules/editorial-review/editorial-review-migration-plan.md`.
+- After Proofreading and Editorial Review specification and baseline audit are
+  accepted, the next module specification should be Module 4 - Publishing
   Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
