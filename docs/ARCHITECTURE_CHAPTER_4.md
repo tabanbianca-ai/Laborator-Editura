@@ -364,12 +364,22 @@ in `docs/ARCHITECTURE_CHAPTER_9.md`.
 Chapter 10 - Integration and Interoperability Architecture is now documented
 in `docs/ARCHITECTURE_CHAPTER_10.md`.
 
-After Chapter 10 is validated, the next recommended document is:
+Chapter 11 - Frontend and Design System Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_11.md`.
 
-- Chapter 11 - Frontend and Design System Architecture.
+Chapter 12 - Backend and Application Services Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_12.md`.
 
-Chapter 11 should define frontend structure, responsive PWA behavior, reusable
-components, internationalization, accessibility, and user experience patterns.
+Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture is
+now documented in `docs/ARCHITECTURE_CHAPTER_13.md`.
+
+After Chapter 13 is validated, the next recommended document is:
+
+- Chapter 14 - Quality Architecture and Testing Strategy.
+
+Chapter 14 should define unit tests, integration tests, contract tests,
+end-to-end tests, performance tests, security tests, accessibility tests,
+release validation, and acceptance criteria.
 
 This step completes the architecture foundation for advanced AI-assisted
 capabilities without contradicting the approved architecture.
