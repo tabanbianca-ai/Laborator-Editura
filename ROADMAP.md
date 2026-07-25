@@ -389,8 +389,147 @@ Roadmap impact:
   logs, AI provider metadata, security governance, observability, and backup
   coverage.
 - Future migration must preserve validated Phase 7 Step 16 behavior.
-- The next recommended architecture document is Chapter 11 - Frontend and
-  Design System Architecture.
+- Chapter 11 - Frontend and Design System Architecture is now documented as
+  the next architecture authority for frontend structure, Design System,
+  i18n, accessibility, responsive behavior, PWA readiness, and frontend API
+  clients.
+
+## Official Frontend and Design System Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_11.md`.
+- `docs/frontend/frontend-architecture.md`.
+- `docs/frontend/design-system.md`.
+- `docs/frontend/component-catalog.md`.
+- `docs/frontend/layouts.md`.
+- `docs/frontend/accessibility.md`.
+- `docs/frontend/i18n.md`.
+- `docs/frontend/frontend-gap-analysis.md`.
+- `docs/frontend/frontend-migration-plan.md`.
+
+Roadmap impact:
+
+- Application Shell, routing, layouts, pages, feature components, shared
+  components, and Design System are the official frontend layers.
+- All visual components must belong to the Design System or derive from it.
+- All user-visible text must use i18n resources.
+- Initial UI languages are Romanian, English, Spanish, French, Portuguese,
+  Italian, and German.
+- Frontend must target WCAG 2.2 AA.
+- Desktop, laptop, tablet, and mobile form factors are mandatory.
+- PWA architecture must support installation, partial offline operation,
+  intelligent caching, deferred synchronization, and push notifications when
+  implemented.
+- Backend communication must use reusable frontend API clients and
+  server-derived session tokens.
+- Current foundations include AppShell, Workspace-driven navigation, UI
+  primitives, feature workspaces, centralized API clients, partial i18n,
+  responsive CSS, accessibility basics, and frontend contract tests.
+- Future migration must preserve validated Phase 7 Step 16 behavior.
+- Chapter 12 - Backend and Application Services Architecture is now documented
+  as the next architecture authority for backend structure, application
+  services, domain separation, module contracts, API standards, transactions,
+  eventing, background jobs, cache, backend security, and backend
+  observability.
+
+## Official Backend and Application Services Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_12.md`.
+- `docs/backend/backend-architecture.md`.
+- `docs/backend/application-services.md`.
+- `docs/backend/domain-layer.md`.
+- `docs/backend/module-contracts.md`.
+- `docs/backend/api-standards.md`.
+- `docs/backend/error-model.md`.
+- `docs/backend/eventing-and-messaging.md`.
+- `docs/backend/background-jobs.md`.
+- `docs/backend/cache-strategy.md`.
+- `docs/backend/transaction-strategy.md`.
+- `docs/backend/backend-security.md`.
+- `docs/backend/backend-observability.md`.
+- `docs/backend/backend-gap-analysis.md`.
+- `docs/backend/backend-dependency-map.md`.
+- `docs/backend/backend-migration-plan.md`.
+
+Roadmap impact:
+
+- The backend remains a modular monolith and must not be split into
+  microservices prematurely.
+- Backend dependencies must move toward delivery, application, domain, ports,
+  infrastructure, and external adapter boundaries.
+- Controllers must remain thin and must not contain business logic.
+- Business operations must become explicit use cases with command/query
+  contracts where appropriate.
+- Cross-module dependencies must move toward documented public contracts.
+- Stable APIs must converge toward versioned `/api/v1` contracts.
+- DTOs must become operation-specific and must not expose internal domain
+  objects.
+- Transactions, idempotency, Outbox, events, background jobs, cache, and
+  observability require incremental implementation phases before runtime
+  changes.
+- Backend security must continue to use central IAM, server-derived context,
+  RBAC, Need-to-Know scope, tenant/workspace isolation, audit, and safe error
+  handling.
+- Current foundations include NestJS modules, typed runtime database
+  persistence, central request context, security middleware, rate limiting,
+  audit event coverage, runtime backup/restore, observability metadata,
+  gateway metadata, and module contract tests.
+- Future migration must preserve validated Phase 7 Step 16 behavior.
+- Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture
+  is now documented as the next architecture authority for CI/CD,
+  infrastructure, deployment, environments, secrets, backup, disaster
+  recovery, operational observability, release management, and rollback.
+
+## Official DevOps, Infrastructure, Deployment, and Recovery Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_13.md`.
+- `docs/devops/devops-architecture.md`.
+- `docs/devops/ci-cd.md`.
+- `docs/devops/deployment-strategy.md`.
+- `docs/devops/environment-management.md`.
+- `docs/devops/containerization.md`.
+- `docs/devops/backup-and-recovery.md`.
+- `docs/devops/disaster-recovery.md`.
+- `docs/devops/observability.md`.
+- `docs/devops/release-management.md`.
+- `docs/devops/devops-gap-analysis.md`.
+- `docs/devops/devops-migration-plan.md`.
+
+Roadmap impact:
+
+- The official delivery path is Git, Pull Request, CI validation, build,
+  artifact publication, staging deployment, staging validation, human approval,
+  production deployment, monitoring, backup, rollback, and recovery.
+- `main` must contain stable versions only in controlled environments.
+- Pull Requests must run automated validation before merge.
+- Staging deployment remains the current operational target and production
+  deployment must be added only after staging is validated.
+- Deployment must remain reproducible, health-checked, rollback-capable, and
+  free of environment-specific application code.
+- Configuration differences between environments must come from external
+  configuration and secrets.
+- Backup and restore must be verifiable, monitored, and encryption-ready.
+- Disaster recovery must define RPO, RTO, owners, restore steps, and
+  validation steps before public production launch.
+- Current foundations include GitHub Actions CI, staging deployment workflow,
+  staging operations workflow, Docker Compose, API/Web Dockerfiles,
+  Infrastructure Pack v1.0, backup/restore scripts, monitoring scripts,
+  Nginx templates, systemd units, validation scripts, and operational
+  runbooks.
+- Future migration must preserve validated Phase 7 Step 16 behavior.
+- The next recommended architecture document is Chapter 14 - Quality
+  Architecture and Testing Strategy.
 
 ## MVP Scope
 
