@@ -340,6 +340,7 @@ conformity with the following documents, in this order:
 7. `docs/ARCHITECTURE_CHAPTER_4.md`.
 8. `docs/ARCHITECTURE_CHAPTER_5.md`.
 9. `docs/ARCHITECTURE_CHAPTER_6.md`.
+10. `docs/ARCHITECTURE_CHAPTER_7.md`.
 
 If an implementation conflicts with these documents, the architecture documents
 always prevail. Any deviation requires explicit approval from the project
@@ -380,15 +381,23 @@ keys, foreign keys, indexes, constraints, migrations, audit, versioning,
 deletion strategies, performance, security, and physical database evolution
 rules.
 
+Chapter 7 - Integrations and AI Agent Architecture is documented in
+`docs/ARCHITECTURE_CHAPTER_7.md`.
+
+It defines AI orchestration, provider adapters, capability routing, prompt
+governance, context management, security, observability, cost controls,
+resilience, human approval, and traceability rules.
+
 ## Recommended Next Architecture Documents
 
 Before implementing individual modules, the architecture suite should also
 define:
 
-1. Chapter 7 - Integrations and AI Agent Architecture: AI orchestration,
-   provider integration, module-agent contracts, prompt governance, cost
-   controls, limits, logging, human approval, and traceability rules.
+1. Chapter 8 - Editorial Workflow and Process Engine Architecture: production
+   workflow states, transitions, approvals, task orchestration, process
+   events, module integration, and human approval gates.
 
 Together, Manifesto, Development Conventions, Chapter 0, Chapter 1, Chapter 2,
-Chapter 3, Chapter 4, Chapter 5, Chapter 6, and Chapter 7 provide Codex with a
-coherent development framework for the entire platform.
+Chapter 3, Chapter 4, Chapter 5, Chapter 6, and Chapter 7 provide Codex with
+the coherent development framework required before Chapter 8 formalizes the
+workflow engine.
