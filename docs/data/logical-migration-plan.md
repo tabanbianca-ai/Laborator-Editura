@@ -230,4 +230,8 @@ Chapter 6 must use Chapter 4 and Chapter 5 together:
   versioning, deletion, and concurrency.
 - Chapter 6 defines the physical database implementation standards.
 
-Proceed next with Chapter 7 - Integrations and AI Agent Architecture.
+Chapter 7 - Integrations and AI Agent Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_7.md`.
+
+Proceed next with Chapter 8 - Editorial Workflow and Process Engine
+Architecture.
