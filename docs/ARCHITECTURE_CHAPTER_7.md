@@ -478,10 +478,13 @@ Validated functionality from Phase 7 - Step 16 must be preserved.
 
 ## Recommended Next Architecture Document
 
-After Chapter 7 is validated, the next recommended document is:
+Chapter 8 - Workflow Engine and Editorial Process Architecture is now
+documented in `docs/ARCHITECTURE_CHAPTER_8.md`.
 
-- Chapter 8 - Editorial Workflow and Process Engine Architecture.
+After Chapter 8 is validated, the next recommended document is:
 
-Chapter 8 should define the official production workflow engine, editorial
-states, transitions, approvals, task orchestration, workflow events,
-cross-module process integration, and human approval gates.
+- Chapter 9 - Security, Identity, and Governance Architecture.
+
+Chapter 9 should consolidate authentication, authorization, identity
+management, security policies, audit, compliance, and governance into one
+official architecture standard.
