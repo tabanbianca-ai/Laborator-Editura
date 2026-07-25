@@ -163,16 +163,19 @@ Validation must include:
 
 ## Blockers Before Physical Migration
 
-- Chapter 5 Logical Data Model is not yet approved.
-- Asset is not yet unified conceptually.
+- Asset physical strategy is not yet approved.
 - Publication identity vs publishing release vs public catalog vs commerce
-  edition needs logical cardinality.
-- Original Work and Source Edition need explicit logical aggregates.
-- User/Role/Permission/Membership/Grant need canonical boundaries.
+  edition needs physical mapping.
+- Original Work and Source Edition need physical mapping decisions.
+- User/Role/Permission/Membership/Grant need physical mapping decisions.
+- Chapter 6 implementation phases for physical migration are not yet
+  explicitly scheduled.
 
 ## Current Recommendation
 
 Do not implement database changes yet.
 
-Proceed next with Chapter 5 - Logical Data Model, using this baseline as the
-input.
+Chapter 5 - Logical Data Model and Chapter 6 - Physical Data Model and
+Database Standards are now documented.
+
+Proceed next with Chapter 7 - Integrations and AI Agent Architecture.
