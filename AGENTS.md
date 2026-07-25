@@ -6,6 +6,32 @@
 
 Define responsibilities and decision authority for the project.
 
+### Manifesto Directive
+
+Purpose:
+
+- Define the strategic vision, mission, and conceptual foundation for all
+  Laborator Editura implementation work.
+
+Rules:
+
+- The canonical platform Manifesto is documented in `docs/MANIFEST.md`.
+- The Manifesto is the first document in the architecture suite and precedes
+  the official development conventions, Chapter 0 fundamental principles, and
+  detailed platform architecture.
+- All implementations must remain compatible with the Manifesto, the official
+  development conventions, and the architecture documents.
+- When multiple implementation options exist, Codex must choose the solution
+  that best preserves coherence, modularity, extensibility, traceability,
+  security, native internationalization, accessibility, and permanent human
+  editorial control.
+- AI agents may assist, automate repetitive work, and propose solutions, but
+  they do not replace authorized human editorial responsibility.
+- Independent applications that duplicate platform functionality are not
+  allowed. Laborator Editura remains one unified ecosystem with shared
+  infrastructure, authentication, database, digital library, and security
+  rules.
+
 ### Development Conventions Directive
 
 Purpose:
@@ -754,10 +780,12 @@ Rules:
 
 ### Priority Order
 
-1. `SPEC.md`.
-2. `AGENTS.md`.
-3. `ROADMAP.md`.
-4. Codex implementation.
-5. Lovable UI generation.
+1. `docs/MANIFEST.md`.
+2. `docs/DEVELOPMENT_CONVENTIONS.md`.
+3. `SPEC.md`.
+4. `AGENTS.md`.
+5. `ROADMAP.md`.
+6. Codex implementation.
+7. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
