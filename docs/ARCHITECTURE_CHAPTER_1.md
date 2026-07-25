@@ -341,6 +341,7 @@ conformity with the following documents, in this order:
 8. `docs/ARCHITECTURE_CHAPTER_5.md`.
 9. `docs/ARCHITECTURE_CHAPTER_6.md`.
 10. `docs/ARCHITECTURE_CHAPTER_7.md`.
+11. `docs/ARCHITECTURE_CHAPTER_8.md`.
 
 If an implementation conflicts with these documents, the architecture documents
 always prevail. Any deviation requires explicit approval from the project
@@ -388,16 +389,24 @@ It defines AI orchestration, provider adapters, capability routing, prompt
 governance, context management, security, observability, cost controls,
 resilience, human approval, and traceability rules.
 
+Chapter 8 - Workflow Engine and Editorial Process Architecture is documented
+in `docs/ARCHITECTURE_CHAPTER_8.md`.
+
+It defines Workflow Engine, workflow definitions, versions, instances, stages,
+transitions, tasks, assignments, approvals, events, automation, escalation,
+Work Table, Scheduling and Agenda integration, audit, observability, and
+process migration rules.
+
 ## Recommended Next Architecture Documents
 
 Before implementing individual modules, the architecture suite should also
 define:
 
-1. Chapter 8 - Editorial Workflow and Process Engine Architecture: production
-   workflow states, transitions, approvals, task orchestration, process
-   events, module integration, and human approval gates.
+1. Chapter 9 - Security, Identity, and Governance Architecture: authentication,
+   authorization, identity management, security policies, audit, compliance,
+   and platform governance.
 
 Together, Manifesto, Development Conventions, Chapter 0, Chapter 1, Chapter 2,
-Chapter 3, Chapter 4, Chapter 5, Chapter 6, and Chapter 7 provide Codex with
-the coherent development framework required before Chapter 8 formalizes the
-workflow engine.
+Chapter 3, Chapter 4, Chapter 5, Chapter 6, Chapter 7, and Chapter 8 provide
+Codex with the coherent development framework required before Chapter 9
+formalizes security, identity, and governance.
