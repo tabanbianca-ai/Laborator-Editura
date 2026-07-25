@@ -30,7 +30,15 @@ Document order:
     architecture.
 16. `docs/ARCHITECTURE_CHAPTER_13.md` - DevOps, infrastructure, deployment,
     and recovery architecture.
-17. The remaining architecture and implementation specifications.
+17. `docs/ARCHITECTURE_CHAPTER_14.md` - quality architecture and testing
+    strategy.
+18. `docs/ARCHITECTURE_CHAPTER_15.md` - operations, maintenance, and platform
+    evolution architecture.
+19. `docs/modules/library/library-overview.md` - Phase II Module 1, Library
+    module implementation specification.
+20. `docs/modules/translation/translation-overview.md` - Phase II Module 2,
+    Translation module implementation specification.
+21. Detailed module specifications and implementation plans.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -624,6 +632,221 @@ functionality.
 Before structural infrastructure changes, Codex must complete and respect the
 DevOps and Infrastructure Baseline Audit, current infrastructure inventory,
 dependency map, gap analysis, risk assessment, and incremental migration plan.
+
+## Chapter 14 - Quality Architecture and Testing Strategy
+
+The official Quality Architecture and Testing Strategy is documented in
+`docs/ARCHITECTURE_CHAPTER_14.md`.
+
+Chapter 14 defines the mandatory standard for Quality by Design, test-first
+development, shift-left testing, automation, repeatable validation,
+continuous verification, risk-based testing, traceability, reproducibility,
+unit tests, domain tests, application tests, integration tests, API tests,
+contract tests, database tests, migration tests, security tests, performance
+tests, accessibility tests, UI tests, end-to-end tests, AI validation tests,
+regression tests, smoke tests, test data, coverage, Quality Gates, quality
+observability, and defect management.
+
+The supporting quality baseline documents are:
+
+1. `docs/quality/testing-strategy.md`.
+2. `docs/quality/test-pyramid.md`.
+3. `docs/quality/test-catalog.md`.
+4. `docs/quality/quality-gates.md`.
+5. `docs/quality/coverage-policy.md`.
+6. `docs/quality/security-testing.md`.
+7. `docs/quality/accessibility-testing.md`.
+8. `docs/quality/performance-testing.md`.
+9. `docs/quality/ai-testing.md`.
+10. `docs/quality/regression-policy.md`.
+11. `docs/quality/quality-gap-analysis.md`.
+12. `docs/quality/quality-migration-plan.md`.
+
+Chapter 14 is authoritative for future test architecture, release validation,
+coverage policy, Quality Gates, security testing, accessibility testing,
+performance testing, AI validation, regression policy, defect management, and
+quality observability work. It does not authorize application code changes,
+API changes, database schema changes, UI changes, Docker changes, or removal
+of Phase 7 Step 16 validated functionality.
+
+Before changes to test architecture or release gates, Codex must complete and
+respect the Quality and Testing Baseline Audit, coverage analysis, risk
+assessment, quality gap analysis, and incremental migration plan.
+
+## Chapter 15 - Operations, Maintenance, and Platform Evolution Architecture
+
+The official Operations, Maintenance, and Platform Evolution Architecture is
+documented in `docs/ARCHITECTURE_CHAPTER_15.md`.
+
+Chapter 15 defines the mandatory standard for operational excellence,
+continuous improvement, reliability, controlled evolution, preventive
+maintenance, configuration management, feature lifecycle management, Semantic
+Versioning, compatibility, deprecation, incident management, SLA, SLO,
+operational monitoring, operational KPIs, operational audit, business
+continuity, lifecycle management, roadmap management, risk management, and
+long-term platform evolution.
+
+The supporting operations baseline documents are:
+
+1. `docs/operations/operations-architecture.md`.
+2. `docs/operations/platform-governance.md`.
+3. `docs/operations/release-management.md`.
+4. `docs/operations/versioning-policy.md`.
+5. `docs/operations/deprecation-policy.md`.
+6. `docs/operations/incident-management.md`.
+7. `docs/operations/business-continuity.md`.
+8. `docs/operations/maintenance-strategy.md`.
+9. `docs/operations/risk-management.md`.
+10. `docs/operations/kpi-and-sla.md`.
+11. `docs/operations/operations-gap-analysis.md`.
+12. `docs/operations/platform-evolution-roadmap.md`.
+
+Chapter 15 is authoritative for future operational architecture, platform
+governance, release management, versioning, deprecation, incident management,
+business continuity, maintenance, risk management, KPIs, SLA, and controlled
+platform evolution. It does not authorize application code changes, API
+changes, database schema changes, UI changes, Docker changes, infrastructure
+changes, or removal of Phase 7 Step 16 validated functionality.
+
+Before changes to operational architecture or long-term maintenance policy,
+Codex must complete and respect the Operations and Platform Evolution Baseline
+Audit, governance assessment, operational gap analysis, risk evaluation, and
+controlled evolution roadmap.
+
+Architecture Chapters 0-15 now form the complete high-level architecture
+framework. The next stage is detailed module specifications and controlled
+module implementation based on these standards.
+
+## Phase II Module 1 - Library Module Architecture
+
+The official Library module implementation specification begins in
+`docs/modules/library/library-overview.md`.
+
+The Library is the canonical repository and Single Source of Truth for all
+editorial resources managed by the platform. No manuscript, book, magazine,
+article, image, illustration, audio, video, translation, export, publication,
+or source file may exist as an editorial object outside the Library model.
+
+The supporting Library module specification documents are:
+
+1. `docs/modules/library/library-overview.md`.
+2. `docs/modules/library/domain-model.md`.
+3. `docs/modules/library/metadata-model.md`.
+4. `docs/modules/library/asset-management.md`.
+5. `docs/modules/library/versioning.md`.
+6. `docs/modules/library/search-and-indexing.md`.
+7. `docs/modules/library/api-contracts.md`.
+8. `docs/modules/library/events.md`.
+9. `docs/modules/library/permissions.md`.
+10. `docs/modules/library/workflows.md`.
+11. `docs/modules/library/library-gap-analysis.md`.
+12. `docs/modules/library/library-migration-plan.md`.
+
+Library module rules:
+
+- Every editorial object must be represented as a Library Item or explicitly
+  linked Library publication record during migration.
+- Every physical file must be managed as an Asset or current publication file
+  record until the generalized Asset model is introduced.
+- All metadata, assets, versions, relationships, rights, and provenance must
+  be auditable.
+- Existing Intelligent Editorial Library lifecycle behavior must be preserved.
+- Existing Phase 7 Step 16 publishing, preflight, and distribution behavior
+  must be preserved.
+- Other modules must consume editorial resources through Library references
+  and must not create duplicate repositories of editorial data.
+
+Module 2 - Translation Module Architecture is now documented as the next
+Phase II specification after Library.
+
+## Phase II Module 2 - Translation Module Architecture
+
+The official Translation module implementation specification begins in
+`docs/modules/translation/translation-overview.md`.
+
+The Translation Module manages the complete editorial translation process for
+Laborator Editura. It preserves source immutability, semantic fidelity,
+terminology consistency, traceability, Human Final Authority, and Library as
+the Single Source of Truth.
+
+The supporting Translation module specification documents are:
+
+1. `docs/modules/translation/translation-overview.md`.
+2. `docs/modules/translation/domain-model.md`.
+3. `docs/modules/translation/segmentation.md`.
+4. `docs/modules/translation/translation-memory.md`.
+5. `docs/modules/translation/glossary-management.md`.
+6. `docs/modules/translation/terminology.md`.
+7. `docs/modules/translation/quality-validation.md`.
+8. `docs/modules/translation/api-contracts.md`.
+9. `docs/modules/translation/events.md`.
+10. `docs/modules/translation/workflows.md`.
+11. `docs/modules/translation/translation-gap-analysis.md`.
+12. `docs/modules/translation/translation-migration-plan.md`.
+
+Translation module rules:
+
+- Original documents are immutable.
+- Every translation must be linked to Library.
+- Every segment must be persistent, auditable, and versionable.
+- Translation Memory is reusable and proposal-only.
+- Validated terminology overrides Translation Memory and AI suggestions.
+- AI translation must operate through orchestration with full context.
+- QA and Semantic Fidelity validation must remain connected.
+- Workflow approval remains human-controlled.
+- No translation workflow may duplicate editorial content outside Library.
+
+Module 3 - Proofreading and Editorial Review Module Architecture is now
+documented as the next Phase II specification after Translation.
+
+## Phase II Module 3 - Proofreading and Editorial Review Module Architecture
+
+The official Proofreading and Editorial Review module implementation
+specification begins in
+`docs/modules/editorial-review/editorial-review-overview.md`.
+
+The Proofreading and Editorial Review Module validates linguistic,
+terminological, stylistic, doctrinal, and editorial quality before approval,
+publication, or distribution. It keeps review non-destructive, auditable,
+workflow-controlled, and subordinate to Human Final Authority.
+
+The supporting Proofreading and Editorial Review module specification
+documents are:
+
+1. `docs/modules/editorial-review/editorial-review-overview.md`.
+2. `docs/modules/editorial-review/domain-model.md`.
+3. `docs/modules/editorial-review/linguistic-validation.md`.
+4. `docs/modules/editorial-review/style-validation.md`.
+5. `docs/modules/editorial-review/terminology-validation.md`.
+6. `docs/modules/editorial-review/comments-and-review.md`.
+7. `docs/modules/editorial-review/api-contracts.md`.
+8. `docs/modules/editorial-review/events.md`.
+9. `docs/modules/editorial-review/workflows.md`.
+10. `docs/modules/editorial-review/editorial-review-gap-analysis.md`.
+11. `docs/modules/editorial-review/editorial-review-migration-plan.md`.
+
+Editorial Review module rules:
+
+- Review must remain non-destructive until an authorized human accepts a
+  correction proposal.
+- AI may suggest, explain, compare, and signal risk, but it must not approve,
+  publish, apply corrections automatically, or bypass Workflow.
+- Editorial Review must reuse Library, Translation, Terminology, Glossary,
+  QA, Semantic Fidelity, Editorial Decisions, Collaboration, Workflow, Audit,
+  and Publishing contracts.
+- Validated terminology remains authoritative over Translation Memory and AI
+  suggestions.
+- Comments, observations, correction proposals, review decisions, approvals,
+  and rejections must be auditable.
+- Review must not duplicate Translation content ownership, Workflow state
+  ownership, Publishing release authority, or Library source-of-truth
+  responsibilities.
+- Existing Phase 7 Step 16 publishing, preflight, and distribution behavior
+  must be preserved.
+
+After Proofreading and Editorial Review specification and baseline audit are
+accepted, the next recommended module specification is Module 4 - Publishing
+Module Architecture.
 
 ## Architecture Freeze & Governance Requirements
 
