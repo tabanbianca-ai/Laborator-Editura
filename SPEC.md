@@ -844,8 +844,104 @@ Editorial Review module rules:
 - Existing Phase 7 Step 16 publishing, preflight, and distribution behavior
   must be preserved.
 
-After Proofreading and Editorial Review specification and baseline audit are
-accepted, the next recommended module specification is Module 4 - Publishing
+Module 4 - Publishing Module Architecture is now documented as the next Phase
+II specification after Proofreading and Editorial Review.
+
+## Phase II Module 4 - Publishing Module Architecture
+
+The official Publishing module implementation specification begins in
+`docs/modules/publishing/publishing-overview.md`.
+
+The Publishing Module manages the complete publication cycle from approved
+Library content to official digital, print, audio, video, and public
+distribution outputs. Publishing is the only controlled mechanism through
+which an approved document becomes an official edition.
+
+The supporting Publishing module specification documents are:
+
+1. `docs/modules/publishing/publishing-overview.md`.
+2. `docs/modules/publishing/domain-model.md`.
+3. `docs/modules/publishing/publication-build.md`.
+4. `docs/modules/publishing/publication-profiles.md`.
+5. `docs/modules/publishing/format-generators.md`.
+6. `docs/modules/publishing/distribution.md`.
+7. `docs/modules/publishing/api-contracts.md`.
+8. `docs/modules/publishing/events.md`.
+9. `docs/modules/publishing/workflows.md`.
+10. `docs/modules/publishing/publishing-gap-analysis.md`.
+11. `docs/modules/publishing/publishing-migration-plan.md`.
+
+Publishing module rules:
+
+- Publishing may use only approved Library content.
+- Published official editions are immutable and versioned.
+- Corrections require a new version, edition, or republication record.
+- All publication metadata must come from Library and must be validated before
+  release.
+- Export owns generated files and format artifacts.
+- Rights & Provenance owns rights warnings and publication authorization.
+- Workflow owns generic approval and transition gates.
+- Public Portal owns public catalog visibility and reader access metadata.
+- Commerce owns commercial edition and print/distribution metadata.
+- Publishing must not create separate Preflight, Distribution, or Archive
+  modules.
+- AI may summarize readiness, detect blockers, and suggest remediation, but it
+  must not publish, approve, withdraw, distribute, bypass rights, or bypass
+  Workflow.
+- Existing Phase 7 Step 16 publishing, final preflight, and distribution
+  tracking behavior must be preserved.
+
+Module 5 - Rights and Provenance Module Architecture is now documented as the
+next Phase II specification after Publishing.
+
+## Phase II Module 5 - Rights and Provenance Module Architecture
+
+The official Rights and Provenance module implementation specification begins
+in `docs/modules/rights/rights-overview.md`.
+
+The Rights and Provenance Module centrally manages intellectual property,
+copyright, translation rights, publishing rights, licenses, contracts,
+provenance, legal restrictions, and legal history. No resource may be
+published without validation from this module.
+
+The supporting Rights and Provenance module specification documents are:
+
+1. `docs/modules/rights/rights-overview.md`.
+2. `docs/modules/rights/domain-model.md`.
+3. `docs/modules/rights/provenance-model.md`.
+4. `docs/modules/rights/license-management.md`.
+5. `docs/modules/rights/contract-management.md`.
+6. `docs/modules/rights/compliance-validation.md`.
+7. `docs/modules/rights/api-contracts.md`.
+8. `docs/modules/rights/events.md`.
+9. `docs/modules/rights/workflows.md`.
+10. `docs/modules/rights/rights-gap-analysis.md`.
+11. `docs/modules/rights/rights-migration-plan.md`.
+
+Rights and Provenance module rules:
+
+- Every Library Item must have verifiable provenance before publication.
+- Every legal right must be explicitly represented.
+- Contracts and licenses must be linked to resources and must be versioned and
+  auditable.
+- Missing, expired, revoked, or incompatible rights must block publication and
+  distribution.
+- Rights and Provenance owns rights records, rights holders, licenses,
+  contract metadata, restrictions, provenance validation, legal history, and
+  rights validation verdicts.
+- Library owns resource identity and contract assets.
+- Publishing, Translation, Audio, Video, Public Portal, Commerce, and Quality
+  must consume rights validation through public Rights contracts.
+- No module may implement an independent rights system.
+- AI may summarize agreements and detect missing or expired permissions, but
+  it must not approve agreements, authorize translations, authorize
+  publication, revoke rights, transfer rights, or modify validated provenance
+  automatically.
+- Existing Phase 7 Step 16 publishing, final preflight, and distribution
+  tracking behavior must be preserved.
+
+After Rights and Provenance Module specification and baseline audit are
+accepted, the next recommended module specification is Module 6 - Magazine
 Module Architecture.
 
 ## Architecture Freeze & Governance Requirements
