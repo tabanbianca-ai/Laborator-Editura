@@ -191,6 +191,12 @@ This document is the first document in the architecture suite and precedes:
   Governance Architecture.
 - `docs/ARCHITECTURE_CHAPTER_10.md` - Chapter 10, Integration and
   Interoperability Architecture.
+- `docs/ARCHITECTURE_CHAPTER_11.md` - Chapter 11, Frontend and Design System
+  Architecture.
+- `docs/ARCHITECTURE_CHAPTER_12.md` - Chapter 12, Backend and Application
+  Services Architecture.
+- `docs/ARCHITECTURE_CHAPTER_13.md` - Chapter 13, DevOps, Infrastructure,
+  Deployment, and Recovery Architecture.
 
 This order gives Codex the strategic context first, then the mandatory
 construction rules, and then the technical design.
