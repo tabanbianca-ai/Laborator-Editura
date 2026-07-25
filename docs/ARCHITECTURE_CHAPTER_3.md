@@ -344,10 +344,13 @@ Chapter 6 - Physical Data Model and Database Standards is now documented in
 Chapter 7 - Integrations and AI Agent Architecture is now documented in
 `docs/ARCHITECTURE_CHAPTER_7.md`.
 
+Chapter 8 - Workflow Engine and Editorial Process Architecture is now
+documented in `docs/ARCHITECTURE_CHAPTER_8.md`.
+
 The next architecture document should be:
 
-- Chapter 8 - Editorial Workflow and Process Engine Architecture.
+- Chapter 9 - Security, Identity, and Governance Architecture.
 
-Chapter 8 should define production workflow states, transitions, approvals,
-task orchestration, process events, module integration, and human approval
-gates.
+Chapter 9 should consolidate authentication, authorization, identity
+management, security policies, audit, compliance, and governance into one
+official architecture standard.
