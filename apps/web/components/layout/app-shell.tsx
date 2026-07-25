@@ -26,6 +26,11 @@ export function AppShell({
   const collapsedMenus = preferences?.collapsedMenus?.join(",") ?? "";
   const platformLanguage = preferences?.platformLanguage ?? preferences?.language ?? "en";
   const ui = createUiTranslator(platformLanguage);
+  const publicAuthRoute = currentPath === "/login" || currentPath === "/reset-password";
+
+  if (publicAuthRoute) {
+    return <div className="auth-shell">{children}</div>;
+  }
 
   return (
     <div className="app-shell" data-collapsed-menus={collapsedMenus}>
