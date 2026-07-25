@@ -29,6 +29,15 @@ Rules:
   language.
 - The full interface must follow the active Platform Language. Mixed-language
   UI is not allowed.
+- Standard UI terminology must follow international localization standards
+  first, then official Microsoft Windows and Apple macOS translations for
+  general interface terms.
+- Platform-specific terminology must live in the platform terminology
+  dictionary and must not duplicate standard UI terminology.
+- New user-facing terms must be checked against standard localization sources
+  before becoming official platform dictionary terms.
+- Different variants for the same official term are not allowed unless the
+  project owner explicitly approves the change.
 - Platform Language controls UI text only. It must not alter Original
   Language, Authoring Language, Target Language, manuscript content, or
   translation content.
@@ -41,6 +50,8 @@ Rules:
   approved public surfaces such as health checks or public catalog reads.
 - New languages, modules, roles, user types, or features must be added without
   changing the existing architecture.
+- If there is ambiguity or more than one possible implementation approach,
+  these conventions take precedence.
 - These conventions may be changed only by an explicit project owner decision.
 
 ### Architecture Freeze
