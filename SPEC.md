@@ -22,6 +22,11 @@ Canonical rules:
 - First-stage platform UI languages are Romanian, English, Spanish, French,
   Portuguese, Italian, and German, with Romanian as the primary platform
   language.
+- Standard UI terminology follows international localization standards first,
+  then official Microsoft Windows and Apple macOS translations for general
+  interface terms.
+- Platform-specific terms are managed through the platform terminology
+  dictionary and must not duplicate standard UI terminology.
 - Platform Language affects UI text only and must remain separate from
   Original Language, Authoring Language, Target Language, manuscript content,
   and translation content.
@@ -30,6 +35,7 @@ Canonical rules:
   `api.laboratoreditorial.com`.
 
 These conventions may be changed only by explicit project owner approval.
+When implementation choices are ambiguous, these conventions take precedence.
 
 ### MVP Scope
 
