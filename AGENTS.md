@@ -6,6 +6,43 @@
 
 Define responsibilities and decision authority for the project.
 
+### Development Conventions Directive
+
+Purpose:
+
+- Define the official development standards for all Laborator Editura
+  implementation work.
+
+Rules:
+
+- The canonical development conventions are documented in
+  `docs/DEVELOPMENT_CONVENTIONS.md`.
+- Internal implementation must use English only for source code, directories,
+  files, classes, functions, methods, variables, constants, APIs, database
+  objects, table names, column names, models, migrations, technical
+  documentation, automated tests, and technical comments.
+- User-facing interface text must be loaded through the localization system.
+  Components must not introduce hardcoded labels, messages, notifications,
+  button text, menu text, or mixed-language UI strings.
+- Supported first-stage platform UI languages are Romanian, English, Spanish,
+  French, Portuguese, Italian, and German. Romanian is the primary platform
+  language.
+- The full interface must follow the active Platform Language. Mixed-language
+  UI is not allowed.
+- Platform Language controls UI text only. It must not alter Original
+  Language, Authoring Language, Target Language, manuscript content, or
+  translation content.
+- Internal role identifiers must remain in English. Role labels displayed in
+  the UI must be localized.
+- One authentication, session, role, and permission system must serve
+  `laboratoreditorial.com`, `app.laboratoreditorial.com`, and
+  `api.laboratoreditorial.com`.
+- All modules must require authentication and authorization except explicitly
+  approved public surfaces such as health checks or public catalog reads.
+- New languages, modules, roles, user types, or features must be added without
+  changing the existing architecture.
+- These conventions may be changed only by an explicit project owner decision.
+
 ### Architecture Freeze
 
 The platform architecture is frozen for MVP implementation.
