@@ -729,9 +729,91 @@ Roadmap impact:
   terminology priority, preserve Workflow gates, preserve Human Final
   Authority, and preserve Phase 7 Step 16 publishing, preflight, and
   distribution behavior.
-- After Proofreading and Editorial Review specification and baseline audit are
-  accepted, the next module specification should be Module 4 - Publishing
-  Module Architecture.
+- Module 4 - Publishing Module Architecture is now documented as the next
+  Phase II specification after Proofreading and Editorial Review.
+
+## Phase II Module 4 - Publishing Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/publishing/publishing-overview.md`.
+- `docs/modules/publishing/domain-model.md`.
+- `docs/modules/publishing/publication-build.md`.
+- `docs/modules/publishing/publication-profiles.md`.
+- `docs/modules/publishing/format-generators.md`.
+- `docs/modules/publishing/distribution.md`.
+- `docs/modules/publishing/api-contracts.md`.
+- `docs/modules/publishing/events.md`.
+- `docs/modules/publishing/workflows.md`.
+- `docs/modules/publishing/publishing-gap-analysis.md`.
+- `docs/modules/publishing/publishing-migration-plan.md`.
+
+Roadmap impact:
+
+- Publishing is the fourth detailed module specification after Library,
+  Translation, and Proofreading/Editorial Review.
+- Existing implementation already includes layout publishing records,
+  publishing preflight, publishing state transitions, publication,
+  withdrawal, republication, distribution records, JSON Master export,
+  Library publication records, public portal catalog/release records,
+  commerce editions, rights warnings, workflow gates, Distribution Center UI,
+  runtime persistence, backup/restore, and contract tests.
+- Future Publishing migration must add a canonical `Publication` facade,
+  first-class reproducible `PublicationBuild` records, reusable/versioned
+  publication profiles, generator contracts for each supported format,
+  distribution adapter contracts, state mapping, performance planning,
+  parallel format generation, incremental builds, asynchronous distribution,
+  and canonical versioned API routes.
+- Migration must be additive, preserve current clients, preserve Library
+  metadata ownership, preserve Export artifact ownership, preserve Rights &
+  Provenance authority, preserve Workflow gates, preserve immutable published
+  editions, and preserve Phase 7 Step 16 publishing/preflight/distribution
+  behavior.
+- Module 5 - Rights and Provenance Module Architecture is now documented as
+  the next Phase II specification after Publishing.
+
+## Phase II Module 5 - Rights and Provenance Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/rights/rights-overview.md`.
+- `docs/modules/rights/domain-model.md`.
+- `docs/modules/rights/provenance-model.md`.
+- `docs/modules/rights/license-management.md`.
+- `docs/modules/rights/contract-management.md`.
+- `docs/modules/rights/compliance-validation.md`.
+- `docs/modules/rights/api-contracts.md`.
+- `docs/modules/rights/events.md`.
+- `docs/modules/rights/workflows.md`.
+- `docs/modules/rights/rights-gap-analysis.md`.
+- `docs/modules/rights/rights-migration-plan.md`.
+
+Roadmap impact:
+
+- Rights and Provenance is the fifth detailed module specification after
+  Library, Translation, Proofreading/Editorial Review, and Publishing.
+- Existing implementation already includes collaboration agreements,
+  translation authorizations, publishing authorizations, provenance records,
+  rights audit events, Rights Workspace UI, Publishing Workspace warnings,
+  Distribution Center rights warnings, runtime persistence, backup/restore,
+  and contract tests.
+- Future Rights migration must add a canonical `RightsRecord`, first-class
+  rights holder registry, generalized rights type model, versioned License
+  records, structured Contract lifecycle, Library Item-scoped provenance,
+  unified restriction model, reusable compliance validation endpoint,
+  immutable legal-history timeline, rights workflow integration, expiration
+  automation, search, and performance hardening.
+- Migration must be additive, preserve current clients, preserve Library
+  resource identity, preserve contract assets in Library, preserve Publishing
+  preflight rights gates, preserve Human Final Authority, and preserve Phase 7
+  Step 16 publishing/preflight/distribution behavior.
+- After Rights and Provenance Module specification and baseline audit are
+  accepted, the next module specification should be Module 6 - Magazine Module
+  Architecture.
 
 ## MVP Scope
 
