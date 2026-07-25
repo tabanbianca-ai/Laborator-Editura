@@ -9,6 +9,28 @@ unless explicitly approved through the architecture and roadmap process.
 Implementation must proceed in phases and remain aligned with `SPEC.md`,
 `AGENTS.md`, and `ROADMAP.md`.
 
+### Official Development Conventions
+
+The platform follows the official development conventions documented in
+`docs/DEVELOPMENT_CONVENTIONS.md`.
+
+Canonical rules:
+
+- Internal implementation language is English only.
+- User-facing UI text must be loaded from the localization system.
+- Mixed-language UI is not allowed.
+- First-stage platform UI languages are Romanian, English, Spanish, French,
+  Portuguese, Italian, and German, with Romanian as the primary platform
+  language.
+- Platform Language affects UI text only and must remain separate from
+  Original Language, Authoring Language, Target Language, manuscript content,
+  and translation content.
+- The platform uses one authentication, session, role, and permission model
+  across `laboratoreditorial.com`, `app.laboratoreditorial.com`, and
+  `api.laboratoreditorial.com`.
+
+These conventions may be changed only by explicit project owner approval.
+
 ### MVP Scope
 
 The MVP is limited to:
