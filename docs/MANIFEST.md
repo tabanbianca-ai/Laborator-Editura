@@ -177,6 +177,7 @@ This document is the first document in the architecture suite and precedes:
 - The official development conventions.
 - Chapter 0 - Fundamental Principles.
 - `docs/ARCHITECTURE_CHAPTER_1.md` - Chapter 1, General Platform Architecture.
+- `docs/ARCHITECTURE_CHAPTER_2.md` - Chapter 2, Application Architecture.
 
 This order gives Codex the strategic context first, then the mandatory
 construction rules, and then the technical design.
