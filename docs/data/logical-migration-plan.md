@@ -207,7 +207,6 @@ Validation must include:
 
 ## Blockers Before Physical Migration
 
-- Chapter 6 is not yet approved.
 - `Asset` ownership and reference strategy require final logical decision.
 - `OriginalWork` and `SourceEdition` need physical mapping decisions.
 - `Review` and `CorrectionProposal` need unified mapping decisions.
@@ -221,12 +220,14 @@ Validation must include:
 
 Do not implement database changes yet.
 
-Proceed next with Chapter 6 - Physical Data Model and Database Standards after
-this logical model baseline is accepted.
+Chapter 6 - Physical Data Model and Database Standards is now documented in
+`docs/ARCHITECTURE_CHAPTER_6.md`.
 
 Chapter 6 must use Chapter 4 and Chapter 5 together:
 
 - Chapter 4 defines conceptual meaning.
 - Chapter 5 defines logical aggregates, ownership, cardinalities, integrity,
   versioning, deletion, and concurrency.
-- Chapter 6 will define the physical database implementation.
+- Chapter 6 defines the physical database implementation standards.
+
+Proceed next with Chapter 7 - Integrations and AI Agent Architecture.
