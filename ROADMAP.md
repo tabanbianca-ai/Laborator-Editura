@@ -228,8 +228,47 @@ Roadmap impact:
   project owner.
 - Phase 7 Step 16 publishing, preflight, distribution, Library, Rights,
   Workflow, Export, Quality, Backup, and audit behavior must be preserved.
-- The next recommended architecture document is Chapter 7 - Integrations and
-  AI Agent Architecture.
+- Chapter 7 - Integrations and AI Agent Architecture is now documented as the
+  next architecture authority for provider-agnostic AI integration.
+
+## Official Integrations and AI Agent Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_7.md`.
+- `docs/ai/ai-architecture.md`.
+- `docs/ai/provider-registry.md`.
+- `docs/ai/capability-catalog.md`.
+- `docs/ai/prompt-management.md`.
+- `docs/ai/ai-security.md`.
+- `docs/ai/ai-observability.md`.
+- `docs/ai/ai-gap-analysis.md`.
+- `docs/ai/ai-migration-plan.md`.
+
+Roadmap impact:
+
+- All future AI calls must pass through the AI Orchestration Service.
+- Functional modules must request provider-independent capabilities and must
+  not call external AI providers directly.
+- AI providers must be integrated through adapters with normalized request,
+  response, error, cost, health, and privacy metadata.
+- Prompt content must be centralized, versioned, auditable, and selected by
+  orchestration instead of hardcoded in functional modules.
+- AI requests must preserve tenant isolation, Need-to-Know access, sensitive
+  data filtering, security policies, budget and quota limits, observability,
+  audit, and Human Final Authority.
+- The current baseline has governance, marketplace, gateway, and observability
+  metadata foundations, but no complete AI Orchestration Service, Capability
+  Router, provider adapter runtime, or central prompt registry.
+- No external provider SDK integration is authorized until orchestration,
+  prompt governance, security filtering, cost enforcement, observability, and
+  audit boundaries are implemented.
+- Phase 7 Step 16 publishing, preflight, distribution, Library, Rights,
+  Workflow, Export, Quality, Backup, and audit behavior must be preserved.
+- The next recommended architecture document is Chapter 8 - Editorial Workflow
+  and Process Engine Architecture.
 
 ## MVP Scope
 
