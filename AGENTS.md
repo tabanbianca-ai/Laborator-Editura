@@ -182,8 +182,47 @@ Rules:
   explicit implementation phase.
 - Phase 7 Step 16 validated Publishing Workflow, Final Preflight, and
   Distribution Tracking behavior must be preserved.
-- Logical data modeling must be handled in a later Chapter 5 document before
-  physical database redesign or migrations are proposed.
+- Logical data modeling is handled by Chapter 5 and must remain the mandatory
+  input before physical database redesign or migrations are proposed.
+
+### Logical Data Model Directive
+
+Purpose:
+
+- Define the official Chapter 5 logical data model that transforms conceptual
+  entities into implementation-ready, technology-independent aggregates,
+  relationships, integrity rules, versioning rules, deletion rules, and
+  concurrency rules.
+
+Rules:
+
+- The canonical Chapter 5 logical data model is documented in
+  `docs/ARCHITECTURE_CHAPTER_5.md`.
+- The required logical baseline deliverables are:
+  - `docs/data/logical-data-model.md`.
+  - `docs/data/aggregate-map.md`.
+  - `docs/data/entity-relationships.md`.
+  - `docs/data/integrity-rules.md`.
+  - `docs/data/logical-gap-analysis.md`.
+  - `docs/data/logical-migration-plan.md`.
+- Chapter 5 is technology-independent. It does not authorize database-specific
+  schemas, indexes, migrations, runtime persistence changes, API changes, UI
+  changes, Docker changes, or removal of existing validated functionality.
+- Every logical entity must have exactly one owner aggregate.
+- Cross-aggregate relationships must use explicit references, public
+  contracts, events, or read models. They must not create alternate sources of
+  truth.
+- Many-to-many relationships must be represented through explicit associative
+  entities in later physical design.
+- Versioning, deletion, audit, and concurrency rules must be defined logically
+  before physical schema work begins.
+- AI must remain outside ownership of editorial data. `AIResult` may become
+  domain evidence only through review and authorized human approval.
+- Validated Phase 7 Step 16 Publishing Workflow, Final Preflight, Distribution
+  Tracking, Library, Rights, Workflow, Export, Quality, Backup, and audit
+  behavior must be preserved.
+- Physical database design belongs to Chapter 6 and must use Chapters 4 and 5
+  as mandatory inputs.
 
 ### Development Conventions Directive
 
@@ -940,10 +979,11 @@ Rules:
 5. `docs/ARCHITECTURE_CHAPTER_2.md`.
 6. `docs/ARCHITECTURE_CHAPTER_3.md`.
 7. `docs/ARCHITECTURE_CHAPTER_4.md`.
-8. `SPEC.md`.
-9. `AGENTS.md`.
-10. `ROADMAP.md`.
-11. Codex implementation.
-12. Lovable UI generation.
+8. `docs/ARCHITECTURE_CHAPTER_5.md`.
+9. `SPEC.md`.
+10. `AGENTS.md`.
+11. `ROADMAP.md`.
+12. Codex implementation.
+13. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
