@@ -339,6 +339,7 @@ conformity with the following documents, in this order:
 6. `docs/ARCHITECTURE_CHAPTER_3.md`.
 7. `docs/ARCHITECTURE_CHAPTER_4.md`.
 8. `docs/ARCHITECTURE_CHAPTER_5.md`.
+9. `docs/ARCHITECTURE_CHAPTER_6.md`.
 
 If an implementation conflicts with these documents, the architecture documents
 always prevail. Any deviation requires explicit approval from the project
@@ -371,15 +372,23 @@ It defines logical aggregates, aggregate roots, relationships, cardinalities,
 integrity rules, deletion strategies, versioning strategies, and concurrency
 rules before database-specific physical design.
 
+Chapter 6 - Physical Data Model and Database Standards is documented in
+`docs/ARCHITECTURE_CHAPTER_6.md`.
+
+It defines PostgreSQL implementation standards, naming conventions, primary
+keys, foreign keys, indexes, constraints, migrations, audit, versioning,
+deletion strategies, performance, security, and physical database evolution
+rules.
+
 ## Recommended Next Architecture Documents
 
 Before implementing individual modules, the architecture suite should also
 define:
 
-1. Chapter 6 - Physical Data Model and Database Standards: concrete database
-   conventions, table structures, keys, indexes, migrations, retention
-   policies, performance, and optimization rules derived from Chapters 4 and 5.
+1. Chapter 7 - Integrations and AI Agent Architecture: AI orchestration,
+   provider integration, module-agent contracts, prompt governance, cost
+   controls, limits, logging, human approval, and traceability rules.
 
 Together, Manifesto, Development Conventions, Chapter 0, Chapter 1, Chapter 2,
-Chapter 3, Chapter 4, Chapter 5, and Chapter 6 provide Codex with a coherent
-development framework for the entire platform.
+Chapter 3, Chapter 4, Chapter 5, Chapter 6, and Chapter 7 provide Codex with a
+coherent development framework for the entire platform.
