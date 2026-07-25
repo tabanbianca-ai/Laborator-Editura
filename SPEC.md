@@ -12,7 +12,8 @@ Document order:
 4. `docs/ARCHITECTURE_CHAPTER_1.md` - general platform architecture.
 5. `docs/ARCHITECTURE_CHAPTER_2.md` - application architecture.
 6. `docs/ARCHITECTURE_CHAPTER_3.md` - module architecture.
-7. The remaining architecture and implementation specifications.
+7. `docs/ARCHITECTURE_CHAPTER_4.md` - conceptual domain model.
+8. The remaining architecture and implementation specifications.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -272,6 +273,31 @@ Before implementing a new module, Codex must:
 
 Any deviation from the module architecture requires an approved Architecture
 Decision Record before implementation.
+
+## Chapter 4 - Conceptual Domain Model
+
+The official conceptual domain model is documented in
+`docs/ARCHITECTURE_CHAPTER_4.md`.
+
+Chapter 4 defines the platform's conceptual data domains, main entities,
+ownership rules, relationships, identifiers, lifecycle rules, versioning,
+audit, files and digital assets, AI relationships, and domain dictionary.
+
+The supporting baseline audit documents are:
+
+1. `docs/domain/domain-model.md`.
+2. `docs/domain/domain-glossary.md`.
+3. `docs/domain/domain-relationships.md`.
+4. `docs/domain/domain-gap-analysis.md`.
+5. `docs/domain/domain-migration-plan.md`.
+
+Chapter 4 precedes logical data modeling and physical database design. It does
+not authorize database redesign, API changes, runtime persistence changes, or
+removal of existing Phase 7 Step 16 validated functionality.
+
+Before proposing schema changes, migrations, or new persistence structures,
+Codex must verify the conceptual owner of each entity and follow the migration
+sequence documented in `docs/domain/domain-migration-plan.md`.
 
 ## Architecture Freeze & Governance Requirements
 
