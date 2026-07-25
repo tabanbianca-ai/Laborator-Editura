@@ -336,6 +336,7 @@ conformity with the following documents, in this order:
 3. `SPEC.md`, Chapter 0 - Fundamental Platform Principles.
 4. `docs/ARCHITECTURE_CHAPTER_1.md`.
 5. `docs/ARCHITECTURE_CHAPTER_2.md`.
+6. `docs/ARCHITECTURE_CHAPTER_3.md`.
 
 If an implementation conflicts with these documents, the architecture documents
 always prevail. Any deviation requires explicit approval from the project
@@ -349,14 +350,17 @@ Chapter 2 - Application Architecture is documented in
 It defines frontend, backend, API, services, code organization, infrastructure,
 testing, deployment, and implementation architecture.
 
+Chapter 3 - Module Architecture is documented in
+`docs/ARCHITECTURE_CHAPTER_3.md`.
+
+It defines the mandatory structure and standards every module must follow.
+
 ## Recommended Next Architecture Documents
 
 Before implementing individual modules, the architecture suite should also
 define:
 
-1. Chapter 3 - Module Architecture: the standard template every module must
-   follow.
-2. Chapter 4 - Data Model: the main entities and relationships before detailed
+1. Chapter 4 - Data Model: the main entities and relationships before detailed
    database design.
 
 Together, Manifesto, Development Conventions, Chapter 0, Chapter 1, Chapter 2,
