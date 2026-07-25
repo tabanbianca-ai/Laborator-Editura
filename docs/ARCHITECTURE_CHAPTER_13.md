@@ -423,11 +423,14 @@ be documented and compatible with future horizontal scaling.
 
 ## Recommended Next Architecture Document
 
-After Chapter 13 is validated, the next recommended document is:
+Chapter 14 status:
 
-- Chapter 14 - Quality Architecture and Testing Strategy.
+- Chapter 14 - Quality Architecture and Testing Strategy has been documented.
 
-Chapter 14 should define standards for unit tests, integration tests, contract
-tests, end-to-end tests, performance tests, security tests, accessibility
-tests, release validation, and acceptance criteria for every module and every
-release.
+Chapter 15 status:
+
+- Chapter 15 - Operations, Maintenance, and Platform Evolution Architecture
+  has been documented in `docs/ARCHITECTURE_CHAPTER_15.md`.
+
+The high-level architecture series is complete with Chapters 0-15. The next
+recommended stage is Phase 2 - Detailed Module Specifications.
