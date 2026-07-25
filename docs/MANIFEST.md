@@ -187,6 +187,10 @@ This document is the first document in the architecture suite and precedes:
   Architecture.
 - `docs/ARCHITECTURE_CHAPTER_8.md` - Chapter 8, Workflow Engine and
   Editorial Process Architecture.
+- `docs/ARCHITECTURE_CHAPTER_9.md` - Chapter 9, Security, Identity, and
+  Governance Architecture.
+- `docs/ARCHITECTURE_CHAPTER_10.md` - Chapter 10, Integration and
+  Interoperability Architecture.
 
 This order gives Codex the strategic context first, then the mandatory
 construction rules, and then the technical design.
