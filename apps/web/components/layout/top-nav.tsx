@@ -28,7 +28,7 @@ export function TopNav({ currentPath, navigation, preferences }: TopNavProps) {
         <h1>{getCurrentNavigationLabel(currentPath, navigationItems, platformLanguage)}</h1>
       </div>
 
-      <div className="top-nav-meta" aria-label="Workspace status">
+      <div className="top-nav-meta" aria-label={ui.t("nav.workspaceStatus")}>
         <Link className="ui-button ui-button-primary ui-button-sm" href="/workspace">
           {ui.t("label.editorialWorkspace")}
         </Link>
@@ -41,9 +41,12 @@ export function TopNav({ currentPath, navigation, preferences }: TopNavProps) {
         <Button disabled size="sm" variant="ghost">
           {ui.t("label.workspace")}
         </Button>
-        <Button disabled size="sm" variant="ghost">
-          {ui.t("label.user")}
-        </Button>
+        <Link aria-label={ui.t("label.user")} className="ui-button ui-button-ghost ui-button-sm" href="/profile">
+          {ui.t("label.userProfile")}
+        </Link>
+        <Link className="ui-button ui-button-ghost ui-button-sm" href="/sessions">
+          {ui.t("label.userSessions")}
+        </Link>
         <Badge tone="neutral">{language}</Badge>
         <span>{PRODUCT_NAME}</span>
         <Badge tone="info">{ui.t("badge.closedBeta")}</Badge>
