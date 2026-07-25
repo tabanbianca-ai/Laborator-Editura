@@ -13,7 +13,8 @@ Document order:
 5. `docs/ARCHITECTURE_CHAPTER_2.md` - application architecture.
 6. `docs/ARCHITECTURE_CHAPTER_3.md` - module architecture.
 7. `docs/ARCHITECTURE_CHAPTER_4.md` - conceptual domain model.
-8. The remaining architecture and implementation specifications.
+8. `docs/ARCHITECTURE_CHAPTER_5.md` - logical data model.
+9. The remaining architecture and implementation specifications.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -298,6 +299,34 @@ removal of existing Phase 7 Step 16 validated functionality.
 Before proposing schema changes, migrations, or new persistence structures,
 Codex must verify the conceptual owner of each entity and follow the migration
 sequence documented in `docs/domain/domain-migration-plan.md`.
+
+## Chapter 5 - Logical Data Model
+
+The official logical data model is documented in
+`docs/ARCHITECTURE_CHAPTER_5.md`.
+
+Chapter 5 transforms the conceptual domain model into technology-independent
+logical aggregates, aggregate roots, logical entities, relationships,
+cardinalities, integrity rules, data ownership rules, versioning strategies,
+deletion strategies, and concurrency rules.
+
+The supporting logical baseline documents are:
+
+1. `docs/data/logical-data-model.md`.
+2. `docs/data/aggregate-map.md`.
+3. `docs/data/entity-relationships.md`.
+4. `docs/data/integrity-rules.md`.
+5. `docs/data/logical-gap-analysis.md`.
+6. `docs/data/logical-migration-plan.md`.
+
+Chapter 5 is authoritative for future physical database design, but it does
+not authorize database-specific schemas, migrations, indexes, runtime
+persistence changes, API changes, UI changes, Docker changes, or removal of
+existing Phase 7 Step 16 validated functionality.
+
+Before generating database-specific schema work, Codex must use Chapters 4 and
+5 together and proceed through Chapter 6 - Physical Data Model and Database
+Standards.
 
 ## Architecture Freeze & Governance Requirements
 
