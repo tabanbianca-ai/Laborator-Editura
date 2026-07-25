@@ -9,7 +9,8 @@ Document order:
 1. `docs/MANIFEST.md` - strategic vision and purpose.
 2. `docs/DEVELOPMENT_CONVENTIONS.md` - mandatory development conventions.
 3. `SPEC.md`, Chapter 0 - fundamental platform principles.
-4. The remaining architecture and implementation specifications.
+4. `docs/ARCHITECTURE_CHAPTER_1.md` - general platform architecture.
+5. The remaining architecture and implementation specifications.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -204,6 +205,27 @@ approved before implementation.
 
 This principle ensures coherent platform evolution and prevents ad hoc
 solutions that could harm long-term maintainability and scalability.
+
+## Chapter 1 - General Platform Architecture
+
+The official general platform architecture is documented in
+`docs/ARCHITECTURE_CHAPTER_1.md`.
+
+Chapter 1 defines the unified platform model, public website, application,
+central API, logical layers, shared components, general workflow, module
+communication rules, AI agent constraints, security model, localization model,
+data storage principles, observability requirements, and extensibility rules.
+
+Before implementing any module, service, or AI agent, Codex must verify
+conformity with:
+
+1. `docs/MANIFEST.md`.
+2. `docs/DEVELOPMENT_CONVENTIONS.md`.
+3. `SPEC.md`, Chapter 0 - Fundamental Platform Principles.
+4. `docs/ARCHITECTURE_CHAPTER_1.md`.
+
+Any deviation from the general platform architecture requires explicit project
+owner approval before implementation.
 
 ## Architecture Freeze & Governance Requirements
 
