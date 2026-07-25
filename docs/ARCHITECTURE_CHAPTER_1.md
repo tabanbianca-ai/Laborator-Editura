@@ -344,6 +344,7 @@ conformity with the following documents, in this order:
 11. `docs/ARCHITECTURE_CHAPTER_8.md`.
 12. `docs/ARCHITECTURE_CHAPTER_9.md`.
 13. `docs/ARCHITECTURE_CHAPTER_10.md`.
+14. `docs/ARCHITECTURE_CHAPTER_11.md`.
 
 If an implementation conflicts with these documents, the architecture documents
 always prevail. Any deviation requires explicit approval from the project
@@ -407,13 +408,24 @@ in `docs/ARCHITECTURE_CHAPTER_9.md`.
 Chapter 10 - Integration and Interoperability Architecture is now documented
 in `docs/ARCHITECTURE_CHAPTER_10.md`.
 
-After Chapter 10 is validated, the next recommended document is:
+Chapter 11 - Frontend and Design System Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_11.md`.
 
-1. Chapter 11 - Frontend and Design System Architecture: frontend structure,
-   responsive PWA behavior, reusable components, internationalization,
-   accessibility, and user experience patterns.
+Chapter 12 - Backend and Application Services Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_12.md`.
+
+Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture is
+now documented in `docs/ARCHITECTURE_CHAPTER_13.md`.
+
+After Chapter 13 is validated, the next recommended document is:
+
+1. Chapter 14 - Quality Architecture and Testing Strategy: unit tests,
+   integration tests, contract tests, end-to-end tests, performance tests,
+   security tests, accessibility tests, release validation, and acceptance
+   criteria.
 
 Together, Manifesto, Development Conventions, Chapter 0, Chapter 1, Chapter 2,
 Chapter 3, Chapter 4, Chapter 5, Chapter 6, Chapter 7, Chapter 8, Chapter 9,
-and Chapter 10 provide Codex with the coherent development framework required
-before Chapter 11 formalizes frontend and design system architecture.
+Chapter 10, Chapter 11, Chapter 12, and Chapter 13 provide Codex with the
+coherent technical foundation required before Chapter 14 formalizes quality
+architecture and testing strategy.
