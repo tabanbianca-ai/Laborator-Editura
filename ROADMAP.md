@@ -114,6 +114,31 @@ Roadmap impact:
   access, direct module access to filesystem storage, or direct AI provider
   calls from functional modules.
 
+## Official Module Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_3.md`.
+
+Roadmap impact:
+
+- Chapter 3 defines the mandatory module architecture and standard module
+  template.
+- New modules must follow the shared structure for controllers, services,
+  domain rules, repositories, DTOs, validators, events, permissions,
+  localization, tests, documentation, and index exports.
+- Module work must reuse existing services before adding new code.
+- Modules must integrate with shared authentication, authorization,
+  localization, audit, observability, versioning when editorial content is
+  managed, and central AI orchestration where AI is used.
+- Circular dependencies, duplicate authentication, duplicate permissions,
+  duplicate localization, duplicate audit, and direct database access outside
+  repositories are not acceptable.
+- Any roadmap item that requires deviating from Chapter 3 must include an
+  approved Architecture Decision Record before implementation.
+
 ## MVP Scope
 
 The MVP includes:
