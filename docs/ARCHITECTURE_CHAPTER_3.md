@@ -334,7 +334,7 @@ Architecture Decision Record before implementation.
 
 The next architecture document should be:
 
-- Chapter 6 - Physical Data Model and Database Standards.
+- Chapter 7 - Integrations and AI Agent Architecture.
 
 Chapter 4 - Conceptual Domain Model is now documented in
 `docs/ARCHITECTURE_CHAPTER_4.md`.
@@ -342,5 +342,9 @@ Chapter 4 - Conceptual Domain Model is now documented in
 Chapter 5 - Logical Data Model is now documented in
 `docs/ARCHITECTURE_CHAPTER_5.md`.
 
-Chapter 6 should transform the approved conceptual and logical models into
-database-specific standards without disrupting validated platform behavior.
+Chapter 6 - Physical Data Model and Database Standards is now documented in
+`docs/ARCHITECTURE_CHAPTER_6.md`.
+
+Chapter 7 should define AI orchestration, provider integration, module-agent
+contracts, prompt governance, cost controls, limits, logging, human approval,
+and traceability rules.
