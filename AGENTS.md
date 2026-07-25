@@ -224,6 +224,44 @@ Rules:
 - Physical database design belongs to Chapter 6 and must use Chapters 4 and 5
   as mandatory inputs.
 
+### Physical Database Model Directive
+
+Purpose:
+
+- Define the official Chapter 6 physical database implementation standards for
+  PostgreSQL, migrations, naming, keys, constraints, indexes, audit,
+  versioning, deletion strategies, security, and incremental evolution.
+
+Rules:
+
+- The canonical Chapter 6 physical database standard is documented in
+  `docs/ARCHITECTURE_CHAPTER_6.md`.
+- The required physical database baseline deliverables are:
+  - `docs/database/physical-data-model.md`.
+  - `docs/database/database-conventions.md`.
+  - `docs/database/index-strategy.md`.
+  - `docs/database/migration-strategy.md`.
+  - `docs/database/database-gap-analysis.md`.
+  - `docs/database/database-migration-plan.md`.
+- PostgreSQL is the primary relational database engine.
+- PostgreSQL-specific features must be documented and isolated when used.
+- New canonical physical table designs must use English, singular nouns, and
+  `snake_case`; existing validated plural table names must not be renamed
+  without an approved compatibility migration.
+- Every future physical table must define primary key, ownership, tenant scope
+  where applicable, deletion strategy, audit requirements, versioning
+  requirements, and index rationale.
+- All database evolution must occur through documented, versioned, tested
+  migrations.
+- Manual direct schema changes are not allowed in controlled environments.
+- Destructive schema changes, table renames, runtime-to-PostgreSQL conversion,
+  audit consolidation, or broad physical redesign require explicit approval.
+- Future migrations must preserve tenant isolation, RLS where applicable,
+  audit history, version history, backup/restore compatibility, and Phase 7
+  Step 16 validated publishing/preflight/distribution behavior.
+- Chapter 6 does not authorize immediate implementation by itself. It provides
+  the mandatory standards for future database work.
+
 ### Development Conventions Directive
 
 Purpose:
@@ -980,10 +1018,11 @@ Rules:
 6. `docs/ARCHITECTURE_CHAPTER_3.md`.
 7. `docs/ARCHITECTURE_CHAPTER_4.md`.
 8. `docs/ARCHITECTURE_CHAPTER_5.md`.
-9. `SPEC.md`.
-10. `AGENTS.md`.
-11. `ROADMAP.md`.
-12. Codex implementation.
-13. Lovable UI generation.
+9. `docs/ARCHITECTURE_CHAPTER_6.md`.
+10. `SPEC.md`.
+11. `AGENTS.md`.
+12. `ROADMAP.md`.
+13. Codex implementation.
+14. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
