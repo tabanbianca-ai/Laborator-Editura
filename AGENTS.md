@@ -848,6 +848,50 @@ Rules:
   budget warning, budget exceeded, AI blocked, subscription upgraded, and
   subscription downgraded.
 
+### Integrations and AI Agent Architecture Directive
+
+Purpose:
+
+- Define the mandatory provider-agnostic AI integration model, orchestration
+  boundary, provider adapter strategy, prompt governance, context management,
+  audit, observability, security, privacy, cost control, and resilience rules
+  for all current and future AI capabilities.
+
+Rules:
+
+- Chapter 7 - Integrations and AI Agent Architecture is the official authority
+  for AI and external provider integration.
+- No functional module may communicate directly with an external AI provider.
+- All AI calls must pass through the AI Orchestration Service.
+- Modules request platform capabilities, not provider-specific SDK methods or
+  model-specific APIs.
+- Provider-specific code is allowed only inside approved provider adapters.
+- Providers must be interchangeable through normalized request, response,
+  error, health, cost, and privacy contracts.
+- Production prompts must be centralized, versioned, auditable, and selected by
+  orchestration. Prompts must not be embedded directly in functional modules.
+- AI context must be assembled centrally and filtered by tenant isolation,
+  role permissions, subscription entitlements, Need-to-Know scope, privacy
+  classification, language policy, rights metadata, and provider policy.
+- Every AI execution must record user, organization, calling module,
+  capability, provider, model, prompt version, routing policy version,
+  duration, estimated cost, result reference, error state, approval state, and
+  audit metadata.
+- AI observability must track requests, latency, errors, retries, fallback,
+  circuit breaker state, queue depth, cost, and usage by module, provider,
+  capability, project, user, and organization.
+- Cost and quota checks must happen before external provider execution when
+  real provider adapters are enabled.
+- Sensitive data must not be sent to external providers without an explicit
+  approved policy.
+- AI may recommend, explain, draft, summarize, classify, and validate, but it
+  must not approve, publish, grant rights, bypass workflow, modify security, or
+  change governance.
+- Direct provider SDK integrations are not authorized until orchestration,
+  prompt governance, security filtering, cost enforcement, observability, and
+  audit boundaries are implemented.
+- Validated Phase 7 Step 16 behavior must be preserved.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
@@ -1019,10 +1063,11 @@ Rules:
 7. `docs/ARCHITECTURE_CHAPTER_4.md`.
 8. `docs/ARCHITECTURE_CHAPTER_5.md`.
 9. `docs/ARCHITECTURE_CHAPTER_6.md`.
-10. `SPEC.md`.
-11. `AGENTS.md`.
-12. `ROADMAP.md`.
-13. Codex implementation.
-14. Lovable UI generation.
+10. `docs/ARCHITECTURE_CHAPTER_7.md`.
+11. `SPEC.md`.
+12. `AGENTS.md`.
+13. `ROADMAP.md`.
+14. Codex implementation.
+15. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
