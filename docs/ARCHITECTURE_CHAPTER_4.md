@@ -349,13 +349,16 @@ design.
 Chapter 5 - Logical Data Model is now documented in
 `docs/ARCHITECTURE_CHAPTER_5.md`.
 
-After Chapter 5 is validated, the next recommended document is:
+Chapter 6 - Physical Data Model and Database Standards is now documented in
+`docs/ARCHITECTURE_CHAPTER_6.md`.
 
-- Chapter 6 - Physical Data Model and Database Standards.
+After Chapter 6 is validated, the next recommended document is:
 
-Chapter 6 should transform the conceptual and logical models into physical
-database standards, including table conventions, keys, indexes, migrations,
-retention, performance, and optimization.
+- Chapter 7 - Integrations and AI Agent Architecture.
 
-This step prepares database implementation in Codex without ambiguity and
-without contradicting the approved architecture.
+Chapter 7 should define AI orchestration, provider integration, module-agent
+contracts, prompt governance, cost controls, limits, logging, human approval,
+and traceability rules.
+
+This step completes the architecture foundation for advanced AI-assisted
+capabilities without contradicting the approved architecture.
