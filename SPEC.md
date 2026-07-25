@@ -16,7 +16,9 @@ Document order:
 8. `docs/ARCHITECTURE_CHAPTER_5.md` - logical data model.
 9. `docs/ARCHITECTURE_CHAPTER_6.md` - physical data model and database
    standards.
-10. The remaining architecture and implementation specifications.
+10. `docs/ARCHITECTURE_CHAPTER_7.md` - integrations and AI agent
+    architecture.
+11. The remaining architecture and implementation specifications.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -358,6 +360,39 @@ functionality.
 All future database evolution must occur through documented, versioned,
 tested migrations and must preserve tenant isolation, audit, backup/restore,
 and validated publication workflow behavior.
+
+## Chapter 7 - Integrations and AI Agent Architecture
+
+The official integrations and AI agent architecture is documented in
+`docs/ARCHITECTURE_CHAPTER_7.md`.
+
+Chapter 7 defines the mandatory provider-agnostic AI architecture, AI
+Orchestration Service, Capability Router, provider adapter model, prompt
+management, context management, human-in-the-loop rules, audit, versioning,
+security, privacy, observability, cost management, resilience, and module
+integration rules.
+
+The supporting AI architecture baseline documents are:
+
+1. `docs/ai/ai-architecture.md`.
+2. `docs/ai/provider-registry.md`.
+3. `docs/ai/capability-catalog.md`.
+4. `docs/ai/prompt-management.md`.
+5. `docs/ai/ai-security.md`.
+6. `docs/ai/ai-observability.md`.
+7. `docs/ai/ai-gap-analysis.md`.
+8. `docs/ai/ai-migration-plan.md`.
+
+Chapter 7 is authoritative for future AI provider integrations, AI agent
+runtime execution, provider routing, prompt governance, and AI observability.
+It does not authorize immediate provider SDK integration, API changes,
+database changes, UI changes, Docker changes, or removal of Phase 7 Step 16
+validated functionality.
+
+All future AI-enabled modules must call the AI Orchestration Service instead
+of calling external providers directly. AI providers must be interchangeable
+through provider adapters, and AI output remains subject to audit, versioning,
+security policy, cost limits, and Human Final Authority.
 
 ## Architecture Freeze & Governance Requirements
 
