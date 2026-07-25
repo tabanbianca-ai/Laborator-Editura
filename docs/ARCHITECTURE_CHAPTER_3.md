@@ -353,9 +353,19 @@ in `docs/ARCHITECTURE_CHAPTER_9.md`.
 Chapter 10 - Integration and Interoperability Architecture is now documented
 in `docs/ARCHITECTURE_CHAPTER_10.md`.
 
+Chapter 11 - Frontend and Design System Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_11.md`.
+
+Chapter 12 - Backend and Application Services Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_12.md`.
+
+Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture is
+now documented in `docs/ARCHITECTURE_CHAPTER_13.md`.
+
 The next architecture document should be:
 
-- Chapter 11 - Frontend and Design System Architecture.
+- Chapter 14 - Quality Architecture and Testing Strategy.
 
-Chapter 11 should define frontend structure, responsive PWA behavior, reusable
-components, internationalization, accessibility, and user experience patterns.
+Chapter 14 should define unit tests, integration tests, contract tests,
+end-to-end tests, performance tests, security tests, accessibility tests,
+release validation, and acceptance criteria.
