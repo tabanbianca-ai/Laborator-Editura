@@ -185,6 +185,8 @@ This document is the first document in the architecture suite and precedes:
   Database Standards.
 - `docs/ARCHITECTURE_CHAPTER_7.md` - Chapter 7, Integrations and AI Agent
   Architecture.
+- `docs/ARCHITECTURE_CHAPTER_8.md` - Chapter 8, Workflow Engine and
+  Editorial Process Architecture.
 
 This order gives Codex the strategic context first, then the mandatory
 construction rules, and then the technical design.
