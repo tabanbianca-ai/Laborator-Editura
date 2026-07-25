@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 const DEFAULT_API_BASE_URL = "http://localhost:3001";
-const SESSION_COOKIE_NAME = "laborator_session_token";
+export const SESSION_COOKIE_NAME = "laborator_session_token";
 
 export interface ApiResult<T> {
   data: T | null;
@@ -88,6 +88,39 @@ export async function apiPost<T, TBody extends object>(
   }
 }
 
+export async function apiPostPublic<T, TBody extends object>(
+  path: string,
+  body: TBody
+): Promise<ApiResult<T>> {
+  try {
+    const response = await fetch(toApiUrl(path), {
+      body: JSON.stringify(body),
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST"
+    });
+
+    if (!response.ok) {
+      return {
+        data: null,
+        error: `API request failed with status ${response.status}.`
+      };
+    }
+
+    return {
+      data: (await response.json()) as T,
+      error: null
+    };
+  } catch {
+    return {
+      data: null,
+      error: "API request could not be completed."
+    };
+  }
+}
+
 export async function apiDelete<T>(path: string): Promise<ApiResult<T>> {
   const token = await getSessionToken();
 
@@ -126,7 +159,7 @@ export async function apiDelete<T>(path: string): Promise<ApiResult<T>> {
   }
 }
 
-async function getSessionToken(): Promise<string | undefined> {
+export async function getSessionToken(): Promise<string | undefined> {
   const cookieStore = await cookies();
 
   return cookieStore.get(SESSION_COOKIE_NAME)?.value;
