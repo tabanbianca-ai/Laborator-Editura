@@ -346,12 +346,16 @@ design.
 
 ## Recommended Next Architecture Document
 
-After Chapter 4 is validated, the next recommended document is:
+Chapter 5 - Logical Data Model is now documented in
+`docs/ARCHITECTURE_CHAPTER_5.md`.
 
-- Chapter 5 - Logical Data Model.
+After Chapter 5 is validated, the next recommended document is:
 
-Chapter 5 should transform the conceptual model into a logical structure:
-aggregates, relationships, cardinalities, constraints, and integrity rules,
-without depending on a specific database management system.
+- Chapter 6 - Physical Data Model and Database Standards.
 
-This step prepares the physical database design and implementation in Codex.
+Chapter 6 should transform the conceptual and logical models into physical
+database standards, including table conventions, keys, indexes, migrations,
+retention, performance, and optimization.
+
+This step prepares database implementation in Codex without ambiguity and
+without contradicting the approved architecture.
