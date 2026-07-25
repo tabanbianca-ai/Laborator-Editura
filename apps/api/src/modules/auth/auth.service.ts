@@ -5,15 +5,28 @@ import {
   NotFoundException,
   UnauthorizedException
 } from "@nestjs/common";
-import { randomUUID } from "node:crypto";
+import { createHash, randomBytes, randomUUID, scryptSync, timingSafeEqual } from "node:crypto";
 import { isLoginSecretValid } from "../security/environment-security";
 import { DatabaseAuthRepository } from "./auth.repository";
+import { permissionsForRoles } from "./request-context.types";
 import {
   type AuthActor,
+  type AuthActiveSessionsResult,
   type AuthAuditAction,
   type AuthAuditEntityType,
   type AuthAuditEvent,
+  type AuthActivityEvent,
+  type AuthCredential,
+  type AuthEmailVerificationRequest,
+  type AuthOrganization,
+  type AuthProfileResult,
   type AuthSecurityEventType,
+  type AuthSession,
+  type AuthSessionRefreshResult,
+  type AuthSessionSummary,
+  type AuthSessionVerificationResult,
+  type AuthUser,
+  type ChangePasswordInput,
   type FounderOwnershipTransfer,
   type FounderOwnershipTransferResult,
   type FounderProtection,
@@ -21,7 +34,11 @@ import {
   type InitiateFounderOwnershipTransferInput,
   type LoginInput,
   type LoginResult,
-  type MvpRole
+  type MvpRole,
+  type RequestPasswordResetInput,
+  type SafeAuthMutationResult,
+  type UpdateProfileInput,
+  type VerifyEmailInput
 } from "./auth.types";
 
 const DEFAULT_ROLES: MvpRole[] = ["TRANSLATOR"];
@@ -33,6 +50,10 @@ const MAX_FAILED_LOGIN_ATTEMPTS = 5;
 const ACCOUNT_LOCKOUT_MS = 15 * 60 * 1000;
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
 const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
+const PASSWORD_RESET_TTL_MS = 60 * 60 * 1000;
+const EMAIL_VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;
+const PASSWORD_HASH_KEY_LENGTH = 64;
+const MIN_PASSWORD_LENGTH = 12;
 
 @Injectable()
 export class AuthService {
@@ -47,12 +68,26 @@ export class AuthService {
 
     await this.assertAccountNotLocked(email);
 
-    if (!this.isValidEmail(email) || !isLoginSecretValid(input.loginSecret)) {
+    if (!this.isValidEmail(email)) {
       await this.recordFailedLogin(email, "Invalid login credentials.");
       throw new UnauthorizedException("Invalid login credentials.");
     }
 
+    if (input.password) {
+      this.assertPasswordStrength(input.password);
+    }
+
     const now = new Date().toISOString();
+    const bootstrapSecretValid = isLoginSecretValid(input.loginSecret);
+    const existingUser = await this.repository.findUserByEmail(email);
+
+    if (existingUser) {
+      await this.assertUserCanAuthenticate(existingUser, input, bootstrapSecretValid);
+    } else if (!bootstrapSecretValid) {
+      await this.recordFailedLogin(email, "Invalid login credentials.");
+      throw new UnauthorizedException("Invalid login credentials.");
+    }
+
     let organization = await this.repository.firstOrganization();
     const organizationCreated = !organization;
 
@@ -66,7 +101,7 @@ export class AuthService {
       });
     }
 
-    let user = await this.repository.findUserByEmail(email);
+    let user = existingUser;
     const userCreated = !user;
 
     if (!user) {
@@ -74,9 +109,46 @@ export class AuthService {
         id: randomUUID(),
         email,
         displayName: input.displayName ?? email,
+        status: "ACTIVE",
         createdAt: now
       });
     }
+
+    const userBeforeLogin = user;
+    const normalizedUserStatus = user.status ?? "ACTIVE";
+    user = await this.repository.updateUser({
+      ...user,
+      status: normalizedUserStatus,
+      displayName: input.displayName ?? user.displayName,
+      lastLoginAt: now,
+      profile: {
+        displayName: input.displayName ?? user.displayName,
+        email: user.email,
+        status: normalizedUserStatus,
+        createdAt: user.createdAt,
+        lastLoginAt: now,
+        emailVerifiedAt: user.emailVerifiedAt
+      }
+    });
+
+    let createdCredential: AuthCredential | undefined;
+
+    if (input.password && !(await this.repository.findCredentialByUserId(user.id))) {
+      createdCredential = await this.createCredential(user.id, input.password);
+      await this.repository.upsertCredential(createdCredential);
+    }
+
+    const emailVerificationRequest = userCreated
+      ? await this.repository.createEmailVerificationRequest({
+          id: randomUUID(),
+          email: user.email,
+          userId: user.id,
+          organizationId: organization.id,
+          tokenHash: this.hashToken(randomUUID()),
+          createdAt: now,
+          expiresAt: new Date(Date.now() + EMAIL_VERIFICATION_TTL_MS).toISOString()
+        })
+      : undefined;
 
     let roles = await this.repository.assignRoles(
       organization.id,
@@ -134,6 +206,28 @@ export class AuthService {
       await this.audit("CREATE", actor, "AUTH_USER", user.id, undefined, user);
     }
 
+    if (createdCredential) {
+      await this.audit(
+        "CREATE",
+        actor,
+        "AUTH_CREDENTIAL",
+        createdCredential.id,
+        undefined,
+        this.safeCredentialState(createdCredential)
+      );
+    }
+
+    if (emailVerificationRequest) {
+      await this.audit(
+        "CREATE",
+        actor,
+        "AUTH_EMAIL_VERIFICATION",
+        emailVerificationRequest.id,
+        undefined,
+        this.safeEmailVerificationState(emailVerificationRequest)
+      );
+    }
+
     if (founderProtection) {
       await this.audit(
         "CREATE",
@@ -169,6 +263,14 @@ export class AuthService {
     }
 
     await this.audit("CREATE", actor, "AUTH_SESSION", session.id, undefined, session);
+    await this.audit("LOGIN", actor, "AUTH_USER", user.id, userBeforeLogin, user);
+    await this.auditActivity(actor, "LOGIN_SUCCEEDED", "User authenticated successfully.", {
+      sessionId: session.id
+    });
+    await this.auditSecurityEvent("LOGIN_SUCCEEDED", "User authenticated successfully.", {
+      organizationId: organization.id,
+      userId: user.id
+    });
 
     return result;
   }
@@ -213,6 +315,419 @@ export class AuthService {
       userId: session.userId,
       organizationId: session.organizationId,
       roles: session.roles
+    };
+  }
+
+  async verifySession(
+    actor: AuthActor,
+    token: string
+  ): Promise<AuthSessionVerificationResult> {
+    this.validateActor(actor);
+    const session = await this.loadSessionForActor(actor, token);
+    const user = await this.loadUser(actor.userId);
+    const organization = await this.loadOrganization(actor.organizationId);
+
+    return {
+      authenticated: true,
+      user,
+      organization,
+      session,
+      roles: actor.roles
+    };
+  }
+
+  async refreshSession(actor: AuthActor, token: string): Promise<AuthSessionRefreshResult> {
+    this.validateActor(actor);
+    const existing = await this.loadSessionForActor(actor, token);
+    const now = new Date().toISOString();
+    const refreshed = await this.repository.updateSession({
+      ...existing,
+      token: randomUUID(),
+      expiresAt: this.createSessionExpiration(now),
+      lastSeenAt: now
+    });
+    const refreshedActor: AuthActor = {
+      userId: refreshed.userId,
+      organizationId: refreshed.organizationId,
+      roles: refreshed.roles
+    };
+
+    await this.audit("REFRESH_SESSION", actor, "AUTH_SESSION", refreshed.id, existing, refreshed);
+    await this.auditActivity(actor, "SESSION_REFRESHED", "Session refreshed.", {
+      sessionId: refreshed.id
+    });
+    await this.auditSecurityEvent("SESSION_REFRESHED", "Session refreshed.", {
+      organizationId: actor.organizationId,
+      userId: actor.userId
+    });
+
+    return {
+      session: refreshed,
+      actor: refreshedActor
+    };
+  }
+
+  async logout(actor: AuthActor, token: string): Promise<SafeAuthMutationResult> {
+    this.validateActor(actor);
+    const existing = await this.loadSessionForActor(actor, token);
+    const revoked = await this.repository.updateSession({
+      ...existing,
+      revokedAt: new Date().toISOString()
+    });
+
+    await this.audit("LOGOUT", actor, "AUTH_SESSION", revoked.id, existing, revoked);
+    await this.auditActivity(actor, "LOGOUT", "User logged out.", {
+      sessionId: revoked.id
+    });
+    await this.auditSecurityEvent("LOGOUT", "User logged out.", {
+      organizationId: actor.organizationId,
+      userId: actor.userId
+    });
+
+    return {
+      accepted: true,
+      message: "Logout completed."
+    };
+  }
+
+  async listActiveSessions(
+    actor: AuthActor,
+    currentToken?: string
+  ): Promise<AuthActiveSessionsResult> {
+    this.validateActor(actor);
+    const sessions = await this.repository.listUserSessions(actor.organizationId, actor.userId);
+
+    return {
+      sessions: sessions.map((session) => this.toSessionSummary(session, currentToken))
+    };
+  }
+
+  async revokeSession(
+    actor: AuthActor,
+    sessionId: string
+  ): Promise<SafeAuthMutationResult> {
+    this.validateActor(actor);
+
+    if (!sessionId) {
+      throw new BadRequestException("sessionId is required.");
+    }
+
+    const existing = await this.repository.findSessionByIdForTenant(sessionId, actor.organizationId);
+
+    if (!existing) {
+      throw new NotFoundException("session not found.");
+    }
+
+    if (existing.userId !== actor.userId && !this.isPrivilegedHuman(actor)) {
+      throw new ForbiddenException("session revocation requires owner or admin access.");
+    }
+
+    const revoked = await this.repository.updateSession({
+      ...existing,
+      revokedAt: existing.revokedAt ?? new Date().toISOString()
+    });
+
+    await this.audit("REVOKE_SESSION", actor, "AUTH_SESSION", revoked.id, existing, revoked);
+    await this.auditActivity(actor, "SESSION_REVOKED", "Session revoked.", {
+      sessionId: revoked.id
+    });
+    await this.auditSecurityEvent("SESSION_REVOKED", "Session revoked.", {
+      organizationId: actor.organizationId,
+      userId: existing.userId
+    });
+
+    return {
+      accepted: true,
+      message: "Session revoked."
+    };
+  }
+
+  async getProfile(actor: AuthActor): Promise<AuthProfileResult> {
+    this.validateActor(actor);
+    const user = await this.loadUser(actor.userId);
+    const organization = await this.loadOrganization(actor.organizationId);
+    const activityLog = await this.repository.listUserActivityEvents(actor.organizationId, actor.userId);
+
+    return {
+      user,
+      organization,
+      roles: actor.roles,
+      permissions: permissionsForRoles(actor.roles),
+      activityLog: activityLog.sort((left, right) => right.createdAt.localeCompare(left.createdAt))
+    };
+  }
+
+  async updateProfile(
+    actor: AuthActor,
+    input: UpdateProfileInput
+  ): Promise<AuthProfileResult> {
+    this.validateActor(actor);
+    const existing = await this.loadUser(actor.userId);
+    const displayName = input.displayName?.trim();
+
+    if (!displayName) {
+      throw new BadRequestException("displayName is required.");
+    }
+
+    const updated = await this.repository.updateUser({
+      ...existing,
+      status: existing.status ?? "ACTIVE",
+      displayName,
+      profile: {
+        displayName,
+        email: existing.email,
+        status: existing.status ?? "ACTIVE",
+        createdAt: existing.createdAt,
+        lastLoginAt: existing.lastLoginAt,
+        emailVerifiedAt: existing.emailVerifiedAt
+      }
+    });
+
+    await this.audit("UPDATE_PROFILE", actor, "AUTH_USER_PROFILE", updated.id, existing, updated);
+    await this.auditActivity(actor, "UPDATE_PROFILE", "User profile updated.", {
+      userId: updated.id
+    });
+
+    return this.getProfile(actor);
+  }
+
+  async requestPasswordReset(input: RequestPasswordResetInput): Promise<SafeAuthMutationResult> {
+    const email = this.normalizeEmail(input.email);
+
+    if (!email || !this.isValidEmail(email)) {
+      return {
+        accepted: true,
+        message: "If the account exists, a reset process has been started."
+      };
+    }
+
+    if (input.token && input.newPassword) {
+      return this.completePasswordReset(email, input.token, input.newPassword);
+    }
+
+    const user = await this.repository.findUserByEmail(email);
+
+    if (user) {
+      const organizationIds = await this.repository.findOrganizationIdsForUser(user.id);
+      const organizationId = organizationIds[0];
+      const now = new Date().toISOString();
+      const request = await this.repository.createPasswordResetRequest({
+        id: randomUUID(),
+        email,
+        userId: user.id,
+        organizationId,
+        tokenHash: this.hashToken(randomUUID()),
+        createdAt: now,
+        expiresAt: new Date(Date.now() + PASSWORD_RESET_TTL_MS).toISOString()
+      });
+
+      await this.auditSecurityEvent("PASSWORD_RESET_REQUESTED", "Password reset requested.", {
+        email,
+        organizationId,
+        userId: user.id
+      });
+
+      if (organizationId) {
+        const actor = {
+          userId: user.id,
+          organizationId,
+          roles: ["GUEST"] as MvpRole[]
+        };
+        await this.audit(
+          "REQUEST_PASSWORD_RESET",
+          actor,
+          "AUTH_PASSWORD_RESET_REQUEST",
+          request.id,
+          undefined,
+          this.safePasswordResetState(request)
+        );
+        await this.auditActivity(actor, "PASSWORD_RESET_REQUESTED", "Password reset requested.", {
+          requestId: request.id
+        });
+      }
+    }
+
+    return {
+      accepted: true,
+      message: "If the account exists, a reset process has been started."
+    };
+  }
+
+  async changePassword(
+    actor: AuthActor,
+    input: ChangePasswordInput
+  ): Promise<SafeAuthMutationResult> {
+    this.validateActor(actor);
+    this.assertPasswordStrength(input.newPassword);
+
+    const existing = await this.repository.findCredentialByUserId(actor.userId);
+
+    if (existing && !this.verifyPassword(input.currentPassword ?? "", existing)) {
+      throw new UnauthorizedException("Current password is invalid.");
+    }
+
+    const credential = await this.createCredential(actor.userId, input.newPassword, existing?.id, existing?.createdAt);
+    await this.repository.upsertCredential(credential);
+    await this.audit(
+      existing ? "CHANGE_PASSWORD" : "CREATE",
+      actor,
+      "AUTH_CREDENTIAL",
+      credential.id,
+      existing ? this.safeCredentialState(existing) : undefined,
+      this.safeCredentialState(credential)
+    );
+    await this.auditActivity(actor, "PASSWORD_CHANGED", "Password changed.", {
+      credentialId: credential.id
+    });
+    await this.auditSecurityEvent("PASSWORD_CHANGED", "Password changed.", {
+      organizationId: actor.organizationId,
+      userId: actor.userId
+    });
+
+    return {
+      accepted: true,
+      message: "Password changed."
+    };
+  }
+
+  private async completePasswordReset(
+    email: string,
+    token: string,
+    newPassword: string
+  ): Promise<SafeAuthMutationResult> {
+    this.assertPasswordStrength(newPassword);
+    const request = await this.repository.findPasswordResetRequestByTokenHash(this.hashToken(token));
+
+    if (!request || request.email !== email || request.usedAt || this.isPast(request.expiresAt) || !request.userId) {
+      return {
+        accepted: true,
+        message: "If the account exists, a reset process has been started."
+      };
+    }
+
+    const user = await this.repository.findUserById(request.userId);
+
+    if (!user) {
+      return {
+        accepted: true,
+        message: "If the account exists, a reset process has been started."
+      };
+    }
+
+    const existing = await this.repository.findCredentialByUserId(user.id);
+    const credential = await this.createCredential(user.id, newPassword, existing?.id, existing?.createdAt);
+    const usedRequest = await this.repository.updatePasswordResetRequest({
+      ...request,
+      usedAt: new Date().toISOString()
+    });
+    await this.repository.upsertCredential(credential);
+
+    if (request.organizationId) {
+      const actor = {
+        userId: user.id,
+        organizationId: request.organizationId,
+        roles: ["GUEST"] as MvpRole[]
+      };
+      await this.audit(
+        "CHANGE_PASSWORD",
+        actor,
+        "AUTH_CREDENTIAL",
+        credential.id,
+        existing ? this.safeCredentialState(existing) : undefined,
+        this.safeCredentialState(credential)
+      );
+      await this.audit(
+        "UPDATE",
+        actor,
+        "AUTH_PASSWORD_RESET_REQUEST",
+        usedRequest.id,
+        this.safePasswordResetState(request),
+        this.safePasswordResetState(usedRequest)
+      );
+      await this.auditActivity(actor, "PASSWORD_CHANGED", "Password changed through reset.", {
+        requestId: usedRequest.id
+      });
+      await this.auditSecurityEvent("PASSWORD_CHANGED", "Password changed through reset.", {
+        organizationId: request.organizationId,
+        userId: user.id
+      });
+    }
+
+    return {
+      accepted: true,
+      message: "Password reset completed."
+    };
+  }
+
+  async verifyEmail(input: VerifyEmailInput): Promise<SafeAuthMutationResult> {
+    const email = this.normalizeEmail(input.email);
+    const tokenHash = this.hashToken(input.token ?? "");
+    const request = input.token
+      ? await this.repository.findEmailVerificationRequestByTokenHash(tokenHash)
+      : null;
+
+    if (!email || !this.isValidEmail(email) || !request || request.email !== email) {
+      return {
+        accepted: true,
+        message: "Email verification request processed."
+      };
+    }
+
+    if (request.verifiedAt || this.isPast(request.expiresAt)) {
+      return {
+        accepted: true,
+        message: "Email verification request processed."
+      };
+    }
+
+    const user = request.userId ? await this.repository.findUserById(request.userId) : null;
+    const verifiedAt = new Date().toISOString();
+    const updatedRequest: AuthEmailVerificationRequest = await this.repository.updateEmailVerificationRequest({
+      ...request,
+      verifiedAt
+    });
+
+    if (user) {
+      await this.repository.updateUser({
+        ...user,
+        emailVerifiedAt: verifiedAt,
+        profile: {
+          displayName: user.displayName,
+          email: user.email,
+          status: user.status,
+          createdAt: user.createdAt,
+          lastLoginAt: user.lastLoginAt,
+          emailVerifiedAt: verifiedAt
+        }
+      });
+    }
+
+    if (request.organizationId && request.userId) {
+      const actor = {
+        userId: request.userId,
+        organizationId: request.organizationId,
+        roles: ["GUEST"] as MvpRole[]
+      };
+      await this.audit(
+        "VERIFY_EMAIL",
+        actor,
+        "AUTH_EMAIL_VERIFICATION",
+        updatedRequest.id,
+        this.safeEmailVerificationState(request),
+        this.safeEmailVerificationState(updatedRequest)
+      );
+      await this.auditActivity(actor, "EMAIL_VERIFIED", "Email verified.", {
+        requestId: updatedRequest.id
+      });
+      await this.auditSecurityEvent("EMAIL_VERIFIED", "Email verified.", {
+        organizationId: request.organizationId,
+        userId: request.userId
+      });
+    }
+
+    return {
+      accepted: true,
+      message: "Email verification request processed."
     };
   }
 
@@ -455,6 +970,182 @@ export class AuthService {
     return this.cancelPendingTransfer(actor, protection, transfer, new Date().toISOString());
   }
 
+  private async assertUserCanAuthenticate(
+    user: AuthUser,
+    input: LoginInput,
+    bootstrapSecretValid: boolean
+  ): Promise<void> {
+    if (user.status === "INACTIVE") {
+      await this.recordFailedLogin(user.email, "Invalid login credentials.");
+      throw new UnauthorizedException("Invalid login credentials.");
+    }
+
+    const credential = await this.repository.findCredentialByUserId(user.id);
+
+    if (credential && this.verifyPassword(input.password ?? "", credential)) {
+      return;
+    }
+
+    if (bootstrapSecretValid) {
+      return;
+    }
+
+    await this.recordFailedLogin(user.email, "Invalid login credentials.");
+    throw new UnauthorizedException("Invalid login credentials.");
+  }
+
+  private async loadSessionForActor(actor: AuthActor, token: string): Promise<AuthSession> {
+    if (!token) {
+      throw new UnauthorizedException("session is not valid.");
+    }
+
+    const session = await this.repository.findSessionByToken(token);
+
+    if (!session || session.organizationId !== actor.organizationId || session.userId !== actor.userId) {
+      throw new UnauthorizedException("session is not valid.");
+    }
+
+    if (session.revokedAt || this.isSessionExpired(session)) {
+      throw new UnauthorizedException("session is not valid.");
+    }
+
+    return session;
+  }
+
+  private async loadUser(userId: string): Promise<AuthUser> {
+    const user = await this.repository.findUserById(userId);
+
+    if (!user) {
+      throw new NotFoundException("user not found.");
+    }
+
+    return user;
+  }
+
+  private async loadOrganization(organizationId: string): Promise<AuthOrganization> {
+    const organization = await this.repository.findOrganizationById(organizationId);
+
+    if (!organization) {
+      throw new NotFoundException("organization not found.");
+    }
+
+    return organization;
+  }
+
+  private async createCredential(
+    userId: string,
+    password: string,
+    existingId?: string,
+    existingCreatedAt?: string
+  ): Promise<AuthCredential> {
+    this.assertPasswordStrength(password);
+    const now = new Date().toISOString();
+    const passwordSalt = randomBytes(16).toString("hex");
+
+    return {
+      id: existingId ?? randomUUID(),
+      userId,
+      passwordHash: this.hashPassword(password, passwordSalt),
+      passwordSalt,
+      createdAt: existingCreatedAt ?? now,
+      updatedAt: now
+    };
+  }
+
+  private hashPassword(password: string, salt: string): string {
+    return scryptSync(password, salt, PASSWORD_HASH_KEY_LENGTH).toString("hex");
+  }
+
+  private verifyPassword(password: string, credential: AuthCredential): boolean {
+    if (!password) {
+      return false;
+    }
+
+    const expected = Buffer.from(credential.passwordHash, "hex");
+    const candidate = Buffer.from(this.hashPassword(password, credential.passwordSalt), "hex");
+
+    return expected.length === candidate.length && timingSafeEqual(expected, candidate);
+  }
+
+  private assertPasswordStrength(password: string): void {
+    if (password.trim().length < MIN_PASSWORD_LENGTH) {
+      throw new BadRequestException("password must contain at least 12 characters.");
+    }
+  }
+
+  private hashToken(token: string): string {
+    return createHash("sha256").update(token).digest("hex");
+  }
+
+  private safeCredentialState(credential: AuthCredential): object {
+    return {
+      id: credential.id,
+      userId: credential.userId,
+      passwordConfigured: true,
+      createdAt: credential.createdAt,
+      updatedAt: credential.updatedAt
+    };
+  }
+
+  private safePasswordResetState(request: {
+    id: string;
+    email: string;
+    userId?: string;
+    organizationId?: string;
+    createdAt: string;
+    expiresAt: string;
+    usedAt?: string;
+  }): object {
+    return {
+      id: request.id,
+      email: request.email,
+      userId: request.userId,
+      organizationId: request.organizationId,
+      createdAt: request.createdAt,
+      expiresAt: request.expiresAt,
+      usedAt: request.usedAt
+    };
+  }
+
+  private safeEmailVerificationState(request: AuthEmailVerificationRequest): object {
+    return {
+      id: request.id,
+      email: request.email,
+      userId: request.userId,
+      organizationId: request.organizationId,
+      createdAt: request.createdAt,
+      expiresAt: request.expiresAt,
+      verifiedAt: request.verifiedAt
+    };
+  }
+
+  private toSessionSummary(session: AuthSession, currentToken?: string): AuthSessionSummary {
+    return {
+      id: session.id,
+      organizationId: session.organizationId,
+      userId: session.userId,
+      roles: session.roles,
+      createdAt: session.createdAt,
+      expiresAt: session.expiresAt,
+      lastSeenAt: session.lastSeenAt,
+      revokedAt: session.revokedAt,
+      active: !session.revokedAt && !this.isSessionExpired(session),
+      current: currentToken ? session.token === currentToken : undefined
+    };
+  }
+
+  private isPrivilegedHuman(actor: AuthActor): boolean {
+    const roles = new Set(actor.roles);
+
+    return roles.has("PLATFORM_CREATOR") || roles.has("ADMIN") || roles.has("EDITOR");
+  }
+
+  private isPast(dateValue: string): boolean {
+    const time = Date.parse(dateValue);
+
+    return !Number.isFinite(time) || time <= Date.now();
+  }
+
   private async audit(
     action: AuthAuditAction,
     actor: AuthActor,
@@ -472,6 +1163,23 @@ export class AuthService {
       entityId,
       beforeState,
       afterState,
+      createdAt: new Date().toISOString()
+    });
+  }
+
+  private async auditActivity(
+    actor: AuthActor,
+    action: AuthActivityEvent["action"],
+    message: string,
+    metadata?: object
+  ): Promise<void> {
+    await this.repository.appendActivityEvent({
+      id: randomUUID(),
+      organizationId: actor.organizationId,
+      userId: actor.userId,
+      action,
+      message,
+      metadata,
       createdAt: new Date().toISOString()
     });
   }
