@@ -144,6 +144,31 @@ export const SUPPORTED_PLATFORM_LANGUAGES = [
     label: "British English",
     language: "en",
     locale: "en-GB"
+  },
+  {
+    label: "Spanish",
+    language: "es",
+    locale: "es-ES"
+  },
+  {
+    label: "French",
+    language: "fr",
+    locale: "fr-FR"
+  },
+  {
+    label: "Portuguese",
+    language: "pt",
+    locale: "pt-PT"
+  },
+  {
+    label: "Italian",
+    language: "it",
+    locale: "it-IT"
+  },
+  {
+    label: "German",
+    language: "de",
+    locale: "de-DE"
   }
 ] as const;
 
@@ -408,6 +433,11 @@ export function createUnifiedLanguageManagementModel(input: {
     translationCompleteness: input.translationCompleteness ?? {
       "en-US": 100,
       "en-GB": 100,
+      "es-ES": 100,
+      "fr-FR": 100,
+      "de-DE": 100,
+      "it-IT": 100,
+      "pt-PT": 100,
       "ro-RO": 100
     },
     project,
