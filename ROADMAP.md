@@ -1,5 +1,30 @@
 # Roadmap
 
+## Official Platform Manifesto
+
+Status: Active.
+
+Reference:
+
+- `docs/MANIFEST.md`.
+
+Roadmap impact:
+
+- The Manifesto is the strategic foundation for the platform.
+- All roadmap phases must preserve the platform as one unified editorial
+  ecosystem.
+- New work must support editorial quality, complete traceability, modularity,
+  extensibility, scalability, security by design, native internationalization,
+  accessibility, AI-assisted collaboration, component reuse, automation of
+  repetitive processes, and permanent human editorial control.
+- AI agents may assist, propose, and automate repetitive work, but they must not
+  replace authorized human editorial responsibility.
+- Roadmap expansion must not introduce independent applications that duplicate
+  existing platform functionality.
+- If future implementation choices are ambiguous, the Manifesto provides the
+  strategic context before the development conventions, `SPEC.md`, and
+  implementation plans.
+
 ## Current Priority
 
 The architecture is frozen for MVP implementation. Build only the core
