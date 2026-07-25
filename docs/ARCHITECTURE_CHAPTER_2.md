@@ -438,12 +438,14 @@ now documented in `docs/ARCHITECTURE_CHAPTER_13.md` and provides the official
 CI/CD, infrastructure, deployment, environment, secret management, backup,
 disaster recovery, operational observability, release, and rollback standard.
 
-After Chapter 13 is validated, the next recommended document is:
+Chapter 14 - Quality Architecture and Testing Strategy is now documented in
+`docs/ARCHITECTURE_CHAPTER_14.md`.
 
-1. Chapter 14 - Quality Architecture and Testing Strategy: unit tests,
-   integration tests, contract tests, end-to-end tests, performance tests,
-   security tests, accessibility tests, release validation, and acceptance
-   criteria.
+Chapter 15 - Operations, Maintenance, and Platform Evolution Architecture is
+now documented in `docs/ARCHITECTURE_CHAPTER_15.md`.
+
+The high-level architecture series is complete with Chapters 0-15. The next
+recommended stage is Phase 2 - Detailed Module Specifications.
 
 Chapter 7 - Integrations and AI Agent Architecture is now documented in
 `docs/ARCHITECTURE_CHAPTER_7.md` and provides the official AI orchestration
