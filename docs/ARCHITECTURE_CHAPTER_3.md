@@ -332,10 +332,6 @@ Architecture Decision Record before implementation.
 
 ## Recommended Next Architecture Document
 
-The next architecture document should be:
-
-- Chapter 7 - Integrations and AI Agent Architecture.
-
 Chapter 4 - Conceptual Domain Model is now documented in
 `docs/ARCHITECTURE_CHAPTER_4.md`.
 
@@ -345,6 +341,13 @@ Chapter 5 - Logical Data Model is now documented in
 Chapter 6 - Physical Data Model and Database Standards is now documented in
 `docs/ARCHITECTURE_CHAPTER_6.md`.
 
-Chapter 7 should define AI orchestration, provider integration, module-agent
-contracts, prompt governance, cost controls, limits, logging, human approval,
-and traceability rules.
+Chapter 7 - Integrations and AI Agent Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_7.md`.
+
+The next architecture document should be:
+
+- Chapter 8 - Editorial Workflow and Process Engine Architecture.
+
+Chapter 8 should define production workflow states, transitions, approvals,
+task orchestration, process events, module integration, and human approval
+gates.
