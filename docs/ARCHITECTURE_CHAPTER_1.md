@@ -342,6 +342,8 @@ conformity with the following documents, in this order:
 9. `docs/ARCHITECTURE_CHAPTER_6.md`.
 10. `docs/ARCHITECTURE_CHAPTER_7.md`.
 11. `docs/ARCHITECTURE_CHAPTER_8.md`.
+12. `docs/ARCHITECTURE_CHAPTER_9.md`.
+13. `docs/ARCHITECTURE_CHAPTER_10.md`.
 
 If an implementation conflicts with these documents, the architecture documents
 always prevail. Any deviation requires explicit approval from the project
@@ -399,14 +401,19 @@ process migration rules.
 
 ## Recommended Next Architecture Documents
 
-Before implementing individual modules, the architecture suite should also
-define:
+Chapter 9 - Security, Identity, and Governance Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_9.md`.
 
-1. Chapter 9 - Security, Identity, and Governance Architecture: authentication,
-   authorization, identity management, security policies, audit, compliance,
-   and platform governance.
+Chapter 10 - Integration and Interoperability Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_10.md`.
+
+After Chapter 10 is validated, the next recommended document is:
+
+1. Chapter 11 - Frontend and Design System Architecture: frontend structure,
+   responsive PWA behavior, reusable components, internationalization,
+   accessibility, and user experience patterns.
 
 Together, Manifesto, Development Conventions, Chapter 0, Chapter 1, Chapter 2,
-Chapter 3, Chapter 4, Chapter 5, Chapter 6, Chapter 7, and Chapter 8 provide
-Codex with the coherent development framework required before Chapter 9
-formalizes security, identity, and governance.
+Chapter 3, Chapter 4, Chapter 5, Chapter 6, Chapter 7, Chapter 8, Chapter 9,
+and Chapter 10 provide Codex with the coherent development framework required
+before Chapter 11 formalizes frontend and design system architecture.
