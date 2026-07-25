@@ -24,7 +24,13 @@ Document order:
     architecture.
 13. `docs/ARCHITECTURE_CHAPTER_10.md` - integration and interoperability
     architecture.
-14. The remaining architecture and implementation specifications.
+14. `docs/ARCHITECTURE_CHAPTER_11.md` - frontend and design system
+    architecture.
+15. `docs/ARCHITECTURE_CHAPTER_12.md` - backend and application services
+    architecture.
+16. `docs/ARCHITECTURE_CHAPTER_13.md` - DevOps, infrastructure, deployment,
+    and recovery architecture.
+17. The remaining architecture and implementation specifications.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -501,6 +507,123 @@ All external systems must be accessed through dedicated adapters and the
 Integration Layer. Business modules must not depend directly on external
 providers, provider SDKs, provider-specific payloads, provider-specific errors,
 or provider secrets.
+
+## Chapter 11 - Frontend and Design System Architecture
+
+The official Frontend and Design System architecture is documented in
+`docs/ARCHITECTURE_CHAPTER_11.md`.
+
+Chapter 11 defines the mandatory frontend architecture for Application Shell,
+routing, layouts, pages, feature components, shared components, Design System,
+navigation, internationalization, accessibility, responsive behavior, PWA
+readiness, state management, backend communication, error handling, visual
+themes, performance, and frontend observability.
+
+The supporting frontend baseline documents are:
+
+1. `docs/frontend/frontend-architecture.md`.
+2. `docs/frontend/design-system.md`.
+3. `docs/frontend/component-catalog.md`.
+4. `docs/frontend/layouts.md`.
+5. `docs/frontend/accessibility.md`.
+6. `docs/frontend/i18n.md`.
+7. `docs/frontend/frontend-gap-analysis.md`.
+8. `docs/frontend/frontend-migration-plan.md`.
+
+Chapter 11 is authoritative for future frontend structure, design system
+components, visual consistency, i18n, accessibility, responsive behavior, PWA
+architecture, frontend state, frontend API clients, frontend errors,
+frontend themes, frontend performance, and frontend observability work. It
+does not authorize immediate UI rewrites, API changes, database changes,
+backend changes, Docker changes, or removal of Phase 7 Step 16 validated
+functionality.
+
+All user interfaces must be built on the shared Design System. User-visible
+text must use i18n resources. Backend communication must use reusable
+frontend API clients rather than scattered HTTP calls inside visual
+components.
+
+## Chapter 12 - Backend and Application Services Architecture
+
+The official Backend and Application Services architecture is documented in
+`docs/ARCHITECTURE_CHAPTER_12.md`.
+
+Chapter 12 defines the mandatory backend architecture for the modular
+monolith, delivery layer, application services, domain layer, infrastructure
+adapters, public module contracts, use cases, commands, queries, validation,
+transactions, repositories, persistence, versioned APIs, DTOs, errors,
+idempotency, domain events, integration events, messaging, background jobs,
+cache, storage, AI orchestration, authentication, authorization,
+multi-tenancy, audit, logging, metrics, health checks, configuration, feature
+flags, limits, testing, compatibility, performance, security, and code
+conventions.
+
+The supporting backend baseline documents are:
+
+1. `docs/backend/backend-architecture.md`.
+2. `docs/backend/application-services.md`.
+3. `docs/backend/domain-layer.md`.
+4. `docs/backend/module-contracts.md`.
+5. `docs/backend/api-standards.md`.
+6. `docs/backend/error-model.md`.
+7. `docs/backend/eventing-and-messaging.md`.
+8. `docs/backend/background-jobs.md`.
+9. `docs/backend/cache-strategy.md`.
+10. `docs/backend/transaction-strategy.md`.
+11. `docs/backend/backend-security.md`.
+12. `docs/backend/backend-observability.md`.
+13. `docs/backend/backend-gap-analysis.md`.
+14. `docs/backend/backend-dependency-map.md`.
+15. `docs/backend/backend-migration-plan.md`.
+
+Chapter 12 is authoritative for future backend structure, application service
+organization, domain separation, module contracts, API standards, error
+classification, transaction strategy, eventing, messaging, background jobs,
+cache, backend security, backend observability, and incremental backend
+migration work. It does not authorize immediate runtime refactoring, API
+breaking changes, database changes, frontend changes, Docker changes, or
+removal of Phase 7 Step 16 validated functionality.
+
+Before any structural backend refactoring, Codex must complete and respect the
+Backend Architecture Baseline Audit, dependency map, gap analysis, risk
+classification, and incremental migration plan.
+
+## Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture
+
+The official DevOps, Infrastructure, Deployment, and Recovery architecture is
+documented in `docs/ARCHITECTURE_CHAPTER_13.md`.
+
+Chapter 13 defines the mandatory architecture for Infrastructure as Code,
+immutable deployments, GitOps readiness, CI/CD, automated validation,
+artifacts, containerization, environment management, configuration, secret
+management, deployment, migrations, backup, disaster recovery, operational
+observability, logging, monitoring, scalability, performance, operational
+security, release versioning, and rollback.
+
+The supporting DevOps baseline documents are:
+
+1. `docs/devops/devops-architecture.md`.
+2. `docs/devops/ci-cd.md`.
+3. `docs/devops/deployment-strategy.md`.
+4. `docs/devops/environment-management.md`.
+5. `docs/devops/containerization.md`.
+6. `docs/devops/backup-and-recovery.md`.
+7. `docs/devops/disaster-recovery.md`.
+8. `docs/devops/observability.md`.
+9. `docs/devops/release-management.md`.
+10. `docs/devops/devops-gap-analysis.md`.
+11. `docs/devops/devops-migration-plan.md`.
+
+Chapter 13 is authoritative for future CI/CD, infrastructure, container,
+environment, secret, deployment, backup, disaster recovery, release,
+operational security, and operational observability work. It does not
+authorize application code changes, API changes, database schema changes, UI
+changes, Docker rewrites, or removal of Phase 7 Step 16 validated
+functionality.
+
+Before structural infrastructure changes, Codex must complete and respect the
+DevOps and Infrastructure Baseline Audit, current infrastructure inventory,
+dependency map, gap analysis, risk assessment, and incremental migration plan.
 
 ## Architecture Freeze & Governance Requirements
 
