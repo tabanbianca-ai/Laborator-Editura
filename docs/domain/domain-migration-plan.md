@@ -178,4 +178,8 @@ Do not implement database changes yet.
 Chapter 5 - Logical Data Model and Chapter 6 - Physical Data Model and
 Database Standards are now documented.
 
-Proceed next with Chapter 7 - Integrations and AI Agent Architecture.
+Chapter 7 - Integrations and AI Agent Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_7.md`.
+
+Proceed next with Chapter 8 - Editorial Workflow and Process Engine
+Architecture.
