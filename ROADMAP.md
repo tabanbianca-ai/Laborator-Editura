@@ -267,8 +267,48 @@ Roadmap impact:
   audit boundaries are implemented.
 - Phase 7 Step 16 publishing, preflight, distribution, Library, Rights,
   Workflow, Export, Quality, Backup, and audit behavior must be preserved.
-- The next recommended architecture document is Chapter 8 - Editorial Workflow
-  and Process Engine Architecture.
+- Chapter 8 - Workflow Engine and Editorial Process Architecture is now
+  documented as the next architecture authority for process coordination.
+
+## Official Workflow Engine and Editorial Process Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_8.md`.
+- `docs/workflow/workflow-architecture.md`.
+- `docs/workflow/workflow-definitions.md`.
+- `docs/workflow/workflow-events.md`.
+- `docs/workflow/workflow-permissions.md`.
+- `docs/workflow/workflow-gap-analysis.md`.
+- `docs/workflow/workflow-migration-plan.md`.
+
+Roadmap impact:
+
+- Workflow Engine is the official coordination layer for editorial and
+  administrative processes.
+- Workflow Engine coordinates stages, transitions, tasks, assignments,
+  approvals, notifications, deadlines, escalations, automations, events, and
+  history.
+- Domain modules keep domain validation rules. Generic workflow behavior must
+  be consolidated into Workflow Engine over time.
+- Workflow definitions must be versioned, and workflow instances must remain
+  bound to the workflow version with which they were created.
+- Work Table is the user-facing execution surface for workflow tasks, not a
+  separate workflow engine.
+- Workflow Engine must use Scheduling and Agenda for deadlines, meetings,
+  notifications, and recurrences instead of implementing a separate calendar.
+- AI-triggered workflow actions must use AI Orchestration from Chapter 7.
+- Every workflow action must be authorized through central RBAC and
+  Need-to-Know access and must be audited and observable.
+- The current baseline has Workflow v1 status transitions, export gates,
+  QA/Semantic/Terminology blocking checks, audit, Scheduling metadata, and
+  multiple module-local approval flows.
+- Future migration must consolidate dispersed workflow logic incrementally and
+  preserve validated Phase 7 Step 16 behavior.
+- The next recommended architecture document is Chapter 9 - Security,
+  Identity, and Governance Architecture.
 
 ## MVP Scope
 
