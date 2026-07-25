@@ -218,6 +218,10 @@ Detailed module specifications now begin with:
   Translation Module Architecture.
 - `docs/modules/editorial-review/editorial-review-overview.md` - Phase II
   Module 3, Proofreading and Editorial Review Module Architecture.
+- `docs/modules/publishing/publishing-overview.md` - Phase II Module 4,
+  Publishing Module Architecture.
+- `docs/modules/rights/rights-overview.md` - Phase II Module 5, Rights and
+  Provenance Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -232,3 +236,14 @@ Proofreading and Editorial Review is the quality gate after Translation. It
 validates linguistic, stylistic, terminological, doctrinal, and editorial
 quality, keeps corrections non-destructive until human acceptance, and ensures
 that review decisions are auditable before Publishing.
+
+Publishing is the official release mechanism after editorial approval. It
+creates immutable, versioned editions from approved Library content, generates
+multi-format outputs through controlled artifacts, validates readiness, and
+tracks distribution without duplicating Library metadata or rights authority.
+
+Rights and Provenance is the legal and historical integrity layer of the
+platform. It preserves verified provenance, rights, licenses, contracts,
+restrictions, and legal history so that no editorial resource can be
+published, distributed, translated, adapted, or reused without explicit,
+auditable authority.
