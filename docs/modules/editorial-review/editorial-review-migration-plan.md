@@ -134,6 +134,8 @@ Deliverables:
 
 ## Next Recommended Module
 
-After Proofreading and Editorial Review specification and baseline audit are
-accepted, the next module specification should be Module 4 - Publishing Module
-Architecture.
+Module 4 - Publishing Module Architecture is now documented as the next Phase
+II specification after Proofreading and Editorial Review.
+
+The next recommended module specification after Publishing is Module 5 -
+Rights and Provenance Module Architecture.
