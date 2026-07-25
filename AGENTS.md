@@ -1024,6 +1024,136 @@ Rules:
   dependency map, and incremental migration plan before implementation.
 - Validated Phase 7 Step 16 behavior must be preserved.
 
+### Frontend and Design System Architecture Directive
+
+Purpose:
+
+- Define the mandatory frontend, Application Shell, routing, layout, component,
+  Design System, i18n, accessibility, responsive, PWA, state management,
+  backend communication, error handling, theme, performance, and frontend
+  observability architecture for the entire platform.
+
+Rules:
+
+- Chapter 11 - Frontend and Design System Architecture is the official
+  authority for frontend architecture and Design System work.
+- The approved frontend layers are Application Shell, Routing Layer, Layouts,
+  Pages, Feature Components, Shared Components, and Design System.
+- All visual components must belong to the Design System or derive from it.
+- Isolated or inconsistent visual components are not allowed.
+- User-visible text, including labels, messages, helper text, loading states,
+  empty states, error states, and ARIA labels, must use i18n resources.
+- Initial UI languages are Romanian, English, Spanish, French, Portuguese,
+  Italian, and German.
+- Changing Platform Language must not change Original Language, Authoring
+  Language, or Target Language.
+- Frontend must target WCAG 2.2 AA.
+- Frontend must support desktop, laptop, tablet, and mobile form factors.
+- PWA behavior must preserve security, data classification, tenant isolation,
+  and offline safety.
+- Backend communication must use centralized reusable API clients. Scattered
+  HTTP calls inside visual components are not allowed.
+- Frontend state must distinguish UI State, Session State, Domain State,
+  Server State, and Cache State.
+- Themes must be implemented through Design System tokens.
+- Frontend observability must respect privacy, data classification, and
+  Need-to-Know constraints.
+- Structural frontend changes require a baseline audit, gap analysis,
+  component inventory, dependency map, and incremental migration plan before
+  implementation.
+- Validated Phase 7 Step 16 behavior must be preserved.
+
+### Backend and Application Services Architecture Directive
+
+Purpose:
+
+- Define the mandatory backend, application service, domain, contract, API,
+  validation, transaction, eventing, messaging, background job, cache,
+  security, observability, and code organization architecture for the entire
+  platform.
+
+Rules:
+
+- Chapter 12 - Backend and Application Services Architecture is the official
+  authority for backend structure and application services.
+- The backend remains a modular monolith until an explicit future extraction
+  phase is approved.
+- Backend dependencies must move toward Delivery/API, Application, Domain,
+  Ports, Infrastructure Adapters, and Database/External Services.
+- Controllers must not contain business logic.
+- State-changing business operations must be represented as explicit use
+  cases or command operations.
+- Read operations must be represented as explicit query operations where
+  practical.
+- Domain rules must remain independent from NestJS, persistence, provider
+  SDKs, filesystem access, and external services.
+- Module communication must occur through documented public contracts,
+  commands, queries, events, ports, or read models.
+- Internal domain entities must not become external API contracts.
+- Stable APIs must converge toward versioned contracts and operation-specific
+  DTOs.
+- Authorization must be enforced inside application services and use cases,
+  not only controllers or frontend visibility.
+- Every operation must preserve organization, workspace, role, subscription,
+  Need-to-Know, resource-state, and policy context where applicable.
+- Critical state changes must define transaction boundaries and must use
+  idempotency and Outbox patterns when external side effects require reliable
+  publication.
+- Long-running operations must move toward recoverable background jobs with
+  progress, retries, cancellation, and restart recovery.
+- Cache must never be the source of truth and must define key scope, TTL,
+  invalidation, and tenant safety.
+- External providers and AI providers must be accessed only through Chapter 10
+  adapters and AI Orchestration ports.
+- Audit and observability remain separate concerns but must be correlatable.
+- Structural backend changes require repository inspection, backend inventory,
+  dependency mapping, gap analysis, risk classification, and incremental
+  migration planning before implementation.
+- Validated Phase 7 Step 16 behavior must be preserved.
+
+### DevOps, Infrastructure, Deployment, and Recovery Architecture Directive
+
+Purpose:
+
+- Define the mandatory infrastructure, DevOps, CI/CD, deployment,
+  environment, configuration, secret management, backup, disaster recovery,
+  operational observability, release, rollback, and operations architecture
+  for the entire platform.
+
+Rules:
+
+- Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture
+  is the official authority for operational architecture.
+- Infrastructure must be managed as code where practical.
+- Deployments must be reproducible, validated, and rollback-capable.
+- No version may reach production without passing the official pipeline.
+- `main` must contain stable versions only in controlled environments.
+- Integration must occur through Pull Requests and automated validation.
+- CI must validate code, tests, builds, migrations/runtime data where
+  applicable, documentation, infrastructure syntax, Docker Compose
+  configuration, and secrets scanning.
+- CD must deploy through controlled environments with staging validation and
+  explicit human approval before production.
+- Artifacts must be immutable, versioned, and traceable to Git commits.
+- Environment differences must be handled through external configuration and
+  secrets, not environment-specific application code.
+- Secrets must not be committed, logged, embedded in images, exposed in client
+  bundles, or exported through project data.
+- Backups must be encrypted where applicable, periodically tested, monitored,
+  and restore-validated.
+- Disaster recovery must define RPO, RTO, restore procedures, validation,
+  responsibilities, and communication.
+- Operational observability must cover uptime, resources, latency, errors,
+  queues, database, cache, AI, Workflow, integrations, backups, and deployment
+  health.
+- Deployment architecture must prepare for rollback, blue/green deployment,
+  rolling updates, and post-deployment checks.
+- Structural infrastructure changes require current infrastructure inventory,
+  pipeline review, container inventory, secret review, backup/DR review,
+  observability review, gap analysis, risk assessment, and migration planning
+  before implementation.
+- Validated Phase 7 Step 16 behavior must be preserved.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
@@ -1199,10 +1329,13 @@ Rules:
 11. `docs/ARCHITECTURE_CHAPTER_8.md`.
 12. `docs/ARCHITECTURE_CHAPTER_9.md`.
 13. `docs/ARCHITECTURE_CHAPTER_10.md`.
-14. `SPEC.md`.
-15. `AGENTS.md`.
-16. `ROADMAP.md`.
-17. Codex implementation.
-18. Lovable UI generation.
+14. `docs/ARCHITECTURE_CHAPTER_11.md`.
+15. `docs/ARCHITECTURE_CHAPTER_12.md`.
+16. `docs/ARCHITECTURE_CHAPTER_13.md`.
+17. `SPEC.md`.
+18. `AGENTS.md`.
+19. `ROADMAP.md`.
+20. Codex implementation.
+21. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
