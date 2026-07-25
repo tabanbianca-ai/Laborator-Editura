@@ -54,6 +54,19 @@ textarea {
   min-height: 100vh;
 }
 
+.auth-shell {
+  align-items: center;
+  display: grid;
+  min-height: 100vh;
+  padding: 32px;
+}
+
+.auth-shell .page-stack {
+  margin: 0 auto;
+  max-width: 720px;
+  width: 100%;
+}
+
 .sidebar-nav {
   background: #17211f;
   border-right: 1px solid #2b3a37;
