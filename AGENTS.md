@@ -65,6 +65,49 @@ Rules:
 - Any deviation from the general platform architecture requires explicit
   project owner approval.
 
+### Application Architecture Directive
+
+Purpose:
+
+- Define the official Chapter 2 application architecture for organizing code,
+  services, components, API access, infrastructure, tests, and deployment.
+
+Rules:
+
+- The canonical Chapter 2 application architecture is documented in
+  `docs/ARCHITECTURE_CHAPTER_2.md`.
+- The platform uses a modular monorepository. Current workspace names may map
+  architecture responsibilities to approved existing packages and
+  applications; this directive does not authorize disruptive renaming or
+  duplicate parallel structures.
+- Frontend work must use reusable components, separated pages, layouts,
+  forms, dialogs, hooks, services, translations, and iconography.
+- Backend work must remain module-based. Business logic must not be placed in
+  controllers.
+- The API is the only official access path to platform data. Frontend code
+  must not access the database directly.
+- Permissions must be verified server-side. UI hiding is not authorization.
+- Configuration must remain external to code. Secrets, API keys, passwords,
+  environment-specific URLs, and sensitive values must not be hardcoded or
+  logged.
+- Functional modules must use approved storage abstractions for files instead
+  of direct filesystem access.
+- Modules must use the shared AI integration layer and must not call AI
+  providers directly.
+- Long-running work such as PDF generation, EPUB conversion, media processing,
+  AI analysis, backup, and indexing must run through background processing
+  services instead of HTTP request handlers.
+- Observability and audit are separate concerns. Observability explains system
+  behavior; audit proves who acted on which resource and when.
+- New code must include appropriate tests based on risk, module boundaries,
+  and user-facing impact.
+- Before implementing any new capability, Codex must verify that it follows
+  Chapter 2, reuses existing components and services, avoids circular
+  dependencies, avoids duplicate functionality, and remains testable,
+  extensible, and documented.
+- Any deviation from the application architecture requires explicit project
+  owner approval.
+
 ### Development Conventions Directive
 
 Purpose:
@@ -817,10 +860,11 @@ Rules:
 2. `docs/DEVELOPMENT_CONVENTIONS.md`.
 3. `SPEC.md`, Chapter 0 - Fundamental Platform Principles.
 4. `docs/ARCHITECTURE_CHAPTER_1.md`.
-5. `SPEC.md`.
-6. `AGENTS.md`.
-7. `ROADMAP.md`.
-8. Codex implementation.
-9. Lovable UI generation.
+5. `docs/ARCHITECTURE_CHAPTER_2.md`.
+6. `SPEC.md`.
+7. `AGENTS.md`.
+8. `ROADMAP.md`.
+9. Codex implementation.
+10. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
