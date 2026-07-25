@@ -62,6 +62,30 @@ Roadmap impact:
 - If future implementation choices are ambiguous, the official development
   conventions take precedence.
 
+## Official General Platform Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_1.md`.
+
+Roadmap impact:
+
+- Chapter 1 defines the unified platform architecture for the public website,
+  application, and central API.
+- Future roadmap phases must reuse shared authentication, permissions,
+  database, digital library, AI infrastructure, audit, localization,
+  configuration, versioning, and backup components.
+- New modules must communicate through services, APIs, events, messages, or
+  well-defined contracts.
+- Circular dependencies and duplicated shared components are not acceptable.
+- AI agents must follow the same authentication, permissions, audit, logging,
+  and localization rules as the rest of the platform.
+- Before any module, service, or AI agent implementation, Codex must verify
+  conformity with the Manifesto, Development Conventions, Chapter 0, and
+  Chapter 1.
+
 ## MVP Scope
 
 The MVP includes:
