@@ -20,7 +20,11 @@ Document order:
     architecture.
 11. `docs/ARCHITECTURE_CHAPTER_8.md` - Workflow Engine and editorial process
     architecture.
-12. The remaining architecture and implementation specifications.
+12. `docs/ARCHITECTURE_CHAPTER_9.md` - security, identity, and governance
+    architecture.
+13. `docs/ARCHITECTURE_CHAPTER_10.md` - integration and interoperability
+    architecture.
+14. The remaining architecture and implementation specifications.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -428,6 +432,75 @@ must not be duplicated across modules.
 
 The Work Table is the user-facing execution surface for workflow tasks. It is
 not a separate workflow engine.
+
+## Chapter 9 - Security, Identity, and Governance Architecture
+
+The official Security, Identity, and Governance architecture is documented in
+`docs/ARCHITECTURE_CHAPTER_9.md`.
+
+Chapter 9 defines the mandatory security architecture for IAM, users,
+workspaces, roles, permissions, authorization policies, authentication,
+session management, API security, encryption, secret management, audit,
+compliance, AI governance, organization policies, data governance, data
+classification, monitoring, recovery, continuity, module integration, and
+security observability.
+
+The supporting security baseline documents are:
+
+1. `docs/security/security-architecture.md`.
+2. `docs/security/iam-architecture.md`.
+3. `docs/security/rbac-model.md`.
+4. `docs/security/security-policies.md`.
+5. `docs/security/data-classification.md`.
+6. `docs/security/api-security.md`.
+7. `docs/security/audit-strategy.md`.
+8. `docs/security/compliance.md`.
+9. `docs/security/security-gap-analysis.md`.
+10. `docs/security/security-migration-plan.md`.
+
+Chapter 9 is authoritative for future authentication, authorization, IAM,
+workspace isolation, policy evaluation, API security, secret management,
+audit, data classification, compliance, and security governance work. It does
+not authorize immediate runtime refactoring, API changes, database changes, UI
+changes, Docker changes, or removal of Phase 7 Step 16 validated
+functionality.
+
+All modules must use the shared IAM, authorization, audit, policy,
+classification, and security infrastructure. Module-specific authentication or
+authorization mechanisms are not allowed.
+
+## Chapter 10 - Integration and Interoperability Architecture
+
+The official Integration and Interoperability architecture is documented in
+`docs/ARCHITECTURE_CHAPTER_10.md`.
+
+Chapter 10 defines the mandatory integration architecture for Integration
+Gateway, provider adapters, integration contracts, internal APIs, public APIs,
+API versioning, events, webhooks, import/export, error handling,
+observability, security, governance, and extensibility.
+
+The supporting integration baseline documents are:
+
+1. `docs/integration/integration-architecture.md`.
+2. `docs/integration/api-contracts.md`.
+3. `docs/integration/adapter-registry.md`.
+4. `docs/integration/event-catalog.md`.
+5. `docs/integration/webhooks.md`.
+6. `docs/integration/integration-security.md`.
+7. `docs/integration/integration-gap-analysis.md`.
+8. `docs/integration/integration-migration-plan.md`.
+
+Chapter 10 is authoritative for future external integrations, internal API
+contracts, public API contracts, adapter registries, event contracts, webhook
+governance, import/export interoperability, provider independence, and
+integration security work. It does not authorize immediate runtime provider
+activation, API changes, database changes, UI changes, Docker changes, or
+removal of Phase 7 Step 16 validated functionality.
+
+All external systems must be accessed through dedicated adapters and the
+Integration Layer. Business modules must not depend directly on external
+providers, provider SDKs, provider-specific payloads, provider-specific errors,
+or provider secrets.
 
 ## Architecture Freeze & Governance Requirements
 
