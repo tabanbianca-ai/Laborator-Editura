@@ -935,6 +935,95 @@ Rules:
   dependency map, and incremental migration plan before implementation.
 - Validated Phase 7 Step 16 behavior must be preserved.
 
+### Security, Identity and Governance Architecture Directive
+
+Purpose:
+
+- Define the mandatory security, identity, access, IAM, workspace isolation,
+  policy, secret management, data classification, audit, compliance, AI
+  governance, monitoring, recovery, and operational governance architecture for
+  the entire platform.
+
+Rules:
+
+- Chapter 9 - Security, Identity, and Governance Architecture is the official
+  authority for security, identity, access, and governance.
+- IAM is the only official source for identity.
+- No module may implement its own authentication or authorization system.
+- Protected requests must use server-derived authenticated context only.
+- Client-provided user IDs, organization IDs, roles, permissions, tenant IDs,
+  or workspace IDs must not be trusted for authorization.
+- Authorization must be explicit and must evaluate role permissions,
+  workspace, organization, resource ownership, resource state, organization
+  policies, subscription entitlements where applicable, Need-to-Know scope,
+  data classification, and audit requirements.
+- No operation may be authorized solely because a user has a role.
+- Workspaces are the primary data isolation boundary for future alignment.
+- Local workspace policies may increase security but must not reduce the
+  platform minimum security baseline.
+- Permissions must evolve toward a complete atomic permission catalog.
+- Secrets must not be stored in source code, logs, traces, client bundles, or
+  exported project data.
+- API security must include authentication, authorization, rate limiting,
+  input validation, documented CORS policy, CSRF protection where applicable,
+  safe errors, and security headers.
+- Data must be classified as `PUBLIC`, `INTERNAL`, `CONFIDENTIAL`, or
+  `RESTRICTED`; classification must influence access, AI eligibility, export,
+  backup, retention, and audit.
+- Audit must cover authentication, failures, changes, approvals, AI
+  executions, permission changes, role changes, publishing, deletion,
+  sensitive resource access, restricted access attempts, policy changes, and
+  compliance exceptions.
+- AI interactions must comply with Chapter 7 and must preserve user, prompt,
+  prompt version, model, provider, cost, result reference, human approval
+  status where required, and audit reference.
+- Security events must integrate with Observability.
+- Structural security changes require a baseline audit, gap analysis,
+  dependency map, and incremental migration plan before implementation.
+- Validated Phase 7 Step 16 behavior must be preserved.
+
+### Integration and Interoperability Architecture Directive
+
+Purpose:
+
+- Define the mandatory integration, interoperability, API contract, adapter,
+  webhook, event, import/export, security, observability, and provider
+  independence architecture for the entire platform.
+
+Rules:
+
+- Chapter 10 - Integration and Interoperability Architecture is the official
+  authority for integration and interoperability.
+- Integration Gateway is the approved external communication boundary.
+- Business modules must not communicate directly with external systems.
+- Business modules must not depend on provider SDKs, provider-specific
+  payloads, provider-specific errors, or provider secrets.
+- Every external system must use a dedicated adapter registered through the
+  Integration Layer.
+- Every stable integration must define a contract before implementation.
+- Public APIs must be explicitly versioned, documented, authenticated,
+  authorized, rate limited, validated, observable, and audited when state
+  changes occur.
+- Internal APIs must preserve module ownership boundaries. A module must not
+  access another module's private persistence or implementation details.
+- Events and webhook payloads must be documented and versioned.
+- Webhooks must use authentication, signature verification, replay protection,
+  retry policy, delivery logging, observability, tenant awareness, and audit.
+- Import and export operations must be authenticated, authorized, validated,
+  audited, observable, tenant-aware, and JSON Master compatible when
+  applicable.
+- Integration errors must use timeout, controlled retry, circuit breaker,
+  fallback, standardized errors, correlation IDs, and safe user-facing
+  messages.
+- Integration secrets must not be stored in source code, logs, traces, client
+  bundles, export artifacts, JSON Master data, or webhook delivery logs.
+- AI may suggest integration configuration, but AI may not enable providers,
+  create active secrets, approve external access, or bypass human final
+  authority.
+- Structural integration changes require a baseline audit, gap analysis,
+  dependency map, and incremental migration plan before implementation.
+- Validated Phase 7 Step 16 behavior must be preserved.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
@@ -1108,10 +1197,12 @@ Rules:
 9. `docs/ARCHITECTURE_CHAPTER_6.md`.
 10. `docs/ARCHITECTURE_CHAPTER_7.md`.
 11. `docs/ARCHITECTURE_CHAPTER_8.md`.
-12. `SPEC.md`.
-13. `AGENTS.md`.
-14. `ROADMAP.md`.
-15. Codex implementation.
-16. Lovable UI generation.
+12. `docs/ARCHITECTURE_CHAPTER_9.md`.
+13. `docs/ARCHITECTURE_CHAPTER_10.md`.
+14. `SPEC.md`.
+15. `AGENTS.md`.
+16. `ROADMAP.md`.
+17. Codex implementation.
+18. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
