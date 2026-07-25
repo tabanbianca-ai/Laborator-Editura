@@ -892,6 +892,49 @@ Rules:
   audit boundaries are implemented.
 - Validated Phase 7 Step 16 behavior must be preserved.
 
+### Workflow Engine and Editorial Process Architecture Directive
+
+Purpose:
+
+- Define Workflow Engine as the mandatory coordination layer for editorial and
+  administrative processes, including workflow definitions, workflow versions,
+  instances, stages, transitions, tasks, assignments, approvals, notifications,
+  deadlines, events, automation, escalation, Work Table execution, audit,
+  observability, and RBAC-based execution.
+
+Rules:
+
+- Chapter 8 - Workflow Engine and Editorial Process Architecture is the
+  official authority for workflow and process coordination.
+- Workflow Engine coordinates processes. Domain modules retain ownership of
+  their domain validation rules.
+- Generic workflow logic must not be duplicated across modules.
+- Workflow definitions must be versioned.
+- Workflow versions are immutable after activation.
+- Workflow instances must remain bound to the workflow version with which they
+  were created.
+- Work Table is the user-facing execution surface for workflow tasks. It is
+  not a separate workflow engine.
+- Workflow Engine must use Scheduling and Agenda for deadlines, meetings,
+  notifications, recurrences, and editorial calendars. It must not implement a
+  separate calendar.
+- Workflow Engine may request AI assistance only through AI Orchestration.
+- AI may recommend, summarize, classify, and detect blockers, but it must not
+  approve, publish, grant rights, bypass workflow, modify security, or change
+  governance.
+- Workflow actions must be authorized server-side through central RBAC,
+  subscription entitlements where applicable, and Need-to-Know scope.
+- Workflow audit must cover definition changes, version creation, instance
+  changes, stage changes, transitions, assignments, approvals, rejections,
+  tasks, deadlines, notifications, AI execution requests, automation,
+  escalations, and manual overrides.
+- Workflow observability must track stage duration, average execution time,
+  bottlenecks, pending tasks, overdue tasks, SLA status, approval latency,
+  AI usage triggered by workflow, and blocked workflow count.
+- Structural workflow changes require a baseline audit, gap analysis,
+  dependency map, and incremental migration plan before implementation.
+- Validated Phase 7 Step 16 behavior must be preserved.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
@@ -1064,10 +1107,11 @@ Rules:
 8. `docs/ARCHITECTURE_CHAPTER_5.md`.
 9. `docs/ARCHITECTURE_CHAPTER_6.md`.
 10. `docs/ARCHITECTURE_CHAPTER_7.md`.
-11. `SPEC.md`.
-12. `AGENTS.md`.
-13. `ROADMAP.md`.
-14. Codex implementation.
-15. Lovable UI generation.
+11. `docs/ARCHITECTURE_CHAPTER_8.md`.
+12. `SPEC.md`.
+13. `AGENTS.md`.
+14. `ROADMAP.md`.
+15. Codex implementation.
+16. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
