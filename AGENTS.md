@@ -1350,9 +1350,83 @@ Rules:
   creating a competing workflow engine.
 - Future Editorial Review work must be additive and must follow
   `docs/modules/editorial-review/editorial-review-migration-plan.md`.
-- After Proofreading and Editorial Review specification and baseline audit are
-  accepted, the next module specification should be Module 4 - Publishing
-  Module Architecture.
+- Module 4 - Publishing Module Architecture is now documented as the next
+  Phase II specification after Proofreading and Editorial Review.
+
+### Phase II Publishing Module Architecture Directive
+
+Purpose:
+
+- Define Publishing as the fourth detailed module specification after Library,
+  Translation, and Proofreading/Editorial Review and establish the official
+  rules for publication generation, editions, immutable published versions,
+  multi-format exports, publication profiles, release validation,
+  distribution, withdrawal, and publishing audit.
+
+Rules:
+
+- Publishing may publish only approved Library content.
+- Publishing is the only controlled mechanism through which an approved
+  document becomes an official edition.
+- Published official editions are immutable and versioned.
+- Corrections to published content require a new version, edition, or
+  republication record.
+- Publication metadata must come from Library and must not be duplicated as a
+  competing source of truth.
+- Export owns generated files and format artifacts.
+- Rights & Provenance owns rights warnings and publication authorization.
+- Workflow Engine owns generic approval and transition gates.
+- Public Portal owns public catalog visibility and reader access metadata.
+- Commerce owns commercial edition and print/distribution metadata.
+- Publishing must not create separate Preflight, Distribution, or Archive
+  modules.
+- Distribution must be adapter-based, auditable, and must preserve history
+  when publication is withdrawn.
+- AI may summarize readiness, detect blockers, suggest profiles, suggest
+  remediation, and prepare draft packaging metadata, but it must never publish,
+  approve, withdraw, distribute automatically, bypass rights, bypass Workflow,
+  or modify immutable published editions.
+- Future Publishing work must be additive and must follow
+  `docs/modules/publishing/publishing-migration-plan.md`.
+- Module 5 - Rights and Provenance Module Architecture is now documented as
+  the next Phase II specification after Publishing.
+
+### Phase II Rights and Provenance Module Architecture Directive
+
+Purpose:
+
+- Define Rights and Provenance as the fifth detailed module specification
+  after Library, Translation, Proofreading/Editorial Review, and Publishing
+  and establish the official rules for intellectual property, copyright,
+  translation rights, publishing rights, licenses, contracts, provenance,
+  restrictions, legal history, compliance validation, and rights audit.
+
+Rules:
+
+- Every Library Item must have verifiable provenance before publication.
+- Every legal right must be explicitly represented and auditable.
+- Contracts and licenses must be linked to resources and must be versioned.
+- Missing, expired, revoked, or incompatible rights must block publication and
+  distribution.
+- Rights and Provenance owns rights records, rights holders, licenses,
+  contract metadata, restrictions, provenance validation, legal history, and
+  rights validation verdicts.
+- Library owns resource identity and stores contract files as assets.
+- Publishing, Translation, Audio, Video, Public Portal, Commerce, and Quality
+  must consume rights validation through public Rights contracts.
+- No module may implement an independent rights system.
+- Legal history must be immutable. Corrections, amendments, renewals,
+  revocations, and transfers must create auditable records or versions.
+- AI may summarize agreements, detect missing permissions, detect expired
+  permissions, and identify missing provenance, but it must never approve
+  agreements, authorize translations, authorize publication, revoke rights,
+  transfer rights, modify validated provenance automatically, or bypass Human
+  Final Authority.
+- Future Rights and Provenance work must be additive and must follow
+  `docs/modules/rights/rights-migration-plan.md`.
+- After Rights and Provenance Module specification and baseline audit are
+  accepted, the next module specification should be Module 6 - Magazine Module
+  Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
