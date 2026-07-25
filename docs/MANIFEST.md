@@ -197,6 +197,31 @@ This document is the first document in the architecture suite and precedes:
   Services Architecture.
 - `docs/ARCHITECTURE_CHAPTER_13.md` - Chapter 13, DevOps, Infrastructure,
   Deployment, and Recovery Architecture.
+- `docs/ARCHITECTURE_CHAPTER_14.md` - Chapter 14, Quality Architecture and
+  Testing Strategy.
+- `docs/ARCHITECTURE_CHAPTER_15.md` - Chapter 15, Operations, Maintenance,
+  and Platform Evolution Architecture.
 
 This order gives Codex the strategic context first, then the mandatory
-construction rules, and then the technical design.
+construction rules, then the complete high-level architecture, and then the
+foundation for detailed module specifications and controlled implementation.
+
+## Phase II Module Specifications
+
+The high-level architecture series is complete with Chapters 0-15.
+
+Detailed module specifications now begin with:
+
+- `docs/modules/library/library-overview.md` - Phase II Module 1, Library
+  Module Architecture.
+- `docs/modules/translation/translation-overview.md` - Phase II Module 2,
+  Translation Module Architecture.
+
+Library is the central editorial repository and Single Source of Truth for
+all editorial resources. Future module specifications must depend on Library
+instead of creating duplicate repositories of editorial data.
+
+Translation is the first major production module that depends on Library. It
+must preserve the original source, create independent translated versions,
+respect terminology and semantic fidelity, and keep AI assistance subordinate
+to human approval.
