@@ -251,4 +251,10 @@ in `docs/ARCHITECTURE_CHAPTER_12.md`.
 Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture is
 now documented in `docs/ARCHITECTURE_CHAPTER_13.md`.
 
-Proceed next with Chapter 14 - Quality Architecture and Testing Strategy.
+Chapter 14 - Quality Architecture and Testing Strategy is now documented in
+`docs/ARCHITECTURE_CHAPTER_14.md`.
+
+Chapter 15 - Operations, Maintenance, and Platform Evolution Architecture is
+now documented in `docs/ARCHITECTURE_CHAPTER_15.md`.
+
+Proceed next with Phase 2 - Detailed Module Specifications.
