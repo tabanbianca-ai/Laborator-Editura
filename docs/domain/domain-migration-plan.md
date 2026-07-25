@@ -181,5 +181,7 @@ Database Standards are now documented.
 Chapter 7 - Integrations and AI Agent Architecture is now documented in
 `docs/ARCHITECTURE_CHAPTER_7.md`.
 
-Proceed next with Chapter 8 - Editorial Workflow and Process Engine
-Architecture.
+Chapter 8 - Workflow Engine and Editorial Process Architecture is now
+documented in `docs/ARCHITECTURE_CHAPTER_8.md`.
+
+Proceed next with Chapter 9 - Security, Identity, and Governance Architecture.
