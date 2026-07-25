@@ -393,6 +393,8 @@ An implementation is considered compliant only if it respects:
 - `docs/ARCHITECTURE_CHAPTER_6.md`.
 - `docs/ARCHITECTURE_CHAPTER_7.md`.
 - `docs/ARCHITECTURE_CHAPTER_8.md`.
+- `docs/ARCHITECTURE_CHAPTER_9.md`.
+- `docs/ARCHITECTURE_CHAPTER_10.md`.
 
 ## Mandatory Requirement for Codex
 
@@ -410,12 +412,19 @@ platform evolution.
 
 ## Recommended Next Architecture Documents
 
-Before implementing individual modules, the architecture suite should also
-define:
+Chapter 9 - Security, Identity, and Governance Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_9.md` and provides the official IAM, RBAC,
+security policy, data classification, audit, and compliance standard.
 
-1. Chapter 9 - Security, Identity, and Governance Architecture: authentication,
-   authorization, identity management, security policies, audit, compliance,
-   and platform governance.
+Chapter 10 - Integration and Interoperability Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_10.md` and provides the official Integration
+Gateway, adapter, API contract, event, webhook, and interoperability standard.
+
+After Chapter 10 is validated, the next recommended document is:
+
+1. Chapter 11 - Frontend and Design System Architecture: frontend structure,
+   responsive PWA behavior, reusable components, internationalization,
+   accessibility, and user experience patterns.
 
 Chapter 7 - Integrations and AI Agent Architecture is now documented in
 `docs/ARCHITECTURE_CHAPTER_7.md` and provides the official AI orchestration
