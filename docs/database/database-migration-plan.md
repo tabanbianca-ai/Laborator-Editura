@@ -211,5 +211,10 @@ Do not implement schema changes from this documentation phase.
 
 Keep existing PostgreSQL migrations intact.
 
-Use Chapter 6 as the required standard for all future database work and proceed
-next with Chapter 7 - Integrations and AI Agent Architecture.
+Use Chapter 6 as the required standard for all future database work.
+
+Chapter 7 - Integrations and AI Agent Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_7.md`.
+
+Proceed next with Chapter 8 - Editorial Workflow and Process Engine
+Architecture.
