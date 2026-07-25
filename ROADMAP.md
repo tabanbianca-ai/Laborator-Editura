@@ -8,6 +8,28 @@ translation platform first.
 MVP stabilization is active. Prioritize implementation, integration, and testing
 of existing approved modules over new design work.
 
+## Official Development Conventions
+
+Status: Active.
+
+Reference:
+
+- `docs/DEVELOPMENT_CONVENTIONS.md`.
+
+Roadmap impact:
+
+- All future implementation must use English for internal code, APIs,
+  database objects, tests, technical documentation, and technical comments.
+- All user-facing UI text must use localization dictionaries or the approved
+  localization system.
+- Romanian, English, Spanish, French, Portuguese, Italian, and German are the
+  first-stage platform UI languages.
+- Mixed-language UI is not acceptable for launch readiness.
+- Authentication, roles, sessions, and permissions remain unified across the
+  public, app, and API domains.
+- Future work that adds languages, modules, roles, user types, or features must
+  preserve the existing architecture.
+
 ## MVP Scope
 
 The MVP includes:
