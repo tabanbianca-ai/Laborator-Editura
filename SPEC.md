@@ -18,7 +18,9 @@ Document order:
    standards.
 10. `docs/ARCHITECTURE_CHAPTER_7.md` - integrations and AI agent
     architecture.
-11. The remaining architecture and implementation specifications.
+11. `docs/ARCHITECTURE_CHAPTER_8.md` - Workflow Engine and editorial process
+    architecture.
+12. The remaining architecture and implementation specifications.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -393,6 +395,39 @@ All future AI-enabled modules must call the AI Orchestration Service instead
 of calling external providers directly. AI providers must be interchangeable
 through provider adapters, and AI output remains subject to audit, versioning,
 security policy, cost limits, and Human Final Authority.
+
+## Chapter 8 - Workflow Engine and Editorial Process Architecture
+
+The official Workflow Engine and editorial process architecture is documented
+in `docs/ARCHITECTURE_CHAPTER_8.md`.
+
+Chapter 8 defines the mandatory Workflow Engine architecture for process
+coordination, workflow definitions, workflow versions, workflow instances,
+stages, transitions, conditions, tasks, assignments, approvals, notifications,
+deadlines, events, automation, escalations, parallelism, Work Table, Calendar
+and Agenda integration, audit, versioning, permissions, and observability.
+
+The supporting workflow baseline documents are:
+
+1. `docs/workflow/workflow-architecture.md`.
+2. `docs/workflow/workflow-definitions.md`.
+3. `docs/workflow/workflow-events.md`.
+4. `docs/workflow/workflow-permissions.md`.
+5. `docs/workflow/workflow-gap-analysis.md`.
+6. `docs/workflow/workflow-migration-plan.md`.
+
+Chapter 8 is authoritative for future workflow consolidation, process
+configuration, task orchestration, approval orchestration, workflow events, and
+Work Table execution behavior. It does not authorize immediate runtime
+refactoring, API changes, database changes, UI changes, Docker changes, or
+removal of Phase 7 Step 16 validated functionality.
+
+Workflow Engine coordinates process execution. Domain modules remain
+responsible for their own domain validation rules. Generic workflow behavior
+must not be duplicated across modules.
+
+The Work Table is the user-facing execution surface for workflow tasks. It is
+not a separate workflow engine.
 
 ## Architecture Freeze & Governance Requirements
 
