@@ -334,12 +334,13 @@ Architecture Decision Record before implementation.
 
 The next architecture document should be:
 
-- Chapter 5 - Logical Data Model.
+- Chapter 6 - Physical Data Model and Database Standards.
 
 Chapter 4 - Conceptual Domain Model is now documented in
 `docs/ARCHITECTURE_CHAPTER_4.md`.
 
-Chapter 5 should transform the conceptual entities, such as User, Project,
-Manuscript, Publication, Translation, Version, Rights, and AI Agent, into
-logical implementation-facing structures without prematurely redesigning the
-physical database.
+Chapter 5 - Logical Data Model is now documented in
+`docs/ARCHITECTURE_CHAPTER_5.md`.
+
+Chapter 6 should transform the approved conceptual and logical models into
+database-specific standards without disrupting validated platform behavior.
