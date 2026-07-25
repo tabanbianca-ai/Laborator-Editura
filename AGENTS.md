@@ -108,6 +108,51 @@ Rules:
 - Any deviation from the application architecture requires explicit project
   owner approval.
 
+### Module Architecture Directive
+
+Purpose:
+
+- Define the official Chapter 3 module architecture and mandatory template for
+  every Laborator Editura module.
+
+Rules:
+
+- The canonical Chapter 3 module architecture is documented in
+  `docs/ARCHITECTURE_CHAPTER_3.md`.
+- Modules must be independent, reusable, extensible, testable, documented,
+  secure, localizable, and auditable.
+- Each module must have a clear responsibility, well-defined boundaries,
+  public interfaces, services, rules, tests, and documentation.
+- The standard module structure includes controllers, services, domain,
+  repositories, DTOs, validators, events, permissions, localization, tests,
+  documentation, and an index entry.
+- Existing modules that predate Chapter 3 must not be used as precedent for
+  new inconsistency. They should converge toward the standard structure when
+  safely refactored, unless an approved Architecture Decision Record defines
+  an exception.
+- Controllers must not contain business logic.
+- Repositories are the only module components responsible for data access.
+  Controllers, UI components, and AI services must not access databases
+  directly.
+- Modules must define typed DTOs and validations for input data, functional
+  rules, security rules, and relationship integrity.
+- Module events must be typed, documented, and emitted through standardized
+  mechanisms without direct module dependencies.
+- Module permissions must integrate with central RBAC and Need-to-Know access
+  and must be enforced server-side.
+- User-facing module text must use the official i18n system and platform
+  terminology dictionary.
+- Modules that manage editorial content must support versioning, comparison,
+  restoration, and complete history.
+- Modules must use the central AI orchestration service and must not call AI
+  providers directly.
+- Before implementing a new module, Codex must check for reusable services,
+  follow Chapter 3 structure, integrate with shared authentication,
+  authorization, localization, audit, and observability, document APIs and
+  events, and deliver appropriate tests.
+- Any deviation from the module architecture requires an approved Architecture
+  Decision Record before implementation.
+
 ### Development Conventions Directive
 
 Purpose:
@@ -861,10 +906,11 @@ Rules:
 3. `SPEC.md`, Chapter 0 - Fundamental Platform Principles.
 4. `docs/ARCHITECTURE_CHAPTER_1.md`.
 5. `docs/ARCHITECTURE_CHAPTER_2.md`.
-6. `SPEC.md`.
-7. `AGENTS.md`.
-8. `ROADMAP.md`.
-9. Codex implementation.
-10. Lovable UI generation.
+6. `docs/ARCHITECTURE_CHAPTER_3.md`.
+7. `SPEC.md`.
+8. `AGENTS.md`.
+9. `ROADMAP.md`.
+10. Codex implementation.
+11. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
