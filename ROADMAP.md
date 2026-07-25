@@ -528,8 +528,210 @@ Roadmap impact:
   Nginx templates, systemd units, validation scripts, and operational
   runbooks.
 - Future migration must preserve validated Phase 7 Step 16 behavior.
-- The next recommended architecture document is Chapter 14 - Quality
-  Architecture and Testing Strategy.
+- Chapter 14 - Quality Architecture and Testing Strategy is documented as
+  the official architecture authority for unit tests, domain tests, application
+  tests, integration tests, API tests, contract tests, database tests,
+  migration tests, security tests, accessibility tests, performance tests,
+  AI validation tests, regression tests, smoke tests, Quality Gates, coverage,
+  quality observability, and defect management.
+
+## Official Quality Architecture and Testing Strategy
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_14.md`.
+- `docs/quality/testing-strategy.md`.
+- `docs/quality/test-pyramid.md`.
+- `docs/quality/test-catalog.md`.
+- `docs/quality/quality-gates.md`.
+- `docs/quality/coverage-policy.md`.
+- `docs/quality/security-testing.md`.
+- `docs/quality/accessibility-testing.md`.
+- `docs/quality/performance-testing.md`.
+- `docs/quality/ai-testing.md`.
+- `docs/quality/regression-policy.md`.
+- `docs/quality/quality-gap-analysis.md`.
+- `docs/quality/quality-migration-plan.md`.
+
+Roadmap impact:
+
+- Every critical domain rule, workflow gate, rights gate, AI approval gate,
+  language rule, security boundary, and publishing rule must have appropriate
+  automated validation.
+- The current repository baseline includes 55 API test files, 30 Web test
+  files, 10 DB test files, and 2 Shared package test files.
+- CI already validates API contracts, DB/runtime/backup tests, shared tests,
+  fixture JSON, infrastructure syntax, Docker Compose config, Nginx templates,
+  secret scan, typecheck/lint/test/build when dependencies are available, and
+  vulnerability scan.
+- Future migration must add pure unit/domain tests, coverage reporting,
+  deterministic AI evaluation fixtures, browser E2E smoke tests,
+  accessibility automation, performance baselines, flaky test tracking, and
+  release quality reports.
+- Quality Gates must block release on failed builds, tests, migrations,
+  security checks, critical accessibility checks, and critical smoke checks.
+- Future migration must preserve validated Phase 7 Step 16 behavior.
+
+## Official Operations, Maintenance, and Platform Evolution Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_15.md`.
+- `docs/operations/operations-architecture.md`.
+- `docs/operations/platform-governance.md`.
+- `docs/operations/release-management.md`.
+- `docs/operations/versioning-policy.md`.
+- `docs/operations/deprecation-policy.md`.
+- `docs/operations/incident-management.md`.
+- `docs/operations/business-continuity.md`.
+- `docs/operations/maintenance-strategy.md`.
+- `docs/operations/risk-management.md`.
+- `docs/operations/kpi-and-sla.md`.
+- `docs/operations/operations-gap-analysis.md`.
+- `docs/operations/platform-evolution-roadmap.md`.
+
+Roadmap impact:
+
+- Architecture Chapters 0-15 are now complete as the high-level platform
+  architecture baseline.
+- Future roadmap work must move into detailed module specifications and
+  controlled module implementation.
+- Every future module must comply with operations, maintenance, quality,
+  security, workflow, AI, data, frontend, backend, integration, and DevOps
+  standards before acceptance.
+- Current operational strengths include GitHub Actions CI, staging deploy and
+  operations workflows, Infrastructure Pack v1.0, backup/restore scripts,
+  monitoring scripts, Nginx templates, systemd units, runbooks, DevOps
+  baseline documentation, and Quality Gate documentation.
+- Future migration must formalize release records, ADRs, incident registers,
+  deprecation registers, RPO/RTO targets, KPI history, production deployment,
+  artifact management, backup encryption enforcement, and centralized
+  observability.
+- Validated Phase 7 Step 16 behavior must be preserved.
+- No additional general architecture chapter is planned. The next recommended
+  stage is Phase 2 - Detailed Module Specifications.
+
+## Phase II Module 1 - Library Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/library/library-overview.md`.
+- `docs/modules/library/domain-model.md`.
+- `docs/modules/library/metadata-model.md`.
+- `docs/modules/library/asset-management.md`.
+- `docs/modules/library/versioning.md`.
+- `docs/modules/library/search-and-indexing.md`.
+- `docs/modules/library/api-contracts.md`.
+- `docs/modules/library/events.md`.
+- `docs/modules/library/permissions.md`.
+- `docs/modules/library/workflows.md`.
+- `docs/modules/library/library-gap-analysis.md`.
+- `docs/modules/library/library-migration-plan.md`.
+
+Roadmap impact:
+
+- Library is the first detailed module specification after completion of
+  Architecture Chapters 0-15.
+- Library is the canonical repository and Single Source of Truth for editorial
+  resources.
+- Existing Library implementation already includes reader items, publication
+  records, editions, versions, files, view preferences, reading progress,
+  bookmarks, highlights, notes, access events, audit, search, lifecycle,
+  duplicate detection, preview protection, runtime persistence, and backup/
+  restore support.
+- Future Library migration must add canonical Library Item mapping,
+  generalized Asset records, required metadata enforcement, typed
+  relationships, universal item/asset/metadata versioning, dedicated indexing,
+  canonical item/search/asset APIs, and operational hardening.
+- Migration must be additive, preserve current clients, preserve Phase 7 Step
+  16 behavior, and prevent duplicate editorial repositories.
+- Module 2 - Translation Module Architecture is now documented as the next
+  Phase II specification after Library.
+
+## Phase II Module 2 - Translation Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/translation/translation-overview.md`.
+- `docs/modules/translation/domain-model.md`.
+- `docs/modules/translation/segmentation.md`.
+- `docs/modules/translation/translation-memory.md`.
+- `docs/modules/translation/glossary-management.md`.
+- `docs/modules/translation/terminology.md`.
+- `docs/modules/translation/quality-validation.md`.
+- `docs/modules/translation/api-contracts.md`.
+- `docs/modules/translation/events.md`.
+- `docs/modules/translation/workflows.md`.
+- `docs/modules/translation/translation-gap-analysis.md`.
+- `docs/modules/translation/translation-migration-plan.md`.
+
+Roadmap impact:
+
+- Translation is the second detailed module specification after Library.
+- Translation depends on Library as the Single Source of Truth and must not
+  duplicate source editorial content.
+- Existing implementation already includes segments, translations,
+  Translation Memory, terminology governance, lexicographic evidence, QA,
+  Semantic Fidelity, Workflow integration, frontend Translation Workspace,
+  runtime persistence, backup/restore support, and contract tests.
+- Future Translation migration must add canonical Library Item linkage,
+  top-level Translation Project aggregate, immutable segment/translation
+  version lineage, standardized context schema, explicit AI orchestration
+  records, broader language-specific style validation, version comparison,
+  performance/indexing hardening, and canonical versioned API routes.
+- Migration must be additive, preserve current clients, preserve validated
+  terminology priority, preserve Translation Memory proposal-only behavior,
+  preserve QA/Semantic/Workflow gates, and preserve Phase 7 Step 16 behavior.
+- Module 3 - Proofreading and Editorial Review Module Architecture is now
+  documented as the next Phase II specification after Translation.
+
+## Phase II Module 3 - Proofreading and Editorial Review Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/editorial-review/editorial-review-overview.md`.
+- `docs/modules/editorial-review/domain-model.md`.
+- `docs/modules/editorial-review/linguistic-validation.md`.
+- `docs/modules/editorial-review/style-validation.md`.
+- `docs/modules/editorial-review/terminology-validation.md`.
+- `docs/modules/editorial-review/comments-and-review.md`.
+- `docs/modules/editorial-review/api-contracts.md`.
+- `docs/modules/editorial-review/events.md`.
+- `docs/modules/editorial-review/workflows.md`.
+- `docs/modules/editorial-review/editorial-review-gap-analysis.md`.
+- `docs/modules/editorial-review/editorial-review-migration-plan.md`.
+
+Roadmap impact:
+
+- Proofreading and Editorial Review is the third detailed module
+  specification after Library and Translation.
+- Existing implementation already includes QA, Semantic Fidelity,
+  Terminology Governance v2, Editorial Decisions, Collaboration comments,
+  Workflow gates, Review Workspace UI, runtime persistence, backup/restore,
+  and contract tests.
+- Future Editorial Review migration must add a canonical `EditorialReview`
+  aggregate, unified observations, persistent correction proposals,
+  non-destructive accept/reject state, language-specific linguistic rule
+  packs, project style profiles, doctrinal review configuration, version
+  comparison, canonical versioned review APIs, and search/performance
+  hardening.
+- Migration must be additive, preserve current clients, preserve validated
+  terminology priority, preserve Workflow gates, preserve Human Final
+  Authority, and preserve Phase 7 Step 16 publishing, preflight, and
+  distribution behavior.
+- After Proofreading and Editorial Review specification and baseline audit are
+  accepted, the next module specification should be Module 4 - Publishing
+  Module Architecture.
 
 ## MVP Scope
 
