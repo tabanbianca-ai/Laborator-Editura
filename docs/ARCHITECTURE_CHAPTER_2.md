@@ -392,6 +392,7 @@ An implementation is considered compliant only if it respects:
 - `docs/ARCHITECTURE_CHAPTER_5.md`.
 - `docs/ARCHITECTURE_CHAPTER_6.md`.
 - `docs/ARCHITECTURE_CHAPTER_7.md`.
+- `docs/ARCHITECTURE_CHAPTER_8.md`.
 
 ## Mandatory Requirement for Codex
 
@@ -412,10 +413,14 @@ platform evolution.
 Before implementing individual modules, the architecture suite should also
 define:
 
-1. Chapter 8 - Editorial Workflow and Process Engine Architecture: production
-   workflow states, transitions, approvals, task orchestration, process
-   events, module integration, and human approval gates.
+1. Chapter 9 - Security, Identity, and Governance Architecture: authentication,
+   authorization, identity management, security policies, audit, compliance,
+   and platform governance.
 
 Chapter 7 - Integrations and AI Agent Architecture is now documented in
 `docs/ARCHITECTURE_CHAPTER_7.md` and provides the official AI orchestration
 and provider integration standard.
+
+Chapter 8 - Workflow Engine and Editorial Process Architecture is now
+documented in `docs/ARCHITECTURE_CHAPTER_8.md` and provides the official
+workflow and process coordination standard.
