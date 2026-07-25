@@ -86,6 +86,34 @@ Roadmap impact:
   conformity with the Manifesto, Development Conventions, Chapter 0, and
   Chapter 1.
 
+## Official Application Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_2.md`.
+
+Roadmap impact:
+
+- Chapter 2 defines mandatory application architecture for code organization,
+  frontend, backend, API access, module structure, state management,
+  localization, authentication, authorization, configuration, file management,
+  AI integration, observability, audit, background processing, testing,
+  deployment, performance, security, and implementation conventions.
+- New roadmap implementation work must reuse existing components and services,
+  avoid circular dependencies, avoid duplicate functionality, and remain
+  testable, extensible, and documented.
+- Frontend work must use reusable components and the official localization
+  system.
+- Backend work must keep business logic out of controllers and preserve
+  server-side authorization.
+- Long-running work must be planned through background processing services, not
+  HTTP request handlers.
+- No roadmap item may introduce hardcoded secrets, direct frontend database
+  access, direct module access to filesystem storage, or direct AI provider
+  calls from functional modules.
+
 ## MVP Scope
 
 The MVP includes:
