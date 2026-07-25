@@ -307,8 +307,90 @@ Roadmap impact:
   multiple module-local approval flows.
 - Future migration must consolidate dispersed workflow logic incrementally and
   preserve validated Phase 7 Step 16 behavior.
-- The next recommended architecture document is Chapter 9 - Security,
-  Identity, and Governance Architecture.
+- Chapter 9 - Security, Identity, and Governance Architecture is documented as
+  the architecture authority for identity, access, security, compliance, and
+  governance.
+
+## Official Security, Identity, and Governance Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_9.md`.
+- `docs/security/security-architecture.md`.
+- `docs/security/iam-architecture.md`.
+- `docs/security/rbac-model.md`.
+- `docs/security/security-policies.md`.
+- `docs/security/data-classification.md`.
+- `docs/security/api-security.md`.
+- `docs/security/audit-strategy.md`.
+- `docs/security/compliance.md`.
+- `docs/security/security-gap-analysis.md`.
+- `docs/security/security-migration-plan.md`.
+
+Roadmap impact:
+
+- IAM is the only official identity source.
+- No module may implement its own authentication or authorization system.
+- All protected API requests must use server-derived authenticated context.
+- Authorization must evaluate role permissions, workspace, resource ownership,
+  resource state, organization policies, subscription entitlements,
+  Need-to-Know scope, and data classification.
+- Workspace is the primary data isolation boundary for future alignment.
+- Permissions must evolve toward a complete atomic permission catalog.
+- Security-sensitive behavior must be centralized through shared IAM, policy,
+  audit, classification, API security, and secret management infrastructure.
+- Audit must be complete, immutable in the target architecture, and included in
+  backup/restore.
+- AI interactions must preserve prompt, prompt version, provider, model, cost,
+  result reference, human approval status, audit, and policy traceability.
+- Current foundations include Auth, server-derived request context, sessions,
+  account lockout, rate limiting, security headers, environment secret
+  validation, Security Governance, Policy Engine, Workspace Need-to-Know,
+  Gateway, Launch Essentials, Observability, audit, and backup coverage.
+- Future migration must preserve validated Phase 7 Step 16 behavior.
+- Chapter 10 - Integration and Interoperability Architecture is now
+  documented as the next architecture authority for external systems, provider
+  adapters, API contracts, events, webhooks, import/export, and provider
+  independence.
+
+## Official Integration and Interoperability Architecture
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_10.md`.
+- `docs/integration/integration-architecture.md`.
+- `docs/integration/api-contracts.md`.
+- `docs/integration/adapter-registry.md`.
+- `docs/integration/event-catalog.md`.
+- `docs/integration/webhooks.md`.
+- `docs/integration/integration-security.md`.
+- `docs/integration/integration-gap-analysis.md`.
+- `docs/integration/integration-migration-plan.md`.
+
+Roadmap impact:
+
+- Integration Gateway is the official external communication boundary.
+- Business modules must not communicate directly with external systems.
+- All external providers must use dedicated adapters.
+- All stable public and partner APIs must be contract-first and versioned.
+- Internal APIs must preserve module ownership boundaries.
+- Events and webhook payloads must be documented and versioned.
+- Webhooks must be authenticated, signed, retryable, logged, observable, and
+  audited.
+- Import and export operations must be authenticated, authorized, validated,
+  audited, observable, tenant-aware, and compatible with JSON Master when
+  applicable.
+- Current foundations include Gateway, route registry metadata, API key
+  metadata, integration provider metadata, webhook metadata, webhook delivery
+  logs, AI provider metadata, security governance, observability, and backup
+  coverage.
+- Future migration must preserve validated Phase 7 Step 16 behavior.
+- The next recommended architecture document is Chapter 11 - Frontend and
+  Design System Architecture.
 
 ## MVP Scope
 
