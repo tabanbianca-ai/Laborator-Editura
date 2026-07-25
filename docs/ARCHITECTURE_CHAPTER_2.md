@@ -395,6 +395,9 @@ An implementation is considered compliant only if it respects:
 - `docs/ARCHITECTURE_CHAPTER_8.md`.
 - `docs/ARCHITECTURE_CHAPTER_9.md`.
 - `docs/ARCHITECTURE_CHAPTER_10.md`.
+- `docs/ARCHITECTURE_CHAPTER_11.md`.
+- `docs/ARCHITECTURE_CHAPTER_12.md`.
+- `docs/ARCHITECTURE_CHAPTER_13.md`.
 
 ## Mandatory Requirement for Codex
 
@@ -420,11 +423,27 @@ Chapter 10 - Integration and Interoperability Architecture is now documented
 in `docs/ARCHITECTURE_CHAPTER_10.md` and provides the official Integration
 Gateway, adapter, API contract, event, webhook, and interoperability standard.
 
-After Chapter 10 is validated, the next recommended document is:
+Chapter 11 - Frontend and Design System Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_11.md` and provides the official frontend,
+Design System, i18n, accessibility, responsive, PWA, and frontend API client
+standard.
 
-1. Chapter 11 - Frontend and Design System Architecture: frontend structure,
-   responsive PWA behavior, reusable components, internationalization,
-   accessibility, and user experience patterns.
+Chapter 12 - Backend and Application Services Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_12.md` and provides the official backend,
+application service, domain, contract, API, validation, transaction, eventing,
+background job, cache, security, and observability standard.
+
+Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture is
+now documented in `docs/ARCHITECTURE_CHAPTER_13.md` and provides the official
+CI/CD, infrastructure, deployment, environment, secret management, backup,
+disaster recovery, operational observability, release, and rollback standard.
+
+After Chapter 13 is validated, the next recommended document is:
+
+1. Chapter 14 - Quality Architecture and Testing Strategy: unit tests,
+   integration tests, contract tests, end-to-end tests, performance tests,
+   security tests, accessibility tests, release validation, and acceptance
+   criteria.
 
 Chapter 7 - Integrations and AI Agent Architecture is now documented in
 `docs/ARCHITECTURE_CHAPTER_7.md` and provides the official AI orchestration
