@@ -32,6 +32,39 @@ Rules:
   infrastructure, authentication, database, digital library, and security
   rules.
 
+### General Platform Architecture Directive
+
+Purpose:
+
+- Define the official Chapter 1 general architecture that all modules,
+  services, components, and AI agents must follow.
+
+Rules:
+
+- The canonical Chapter 1 architecture is documented in
+  `docs/ARCHITECTURE_CHAPTER_1.md`.
+- Laborator Editura is one unified editorial ecosystem, not a collection of
+  independent applications.
+- The public website, application, and central API must share the same
+  authentication model, permission model, database, digital library, AI
+  infrastructure, audit infrastructure, localization infrastructure, and
+  security rules.
+- Modules must not communicate through uncontrolled direct dependencies.
+  Communication must use internal services, APIs, events, messages, or
+  well-defined contracts.
+- Circular dependencies are not allowed.
+- Shared central components such as authentication, authorization, users,
+  roles, permissions, audit, logging, localization, configuration, versions,
+  digital library, and backup must not be duplicated.
+- AI agents are integrated services and must follow the same authentication,
+  permission, audit, logging, and localization rules as every other platform
+  component.
+- Before implementing any module, service, or AI agent, Codex must verify
+  conformity with `docs/MANIFEST.md`, `docs/DEVELOPMENT_CONVENTIONS.md`,
+  `SPEC.md` Chapter 0, and `docs/ARCHITECTURE_CHAPTER_1.md`.
+- Any deviation from the general platform architecture requires explicit
+  project owner approval.
+
 ### Development Conventions Directive
 
 Purpose:
@@ -782,10 +815,12 @@ Rules:
 
 1. `docs/MANIFEST.md`.
 2. `docs/DEVELOPMENT_CONVENTIONS.md`.
-3. `SPEC.md`.
-4. `AGENTS.md`.
-5. `ROADMAP.md`.
-6. Codex implementation.
-7. Lovable UI generation.
+3. `SPEC.md`, Chapter 0 - Fundamental Platform Principles.
+4. `docs/ARCHITECTURE_CHAPTER_1.md`.
+5. `SPEC.md`.
+6. `AGENTS.md`.
+7. `ROADMAP.md`.
+8. Codex implementation.
+9. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
