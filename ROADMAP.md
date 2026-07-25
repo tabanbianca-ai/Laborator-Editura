@@ -25,10 +25,17 @@ Roadmap impact:
 - Romanian, English, Spanish, French, Portuguese, Italian, and German are the
   first-stage platform UI languages.
 - Mixed-language UI is not acceptable for launch readiness.
+- Standard UI terminology must follow international localization standards and
+  established operating-system translations before platform-specific terms are
+  added.
+- Platform-specific terms must be governed through the platform terminology
+  dictionary.
 - Authentication, roles, sessions, and permissions remain unified across the
   public, app, and API domains.
 - Future work that adds languages, modules, roles, user types, or features must
   preserve the existing architecture.
+- If future implementation choices are ambiguous, the official development
+  conventions take precedence.
 
 ## MVP Scope
 
