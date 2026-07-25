@@ -179,6 +179,7 @@ This document is the first document in the architecture suite and precedes:
 - `docs/ARCHITECTURE_CHAPTER_1.md` - Chapter 1, General Platform Architecture.
 - `docs/ARCHITECTURE_CHAPTER_2.md` - Chapter 2, Application Architecture.
 - `docs/ARCHITECTURE_CHAPTER_3.md` - Chapter 3, Module Architecture.
+- `docs/ARCHITECTURE_CHAPTER_4.md` - Chapter 4, Conceptual Domain Model.
 
 This order gives Codex the strategic context first, then the mandatory
 construction rules, and then the technical design.
