@@ -390,6 +390,7 @@ An implementation is considered compliant only if it respects:
 - `docs/ARCHITECTURE_CHAPTER_3.md`.
 - `docs/ARCHITECTURE_CHAPTER_4.md`.
 - `docs/ARCHITECTURE_CHAPTER_5.md`.
+- `docs/ARCHITECTURE_CHAPTER_6.md`.
 
 ## Mandatory Requirement for Codex
 
@@ -410,10 +411,10 @@ platform evolution.
 Before implementing individual modules, the architecture suite should also
 define:
 
-1. Chapter 6 - Physical Data Model and Database Standards: database-specific
-   table, key, index, migration, retention, performance, and optimization
-   standards derived from the conceptual and logical data models.
+1. Chapter 7 - Integrations and AI Agent Architecture: AI orchestration,
+   provider integration, module-agent contracts, prompt governance, cost
+   controls, limits, logging, human approval, and traceability rules.
 
-After Chapter 6 is approved, Codex will have a complete foundation for
-consistent module implementation and physical database work without major
-architecture changes during development.
+After Chapter 7 is approved, Codex will have a complete foundation for
+consistent module implementation, physical database work, and advanced AI
+integration without major architecture changes during development.
