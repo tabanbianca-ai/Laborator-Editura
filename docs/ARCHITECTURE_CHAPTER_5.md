@@ -563,10 +563,15 @@ Chapter 7 - Integrations and AI Agent Architecture is now documented in
 Chapter 8 - Workflow Engine and Editorial Process Architecture is now
 documented in `docs/ARCHITECTURE_CHAPTER_8.md`.
 
-After Chapter 8 is validated, the next recommended document is:
+Chapter 9 - Security, Identity, and Governance Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_9.md`.
 
-- Chapter 9 - Security, Identity, and Governance Architecture.
+Chapter 10 - Integration and Interoperability Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_10.md`.
 
-Chapter 9 should consolidate authentication, authorization, identity
-management, security policies, audit, compliance, and governance into one
-official architecture standard.
+After Chapter 10 is validated, the next recommended document is:
+
+- Chapter 11 - Frontend and Design System Architecture.
+
+Chapter 11 should define frontend structure, responsive PWA behavior, reusable
+components, internationalization, accessibility, and user experience patterns.
