@@ -391,6 +391,7 @@ An implementation is considered compliant only if it respects:
 - `docs/ARCHITECTURE_CHAPTER_4.md`.
 - `docs/ARCHITECTURE_CHAPTER_5.md`.
 - `docs/ARCHITECTURE_CHAPTER_6.md`.
+- `docs/ARCHITECTURE_CHAPTER_7.md`.
 
 ## Mandatory Requirement for Codex
 
@@ -411,10 +412,10 @@ platform evolution.
 Before implementing individual modules, the architecture suite should also
 define:
 
-1. Chapter 7 - Integrations and AI Agent Architecture: AI orchestration,
-   provider integration, module-agent contracts, prompt governance, cost
-   controls, limits, logging, human approval, and traceability rules.
+1. Chapter 8 - Editorial Workflow and Process Engine Architecture: production
+   workflow states, transitions, approvals, task orchestration, process
+   events, module integration, and human approval gates.
 
-After Chapter 7 is approved, Codex will have a complete foundation for
-consistent module implementation, physical database work, and advanced AI
-integration without major architecture changes during development.
+Chapter 7 - Integrations and AI Agent Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_7.md` and provides the official AI orchestration
+and provider integration standard.
