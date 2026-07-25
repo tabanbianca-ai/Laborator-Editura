@@ -338,6 +338,7 @@ conformity with the following documents, in this order:
 5. `docs/ARCHITECTURE_CHAPTER_2.md`.
 6. `docs/ARCHITECTURE_CHAPTER_3.md`.
 7. `docs/ARCHITECTURE_CHAPTER_4.md`.
+8. `docs/ARCHITECTURE_CHAPTER_5.md`.
 
 If an implementation conflicts with these documents, the architecture documents
 always prevail. Any deviation requires explicit approval from the project
@@ -363,15 +364,22 @@ It defines conceptual data domains, entity ownership, relationships,
 versioning, audit, lifecycle rules, and the domain baseline before logical or
 physical database design.
 
+Chapter 5 - Logical Data Model is documented in
+`docs/ARCHITECTURE_CHAPTER_5.md`.
+
+It defines logical aggregates, aggregate roots, relationships, cardinalities,
+integrity rules, deletion strategies, versioning strategies, and concurrency
+rules before database-specific physical design.
+
 ## Recommended Next Architecture Documents
 
 Before implementing individual modules, the architecture suite should also
 define:
 
-1. Chapter 5 - Logical Data Model: table boundaries, API-facing structures,
-   compatibility mappings, and migration-safe data rules derived from the
-   conceptual domain model.
+1. Chapter 6 - Physical Data Model and Database Standards: concrete database
+   conventions, table structures, keys, indexes, migrations, retention
+   policies, performance, and optimization rules derived from Chapters 4 and 5.
 
 Together, Manifesto, Development Conventions, Chapter 0, Chapter 1, Chapter 2,
-Chapter 3, Chapter 4, and Chapter 5 provide Codex with a coherent development
-framework for the entire platform.
+Chapter 3, Chapter 4, Chapter 5, and Chapter 6 provide Codex with a coherent
+development framework for the entire platform.
