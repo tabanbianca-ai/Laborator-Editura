@@ -1,5 +1,22 @@
 # Project Specification
 
+## Vision Manifesto
+
+The strategic vision for the platform is defined in `docs/MANIFEST.md`.
+
+Document order:
+
+1. `docs/MANIFEST.md` - strategic vision and purpose.
+2. `docs/DEVELOPMENT_CONVENTIONS.md` - mandatory development conventions.
+3. `SPEC.md`, Chapter 0 - fundamental platform principles.
+4. The remaining architecture and implementation specifications.
+
+All product, architecture, implementation, and roadmap decisions must remain
+compatible with the Manifesto. When multiple implementation approaches are
+valid, the selected approach must preserve the platform's coherence,
+modularity, extensibility, traceability, security, native internationalization,
+accessibility, and permanent human editorial control.
+
 ## Chapter 0 - Fundamental Platform Principles
 
 ### 0.1 Purpose
