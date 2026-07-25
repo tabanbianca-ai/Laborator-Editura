@@ -183,6 +183,8 @@ This document is the first document in the architecture suite and precedes:
 - `docs/ARCHITECTURE_CHAPTER_5.md` - Chapter 5, Logical Data Model.
 - `docs/ARCHITECTURE_CHAPTER_6.md` - Chapter 6, Physical Data Model and
   Database Standards.
+- `docs/ARCHITECTURE_CHAPTER_7.md` - Chapter 7, Integrations and AI Agent
+  Architecture.
 
 This order gives Codex the strategic context first, then the mandatory
 construction rules, and then the technical design.
