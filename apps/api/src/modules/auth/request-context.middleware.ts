@@ -37,7 +37,9 @@ export class RequestContextMiddleware implements NestMiddleware {
       (method === "GET" && this.isPublicCatalogRoute(routePath)) ||
       (method === "GET" && this.isPublicStoreRoute(routePath)) ||
       (method === "GET" && this.isPublicCommunityRoute(routePath)) ||
-      (method === "POST" && routePath.endsWith("/auth/login"));
+      (method === "POST" && routePath === "/auth/login") ||
+      (method === "POST" && routePath === "/auth/password/reset") ||
+      (method === "POST" && routePath === "/auth/email/verify");
   }
 
   private routePath(request: RequestWithAuthContext): string {
