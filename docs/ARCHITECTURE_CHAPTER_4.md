@@ -352,13 +352,16 @@ Chapter 5 - Logical Data Model is now documented in
 Chapter 6 - Physical Data Model and Database Standards is now documented in
 `docs/ARCHITECTURE_CHAPTER_6.md`.
 
-After Chapter 6 is validated, the next recommended document is:
+Chapter 7 - Integrations and AI Agent Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_7.md`.
 
-- Chapter 7 - Integrations and AI Agent Architecture.
+After Chapter 7 is validated, the next recommended document is:
 
-Chapter 7 should define AI orchestration, provider integration, module-agent
-contracts, prompt governance, cost controls, limits, logging, human approval,
-and traceability rules.
+- Chapter 8 - Editorial Workflow and Process Engine Architecture.
+
+Chapter 8 should define production workflow states, transitions, approvals,
+task orchestration, process events, module integration, and human approval
+gates.
 
 This step completes the architecture foundation for advanced AI-assisted
 capabilities without contradicting the approved architecture.
