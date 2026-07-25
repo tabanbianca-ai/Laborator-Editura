@@ -409,12 +409,13 @@ All database evolution must occur through documented, versioned migrations.
 
 ## Recommended Next Architecture Document
 
-After Chapter 6 is validated, the next recommended document is:
+Chapter 7 - Integrations and AI Agent Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_7.md`.
 
-- Chapter 7 - Integrations and AI Agent Architecture.
+After Chapter 7 is validated, the next recommended document is:
 
-Chapter 7 should define the official AI orchestration service architecture,
-contracts between modules and AI agents, integrations with providers such as
-OpenAI, Google, ElevenLabs, and future providers, prompt governance, cost
-management, limits, logging, human approval, and traceability rules for
-generated content.
+- Chapter 8 - Editorial Workflow and Process Engine Architecture.
+
+Chapter 8 should define the official production workflow engine, editorial
+states, transitions, approvals, task orchestration, workflow events,
+cross-module process integration, and human approval gates.
