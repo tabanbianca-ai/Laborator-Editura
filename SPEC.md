@@ -11,7 +11,8 @@ Document order:
 3. `SPEC.md`, Chapter 0 - fundamental platform principles.
 4. `docs/ARCHITECTURE_CHAPTER_1.md` - general platform architecture.
 5. `docs/ARCHITECTURE_CHAPTER_2.md` - application architecture.
-6. The remaining architecture and implementation specifications.
+6. `docs/ARCHITECTURE_CHAPTER_3.md` - module architecture.
+7. The remaining architecture and implementation specifications.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -249,6 +250,28 @@ Before implementing any new capability, Codex must verify that the change:
 
 Any deviation from the application architecture requires explicit project owner
 approval before implementation.
+
+## Chapter 3 - Module Architecture
+
+The official module architecture is documented in
+`docs/ARCHITECTURE_CHAPTER_3.md`.
+
+Chapter 3 defines the mandatory structure and standards for platform modules,
+including controllers, services, domain rules, repositories, DTOs, validators,
+events, permissions, localization, tests, documentation, audit, versioning, AI
+integration, prohibitions, and module acceptance criteria.
+
+Before implementing a new module, Codex must:
+
+1. Check whether a reusable service already exists.
+2. Follow the standard module structure.
+3. Integrate with existing authentication, authorization, localization, audit,
+   and observability.
+4. Document public APIs and events.
+5. Deliver appropriate tests.
+
+Any deviation from the module architecture requires an approved Architecture
+Decision Record before implementation.
 
 ## Architecture Freeze & Governance Requirements
 
