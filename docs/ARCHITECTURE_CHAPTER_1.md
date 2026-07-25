@@ -417,15 +417,17 @@ in `docs/ARCHITECTURE_CHAPTER_12.md`.
 Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture is
 now documented in `docs/ARCHITECTURE_CHAPTER_13.md`.
 
-After Chapter 13 is validated, the next recommended document is:
+Chapter 14 - Quality Architecture and Testing Strategy is now documented in
+`docs/ARCHITECTURE_CHAPTER_14.md`.
 
-1. Chapter 14 - Quality Architecture and Testing Strategy: unit tests,
-   integration tests, contract tests, end-to-end tests, performance tests,
-   security tests, accessibility tests, release validation, and acceptance
-   criteria.
+Chapter 15 - Operations, Maintenance, and Platform Evolution Architecture is
+now documented in `docs/ARCHITECTURE_CHAPTER_15.md`.
+
+The high-level architecture series is complete with Chapters 0-15. The next
+recommended stage is Phase 2 - Detailed Module Specifications.
 
 Together, Manifesto, Development Conventions, Chapter 0, Chapter 1, Chapter 2,
 Chapter 3, Chapter 4, Chapter 5, Chapter 6, Chapter 7, Chapter 8, Chapter 9,
-Chapter 10, Chapter 11, Chapter 12, and Chapter 13 provide Codex with the
-coherent technical foundation required before Chapter 14 formalizes quality
-architecture and testing strategy.
+Chapter 10, Chapter 11, Chapter 12, Chapter 13, Chapter 14, and Chapter 15
+provide Codex with the coherent technical foundation required before detailed
+module specifications and controlled module implementation.
