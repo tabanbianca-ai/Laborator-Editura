@@ -242,4 +242,13 @@ in `docs/ARCHITECTURE_CHAPTER_9.md`.
 Chapter 10 - Integration and Interoperability Architecture is now documented
 in `docs/ARCHITECTURE_CHAPTER_10.md`.
 
-Proceed next with Chapter 11 - Frontend and Design System Architecture.
+Chapter 11 - Frontend and Design System Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_11.md`.
+
+Chapter 12 - Backend and Application Services Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_12.md`.
+
+Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture is
+now documented in `docs/ARCHITECTURE_CHAPTER_13.md`.
+
+Proceed next with Chapter 14 - Quality Architecture and Testing Strategy.
