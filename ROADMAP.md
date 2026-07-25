@@ -139,6 +139,34 @@ Roadmap impact:
 - Any roadmap item that requires deviating from Chapter 3 must include an
   approved Architecture Decision Record before implementation.
 
+## Official Conceptual Domain Model
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_4.md`.
+- `docs/domain/domain-model.md`.
+- `docs/domain/domain-glossary.md`.
+- `docs/domain/domain-relationships.md`.
+- `docs/domain/domain-gap-analysis.md`.
+- `docs/domain/domain-migration-plan.md`.
+
+Roadmap impact:
+
+- Chapter 4 defines the platform's conceptual data domains, entity ownership
+  rules, relationships, lifecycle, versioning, audit, and migration baseline.
+- Future roadmap phases that change persistence, APIs, or module boundaries
+  must first respect the conceptual owner and relationship rules documented in
+  Chapter 4.
+- The domain baseline audit identifies current entities, overlaps, missing
+  conceptual concepts, and safe migration order without changing the runtime
+  database.
+- No roadmap item may redesign database schema or remove existing Phase 7 Step
+  16 validated behavior solely on the basis of Chapter 4.
+- Logical data modeling belongs to Chapter 5 and must be completed before any
+  physical database redesign or migration strategy is implemented.
+
 ## MVP Scope
 
 The MVP includes:
