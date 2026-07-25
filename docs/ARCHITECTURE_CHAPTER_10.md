@@ -407,13 +407,21 @@ and no business module may depend directly on external providers.
 Preserve all validated functionality from Phase 7 Step 16 while evolving the
 platform toward a unified integration architecture.
 
+Chapter 11 - Frontend and Design System Architecture is now documented in
+`docs/ARCHITECTURE_CHAPTER_11.md`.
+
 ## Recommended Next Architecture Document
 
-After Chapter 10 is validated, the next recommended document is:
+Chapter 12 - Backend and Application Services Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_12.md`.
 
-- Chapter 11 - Frontend and Design System Architecture.
+Chapter 13 - DevOps, Infrastructure, Deployment, and Recovery Architecture is
+now documented in `docs/ARCHITECTURE_CHAPTER_13.md`.
 
-Chapter 11 should define the complete frontend structure, responsive PWA
-architecture for desktop, tablet, and mobile, reusable component system,
-internationalization, accessibility, and user experience patterns for future
-frontend implementation.
+After Chapter 13 is validated, the next recommended document is:
+
+- Chapter 14 - Quality Architecture and Testing Strategy.
+
+Chapter 14 should define unit tests, integration tests, contract tests,
+end-to-end tests, performance tests, security tests, accessibility tests,
+release validation, and acceptance criteria.
