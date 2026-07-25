@@ -540,10 +540,15 @@ Validated functionality from Phase 7 - Step 16 must be preserved.
 
 ## Recommended Next Architecture Document
 
-After Chapter 8 is validated, the next recommended document is:
+Chapter 9 - Security, Identity, and Governance Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_9.md`.
 
-- Chapter 9 - Security, Identity, and Governance Architecture.
+Chapter 10 - Integration and Interoperability Architecture is now documented
+in `docs/ARCHITECTURE_CHAPTER_10.md`.
 
-Chapter 9 should consolidate authentication, authorization, identity
-management, security policies, audit, compliance, and governance into one
-official architecture standard.
+After Chapter 10 is validated, the next recommended document is:
+
+- Chapter 11 - Frontend and Design System Architecture.
+
+Chapter 11 should define frontend structure, responsive PWA behavior, reusable
+components, internationalization, accessibility, and user experience patterns.
