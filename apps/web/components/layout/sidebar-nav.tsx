@@ -25,11 +25,11 @@ export function SidebarNav({
 
   return (
     <aside className="sidebar-nav">
-      <div className="sidebar-brand" aria-label="Workspace">
+      <div className="sidebar-brand" aria-label={ui.t("label.workspace")}>
         <span>LE</span>
         <strong>Laborator</strong>
       </div>
-      <nav aria-label="Primary navigation" className="sidebar-nav-list">
+      <nav aria-label={ui.t("nav.primaryNavigation")} className="sidebar-nav-list">
         <Link
           aria-current={currentPath === "/pipeline" || currentPath.startsWith("/pipeline/") ? "page" : undefined}
           className={
