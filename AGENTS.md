@@ -1154,6 +1154,167 @@ Rules:
   before implementation.
 - Validated Phase 7 Step 16 behavior must be preserved.
 
+### Quality Architecture and Testing Strategy Directive
+
+Purpose:
+
+- Define the mandatory quality, testing, Quality Gate, coverage, security
+  testing, accessibility testing, performance testing, AI validation,
+  regression, smoke testing, defect management, and release validation
+  architecture for the entire platform.
+
+Rules:
+
+- Chapter 14 - Quality Architecture and Testing Strategy is the official
+  authority for quality and testing.
+- Quality must be designed into every module, workflow, API, frontend route,
+  database change, AI agent, integration, and release process.
+- The official test pyramid prioritizes unit tests, then integration tests,
+  then UI tests.
+- Domain tests are the highest-value protection for business rules and must be
+  framework-independent where practical.
+- Public API, event, DTO, adapter, JSON Master, backup, and runtime database
+  contracts must have contract tests.
+- Application tests must verify use cases, permissions, transactions,
+  orchestration, audit, and event side effects.
+- Security tests must cover authentication, RBAC, Need-to-Know,
+  workspace/tenant isolation, safe public endpoints, rate limiting, secret
+  handling, and safe errors.
+- Accessibility testing must target WCAG 2.2 AA.
+- AI validation tests must verify prompts, versions, responses, fallback,
+  audit, cost, reproducibility, provider independence, and Human Final
+  Authority.
+- Every fixed defect must create or update a regression test unless the fix is
+  documentation-only or a documented exception is approved.
+- Test data must be reproducible, versioned, anonymized, and independent from
+  production.
+- Coverage quality is more important than raw coverage percentage; thresholds
+  may be introduced only after baseline measurement.
+- Quality Gates must block release when builds, tests, migrations, security
+  checks, critical accessibility checks, or critical smoke tests fail.
+- Structural quality strategy changes require test inventory, test
+  classification, coverage analysis, Quality Gate review, AI/security/
+  accessibility/performance test review, gap analysis, risk assessment, and
+  migration planning before implementation.
+- Validated Phase 7 Step 16 behavior must be preserved.
+
+### Operations, Maintenance and Platform Evolution Directive
+
+Purpose:
+
+- Define the mandatory operational excellence, maintenance, versioning,
+  release, incident, KPI, SLA, business continuity, risk, governance, and
+  controlled platform evolution architecture for the entire platform.
+
+Rules:
+
+- Chapter 15 - Operations, Maintenance, and Platform Evolution Architecture is
+  the official authority for long-term platform operations and evolution.
+- Architecture Chapters 0-15 now form the complete high-level architecture
+  baseline.
+- All platform changes must be controlled, traceable, documented, reversible
+  where practical, and compatible with validated Phase 7 Step 16 behavior.
+- Platform configuration must be classified, traceable, audited, and versioned
+  where practical.
+- New functionality must follow controlled feature lifecycle management and
+  use feature flags when gradual rollout, beta exposure, operational fallback,
+  or controlled disabling is required.
+- Platform releases must use Semantic Versioning and include release notes,
+  migration guidance when needed, compatibility notes, known issues, commit or
+  artifact reference, backup reference, and rollback reference.
+- Backward compatibility must be preserved whenever possible. Incompatible
+  changes require justification, migration plan, transition period, user or
+  operator notification, and rollback or mitigation strategy.
+- Deprecated functionality must follow the lifecycle `Supported` ->
+  `Deprecated` -> `Removal Planned` -> `Removed`.
+- Incidents must be classified as Critical, High, Medium, or Low and must
+  preserve impact, cause, mitigation, permanent fix, lessons learned, and
+  follow-up actions.
+- Operational monitoring must cover uptime, performance, resources, AI,
+  Workflow, runtime database, cache when introduced, module usage, errors,
+  backup/restore health, and deployment health.
+- Operational KPIs must include availability, mean response time, mean time to
+  restore, mean time between incidents, deployment success rate, AI execution
+  duration, workflow duration, backup success rate, and restore dry-run
+  success rate.
+- Architecture may evolve only through Architecture Decision Records,
+  Architecture Review, Impact Analysis, and Approval Process.
+- Future modules, services, AI capabilities, integrations, and production
+  operations must comply with Chapters 0-15 before acceptance.
+- The next stage after Chapters 0-15 is detailed module specifications and
+  controlled implementation, not a new general architecture chapter.
+
+### Phase II Library Module Architecture Directive
+
+Purpose:
+
+- Define Library as the first detailed module specification after completion
+  of Architecture Chapters 0-15 and establish it as the Single Source of Truth
+  for editorial resources.
+
+Rules:
+
+- Library is the canonical repository for manuscripts, books, magazines,
+  articles, images, illustrations, audio, video, translations, publication
+  artifacts, source files, metadata, versions, rights, provenance, and
+  relationships.
+- No editorial object may be introduced as a duplicate repository outside the
+  Library model.
+- Other modules may operate on editorial resources only through Library
+  references or controlled Library service contracts.
+- Every Library resource must be metadata-first, versionable, auditable,
+  searchable, rights-aware, provenance-aware, and compatible with Need-to-Know
+  access.
+- Physical files must be managed as Assets or, during migration, existing
+  Library publication file records.
+- Existing Library reader experience, Intelligent Editorial Library behavior,
+  runtime persistence, backup/restore, and Phase 7 Step 16 publishing/
+  preflight/distribution behavior must be preserved.
+- Current publication lifecycle statuses `STOC_REAL`, `IN_LUCRU`, and
+  `PUBLICAT` must be preserved and mapped to canonical Library Item workflow
+  status before any future consolidation.
+- Future Library work must be additive and must follow
+  `docs/modules/library/library-migration-plan.md`.
+- Module 2 - Translation Module Architecture is now documented as the next
+  Phase II specification after Library.
+
+### Phase II Translation Module Architecture Directive
+
+Purpose:
+
+- Define Translation as the second detailed module specification after Library
+  and establish the official rules for source preservation, segmentation,
+  Translation Memory, terminology, QA, Semantic Fidelity, Workflow, AI
+  assistance, and translation audit.
+
+Rules:
+
+- Translation must preserve original source documents and must never modify
+  them directly.
+- Every translation must be linked to a Library Item or Library publication
+  record during migration.
+- Every translation segment must be persistent, auditable, and versionable.
+- Translation Memory stores only validated reusable translations and remains
+  proposal-only; it must never overwrite target text automatically.
+- Validated terminology has priority over Translation Memory and AI
+  suggestions.
+- AI may suggest, explain, compare, and validate, but it must operate through
+  AI orchestration, receive full contextual information, and never approve,
+  publish, overwrite validated terminology, or bypass Workflow.
+- Translation workflows must use the centralized Workflow Engine and Human
+  Final Authority.
+- QA and Semantic Fidelity validation must remain connected to segment and
+  document translation checks.
+- Translation must reuse centralized terminology, glossary, lexicographic,
+  language policy, audit, and Library services.
+- Translation must not introduce duplicate editorial source repositories
+  outside Library.
+- Future Translation work must be additive and must follow
+  `docs/modules/translation/translation-migration-plan.md`.
+- After Translation specification and baseline audit are accepted, the next
+  module specification should be Module 3 - Proofreading and Editorial Review
+  Module Architecture.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
@@ -1332,10 +1493,12 @@ Rules:
 14. `docs/ARCHITECTURE_CHAPTER_11.md`.
 15. `docs/ARCHITECTURE_CHAPTER_12.md`.
 16. `docs/ARCHITECTURE_CHAPTER_13.md`.
-17. `SPEC.md`.
-18. `AGENTS.md`.
-19. `ROADMAP.md`.
-20. Codex implementation.
-21. Lovable UI generation.
+17. `docs/ARCHITECTURE_CHAPTER_14.md`.
+18. `docs/ARCHITECTURE_CHAPTER_15.md`.
+19. `SPEC.md`.
+20. `AGENTS.md`.
+21. `ROADMAP.md`.
+22. Codex implementation.
+23. Lovable UI generation.
 
 When conflicts occur, architecture and specifications take precedence.
