@@ -387,6 +387,7 @@ An implementation is considered compliant only if it respects:
 - `SPEC.md`, Chapter 0 - Fundamental Platform Principles.
 - `docs/ARCHITECTURE_CHAPTER_1.md`.
 - This document.
+- `docs/ARCHITECTURE_CHAPTER_3.md`.
 
 ## Mandatory Requirement for Codex
 
@@ -407,11 +408,9 @@ platform evolution.
 Before implementing individual modules, the architecture suite should also
 define:
 
-1. Chapter 3 - Module Architecture: the single template every module must
-   follow.
-2. Chapter 4 - Data Model: the main entities and relationships before detailed
+1. Chapter 4 - Data Model: the main entities and relationships before detailed
    database design.
 
-After these documents are approved, Codex will have a complete foundation for
-consistent module implementation without major architecture changes during
-development.
+After Chapter 4 is approved, Codex will have a complete foundation for
+consistent module implementation and data modeling without major architecture
+changes during development.
