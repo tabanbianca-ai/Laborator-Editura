@@ -134,6 +134,8 @@ Deliverables:
 
 ## Next Recommended Module
 
-After Translation specification and baseline audit are accepted, the next
-module specification should be Module 3 - Proofreading and Editorial Review
-Module Architecture.
+Module 3 - Proofreading and Editorial Review Module Architecture is now
+documented as the next Phase II specification after Translation.
+
+The next recommended module specification after Editorial Review is Module 4 -
+Publishing Module Architecture.
