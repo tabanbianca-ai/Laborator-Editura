@@ -190,13 +190,46 @@ Roadmap impact:
 - Future roadmap phases that change persistence, API contracts, cross-module
   relationships, or entity ownership must first respect the logical aggregate
   map and integrity rules.
-- Physical database work must not begin until Chapter 6 - Physical Data Model
-  and Database Standards is approved.
+- Physical database work must follow Chapter 6 - Physical Data Model and
+  Database Standards.
 - Chapter 5 does not authorize database-specific schemas, migrations, indexes,
   runtime persistence changes, API changes, UI changes, Docker changes, or
   removal of Phase 7 Step 16 validated behavior.
 - Chapter 6 must use Chapter 4 and Chapter 5 together: Chapter 4 defines
   conceptual meaning, and Chapter 5 defines logical implementation boundaries.
+
+## Official Physical Data Model and Database Standards
+
+Status: Active.
+
+Reference:
+
+- `docs/ARCHITECTURE_CHAPTER_6.md`.
+- `docs/database/physical-data-model.md`.
+- `docs/database/database-conventions.md`.
+- `docs/database/index-strategy.md`.
+- `docs/database/migration-strategy.md`.
+- `docs/database/database-gap-analysis.md`.
+- `docs/database/database-migration-plan.md`.
+
+Roadmap impact:
+
+- Chapter 6 establishes PostgreSQL as the primary relational database engine
+  and defines mandatory standards for naming, keys, foreign keys, indexes,
+  constraints, migrations, audit, versioning, deletion strategies, data
+  security, reference data, and module compatibility.
+- Future roadmap phases that introduce or modify database schema must use
+  documented, versioned, tested migrations.
+- Existing validated plural table names are legacy-compatible and must not be
+  renamed without an approved compatibility migration.
+- Runtime persistence for Phase 2-7 foundations must move toward PostgreSQL
+  only through bounded, approved, additive migration phases.
+- Destructive schema changes are not allowed unless explicitly approved by the
+  project owner.
+- Phase 7 Step 16 publishing, preflight, distribution, Library, Rights,
+  Workflow, Export, Quality, Backup, and audit behavior must be preserved.
+- The next recommended architecture document is Chapter 7 - Integrations and
+  AI Agent Architecture.
 
 ## MVP Scope
 
