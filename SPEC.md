@@ -14,7 +14,9 @@ Document order:
 6. `docs/ARCHITECTURE_CHAPTER_3.md` - module architecture.
 7. `docs/ARCHITECTURE_CHAPTER_4.md` - conceptual domain model.
 8. `docs/ARCHITECTURE_CHAPTER_5.md` - logical data model.
-9. The remaining architecture and implementation specifications.
+9. `docs/ARCHITECTURE_CHAPTER_6.md` - physical data model and database
+   standards.
+10. The remaining architecture and implementation specifications.
 
 All product, architecture, implementation, and roadmap decisions must remain
 compatible with the Manifesto. When multiple implementation approaches are
@@ -327,6 +329,35 @@ existing Phase 7 Step 16 validated functionality.
 Before generating database-specific schema work, Codex must use Chapters 4 and
 5 together and proceed through Chapter 6 - Physical Data Model and Database
 Standards.
+
+## Chapter 6 - Physical Data Model and Database Standards
+
+The official physical database implementation standard is documented in
+`docs/ARCHITECTURE_CHAPTER_6.md`.
+
+Chapter 6 defines PostgreSQL as the primary relational database engine and
+establishes mandatory physical database standards for naming, primary keys,
+foreign keys, indexes, constraints, migrations, audit, versioning, deletion
+strategies, performance, data security, reference data, and module
+compatibility.
+
+The supporting physical database baseline documents are:
+
+1. `docs/database/physical-data-model.md`.
+2. `docs/database/database-conventions.md`.
+3. `docs/database/index-strategy.md`.
+4. `docs/database/migration-strategy.md`.
+5. `docs/database/database-gap-analysis.md`.
+6. `docs/database/database-migration-plan.md`.
+
+Chapter 6 is authoritative for future PostgreSQL schema work, but it does not
+authorize immediate schema changes, table renames, destructive migrations, API
+changes, UI changes, Docker changes, or removal of Phase 7 Step 16 validated
+functionality.
+
+All future database evolution must occur through documented, versioned,
+tested migrations and must preserve tenant isolation, audit, backup/restore,
+and validated publication workflow behavior.
 
 ## Architecture Freeze & Governance Requirements
 
