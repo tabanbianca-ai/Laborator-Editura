@@ -168,6 +168,12 @@ documented after Workflow Engine and Business Process Automation.
 Module 12 - Identity, Access Management and Security Module Architecture is
 now documented after Notification and Communication.
 
-The next recommended module specification after Identity, Access Management
-and Security is Module 13 - Observability, Monitoring and Audit Module
+Module 13 - Observability, Monitoring and Audit Module Architecture is now
+documented after Identity, Access Management and Security.
+
+Module 14 - Backup, Disaster Recovery and Business Continuity Module
+Architecture is now documented after Observability, Monitoring and Audit.
+
+The next recommended module specification after Backup, Disaster Recovery and
+Business Continuity is Module 15 - Search, Indexing and Knowledge Graph Module
 Architecture.
