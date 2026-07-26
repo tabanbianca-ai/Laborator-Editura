@@ -1505,10 +1505,67 @@ Integration module rules:
   Observability, Backup, Search, Notification, AI Orchestration, Publishing,
   Distribution, and Phase 7 Step 16 behavior must be preserved.
 
-After Integration, API Gateway and External Connectors Module specification
-and baseline audit are accepted, the next recommended module specification is
-Module 17 - Configuration, Feature Flags and Platform Administration Module
-Architecture.
+## Phase II Module 17 - Configuration, Feature Flags and Platform Administration Module Architecture
+
+The official Configuration, Feature Flags and Platform Administration module
+implementation specification begins in
+`docs/modules/configuration/configuration-overview.md`.
+
+The Configuration, Feature Flags and Platform Administration Module provides
+the centralized infrastructure for global configuration, environment-specific
+configuration, organization and project configuration, Feature Flags,
+platform administration, service administration, module configuration, AI
+parameters, editorial parameters, branding, localization, licensing, and
+operational policies.
+
+The supporting Configuration module specification documents are:
+
+1. `docs/modules/configuration/configuration-overview.md`.
+2. `docs/modules/configuration/domain-model.md`.
+3. `docs/modules/configuration/configuration-service.md`.
+4. `docs/modules/configuration/feature-flags.md`.
+5. `docs/modules/configuration/environment-management.md`.
+6. `docs/modules/configuration/branding.md`.
+7. `docs/modules/configuration/localization.md`.
+8. `docs/modules/configuration/platform-administration.md`.
+9. `docs/modules/configuration/api-contracts.md`.
+10. `docs/modules/configuration/events.md`.
+11. `docs/modules/configuration/configuration-gap-analysis.md`.
+12. `docs/modules/configuration/configuration-migration-plan.md`.
+
+Configuration module rules:
+
+- No component may contain business-critical hardcoded configuration or create
+  its own independent administration mechanism for shared platform concerns.
+- All modules must obtain shared runtime configuration through Configuration
+  Service contracts once the service is implemented.
+- Configuration must be scoped, typed, validated, versioned, auditable,
+  reversible where safe, and isolated by environment.
+- Feature Flags must be managed independently of deployments and evaluated
+  server-side for gated backend behavior.
+- Feature Flags do not replace IAM, RBAC, Need-to-Know access, subscription,
+  policy, or workflow authorization.
+- Development, Testing, Staging, and Production must remain isolated by
+  configuration, database targets, secrets, policies, and Feature Flag state.
+- Branding and localization must be configurable without code changes while
+  preserving the official Platform Language, Original Language, Authoring
+  Language, and Target Language separation.
+- Secrets, tokens, credentials, provider keys, and webhook secrets must be
+  stored only through approved secret references and must not be hardcoded,
+  logged, indexed, exported, embedded in JSON Master, or exposed in client
+  bundles.
+- AI may suggest configuration changes, summarize risks, and identify drift,
+  but must not activate production-impacting features, change security,
+  approve configuration changes, alter secrets, or bypass administrative
+  confirmation.
+- Existing Enterprise Administration, Workspace, Gateway, Security Governance,
+  Policy Engine, AI Governance, Observability, Backup, Search, Integration,
+  Publishing, Distribution, and Phase 7 Step 16 behavior must be preserved.
+
+After Configuration, Feature Flags and Platform Administration Module
+specification and baseline audit are accepted, the next recommended module
+specification is Module 18 - Data Governance, Metadata and Master Data
+Management Module Architecture.
 
 ## Architecture Freeze & Governance Requirements
 
