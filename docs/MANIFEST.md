@@ -232,6 +232,8 @@ Detailed module specifications now begin with:
   Multimedia Module Architecture.
 - `docs/modules/workflow/workflow-overview.md` - Phase II Module 10, Workflow
   Engine and Business Process Automation Module Architecture.
+- `docs/modules/notifications/notifications-overview.md` - Phase II Module 11,
+  Notification and Communication Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -286,3 +288,9 @@ coordination layer. It coordinates versioned workflow definitions, state
 machines, tasks, approvals, business rules, scheduler hooks, escalation
 metadata, automation metadata, events, and audit while domain modules retain
 their own validation authority and Human Final Authority remains mandatory.
+
+Notification and Communication is the centralized outbound communication
+layer. It renders versioned localized templates, respects recipient
+preferences and Need-to-Know access, routes messages through independent
+channels, tracks delivery and retries, dispatches webhooks through governed
+contracts, and audits every communication event.
