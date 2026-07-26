@@ -1562,10 +1562,80 @@ Configuration module rules:
   Policy Engine, AI Governance, Observability, Backup, Search, Integration,
   Publishing, Distribution, and Phase 7 Step 16 behavior must be preserved.
 
-After Configuration, Feature Flags and Platform Administration Module
+## Phase II Module 18 - Data Governance, Metadata and Master Data Management Module Architecture
+
+The official Data Governance, Metadata and Master Data Management module
+implementation specification begins in
+`docs/modules/data-governance/data-governance-overview.md`.
+
+The Data Governance, Metadata and Master Data Management Module provides the
+centralized infrastructure for coherent platform data and metadata governance,
+canonical data models, master data, metadata registry, data catalog, data
+dictionary, schema registry, reference data, data classification, data quality,
+data lineage, data ownership, data stewardship, data retention, deduplication,
+entity resolution, Golden Records, data contracts, and controlled data import
+and export governance.
+
+The supporting Data Governance module specification documents are:
+
+1. `docs/modules/data-governance/data-governance-overview.md`.
+2. `docs/modules/data-governance/domain-model.md`.
+3. `docs/modules/data-governance/canonical-data-model.md`.
+4. `docs/modules/data-governance/master-data-management.md`.
+5. `docs/modules/data-governance/metadata-registry.md`.
+6. `docs/modules/data-governance/data-catalog.md`.
+7. `docs/modules/data-governance/data-dictionary.md`.
+8. `docs/modules/data-governance/schema-registry.md`.
+9. `docs/modules/data-governance/data-contracts.md`.
+10. `docs/modules/data-governance/reference-data.md`.
+11. `docs/modules/data-governance/data-quality.md`.
+12. `docs/modules/data-governance/entity-resolution.md`.
+13. `docs/modules/data-governance/golden-record.md`.
+14. `docs/modules/data-governance/data-lineage.md`.
+15. `docs/modules/data-governance/data-classification.md`.
+16. `docs/modules/data-governance/data-retention.md`.
+17. `docs/modules/data-governance/api-contracts.md`.
+18. `docs/modules/data-governance/events.md`.
+19. `docs/modules/data-governance/data-governance-gap-analysis.md`.
+20. `docs/modules/data-governance/data-governance-migration-plan.md`.
+
+Data Governance module rules:
+
+- Shared entities must have canonical definitions, stable identifiers,
+  authoritative source references, owners, stewards, validation rules,
+  classification, history, provenance, and explicit relationships.
+- Existing identifiers must be preserved through explicit mapping records;
+  migrations must not silently replace or discard legacy identifiers.
+- Functional modules remain authoritative for their own business behavior, but
+  shared entity definitions must align with the canonical model.
+- IAM remains authoritative for identity and access. Rights and Provenance
+  remains authoritative for legal rights behavior. Workflow remains
+  authoritative for transitions and approvals. Publishing remains authoritative
+  for release gates.
+- Schemas, metadata definitions, data contracts, reference data, and generated
+  artifact contracts must be versioned and compatibility-tested.
+- AI-generated or AI-extracted data must not become validated master data
+  without the applicable human approval and governance policy.
+- Entity Resolution and Golden Records must preserve all source records,
+  conflicting values, provenance, approvals, and history.
+- Derived PDF, EPUB, HTML, XML, print-ready PDF, audiobook, transcript,
+  subtitle, video, accessibility, and distribution outputs must retain
+  verifiable references to the exact master record and master version used to
+  generate them.
+- Classification, retention, legal hold, audit, backup, observability, IAM,
+  and Need-to-Know policies must apply consistently to master data and
+  metadata operations.
+- No destructive schema changes, irreversible data migrations, or massive
+  reconciliation may begin during the baseline audit.
+- Existing JSON Master v1.0, Domain Model, Logical Data Model, Physical
+  Database Model, Library, Translation, Rights, Publishing, Export, Search,
+  Integration, Configuration, Backup, Observability, IAM, and Phase 7 Step 16
+  behavior must be preserved.
+
+After Data Governance, Metadata and Master Data Management Module
 specification and baseline audit are accepted, the next recommended module
-specification is Module 18 - Data Governance, Metadata and Master Data
-Management Module Architecture.
+specification is Module 19 - Accessibility, Localization and Inclusive
+Experience Module Architecture.
 
 ## Architecture Freeze & Governance Requirements
 
