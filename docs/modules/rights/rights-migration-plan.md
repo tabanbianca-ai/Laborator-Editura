@@ -150,5 +150,8 @@ specification after Rights and Provenance.
 Module 7 - AI Orchestration and Editorial Agents Module Architecture is now
 documented after Magazine.
 
-The next recommended module specification after AI Orchestration is Module 8 -
-Audio and Narration Module Architecture.
+Module 8 - Audio and Narration Module Architecture is now documented after AI
+Orchestration.
+
+The next recommended module specification after Audio and Narration is Module
+9 - Video and Multimedia Module Architecture.
