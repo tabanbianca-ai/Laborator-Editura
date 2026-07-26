@@ -1533,9 +1533,46 @@ Rules:
   consent, bypass rights, or bypass workflow.
 - Future Audio work must be additive and must follow
   `docs/modules/audio/audio-migration-plan.md`.
-- After Audio and Narration Module specification and baseline audit are
-  accepted, the next module specification should be Module 9 - Video and
-  Multimedia Module Architecture.
+- Module 9 - Video and Multimedia Module Architecture is now documented as the
+  next Phase II specification after Audio and Narration.
+
+### Phase II Video and Multimedia Module Architecture Directive
+
+Purpose:
+
+- Define Video and Multimedia as the ninth detailed module specification after
+  Library, Translation, Proofreading/Editorial Review, Publishing, Rights and
+  Provenance, Magazine, AI Orchestration, and Audio and Narration and
+  establish the official rules for video projects, scenes, timelines,
+  multimedia asset references, captions, synchronization, rendering,
+  accessibility, publication handoff, and audit.
+
+Rules:
+
+- Every video project must be linked to a Library Item.
+- All multimedia assets must be centrally managed and referenced from Library
+  or approved asset modules.
+- Video must not duplicate Library text, Audio narration, Translation content,
+  or media assets.
+- Timeline state must remain independent from source editorial content.
+- Scene, timeline, render, caption, and synchronization changes must be
+  versioned and auditable.
+- Text-audio-video-caption synchronization must preserve source text version,
+  segment IDs, scene IDs, timestamps, confidence, and review status.
+- Rendering must be asynchronous, scalable, traceable, and non-destructive.
+- Preview video is draft-only and must never be published.
+- Official video publication requires approved source content, asset rights,
+  workflow approval, quality review, rendering review, and Publishing handoff.
+- AI-assisted video, captioning, thumbnail, timing, or media generation must
+  route through AI Orchestration. Video must not call providers directly.
+- AI may suggest visuals, timing, captions, thumbnails, scene structures, and
+  platform formats, but it must not approve, publish, bypass rights, bypass
+  workflow, or alter source content.
+- Future Video work must be additive and must follow
+  `docs/modules/video/video-migration-plan.md`.
+- After Video and Multimedia Module specification and baseline audit are
+  accepted, the next module specification should be Module 10 - Workflow
+  Engine and Business Process Automation Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
