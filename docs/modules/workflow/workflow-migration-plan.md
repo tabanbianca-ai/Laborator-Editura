@@ -192,6 +192,18 @@ documented after Workflow Engine and Business Process Automation.
 Module 12 - Identity, Access Management and Security Module Architecture is
 now documented after Notification and Communication.
 
-The next recommended module specification after Identity, Access Management
-and Security is Module 13 - Observability, Monitoring and Audit Module
-Architecture.
+Module 13 - Observability, Monitoring and Audit Module Architecture is now
+documented after Identity, Access Management and Security.
+
+Module 14 - Backup, Disaster Recovery and Business Continuity Module
+Architecture is now documented after Observability, Monitoring and Audit.
+
+Module 15 - Search, Indexing and Knowledge Graph Module Architecture is now
+documented after Backup, Disaster Recovery and Business Continuity.
+
+Module 16 - Integration, API Gateway and External Connectors Module
+Architecture is now documented after Search, Indexing and Knowledge Graph.
+
+The next recommended module specification after Integration, API Gateway and
+External Connectors is Module 17 - Configuration, Feature Flags and Platform
+Administration Module Architecture.
