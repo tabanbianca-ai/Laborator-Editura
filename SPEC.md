@@ -1288,9 +1288,227 @@ IAM module rules:
   Notification, Publishing, Distribution, and Phase 7 Step 16 behavior must be
   preserved.
 
-After Identity, Access Management and Security Module specification and
-baseline audit are accepted, the next recommended module specification is
-Module 13 - Observability, Monitoring and Audit Module Architecture.
+Module 13 - Observability, Monitoring and Audit Module Architecture is now
+documented as the next Phase II specification after Identity, Access
+Management and Security.
+
+## Phase II Module 13 - Observability, Monitoring and Audit Module Architecture
+
+The official Observability, Monitoring and Audit module implementation
+specification begins in
+`docs/modules/observability/observability-overview.md`.
+
+The Observability, Monitoring and Audit Module provides real-time monitoring,
+structured logs, metrics, distributed traces, operational audit visibility,
+alerting, dashboards, diagnostics, and telemetry correlation for all services,
+workers, AI agents, workflows, infrastructure processes, and publication
+pipelines.
+
+The supporting Observability module specification documents are:
+
+1. `docs/modules/observability/observability-overview.md`.
+2. `docs/modules/observability/domain-model.md`.
+3. `docs/modules/observability/logging.md`.
+4. `docs/modules/observability/metrics.md`.
+5. `docs/modules/observability/tracing.md`.
+6. `docs/modules/observability/audit.md`.
+7. `docs/modules/observability/alerting.md`.
+8. `docs/modules/observability/dashboards.md`.
+9. `docs/modules/observability/api-contracts.md`.
+10. `docs/modules/observability/events.md`.
+11. `docs/modules/observability/observability-gap-analysis.md`.
+12. `docs/modules/observability/observability-migration-plan.md`.
+
+Observability module rules:
+
+- All platform components must emit telemetry through centralized
+  observability infrastructure.
+- Modules must not create isolated monitoring mechanisms that cannot be
+  correlated, retained, audited, or diagnosed.
+- Structured logs must include severity, service/module, timestamp,
+  correlation ID, trace ID when available, tenant scope, and safe metadata.
+- Metrics must be centrally collected and use documented names, units, types,
+  and dimensions.
+- Every request, event, job, workflow, AI execution, notification, export, and
+  infrastructure process should propagate correlation ID and trace ID.
+- Audit remains distinct from observability: audit proves authorized actions,
+  while observability explains system behavior.
+- Source modules remain authoritative for their own business audit records.
+- Observability may provide immutable read models, correlation, dashboards,
+  diagnostics, and alerting over audit sources.
+- Alert rules must be configurable, deduplicated, acknowledged, escalated, and
+  routed through Notification and Communication for delivery.
+- Telemetry must not expose secrets, tokens, restricted content, or
+  unnecessary personal data.
+- AI may diagnose, summarize incidents, and suggest remediation, but must not
+  delete logs, hide errors, alter audit, suppress critical alerts
+  automatically, or execute infrastructure actions automatically.
+- Existing Health, Observability, IAM, Notification, Workflow, Gateway,
+  Security Governance, Backup, Platform Engineering, Publishing,
+  Distribution, infrastructure scripts, and Phase 7 Step 16 behavior must be
+  preserved.
+
+## Phase II Module 14 - Backup, Disaster Recovery and Business Continuity Module Architecture
+
+The official Backup, Disaster Recovery and Business Continuity module
+implementation specification begins in
+`docs/modules/backup/backup-overview.md`.
+
+The Backup, Disaster Recovery and Business Continuity Module protects all
+platform data, configuration, audit history, editorial assets, publication
+artifacts, and operational continuity. It centralizes full backups,
+incremental backups, differential backups, snapshots, replication, restore
+workflows, disaster recovery plans, business continuity procedures, retention
+policies, integrity validation, recovery objectives, and backup audit.
+
+The supporting Backup module specification documents are:
+
+1. `docs/modules/backup/backup-overview.md`.
+2. `docs/modules/backup/domain-model.md`.
+3. `docs/modules/backup/backup-strategies.md`.
+4. `docs/modules/backup/retention-policies.md`.
+5. `docs/modules/backup/replication.md`.
+6. `docs/modules/backup/restore.md`.
+7. `docs/modules/backup/disaster-recovery.md`.
+8. `docs/modules/backup/business-continuity.md`.
+9. `docs/modules/backup/api-contracts.md`.
+10. `docs/modules/backup/events.md`.
+11. `docs/modules/backup/backup-gap-analysis.md`.
+12. `docs/modules/backup/backup-migration-plan.md`.
+
+Backup module rules:
+
+- All critical platform data, configuration, audit history, and publication
+  artifacts must be covered by centralized backup policies.
+- Modules must not create isolated backup or restore mechanisms that bypass
+  centralized backup governance, tenant isolation, retention, encryption,
+  validation, observability, or audit.
+- Backups must be versioned, checksum-verified, encrypted in controlled
+  environments, and retained according to documented policy.
+- Restore operations require authenticated server-derived context, explicit
+  authorized human approval, integrity validation, and full audit.
+- Disaster recovery plans must define RPO, RTO, critical services,
+  dependencies, restore order, failover/failback procedures, and post-recovery
+  checks.
+- Business continuity must prioritize safe degraded operation, preservation of
+  editorial work, audit continuity, rights restrictions, and Human Final
+  Authority.
+- AI may recommend backup, restore, continuity, or disaster recovery actions,
+  but must not restore data, delete backups, alter retention, execute
+  failover, publish, approve, or bypass workflow.
+- Existing Backup Governance, runtime backup/restore, Infrastructure Pack,
+  Observability, IAM, Workflow, Publishing, Distribution, and Phase 7 Step 16
+  behavior must be preserved.
+
+## Phase II Module 15 - Search, Indexing and Knowledge Graph Module Architecture
+
+The official Search, Indexing and Knowledge Graph module implementation
+specification begins in `docs/modules/search/search-overview.md`.
+
+The Search, Indexing and Knowledge Graph Module provides the unified
+infrastructure for full-text search, semantic search, vector search,
+autocomplete, faceted search, incremental indexing, entity linking,
+relationship navigation, intelligent recommendations, and editorial knowledge
+reuse across the entire platform.
+
+The supporting Search module specification documents are:
+
+1. `docs/modules/search/search-overview.md`.
+2. `docs/modules/search/domain-model.md`.
+3. `docs/modules/search/indexing.md`.
+4. `docs/modules/search/full-text-search.md`.
+5. `docs/modules/search/semantic-search.md`.
+6. `docs/modules/search/vector-search.md`.
+7. `docs/modules/search/knowledge-graph.md`.
+8. `docs/modules/search/entity-relationships.md`.
+9. `docs/modules/search/api-contracts.md`.
+10. `docs/modules/search/events.md`.
+11. `docs/modules/search/search-gap-analysis.md`.
+12. `docs/modules/search/search-migration-plan.md`.
+
+Search module rules:
+
+- Search, indexing, autocomplete, semantic retrieval, vector retrieval, and
+  Knowledge Graph capabilities must be centralized.
+- Functional modules must not implement isolated search engines. Local query
+  helpers may remain during migration only when they preserve existing
+  behavior and are compatible with the central indexing plan.
+- Indexing must be incremental, asynchronous, event-driven, re-runnable,
+  language-aware, version-aware, and auditable.
+- Search results must enforce IAM, Need-to-Know, project scope, document
+  permissions, workflow visibility, rights restrictions, and public visibility
+  rules server-side.
+- Restricted content must not be indexed, embedded, exposed, summarized, or
+  suggested unless copyright, license, security, and AI-eligibility policies
+  allow it.
+- Knowledge Graph entities and relationships must preserve source module,
+  source resource ID, source version, provenance, confidence, and validation
+  state where editorially relevant.
+- AI may suggest related resources, entities, relationships, rankings,
+  embeddings, and explanations, but it must not approve editorial facts,
+  override validated terminology, publish, grant access, or bypass workflow.
+- Existing Library, Research, Translation Memory, Terminology,
+  Lexicographic Intelligence, Public Portal, Marketplace, IAM,
+  Observability, Backup, Publishing, Distribution, and Phase 7 Step 16
+  behavior must be preserved.
+
+## Phase II Module 16 - Integration, API Gateway and External Connectors Module Architecture
+
+The official Integration, API Gateway and External Connectors module
+implementation specification begins in
+`docs/modules/integration/integration-overview.md`.
+
+The Integration, API Gateway and External Connectors Module provides the
+unified infrastructure for secure external interoperability, API Gateway
+routing, REST APIs, optional GraphQL APIs, webhooks, event gateway contracts,
+external connectors, rate limiting, API versioning, API security, OAuth
+integration, API monitoring, service discovery, and contract validation.
+
+The supporting Integration module specification documents are:
+
+1. `docs/modules/integration/integration-overview.md`.
+2. `docs/modules/integration/domain-model.md`.
+3. `docs/modules/integration/api-gateway.md`.
+4. `docs/modules/integration/connectors.md`.
+5. `docs/modules/integration/webhooks.md`.
+6. `docs/modules/integration/api-versioning.md`.
+7. `docs/modules/integration/rate-limiting.md`.
+8. `docs/modules/integration/security.md`.
+9. `docs/modules/integration/api-contracts.md`.
+10. `docs/modules/integration/events.md`.
+11. `docs/modules/integration/integration-gap-analysis.md`.
+12. `docs/modules/integration/integration-migration-plan.md`.
+
+Integration module rules:
+
+- All external communication must pass through the API Gateway or approved
+  centralized connector adapters.
+- Functional modules must not call external services, provider SDKs, webhooks,
+  storage providers, AI providers, publishing providers, payment providers, or
+  productivity providers directly.
+- API contracts must be versioned, documented, validated, observable, and
+  backwards-compatible according to deprecation policy before stable external
+  exposure.
+- Webhooks must be signed, retryable, idempotent where needed, observable,
+  auditable, and protected against replay.
+- Rate limiting must be configurable by endpoint, tenant, consumer, connector,
+  and sensitive-operation policy.
+- Secrets, tokens, OAuth credentials, webhook secrets, and provider keys must
+  not be hardcoded, logged, indexed, exported, embedded in JSON Master, or
+  exposed in client bundles.
+- IAM remains the source of authentication and authorization for integration
+  traffic.
+- AI may suggest integration settings, connector scopes, and risk summaries,
+  but must not create active secrets, enable providers, expand scopes, bypass
+  rate limits, or execute production-impacting integration actions.
+- Existing Gateway, Integrations, Webhooks, IAM, Security Governance,
+  Observability, Backup, Search, Notification, AI Orchestration, Publishing,
+  Distribution, and Phase 7 Step 16 behavior must be preserved.
+
+After Integration, API Gateway and External Connectors Module specification
+and baseline audit are accepted, the next recommended module specification is
+Module 17 - Configuration, Feature Flags and Platform Administration Module
+Architecture.
 
 ## Architecture Freeze & Governance Requirements
 
