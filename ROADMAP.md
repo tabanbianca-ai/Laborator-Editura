@@ -1266,10 +1266,54 @@ Roadmap impact:
   Notification, AI Orchestration, Publishing, Distribution, and Phase 7 Step
   16 behavior, and prevent business modules from directly calling external
   providers.
-- After Integration, API Gateway and External Connectors Module specification
-  and baseline audit are accepted, the next module specification should be
-  Module 17 - Configuration, Feature Flags and Platform Administration Module
-  Architecture.
+## Phase II Module 17 - Configuration, Feature Flags and Platform Administration Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/configuration/configuration-overview.md`.
+- `docs/modules/configuration/domain-model.md`.
+- `docs/modules/configuration/configuration-service.md`.
+- `docs/modules/configuration/feature-flags.md`.
+- `docs/modules/configuration/environment-management.md`.
+- `docs/modules/configuration/branding.md`.
+- `docs/modules/configuration/localization.md`.
+- `docs/modules/configuration/platform-administration.md`.
+- `docs/modules/configuration/api-contracts.md`.
+- `docs/modules/configuration/events.md`.
+- `docs/modules/configuration/configuration-gap-analysis.md`.
+- `docs/modules/configuration/configuration-migration-plan.md`.
+
+Roadmap impact:
+
+- Configuration, Feature Flags and Platform Administration is the seventeenth
+  detailed module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  and Integration.
+- Existing implementation already includes staging environment examples,
+  Docker Compose runtime environment wiring, protected-environment secret
+  validation, in-memory rate limiting policy, security headers, Enterprise
+  Administration metadata, Workspace preferences and platform language,
+  Gateway/Integration/Webhook metadata, AI Governance, Policy Engine, Security
+  Governance, Observability, Backup Governance, and frontend localization
+  dictionaries.
+- Future Configuration migration must add Configuration Service contracts,
+  scoped typed configuration, immutable configuration versions, central
+  Feature Flag runtime, environment registry, branding profiles, localization
+  profiles, module administration profiles, configuration events, runtime
+  distribution, rollback, and hardcoded policy reduction.
+- Migration must be additive, preserve current Enterprise Administration,
+  Workspace, Gateway, Security Governance, Policy Engine, AI Governance,
+  Observability, Backup, Search, Integration, Publishing, Distribution, and
+  Phase 7 Step 16 behavior, and prevent modules from creating independent
+  configuration stores for shared platform concerns.
+- After Configuration, Feature Flags and Platform Administration Module
+  specification and baseline audit are accepted, the next module
+  specification should be Module 18 - Data Governance, Metadata and Master
+  Data Management Module Architecture.
 
 ## MVP Scope
 
