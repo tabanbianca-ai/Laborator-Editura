@@ -1058,9 +1058,54 @@ Roadmap impact:
   keep domain decisions inside the owning modules.
 - No module may send direct outbound communication after adoption; modules
   must emit events or requests for Notification Engine.
-- After Notification and Communication Module specification and baseline audit
-  are accepted, the next module specification should be Module 12 - Identity,
-  Access Management and Security Module Architecture.
+- Module 12 - Identity, Access Management and Security Module Architecture is
+  now documented after Notification and Communication.
+
+## Phase II Module 12 - Identity, Access Management and Security Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/iam/iam-overview.md`.
+- `docs/modules/iam/domain-model.md`.
+- `docs/modules/iam/authentication.md`.
+- `docs/modules/iam/authorization.md`.
+- `docs/modules/iam/rbac.md`.
+- `docs/modules/iam/mfa-sso.md`.
+- `docs/modules/iam/session-management.md`.
+- `docs/modules/iam/security-policies.md`.
+- `docs/modules/iam/api-contracts.md`.
+- `docs/modules/iam/events.md`.
+- `docs/modules/iam/iam-gap-analysis.md`.
+- `docs/modules/iam/iam-migration-plan.md`.
+
+Roadmap impact:
+
+- Identity, Access Management and Security is the twelfth detailed module
+  specification after Library, Translation, Proofreading/Editorial Review,
+  Publishing, Rights and Provenance, Magazine, AI Orchestration, Audio and
+  Narration, Video and Multimedia, Workflow Engine, and Notification and
+  Communication.
+- Existing implementation already includes Auth, server-derived request
+  context, MVP RBAC permissions, session expiration/refresh/revocation,
+  account lockout, rate limiting, security headers, secret validation,
+  Founder Protection, Security Governance, Policy Engine, Enterprise Admin,
+  Workspace Need-to-Know access, Gateway API keys, MFA metadata, GDPR
+  metadata, Secret Vault metadata, and security audit foundations.
+- Future IAM migration must add a complete atomic permission catalog,
+  centralized authorization decision service, runtime MFA enforcement, OIDC
+  and SAML SSO provider runtime, distributed session strategy, policy
+  enforcement alignment, service principal alignment, versioned IAM events,
+  and IAM performance metrics.
+- Migration must be additive, preserve current Auth, Request Context,
+  Security Governance, Policy Engine, Enterprise Admin, Workspace, Gateway,
+  Launch Essentials, Workflow, Notification, Publishing, Distribution, and
+  Phase 7 Step 16 behavior, and prevent modules from creating independent
+  authentication or authorization mechanisms.
+- After Identity, Access Management and Security Module specification and
+  baseline audit are accepted, the next module specification should be Module
+  13 - Observability, Monitoring and Audit Module Architecture.
 
 ## MVP Scope
 
