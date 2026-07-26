@@ -247,6 +247,9 @@ Detailed module specifications now begin with:
 - `docs/modules/configuration/configuration-overview.md` - Phase II Module 17,
   Configuration, Feature Flags and Platform Administration Module
   Architecture.
+- `docs/modules/data-governance/data-governance-overview.md` - Phase II Module
+  18, Data Governance, Metadata and Master Data Management Module
+  Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -341,3 +344,10 @@ administration foundation. It governs shared configuration, environment
 settings, Feature Flags, module activation, branding, localization, licensing,
 operational policies, versioning, rollback, and audit so no module creates an
 isolated configuration authority for shared platform concerns.
+
+Data Governance, Metadata and Master Data Management is the canonical data
+foundation. It governs shared entity definitions, canonical identifiers,
+metadata, schemas, reference data, quality, lineage, classification, retention,
+stewardship, entity resolution, and Golden Records so every editorial,
+technical, legal, and publication output can be traced to an authoritative
+master source without erasing module ownership or historical evidence.
