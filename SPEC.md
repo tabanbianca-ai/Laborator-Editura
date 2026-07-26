@@ -1127,9 +1127,59 @@ Video and Multimedia module rules:
   Rights, Publishing, Public Portal, Pipeline, and Phase 7 Step 16 behavior
   must be preserved.
 
-After Video and Multimedia Module specification and baseline audit are
-accepted, the next recommended module specification is Module 10 - Workflow
-Engine and Business Process Automation Module Architecture.
+Module 10 - Workflow Engine and Business Process Automation Module
+Architecture is now documented as the next Phase II specification after Video
+and Multimedia.
+
+## Phase II Module 10 - Workflow Engine and Business Process Automation Module Architecture
+
+The official Workflow Engine and Business Process Automation module
+implementation specification begins in
+`docs/modules/workflow/workflow-overview.md`.
+
+The Workflow Engine coordinates platform processes from manuscript creation to
+publication, distribution, archive, and operational follow-up. It manages
+workflow definitions, workflow versions, workflow instances, state machines,
+transitions, business rules, tasks, approvals, scheduler hooks, automation
+metadata, SLA metadata, escalation metadata, events, and process audit.
+
+The supporting Workflow Engine module specification documents are:
+
+1. `docs/modules/workflow/workflow-overview.md`.
+2. `docs/modules/workflow/domain-model.md`.
+3. `docs/modules/workflow/state-machine.md`.
+4. `docs/modules/workflow/rule-engine.md`.
+5. `docs/modules/workflow/task-management.md`.
+6. `docs/modules/workflow/approval-engine.md`.
+7. `docs/modules/workflow/scheduler.md`.
+8. `docs/modules/workflow/api-contracts.md`.
+9. `docs/modules/workflow/events.md`.
+10. `docs/modules/workflow/workflow-gap-analysis.md`.
+11. `docs/modules/workflow/workflow-migration-plan.md`.
+
+Workflow Engine module rules:
+
+- All platform business processes must be coordinated through Workflow Engine
+  when generic process orchestration is required.
+- Domain modules keep ownership of domain validation and domain state.
+- Domain modules must not create independent workflow engines.
+- Workflow definitions must be versioned and configurable without code.
+- Workflow instances must reference immutable workflow versions.
+- Transitions must be validated, idempotent, auditable, and tenant-scoped.
+- Tasks, approvals, deadlines, notifications, scheduler hooks, and
+  escalations must be integrated through clear contracts.
+- Automation rules must be reusable, auditable, retry-safe, and non-
+  destructive.
+- Automation must not approve, publish, grant rights, bypass workflow, modify
+  security, or override Human Final Authority.
+- AI-triggered workflow actions must route through AI Orchestration and must
+  never call providers directly from Workflow Engine.
+- Existing Workflow v1, Scheduling, Editorial Pipeline, Publishing,
+  Preflight, Distribution, and Phase 7 Step 16 behavior must be preserved.
+
+After Workflow Engine and Business Process Automation Module specification and
+baseline audit are accepted, the next recommended module specification is
+Module 11 - Notification and Communication Module Architecture.
 
 ## Architecture Freeze & Governance Requirements
 
