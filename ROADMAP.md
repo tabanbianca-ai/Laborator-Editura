@@ -1103,9 +1103,173 @@ Roadmap impact:
   Launch Essentials, Workflow, Notification, Publishing, Distribution, and
   Phase 7 Step 16 behavior, and prevent modules from creating independent
   authentication or authorization mechanisms.
-- After Identity, Access Management and Security Module specification and
-  baseline audit are accepted, the next module specification should be Module
-  13 - Observability, Monitoring and Audit Module Architecture.
+- Module 13 - Observability, Monitoring and Audit Module Architecture is now
+  documented after Identity, Access Management and Security.
+
+## Phase II Module 13 - Observability, Monitoring and Audit Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/observability/observability-overview.md`.
+- `docs/modules/observability/domain-model.md`.
+- `docs/modules/observability/logging.md`.
+- `docs/modules/observability/metrics.md`.
+- `docs/modules/observability/tracing.md`.
+- `docs/modules/observability/audit.md`.
+- `docs/modules/observability/alerting.md`.
+- `docs/modules/observability/dashboards.md`.
+- `docs/modules/observability/api-contracts.md`.
+- `docs/modules/observability/events.md`.
+- `docs/modules/observability/observability-gap-analysis.md`.
+- `docs/modules/observability/observability-migration-plan.md`.
+
+Roadmap impact:
+
+- Observability, Monitoring and Audit is the thirteenth detailed module
+  specification after Library, Translation, Proofreading/Editorial Review,
+  Publishing, Rights and Provenance, Magazine, AI Orchestration, Audio and
+  Narration, Video and Multimedia, Workflow Engine, Notification and
+  Communication, and IAM.
+- Existing implementation already includes public health, authenticated
+  observability health/metrics/logs/traces/agent-execution endpoints,
+  runtime observability tables, observability backup coverage, infrastructure
+  monitoring scripts, DevOps/backend/AI observability documentation, and broad
+  module audit coverage.
+- Future Observability migration must add universal correlation and trace
+  propagation, centralized structured logging helpers, standardized metrics,
+  distributed tracing, unified audit read model, configurable alert manager,
+  dashboard definitions, telemetry retention alignment, and optional external
+  provider adapters after approval.
+- Migration must be additive, preserve current Health, Observability, IAM,
+  Notification, Workflow, Gateway, Security Governance, Backup, Platform
+  Engineering, Publishing, Distribution, infrastructure scripts, and Phase 7
+  Step 16 behavior, and keep source module audit ownership intact.
+## Phase II Module 14 - Backup, Disaster Recovery and Business Continuity Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/backup/backup-overview.md`.
+- `docs/modules/backup/domain-model.md`.
+- `docs/modules/backup/backup-strategies.md`.
+- `docs/modules/backup/retention-policies.md`.
+- `docs/modules/backup/replication.md`.
+- `docs/modules/backup/restore.md`.
+- `docs/modules/backup/disaster-recovery.md`.
+- `docs/modules/backup/business-continuity.md`.
+- `docs/modules/backup/api-contracts.md`.
+- `docs/modules/backup/events.md`.
+- `docs/modules/backup/backup-gap-analysis.md`.
+- `docs/modules/backup/backup-migration-plan.md`.
+
+Roadmap impact:
+
+- Backup, Disaster Recovery and Business Continuity is the fourteenth
+  detailed module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, and Observability.
+- Existing implementation already includes Backup Governance metadata APIs,
+  runtime backup governance tables, deterministic runtime database
+  backup/restore, tenant-boundary backup validation, infrastructure backup and
+  restore scripts, restore dry-run scripts, systemd backup timer assets, and
+  backup/restore/disaster recovery runbooks.
+- Future Backup migration must add canonical backup repository metadata,
+  policy-driven scheduling, governed restore jobs, PostgreSQL backup and PITR,
+  replication records, selective restore, continuity plan runtime metadata,
+  RPO/RTO monitoring, and Observability/Notification integration.
+- Migration must be additive, preserve current Backup Governance, runtime
+  backup/restore, Infrastructure Pack, IAM, Observability, Notification,
+  Workflow, Publishing, Distribution, and Phase 7 Step 16 behavior, and
+  prevent functional modules from creating isolated backup mechanisms.
+## Phase II Module 15 - Search, Indexing and Knowledge Graph Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/search/search-overview.md`.
+- `docs/modules/search/domain-model.md`.
+- `docs/modules/search/indexing.md`.
+- `docs/modules/search/full-text-search.md`.
+- `docs/modules/search/semantic-search.md`.
+- `docs/modules/search/vector-search.md`.
+- `docs/modules/search/knowledge-graph.md`.
+- `docs/modules/search/entity-relationships.md`.
+- `docs/modules/search/api-contracts.md`.
+- `docs/modules/search/events.md`.
+- `docs/modules/search/search-gap-analysis.md`.
+- `docs/modules/search/search-migration-plan.md`.
+
+Roadmap impact:
+
+- Search, Indexing and Knowledge Graph is the fifteenth detailed module
+  specification after Library, Translation, Proofreading/Editorial Review,
+  Publishing, Rights and Provenance, Magazine, AI Orchestration, Audio and
+  Narration, Video and Multimedia, Workflow Engine, Notification and
+  Communication, IAM, Observability, and Backup.
+- Existing implementation already includes distributed local search in
+  Library, Research, Translation Memory, Terminology, Lexicographic
+  Intelligence, Public Portal, and Marketplace, plus research entities and
+  relationships that form the current graph-like baseline.
+- Future Search migration must add canonical search documents, search index
+  metadata, indexing jobs, event-driven incremental indexing, centralized
+  full-text and faceted search, autocomplete, platform-wide Knowledge Graph,
+  semantic search, vector search, reindexing, schema versioning, and search
+  audit.
+- Migration must be additive, preserve current Library, Research,
+  Translation Memory, Terminology, Lexicographic Intelligence, Public Portal,
+  Marketplace, IAM, Observability, Backup, Publishing, Distribution, and
+  Phase 7 Step 16 behavior, and prevent modules from creating new isolated
+  search engines.
+## Phase II Module 16 - Integration, API Gateway and External Connectors Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/integration/integration-overview.md`.
+- `docs/modules/integration/domain-model.md`.
+- `docs/modules/integration/api-gateway.md`.
+- `docs/modules/integration/connectors.md`.
+- `docs/modules/integration/webhooks.md`.
+- `docs/modules/integration/api-versioning.md`.
+- `docs/modules/integration/rate-limiting.md`.
+- `docs/modules/integration/security.md`.
+- `docs/modules/integration/api-contracts.md`.
+- `docs/modules/integration/events.md`.
+- `docs/modules/integration/integration-gap-analysis.md`.
+- `docs/modules/integration/integration-migration-plan.md`.
+
+Roadmap impact:
+
+- Integration, API Gateway and External Connectors is the sixteenth detailed
+  module specification after Library, Translation, Proofreading/Editorial
+  Review, Publishing, Rights and Provenance, Magazine, AI Orchestration,
+  Audio and Narration, Video and Multimedia, Workflow Engine, Notification and
+  Communication, IAM, Observability, Backup, and Search.
+- Existing implementation already includes Gateway route registry metadata,
+  API key metadata with scopes, expiration, hashing, revocation and audit,
+  Integration provider metadata, Webhook metadata with retry policy and
+  delivery logs, rate limiting middleware, integration security docs, runtime
+  persistence, and backup/restore coverage.
+- Future Integration migration must add API definition registry, stable
+  versioned public API namespace, connector adapter interfaces, Secret Vault
+  and OAuth maturity, signed webhook dispatch and inbound verification,
+  configurable distributed rate-limit policies, event gateway runtime,
+  integration observability, and provider adapter activation by category.
+- Migration must be additive, preserve current Gateway, Integrations,
+  Webhooks, IAM, Security Governance, Observability, Backup, Search,
+  Notification, AI Orchestration, Publishing, Distribution, and Phase 7 Step
+  16 behavior, and prevent business modules from directly calling external
+  providers.
+- After Integration, API Gateway and External Connectors Module specification
+  and baseline audit are accepted, the next module specification should be
+  Module 17 - Configuration, Feature Flags and Platform Administration Module
+  Architecture.
 
 ## MVP Scope
 
