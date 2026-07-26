@@ -1233,9 +1233,64 @@ Notification and Communication module rules:
   Auth recovery flows, Workflow Engine, Publishing, Distribution, and Phase 7
   Step 16 behavior must be preserved.
 
-After Notification and Communication Module specification and baseline audit
-are accepted, the next recommended module specification is Module 12 -
-Identity, Access Management and Security Module Architecture.
+Module 12 - Identity, Access Management and Security Module Architecture is
+now documented as the next Phase II specification after Notification and
+Communication.
+
+## Phase II Module 12 - Identity, Access Management and Security Module Architecture
+
+The official Identity, Access Management and Security module implementation
+specification begins in `docs/modules/iam/iam-overview.md`.
+
+The IAM Module manages authentication, authorization, identity, roles,
+permissions, sessions, MFA policy, future SSO providers, security policies,
+and security audit for the entire platform. No module may implement its own
+authentication or authorization mechanism.
+
+The supporting IAM module specification documents are:
+
+1. `docs/modules/iam/iam-overview.md`.
+2. `docs/modules/iam/domain-model.md`.
+3. `docs/modules/iam/authentication.md`.
+4. `docs/modules/iam/authorization.md`.
+5. `docs/modules/iam/rbac.md`.
+6. `docs/modules/iam/mfa-sso.md`.
+7. `docs/modules/iam/session-management.md`.
+8. `docs/modules/iam/security-policies.md`.
+9. `docs/modules/iam/api-contracts.md`.
+10. `docs/modules/iam/events.md`.
+11. `docs/modules/iam/iam-gap-analysis.md`.
+12. `docs/modules/iam/iam-migration-plan.md`.
+
+IAM module rules:
+
+- IAM is the only official source of authentication, authorization, identity,
+  roles, permissions, sessions, MFA policy, future SSO provider decisions, and
+  security audit.
+- All protected requests must use server-derived authenticated context.
+- Client-provided user IDs, organization IDs, roles, and permissions must not
+  be trusted.
+- All modules must consult IAM or the approved authorization layer before
+  reading, creating, modifying, deleting, publishing, approving, exporting, or
+  executing restricted actions.
+- RBAC is mandatory and may be extended by policy-based authorization,
+  Need-to-Know scope, data classification, workflow state, organization
+  policy, and subscription entitlements.
+- The most restrictive valid access rule wins.
+- MFA and SSO configuration must be centralized in IAM.
+- Security policies must be administrable without application code changes.
+- Every permission-sensitive action must be auditable.
+- AI may detect risks, summarize access, and suggest policy changes, but must
+  not grant roles, revoke users, approve access reviews, enable SSO, change
+  security policies, or expand its own access.
+- Existing Auth, Request Context, Security Governance, Policy Engine,
+  Enterprise Admin, Workspace, Gateway, Launch Essentials, Workflow,
+  Notification, Publishing, Distribution, and Phase 7 Step 16 behavior must be
+  preserved.
+
+After Identity, Access Management and Security Module specification and
+baseline audit are accepted, the next recommended module specification is
+Module 13 - Observability, Monitoring and Audit Module Architecture.
 
 ## Architecture Freeze & Governance Requirements
 
