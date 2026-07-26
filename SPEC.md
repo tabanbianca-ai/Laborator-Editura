@@ -1080,9 +1080,56 @@ Audio and Narration module rules:
   Publishing, Public Portal, Pipeline, and Phase 7 Step 16 behavior must be
   preserved.
 
-After Audio and Narration Module specification and baseline audit are
-accepted, the next recommended module specification is Module 9 - Video and
-Multimedia Module Architecture.
+Module 9 - Video and Multimedia Module Architecture is now documented as the
+next Phase II specification after Audio and Narration.
+
+## Phase II Module 9 - Video and Multimedia Module Architecture
+
+The official Video and Multimedia module implementation specification begins
+in `docs/modules/video/video-overview.md`.
+
+The Video and Multimedia Module manages the complete lifecycle of editorial
+video: video projects, scenes, timelines, multimedia asset references,
+narration, captions, synchronization, rendering, export, accessibility
+metadata, platform targets, and publication handoff.
+
+The supporting Video and Multimedia module specification documents are:
+
+1. `docs/modules/video/video-overview.md`.
+2. `docs/modules/video/domain-model.md`.
+3. `docs/modules/video/video-projects.md`.
+4. `docs/modules/video/timeline.md`.
+5. `docs/modules/video/media-assets.md`.
+6. `docs/modules/video/rendering-pipeline.md`.
+7. `docs/modules/video/api-contracts.md`.
+8. `docs/modules/video/events.md`.
+9. `docs/modules/video/workflows.md`.
+10. `docs/modules/video/video-gap-analysis.md`.
+11. `docs/modules/video/video-migration-plan.md`.
+
+Video and Multimedia module rules:
+
+- Every video project must be linked to a Library Item.
+- All multimedia assets must be centrally managed and referenced from Library
+  or approved asset modules.
+- Timeline state must remain independent from source editorial content.
+- Scene, timeline, render, caption, and synchronization changes must be
+  versioned and auditable.
+- Text-audio-video-caption synchronization must be preserved at segment
+  level.
+- Rendering must be asynchronous, scalable, traceable, and non-destructive.
+- Preview video is draft-only and must never be published.
+- Official video publication requires approved source content, asset rights,
+  workflow approval, quality review, rendering review, and Publishing handoff.
+- AI-assisted video, captioning, thumbnail, timing, or media generation must
+  route through AI Orchestration.
+- Existing Multimedia Creation, Media Localization, Audio, AI Governance,
+  Rights, Publishing, Public Portal, Pipeline, and Phase 7 Step 16 behavior
+  must be preserved.
+
+After Video and Multimedia Module specification and baseline audit are
+accepted, the next recommended module specification is Module 10 - Workflow
+Engine and Business Process Automation Module Architecture.
 
 ## Architecture Freeze & Governance Requirements
 
