@@ -154,7 +154,9 @@ Each implementation phase requires:
 
 ## Next Recommended Module
 
-After Video and Multimedia Module specification and baseline audit are
-accepted, the next recommended module specification is Module 10 - Workflow
-Engine and Business Process Automation Module Architecture.
+Module 10 - Workflow Engine and Business Process Automation Module
+Architecture is now documented after Video and Multimedia.
 
+The next recommended module specification after Workflow Engine and Business
+Process Automation is Module 11 - Notification and Communication Module
+Architecture.
