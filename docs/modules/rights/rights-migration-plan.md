@@ -153,5 +153,9 @@ documented after Magazine.
 Module 8 - Audio and Narration Module Architecture is now documented after AI
 Orchestration.
 
-The next recommended module specification after Audio and Narration is Module
-9 - Video and Multimedia Module Architecture.
+Module 9 - Video and Multimedia Module Architecture is now documented after
+Audio and Narration.
+
+The next recommended module specification after Video and Multimedia is
+Module 10 - Workflow Engine and Business Process Automation Module
+Architecture.
