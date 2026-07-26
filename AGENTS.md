@@ -1650,9 +1650,51 @@ Rules:
   16 behavior must be preserved.
 - Future Notification implementation must follow
   `docs/modules/notifications/notifications-migration-plan.md`.
-- After Notification and Communication Module specification and baseline audit
-  are accepted, the next module specification should be Module 12 - Identity,
-  Access Management and Security Module Architecture.
+- Module 12 - Identity, Access Management and Security Module Architecture is
+  now documented after Notification and Communication.
+
+### Phase II Identity, Access Management and Security Module Architecture Directive
+
+Purpose:
+
+- Define Identity, Access Management and Security as the twelfth detailed
+  Phase II module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, and Notification and Communication.
+
+Rules:
+
+- IAM is the only official source of authentication, authorization, identity,
+  users, roles, permissions, sessions, MFA policy, future SSO provider
+  decisions, security policies, and security audit.
+- Functional modules must not implement independent authentication or
+  authorization mechanisms.
+- All protected requests must use server-derived authenticated context.
+- Client-provided user IDs, organization IDs, roles, and permissions must not
+  be trusted.
+- All modules must consult IAM or the approved authorization layer before
+  reading, creating, modifying, deleting, publishing, approving, exporting, or
+  executing restricted actions.
+- RBAC is mandatory and may be extended by policy-driven authorization,
+  Need-to-Know scope, data classification, workflow state, organization
+  policy, and subscription entitlements.
+- The most restrictive valid access rule wins.
+- MFA and SSO configuration must be centralized in IAM.
+- Security policies must be administrable without application code changes.
+- Every permission-sensitive action must be auditable.
+- AI may detect risks, summarize access, and suggest policy changes, but it
+  must not grant roles, revoke users, approve access reviews, enable SSO,
+  change security policies, or expand its own access.
+- Existing Auth, Request Context, Security Governance, Policy Engine,
+  Enterprise Admin, Workspace, Gateway, Launch Essentials, Workflow,
+  Notification, Publishing, Distribution, and Phase 7 Step 16 behavior must be
+  preserved.
+- Future IAM implementation must follow
+  `docs/modules/iam/iam-migration-plan.md`.
+- After Identity, Access Management and Security Module specification and
+  baseline audit are accepted, the next module specification should be Module
+  13 - Observability, Monitoring and Audit Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
