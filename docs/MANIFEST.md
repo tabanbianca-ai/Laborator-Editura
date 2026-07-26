@@ -228,6 +228,8 @@ Detailed module specifications now begin with:
   Module 7, AI Orchestration and Editorial Agents Module Architecture.
 - `docs/modules/audio/audio-overview.md` - Phase II Module 8, Audio and
   Narration Module Architecture.
+- `docs/modules/video/video-overview.md` - Phase II Module 9, Video and
+  Multimedia Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -270,3 +272,9 @@ non-destructive, versioned, rights-aware audio derived from authoritative
 Library text, manages reusable voice profiles, preserves segment-level
 text-audio synchronization, routes AI-assisted narration through AI
 Orchestration, and publishes official audio only through Publishing.
+
+Video and Multimedia is the editorial video production layer. It transforms
+approved Library, Audio, Translation, and multimedia resources into
+non-destructive, versioned, rights-aware videos through governed timelines,
+scenes, captions, synchronization, asynchronous rendering, and Publishing
+handoff.
