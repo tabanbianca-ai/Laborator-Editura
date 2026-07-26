@@ -144,6 +144,11 @@ Deliverables:
 
 ## Next Recommended Module
 
-After Rights and Provenance Module specification and baseline audit are
-accepted, the next module specification should be Module 6 - Magazine Module
-Architecture.
+Module 6 - Magazine Module Architecture is now documented as the next Phase II
+specification after Rights and Provenance.
+
+Module 7 - AI Orchestration and Editorial Agents Module Architecture is now
+documented after Magazine.
+
+The next recommended module specification after AI Orchestration is Module 8 -
+Audio and Narration Module Architecture.
