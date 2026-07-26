@@ -1605,9 +1605,54 @@ Rules:
   Distribution, and Phase 7 Step 16 behavior must be preserved.
 - Future Workflow implementation must follow
   `docs/modules/workflow/workflow-migration-plan.md`.
-- After Workflow Engine and Business Process Automation Module specification
-  and baseline audit are accepted, the next module specification should be
-  Module 11 - Notification and Communication Module Architecture.
+- Module 11 - Notification and Communication Module Architecture is now
+  documented after Workflow Engine and Business Process Automation.
+
+### Phase II Notification and Communication Module Architecture Directive
+
+Purpose:
+
+- Define Notification and Communication as the eleventh detailed Phase II
+  module specification after Library, Translation, Proofreading/Editorial
+  Review, Publishing, Rights and Provenance, Magazine, AI Orchestration, Audio
+  and Narration, Video and Multimedia, and Workflow Engine.
+
+Rules:
+
+- Notification Engine is the official centralized outbound communication layer
+  for platform-generated notifications, email, in-app messages, push
+  notifications, webhook dispatch, future SMS, Teams, Slack, and external
+  communication adapters.
+- Domain modules must emit events or notification requests instead of sending
+  outbound communication directly.
+- Workflow Engine coordinates process intent. Notification Engine executes
+  communication rendering, routing, delivery metadata, retries, and delivery
+  audit.
+- Templates must be versioned, localized, previewable, and auditable.
+- Active template versions cannot be overwritten.
+- Channel routing must respect recipient preferences, Platform Language,
+  organization policy, priority, channel availability, tenant isolation,
+  Need-to-Know access, and confidentiality classification.
+- Mandatory security, account recovery, workflow, rights, compliance, and
+  Human Final Authority messages may follow explicit policy-defined delivery
+  rules.
+- Deliveries must be asynchronous, idempotent, retryable, traceable, and
+  auditable.
+- Webhook dispatch must use documented event versions, HMAC signatures,
+  timeout handling, retry policy, safe payloads, and delivery logs.
+- Restricted content must not be leaked into external channels.
+- AI may draft templates, summarize messages, and suggest routing, but it must
+  not activate templates, enable channels, override preferences, expose
+  restricted content, approve workflow, publish, grant rights, or bypass
+  Human Final Authority.
+- Existing Gateway webhooks, Scheduling reminders, Workspace preferences, Auth
+  recovery flows, Workflow Engine, Publishing, Distribution, and Phase 7 Step
+  16 behavior must be preserved.
+- Future Notification implementation must follow
+  `docs/modules/notifications/notifications-migration-plan.md`.
+- After Notification and Communication Module specification and baseline audit
+  are accepted, the next module specification should be Module 12 - Identity,
+  Access Management and Security Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
