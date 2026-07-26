@@ -811,9 +811,91 @@ Roadmap impact:
   resource identity, preserve contract assets in Library, preserve Publishing
   preflight rights gates, preserve Human Final Authority, and preserve Phase 7
   Step 16 publishing/preflight/distribution behavior.
-- After Rights and Provenance Module specification and baseline audit are
-  accepted, the next module specification should be Module 6 - Magazine Module
-  Architecture.
+- Module 6 - Magazine Module Architecture is now documented as the next Phase
+  II specification after Rights and Provenance.
+
+## Phase II Module 6 - Magazine Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/magazine/magazine-overview.md`.
+- `docs/modules/magazine/domain-model.md`.
+- `docs/modules/magazine/issue-management.md`.
+- `docs/modules/magazine/article-management.md`.
+- `docs/modules/magazine/layout.md`.
+- `docs/modules/magazine/publication.md`.
+- `docs/modules/magazine/api-contracts.md`.
+- `docs/modules/magazine/events.md`.
+- `docs/modules/magazine/workflows.md`.
+- `docs/modules/magazine/magazine-gap-analysis.md`.
+- `docs/modules/magazine/magazine-migration-plan.md`.
+
+Roadmap impact:
+
+- Magazine is the sixth detailed module specification after Library,
+  Translation, Proofreading/Editorial Review, Publishing, and Rights and
+  Provenance.
+- Existing implementation already includes project publication type
+  `MAGAZINE`, magazine-only `FLIPBOOK` capability, Library magazine/article
+  metadata, Author Studio magazine article type, Magazine Digital Experience
+  frontend, Rights warnings, Layout Publishing magazine plans, Public Portal
+  magazine/article catalog support, Distribution Center flipbook readiness,
+  and contract tests.
+- Future Magazine migration must add canonical Magazine, Volume, Issue,
+  Section, and Article Assignment records, issue versioning, issue archive
+  state, issue-specific layout placement, issue-to-Publishing handoff,
+  canonical Magazine APIs, domain events, full-text search, indexing, and
+  performance planning.
+- Migration must be additive, preserve current Magazine Digital Experience,
+  preserve Library article ownership, preserve Publishing release authority,
+  preserve Rights and Provenance gates, preserve Translation and Editorial
+  Review ownership, and preserve Phase 7 Step 16 publishing/preflight/
+  distribution behavior.
+- Module 7 - AI Orchestration and Editorial Agents Module Architecture is now
+  documented as the next Phase II specification after Magazine.
+
+## Phase II Module 7 - AI Orchestration and Editorial Agents Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/ai-orchestration/ai-orchestration-overview.md`.
+- `docs/modules/ai-orchestration/domain-model.md`.
+- `docs/modules/ai-orchestration/agent-registry.md`.
+- `docs/modules/ai-orchestration/context-builder.md`.
+- `docs/modules/ai-orchestration/prompt-builder.md`.
+- `docs/modules/ai-orchestration/model-router.md`.
+- `docs/modules/ai-orchestration/validation-engine.md`.
+- `docs/modules/ai-orchestration/api-contracts.md`.
+- `docs/modules/ai-orchestration/events.md`.
+- `docs/modules/ai-orchestration/workflows.md`.
+- `docs/modules/ai-orchestration/ai-gap-analysis.md`.
+- `docs/modules/ai-orchestration/ai-migration-plan.md`.
+
+Roadmap impact:
+
+- AI Orchestration is the seventh detailed module specification after Library,
+  Translation, Proofreading/Editorial Review, Publishing, Rights and
+  Provenance, and Magazine.
+- Existing implementation already includes AI Governance provider metadata,
+  OpenAI primary and Anthropic fallback metadata, budgets, quotas, usage
+  records, cost policies, agent governance profiles, Marketplace agent
+  registry metadata, Observability agent execution records, Gateway integration
+  metadata, deterministic AI workflow tests, and an `apps/ai` health endpoint.
+- Future AI Orchestration migration must add canonical AI task lifecycle,
+  context package construction, prompt registry, model router, provider
+  adapter contracts, AI output validation, agent chain execution,
+  orchestration events, full observability traces, and human review handoff.
+- Migration must be additive, preserve current AI Governance, Marketplace,
+  Observability, Gateway, Editorial Decision, Translation, Rights, Publishing,
+  Magazine, Quality, and Phase 7 Step 16 publishing/preflight/distribution
+  behavior, and prevent direct provider calls from functional modules.
+- After AI Orchestration and Editorial Agents Module specification and
+  baseline audit are accepted, the next module specification should be Module
+  8 - Audio and Narration Module Architecture.
 
 ## MVP Scope
 
