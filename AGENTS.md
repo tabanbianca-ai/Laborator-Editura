@@ -1692,9 +1692,138 @@ Rules:
   preserved.
 - Future IAM implementation must follow
   `docs/modules/iam/iam-migration-plan.md`.
-- After Identity, Access Management and Security Module specification and
+- Module 13 - Observability, Monitoring and Audit Module Architecture is now
+  documented after Identity, Access Management and Security.
+
+### Phase II Observability, Monitoring and Audit Module Architecture Directive
+
+Purpose:
+
+- Define Observability, Monitoring and Audit as the thirteenth detailed Phase
+  II module specification after Library, Translation, Proofreading/Editorial
+  Review, Publishing, Rights and Provenance, Magazine, AI Orchestration, Audio
+  and Narration, Video and Multimedia, Workflow Engine, Notification and
+  Communication, and IAM.
+
+Rules:
+
+- Observability is the official centralized telemetry layer for structured
+  logs, metrics, traces, operational audit visibility, alerting, dashboards,
+  diagnostics, and health monitoring.
+- Modules must not create isolated monitoring mechanisms that cannot be
+  correlated, retained, audited, or diagnosed.
+- Structured logs must include severity, service/module, timestamp,
+  correlation ID, trace ID when available, tenant scope, and safe metadata.
+- Metrics must use documented names, units, types, and dimensions.
+- Requests, events, jobs, workflows, AI executions, notifications, exports,
+  and infrastructure processes should propagate correlation ID and trace ID.
+- Audit and observability are distinct. Audit proves authorized actions;
+  observability explains system behavior.
+- Source modules remain authoritative for their own business audit records.
+- Observability may provide immutable read models, correlation, dashboards,
+  diagnostics, and alerting over audit sources.
+- Alert delivery must route through Notification and Communication.
+- Telemetry must not expose secrets, tokens, restricted content, or
+  unnecessary personal data.
+- AI may diagnose, summarize incidents, and suggest remediation, but it must
+  not delete logs, hide errors, alter audit, suppress critical alerts
+  automatically, execute infrastructure actions automatically, or change
+  security policy.
+- Existing Health, Observability, IAM, Notification, Workflow, Gateway,
+  Security Governance, Backup, Platform Engineering, Publishing,
+  Distribution, infrastructure scripts, and Phase 7 Step 16 behavior must be
+  preserved.
+- Future Observability implementation must follow
+  `docs/modules/observability/observability-migration-plan.md`.
+- Module 14 - Backup, Disaster Recovery and Business Continuity Module
+  Architecture is now documented after Observability, Monitoring and Audit.
+
+### Backup, Disaster Recovery and Business Continuity Module Architecture Directive
+
+Purpose:
+
+- Define Backup, Disaster Recovery and Business Continuity as the fourteenth
+  detailed Phase II module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, and Observability.
+
+Rules:
+
+- Backup is the official centralized protection layer for platform data,
+  configuration, audit history, editorial assets, publication artifacts,
+  recovery plans, retention, restore validation, disaster recovery, and
+  business continuity.
+- Functional modules must not implement isolated backup or restore mechanisms
+  that bypass centralized backup governance, tenant isolation, retention,
+  encryption, validation, observability, or audit.
+- All critical platform data and configuration must be covered by centralized
+  backup policies.
+- Backups must be versioned, checksum-verified, encrypted in controlled
+  environments, retained according to policy, and validated through restore
+  tests.
+- Restore operations require authenticated server-derived context, explicit
+  authorized human approval, integrity validation, and full audit.
+- Disaster recovery plans must define RPO, RTO, critical services,
+  dependencies, restore order, failover/failback procedures, post-recovery
+  checks, and test evidence.
+- Business continuity must preserve editorial work, audit continuity, rights
+  restrictions, security restrictions, Need-to-Know access, and Human Final
+  Authority during degraded operation.
+- AI may diagnose, summarize, and recommend backup, restore, continuity, or
+  disaster recovery actions, but it must not restore data, delete backups,
+  alter retention, execute failover, approve recovery, publish, or bypass
+  workflow.
+- Existing Backup Governance, runtime backup/restore, Infrastructure Pack,
+  IAM, Observability, Notification, Workflow, Publishing, Distribution, and
+  Phase 7 Step 16 behavior must be preserved.
+- Future Backup implementation must follow
+  `docs/modules/backup/backup-migration-plan.md`.
+- Module 15 - Search, Indexing and Knowledge Graph Module Architecture is now
+  documented after Backup, Disaster Recovery and Business Continuity.
+
+### Search, Indexing and Knowledge Graph Module Architecture Directive
+
+Purpose:
+
+- Define Search, Indexing and Knowledge Graph as the fifteenth detailed Phase
+  II module specification after Library, Translation, Proofreading/Editorial
+  Review, Publishing, Rights and Provenance, Magazine, AI Orchestration,
+  Audio and Narration, Video and Multimedia, Workflow Engine, Notification
+  and Communication, IAM, Observability, and Backup.
+
+Rules:
+
+- Search is the official centralized discovery layer for full-text search,
+  semantic search, vector search, autocomplete, faceted search, indexing,
+  entity linking, relationship navigation, recommendations, and Knowledge
+  Graph traversal.
+- Functional modules must not implement new isolated search engines. Existing
+  local query helpers may remain during migration only when they preserve
+  compatibility and converge toward the central Search module.
+- Indexing must be incremental, asynchronous, event-driven, re-runnable,
+  language-aware, version-aware, and auditable.
+- Search results must enforce IAM, Need-to-Know, project scope, document
+  permissions, workflow visibility, rights restrictions, and public
+  visibility server-side.
+- Restricted content must not be indexed, embedded, exposed, summarized, or
+  suggested unless copyright, license, security, and AI-eligibility policies
+  allow it.
+- Knowledge Graph entities and relationships must preserve source module,
+  source resource ID, source version, provenance, confidence, validation
+  state where editorially relevant, and audit trail.
+- AI may suggest related resources, entities, relationships, rankings,
+  embeddings, and explanations, but it must not approve editorial facts,
+  override validated terminology, publish, grant access, change rights, or
+  bypass workflow.
+- Existing Library, Research, Translation Memory, Terminology, Lexicographic
+  Intelligence, Public Portal, Marketplace, IAM, Observability, Backup,
+  Publishing, Distribution, and Phase 7 Step 16 behavior must be preserved.
+- Future Search implementation must follow
+  `docs/modules/search/search-migration-plan.md`.
+- After Search, Indexing and Knowledge Graph Module specification and
   baseline audit are accepted, the next module specification should be Module
-  13 - Observability, Monitoring and Audit Module Architecture.
+  16 - Integration, API Gateway and External Connectors Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
