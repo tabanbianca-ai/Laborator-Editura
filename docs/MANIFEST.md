@@ -244,6 +244,9 @@ Detailed module specifications now begin with:
   Indexing and Knowledge Graph Module Architecture.
 - `docs/modules/integration/integration-overview.md` - Phase II Module 16,
   Integration, API Gateway and External Connectors Module Architecture.
+- `docs/modules/configuration/configuration-overview.md` - Phase II Module 17,
+  Configuration, Feature Flags and Platform Administration Module
+  Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -332,3 +335,9 @@ boundary. It centralizes API Gateway routing, API contracts, versioning,
 external connectors, webhooks, rate limiting, OAuth policy, integration
 security, monitoring, service discovery, and audit so no functional module
 communicates directly with external providers.
+
+Configuration, Feature Flags and Platform Administration is the centralized
+administration foundation. It governs shared configuration, environment
+settings, Feature Flags, module activation, branding, localization, licensing,
+operational policies, versioning, rollback, and audit so no module creates an
+isolated configuration authority for shared platform concerns.
