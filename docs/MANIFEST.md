@@ -236,6 +236,12 @@ Detailed module specifications now begin with:
   Notification and Communication Module Architecture.
 - `docs/modules/iam/iam-overview.md` - Phase II Module 12, Identity, Access
   Management and Security Module Architecture.
+- `docs/modules/observability/observability-overview.md` - Phase II Module
+  13, Observability, Monitoring and Audit Module Architecture.
+- `docs/modules/backup/backup-overview.md` - Phase II Module 14, Backup,
+  Disaster Recovery and Business Continuity Module Architecture.
+- `docs/modules/search/search-overview.md` - Phase II Module 15, Search,
+  Indexing and Knowledge Graph Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -301,3 +307,20 @@ Identity, Access Management and Security is the shared security foundation. It
 centralizes authentication, authorization, identity, roles, permissions,
 sessions, MFA policy, future SSO providers, security policies, and security
 audit so every module works from one server-derived access model.
+
+Observability, Monitoring and Audit is the operational visibility foundation.
+It centralizes structured logs, metrics, traces, operational audit
+correlation, alerting, dashboards, diagnostics, and health monitoring while
+keeping source module audit authoritative and immutable.
+
+Backup, Disaster Recovery and Business Continuity is the resilience foundation.
+It centralizes backup policies, versioned backups, restore validation,
+replication, retention, recovery plans, RPO/RTO tracking, business continuity,
+and operational audit so editorial data, configuration, publication artifacts,
+and platform history remain recoverable after incidents.
+
+Search, Indexing and Knowledge Graph is the discovery and knowledge
+infrastructure. It centralizes indexing, full-text search, semantic search,
+vector search, autocomplete, faceted search, entity linking, relationship
+navigation, recommendations, and the platform-wide Knowledge Graph while
+enforcing IAM, Need-to-Know, rights, versioning, and audit rules.
