@@ -185,6 +185,9 @@ documented after Identity, Access Management and Security.
 Module 14 - Backup, Disaster Recovery and Business Continuity Module
 Architecture is now documented after Observability, Monitoring and Audit.
 
-The next recommended module specification after Backup, Disaster Recovery and
-Business Continuity is Module 15 - Search, Indexing and Knowledge Graph Module
-Architecture.
+Module 15 - Search, Indexing and Knowledge Graph Module Architecture is now
+documented after Backup, Disaster Recovery and Business Continuity.
+
+The next recommended module specification after Search, Indexing and
+Knowledge Graph is Module 16 - Integration, API Gateway and External
+Connectors Module Architecture.
