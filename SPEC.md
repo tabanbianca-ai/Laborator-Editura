@@ -1035,9 +1035,54 @@ AI Orchestration module rules:
   Decision, Translation, Rights, Publishing, Magazine, and Quality behavior
   must be preserved.
 
-After AI Orchestration and Editorial Agents Module specification and baseline
-audit are accepted, the next recommended module specification is Module 8 -
-Audio and Narration Module Architecture.
+Module 8 - Audio and Narration Module Architecture is now documented as the
+next Phase II specification after AI Orchestration and Editorial Agents.
+
+## Phase II Module 8 - Audio and Narration Module Architecture
+
+The official Audio and Narration module implementation specification begins
+in `docs/modules/audio/audio-overview.md`.
+
+The Audio and Narration Module manages the complete lifecycle of editorial
+audio: narration projects, audio chapters, voice profiles, human recordings,
+TTS generation metadata, voice cloning governance metadata, text-audio
+synchronization, transcripts, subtitles, accessibility metadata, audio assets,
+and publication handoff.
+
+The supporting Audio and Narration module specification documents are:
+
+1. `docs/modules/audio/audio-overview.md`.
+2. `docs/modules/audio/domain-model.md`.
+3. `docs/modules/audio/narration-projects.md`.
+4. `docs/modules/audio/voice-profiles.md`.
+5. `docs/modules/audio/tts-pipeline.md`.
+6. `docs/modules/audio/synchronization.md`.
+7. `docs/modules/audio/api-contracts.md`.
+8. `docs/modules/audio/events.md`.
+9. `docs/modules/audio/workflows.md`.
+10. `docs/modules/audio/audio-gap-analysis.md`.
+11. `docs/modules/audio/audio-migration-plan.md`.
+
+Audio and Narration module rules:
+
+- Every audio project must be linked to a Library Item.
+- Source text remains the authoritative source of truth.
+- Audio assets are derived, non-destructive, versioned, and auditable.
+- Voice profiles must be reusable and versioned.
+- Voice cloning requires documented consent and Rights and Provenance
+  validation.
+- TTS and AI-assisted narration must route through AI Orchestration.
+- Text-audio synchronization must be preserved at segment level.
+- Preview audio is draft-only and must never be published.
+- Official audio publication requires approved text, voice rights,
+  publication rights, workflow approval, and Publishing handoff.
+- Existing Multimedia Creation, Media Localization, AI Governance, Rights,
+  Publishing, Public Portal, Pipeline, and Phase 7 Step 16 behavior must be
+  preserved.
+
+After Audio and Narration Module specification and baseline audit are
+accepted, the next recommended module specification is Module 9 - Video and
+Multimedia Module Architecture.
 
 ## Architecture Freeze & Governance Requirements
 
