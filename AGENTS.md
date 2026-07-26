@@ -1916,10 +1916,63 @@ Rules:
   Publishing, Distribution, and Phase 7 Step 16 behavior must be preserved.
 - Future Configuration implementation must follow
   `docs/modules/configuration/configuration-migration-plan.md`.
-- After Configuration, Feature Flags and Platform Administration Module
+- Module 18 - Data Governance, Metadata and Master Data Management Module
+  Architecture is now documented after Configuration, Feature Flags and
+  Platform Administration.
+
+### Data Governance, Metadata and Master Data Management Module Architecture Directive
+
+Purpose:
+
+- Define Data Governance, Metadata and Master Data Management as the eighteenth
+  detailed Phase II module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, and Configuration.
+
+Rules:
+
+- Data Governance is the official centralized governance boundary for
+  canonical data models, master data, metadata registry, data catalog, data
+  dictionary, schema registry, reference data, data classification, data
+  quality, data lineage, ownership, stewardship, retention, deduplication,
+  entity resolution, Golden Records, data contracts, and controlled data
+  import/export governance.
+- Shared entities must have canonical definitions, stable identifiers,
+  authoritative source references, owners, stewards, validation rules,
+  classification, history, provenance, and explicit relationships.
+- Existing identifiers must be preserved through explicit mapping records;
+  migrations must not silently replace or discard legacy identifiers.
+- Functional modules remain authoritative for their own business behavior, but
+  shared entity definitions must align with the canonical model.
+- IAM remains authoritative for identity and access. Rights and Provenance
+  remains authoritative for legal rights behavior. Workflow remains
+  authoritative for transitions and approvals. Publishing remains authoritative
+  for release gates.
+- Schemas, metadata definitions, data contracts, reference data, and generated
+  artifact contracts must be versioned and compatibility-tested.
+- AI-generated or AI-extracted data must not become validated master data
+  without the applicable human approval and governance policy.
+- Entity Resolution and Golden Records must preserve all source records,
+  conflicting values, provenance, approvals, and history.
+- Derived publication and media outputs must retain verifiable references to
+  the exact master record and master version used to generate them.
+- Classification, retention, legal hold, audit, backup, observability, IAM,
+  and Need-to-Know policies must apply consistently to master data and
+  metadata operations.
+- Do not perform destructive schema changes, irreversible data migrations, or
+  massive reconciliation during the baseline audit.
+- Existing JSON Master v1.0, Domain Model, Logical Data Model, Physical
+  Database Model, Library, Translation, Rights, Publishing, Export, Search,
+  Integration, Configuration, Backup, Observability, IAM, and Phase 7 Step 16
+  behavior must be preserved.
+- Future Data Governance implementation must follow
+  `docs/modules/data-governance/data-governance-migration-plan.md`.
+- After Data Governance, Metadata and Master Data Management Module
   specification and baseline audit are accepted, the next module
-  specification should be Module 18 - Data Governance, Metadata and Master
-  Data Management Module Architecture.
+  specification should be Module 19 - Accessibility, Localization and
+  Inclusive Experience Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
