@@ -1310,10 +1310,60 @@ Roadmap impact:
   Observability, Backup, Search, Integration, Publishing, Distribution, and
   Phase 7 Step 16 behavior, and prevent modules from creating independent
   configuration stores for shared platform concerns.
-- After Configuration, Feature Flags and Platform Administration Module
+## Phase II Module 18 - Data Governance, Metadata and Master Data Management Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/data-governance/data-governance-overview.md`.
+- `docs/modules/data-governance/domain-model.md`.
+- `docs/modules/data-governance/canonical-data-model.md`.
+- `docs/modules/data-governance/master-data-management.md`.
+- `docs/modules/data-governance/metadata-registry.md`.
+- `docs/modules/data-governance/data-catalog.md`.
+- `docs/modules/data-governance/data-dictionary.md`.
+- `docs/modules/data-governance/schema-registry.md`.
+- `docs/modules/data-governance/data-contracts.md`.
+- `docs/modules/data-governance/reference-data.md`.
+- `docs/modules/data-governance/data-quality.md`.
+- `docs/modules/data-governance/entity-resolution.md`.
+- `docs/modules/data-governance/golden-record.md`.
+- `docs/modules/data-governance/data-lineage.md`.
+- `docs/modules/data-governance/data-classification.md`.
+- `docs/modules/data-governance/data-retention.md`.
+- `docs/modules/data-governance/api-contracts.md`.
+- `docs/modules/data-governance/events.md`.
+- `docs/modules/data-governance/data-governance-gap-analysis.md`.
+- `docs/modules/data-governance/data-governance-migration-plan.md`.
+
+Roadmap impact:
+
+- Data Governance, Metadata and Master Data Management is the eighteenth
+  detailed module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, and Configuration.
+- Existing implementation already includes Chapter 4 conceptual domain model,
+  Chapter 5 logical data model, Chapter 6 physical database standards, JSON
+  Master v1.0, PostgreSQL migrations for the MVP foundation, runtime database
+  table registry, deterministic backup/restore, and module-level domain/API/
+  event documentation.
+- Future Data Governance migration must add canonical identifiers, explicit
+  legacy ID mappings, Schema Registry, Data Dictionary, Reference Data
+  Registry, Metadata Registry, Data Catalog, Data Quality Engine, Provenance
+  and Lineage capture, Entity Resolution, Golden Records, Classification,
+  Retention, stewardship assignments, and continuous quality monitoring.
+- Migration must be additive, preserve JSON Master v1.0, existing identifiers,
+  module source-of-truth ownership, audit, versions, rights restrictions,
+  publication history, backup/restore compatibility, and Phase 7 Step 16
+  behavior, and prevent modules from maintaining incompatible independent
+  definitions of shared entities.
+- After Data Governance, Metadata and Master Data Management Module
   specification and baseline audit are accepted, the next module
-  specification should be Module 18 - Data Governance, Metadata and Master
-  Data Management Module Architecture.
+  specification should be Module 19 - Accessibility, Localization and
+  Inclusive Experience Module Architecture.
 
 ## MVP Scope
 
