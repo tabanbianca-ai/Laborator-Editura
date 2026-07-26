@@ -1424,9 +1424,82 @@ Rules:
   Final Authority.
 - Future Rights and Provenance work must be additive and must follow
   `docs/modules/rights/rights-migration-plan.md`.
-- After Rights and Provenance Module specification and baseline audit are
-  accepted, the next module specification should be Module 6 - Magazine Module
-  Architecture.
+- Module 6 - Magazine Module Architecture is now documented as the next Phase
+  II specification after Rights and Provenance.
+
+### Phase II Magazine Module Architecture Directive
+
+Purpose:
+
+- Define Magazine as the sixth detailed module specification after Library,
+  Translation, Proofreading/Editorial Review, Publishing, and Rights and
+  Provenance and establish the official rules for periodical publications,
+  volumes, issues, sections, article assignment, reusable content, issue
+  layout, publication handoff, archive, distribution readiness, and magazine
+  audit.
+
+Rules:
+
+- Every magazine article must be represented as an independent Library Item.
+- Articles may be reused across issues and publications only through
+  references. Editorial content must not be duplicated across issues.
+- Magazine issues must be versioned and auditable.
+- Issue layout must remain decoupled from article content and must not mutate
+  article body text or Library records.
+- Article translation must use the Translation Module.
+- Article approval must use the Editorial Review Module.
+- Rights validation must use Rights and Provenance.
+- Official issue publication must be delegated exclusively to the Publishing
+  Module.
+- Magazine assets such as images, illustrations, covers, PDFs, and source
+  files must remain managed through Library references.
+- Magazine must not create independent publishing, rights, translation,
+  review, or asset repositories.
+- Future Magazine work must be additive and must follow
+  `docs/modules/magazine/magazine-migration-plan.md`.
+- Module 7 - AI Orchestration and Editorial Agents Module Architecture is now
+  documented as the next Phase II specification after Magazine.
+
+### Phase II AI Orchestration and Editorial Agents Module Architecture Directive
+
+Purpose:
+
+- Define AI Orchestration and Editorial Agents as the seventh detailed module
+  specification after Library, Translation, Proofreading/Editorial Review,
+  Publishing, Rights and Provenance, and Magazine and establish the official
+  rules for centralized AI task execution, agent registry, context building,
+  prompt building, model routing, validation, observability, cost governance,
+  human review handoff, and audit.
+
+Rules:
+
+- No functional module may communicate directly with an external AI provider.
+- Every AI request must pass through AI Orchestration.
+- AI Orchestration is the only approved runtime boundary between platform
+  modules and provider adapters.
+- Context packages must be built from authorized sources only and must obey
+  server-side authentication, tenant isolation, RBAC, Need-to-Know access,
+  rights restrictions, workflow state, and privacy filtering.
+- Prompts must be centralized, versioned, auditable, and selected through the
+  orchestrator. Production prompts must not be hardcoded in functional
+  modules.
+- Provider and model routing must be policy-driven, cost-aware, replaceable,
+  observable, and auditable.
+- Agent registry and agent chains must be reusable, versioned, governed,
+  auditable, and subject to Human Final Authority.
+- AI output must be validated before being returned to functional modules.
+- AI may propose, analyze, synthesize, classify, draft, and explain, but it
+  must never publish, approve editorial decisions, modify rights, modify
+  permissions, validate legal status, alter security, change governance, or
+  bypass workflow.
+- AI executions must record model, model version, prompt version, context
+  references, duration, token usage, estimated cost, result, errors,
+  validation status, audit references, and observability traces.
+- Future AI Orchestration work must be additive and must follow
+  `docs/modules/ai-orchestration/ai-migration-plan.md`.
+- After AI Orchestration and Editorial Agents Module specification and
+  baseline audit are accepted, the next module specification should be Module
+  8 - Audio and Narration Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
