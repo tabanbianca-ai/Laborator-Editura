@@ -1017,9 +1017,50 @@ Roadmap impact:
 - Workflow automation must remain subordinate to Human Final Authority and
   must not approve, publish, grant rights, bypass workflow, modify security,
   or call AI providers directly.
-- After Workflow Engine and Business Process Automation Module specification
-  and baseline audit are accepted, the next module specification should be
-  Module 11 - Notification and Communication Module Architecture.
+- Module 11 - Notification and Communication Module Architecture is now
+  documented after Workflow Engine and Business Process Automation.
+
+## Phase II Module 11 - Notification and Communication Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/notifications/notifications-overview.md`.
+- `docs/modules/notifications/domain-model.md`.
+- `docs/modules/notifications/template-engine.md`.
+- `docs/modules/notifications/channel-router.md`.
+- `docs/modules/notifications/delivery-queue.md`.
+- `docs/modules/notifications/webhooks.md`.
+- `docs/modules/notifications/api-contracts.md`.
+- `docs/modules/notifications/events.md`.
+- `docs/modules/notifications/workflows.md`.
+- `docs/modules/notifications/notifications-gap-analysis.md`.
+- `docs/modules/notifications/notifications-migration-plan.md`.
+
+Roadmap impact:
+
+- Notification and Communication is the eleventh detailed module
+  specification after Library, Translation, Proofreading/Editorial Review,
+  Publishing, Rights and Provenance, Magazine, AI Orchestration, Audio and
+  Narration, Video and Multimedia, and Workflow Engine.
+- Existing implementation already includes Gateway webhook registry and
+  delivery logs, Scheduling reminders and overdue alert metadata, Workspace
+  notification preference metadata, Auth password reset and email verification
+  request records, and Observability logging primitives.
+- Future Notification migration must add centralized notification records,
+  versioned localized templates, typed preferences, channel routing,
+  asynchronous delivery queue metadata, retry and dead letter handling,
+  webhook dispatch orchestration, delivery status tracking, communication
+  events, and communication audit.
+- Migration must be additive, preserve current Gateway, Scheduling, Workspace,
+  Auth, Workflow, Publishing, Distribution, and Phase 7 Step 16 behavior, and
+  keep domain decisions inside the owning modules.
+- No module may send direct outbound communication after adoption; modules
+  must emit events or requests for Notification Engine.
+- After Notification and Communication Module specification and baseline audit
+  are accepted, the next module specification should be Module 12 - Identity,
+  Access Management and Security Module Architecture.
 
 ## MVP Scope
 
