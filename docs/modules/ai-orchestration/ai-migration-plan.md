@@ -164,7 +164,8 @@ Each phase requires:
 
 ## Next Recommended Module
 
-After AI Orchestration and Editorial Agents Module specification and baseline
-audit are accepted, the next recommended module specification is Module 8 -
-Audio and Narration Module Architecture.
+Module 8 - Audio and Narration Module Architecture is now documented as the
+next Phase II specification after AI Orchestration and Editorial Agents.
 
+The next recommended module specification after Audio and Narration is Module
+9 - Video and Multimedia Module Architecture.
