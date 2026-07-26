@@ -1570,9 +1570,44 @@ Rules:
   workflow, or alter source content.
 - Future Video work must be additive and must follow
   `docs/modules/video/video-migration-plan.md`.
-- After Video and Multimedia Module specification and baseline audit are
-  accepted, the next module specification should be Module 10 - Workflow
-  Engine and Business Process Automation Module Architecture.
+- Module 10 - Workflow Engine and Business Process Automation Module
+  Architecture is now documented after Video and Multimedia.
+
+### Phase II Workflow Engine and Business Process Automation Module Architecture Directive
+
+Purpose:
+
+- Define Workflow Engine and Business Process Automation as the tenth detailed
+  Phase II module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, and Video and Multimedia.
+
+Rules:
+
+- Workflow Engine is the official coordination layer for generic platform
+  business processes.
+- Domain modules keep ownership of domain validation and domain state.
+- Domain modules must not create independent workflow engines.
+- Workflow definitions must be versioned and configurable without code.
+- Workflow instances must reference immutable workflow versions.
+- State transitions must be validated, idempotent, auditable, tenant-scoped,
+  and compatible with Need-to-Know access.
+- Workflow tasks, approvals, deadlines, notifications, scheduler hooks,
+  escalations, automation metadata, and process audit must use clear contracts.
+- Automation must be reusable, retry-safe, non-destructive, and audited.
+- Automation must not approve, publish, grant rights, bypass workflow, modify
+  security, or override Human Final Authority.
+- Workflow Engine may request AI assistance only through AI Orchestration and
+  must not call AI providers directly.
+- Workflow notification delivery belongs to the future Notification and
+  Communication Module. Workflow may emit notification requests and events.
+- Existing Workflow v1, Scheduling, Editorial Pipeline, Publishing, Preflight,
+  Distribution, and Phase 7 Step 16 behavior must be preserved.
+- Future Workflow implementation must follow
+  `docs/modules/workflow/workflow-migration-plan.md`.
+- After Workflow Engine and Business Process Automation Module specification
+  and baseline audit are accepted, the next module specification should be
+  Module 11 - Notification and Communication Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
