@@ -156,7 +156,9 @@ Each implementation phase requires:
 
 ## Next Recommended Module
 
-After Audio and Narration Module specification and baseline audit are
-accepted, the next recommended module specification is Module 9 - Video and
-Multimedia Module Architecture.
+Module 9 - Video and Multimedia Module Architecture is now documented as the
+next Phase II specification after Audio and Narration.
 
+The next recommended module specification after Video and Multimedia is
+Module 10 - Workflow Engine and Business Process Automation Module
+Architecture.
