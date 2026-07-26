@@ -44,6 +44,35 @@ automation, events, observability, and process audit.
 - Scheduling provides task, event, reminder, and agent scheduling primitives.
 - Existing docs in `docs/workflow` define target architecture.
 
+## Performance Assessment
+
+The current Workflow v1 footprint is appropriate for MVP gate enforcement, but
+the target Workflow Engine requires a stronger execution model before it can
+coordinate thousands of simultaneous workflows.
+
+Required performance capabilities:
+
+- Durable workflow instance persistence.
+- Queue-backed asynchronous execution for long-running transitions.
+- Idempotency keys for retries and automation.
+- Distributed worker compatibility.
+- Automatic recovery after transient failures.
+- Stage duration and task backlog metrics.
+- SLA breach metrics.
+- Real-time monitoring hooks.
+- Safe retry limits for automation actions.
+
+Current gaps:
+
+- Workflow v1 transitions execute synchronously in service calls.
+- There is no workflow-specific distributed execution queue.
+- Retry metadata is not centrally modeled in Workflow Engine.
+- SLA and escalation metrics are not emitted as workflow observability records.
+- Workflow task backlog and approval latency are not centralized.
+
+Migration must introduce these capabilities incrementally and preserve current
+API behavior until compatibility is proven by contract tests.
+
 ## Dispersed Workflow Logic
 
 Workflow-like behavior exists in:
@@ -108,4 +137,3 @@ The module is incomplete until:
 - Scheduler, SLA, and escalation integrate with workflow.
 - Workflow events are versioned.
 - Workflow observability is available.
-
