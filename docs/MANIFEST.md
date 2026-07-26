@@ -242,6 +242,8 @@ Detailed module specifications now begin with:
   Disaster Recovery and Business Continuity Module Architecture.
 - `docs/modules/search/search-overview.md` - Phase II Module 15, Search,
   Indexing and Knowledge Graph Module Architecture.
+- `docs/modules/integration/integration-overview.md` - Phase II Module 16,
+  Integration, API Gateway and External Connectors Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -324,3 +326,9 @@ infrastructure. It centralizes indexing, full-text search, semantic search,
 vector search, autocomplete, faceted search, entity linking, relationship
 navigation, recommendations, and the platform-wide Knowledge Graph while
 enforcing IAM, Need-to-Know, rights, versioning, and audit rules.
+
+Integration, API Gateway and External Connectors is the interoperability
+boundary. It centralizes API Gateway routing, API contracts, versioning,
+external connectors, webhooks, rate limiting, OAuth policy, integration
+security, monitoring, service discovery, and audit so no functional module
+communicates directly with external providers.
