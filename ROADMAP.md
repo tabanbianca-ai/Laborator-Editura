@@ -933,9 +933,50 @@ Roadmap impact:
   Localization, AI Governance, Rights, Publishing, Public Portal, Pipeline,
   and Phase 7 Step 16 publishing/preflight/distribution behavior, and route
   all provider-based TTS or voice operations through AI Orchestration.
-- After Audio and Narration Module specification and baseline audit are
-  accepted, the next module specification should be Module 9 - Video and
-  Multimedia Module Architecture.
+- Module 9 - Video and Multimedia Module Architecture is now documented as the
+  next Phase II specification after Audio and Narration.
+
+## Phase II Module 9 - Video and Multimedia Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/video/video-overview.md`.
+- `docs/modules/video/domain-model.md`.
+- `docs/modules/video/video-projects.md`.
+- `docs/modules/video/timeline.md`.
+- `docs/modules/video/media-assets.md`.
+- `docs/modules/video/rendering-pipeline.md`.
+- `docs/modules/video/api-contracts.md`.
+- `docs/modules/video/events.md`.
+- `docs/modules/video/workflows.md`.
+- `docs/modules/video/video-gap-analysis.md`.
+- `docs/modules/video/video-migration-plan.md`.
+
+Roadmap impact:
+
+- Video and Multimedia is the ninth detailed module specification after
+  Library, Translation, Proofreading/Editorial Review, Publishing, Rights and
+  Provenance, Magazine, AI Orchestration, and Audio and Narration.
+- Existing implementation already includes generic video support in
+  Multimedia Creation, video localization, localized captions, multilingual
+  audio tracks, Video Agent governance, video rights flags, Public Portal
+  video references, Editorial Pipeline preview video and official video
+  gating, and runtime backup coverage for multimedia and media localization
+  assets.
+- Future Video migration must add canonical Video Project, Scene, Timeline,
+  Video Asset Reference, Caption Track, Video Synchronization Map, Render Job,
+  Render Profile, video-specific APIs, events, rights gates, workflow gates,
+  Publishing handoff, and distributed rendering planning.
+- Migration must be additive, preserve current Multimedia Creation, Media
+  Localization, Audio, AI Governance, Rights, Publishing, Public Portal,
+  Pipeline, and Phase 7 Step 16 publishing/preflight/distribution behavior,
+  and route all provider-based video, captioning, thumbnail, timing, or media
+  operations through AI Orchestration.
+- After Video and Multimedia Module specification and baseline audit are
+  accepted, the next module specification should be Module 10 - Workflow
+  Engine and Business Process Automation Module Architecture.
 
 ## MVP Scope
 
