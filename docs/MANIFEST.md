@@ -230,6 +230,8 @@ Detailed module specifications now begin with:
   Narration Module Architecture.
 - `docs/modules/video/video-overview.md` - Phase II Module 9, Video and
   Multimedia Module Architecture.
+- `docs/modules/workflow/workflow-overview.md` - Phase II Module 10, Workflow
+  Engine and Business Process Automation Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -278,3 +280,9 @@ approved Library, Audio, Translation, and multimedia resources into
 non-destructive, versioned, rights-aware videos through governed timelines,
 scenes, captions, synchronization, asynchronous rendering, and Publishing
 handoff.
+
+Workflow Engine and Business Process Automation is the central process
+coordination layer. It coordinates versioned workflow definitions, state
+machines, tasks, approvals, business rules, scheduler hooks, escalation
+metadata, automation metadata, events, and audit while domain modules retain
+their own validation authority and Human Final Authority remains mandatory.
