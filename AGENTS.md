@@ -1821,9 +1821,55 @@ Rules:
   Publishing, Distribution, and Phase 7 Step 16 behavior must be preserved.
 - Future Search implementation must follow
   `docs/modules/search/search-migration-plan.md`.
-- After Search, Indexing and Knowledge Graph Module specification and
-  baseline audit are accepted, the next module specification should be Module
-  16 - Integration, API Gateway and External Connectors Module Architecture.
+- Module 16 - Integration, API Gateway and External Connectors Module
+  Architecture is now documented after Search, Indexing and Knowledge Graph.
+
+### Integration, API Gateway and External Connectors Module Architecture Directive
+
+Purpose:
+
+- Define Integration, API Gateway and External Connectors as the sixteenth
+  detailed Phase II module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, and
+  Search.
+
+Rules:
+
+- Integration is the official centralized interoperability boundary for API
+  Gateway routing, REST APIs, optional GraphQL APIs, webhooks, event gateway
+  contracts, external connectors, rate limiting, API versioning, API security,
+  OAuth integration, monitoring, service discovery, and contract validation.
+- All external communication must pass through the API Gateway or approved
+  centralized connector adapters.
+- Functional modules must not call external services, provider SDKs, webhooks,
+  storage providers, AI providers, publishing providers, payment providers, or
+  productivity providers directly.
+- API contracts must be versioned, documented, validated, observable, and
+  backwards-compatible according to deprecation policy before stable external
+  exposure.
+- Webhooks must be signed, retryable, idempotent where needed, observable,
+  auditable, and protected against replay.
+- Rate limiting must be configurable by endpoint, tenant, consumer, connector,
+  and sensitive-operation policy.
+- Secrets, tokens, OAuth credentials, webhook secrets, and provider keys must
+  not be hardcoded, logged, indexed, exported, embedded in JSON Master, or
+  exposed in client bundles.
+- IAM remains the source of authentication and authorization for integration
+  traffic.
+- AI may suggest integration settings, connector scopes, and risk summaries,
+  but it must not create active secrets, enable providers, expand scopes,
+  bypass rate limits, or execute production-impacting integration actions.
+- Existing Gateway, Integrations, Webhooks, IAM, Security Governance,
+  Observability, Backup, Search, Notification, AI Orchestration, Publishing,
+  Distribution, and Phase 7 Step 16 behavior must be preserved.
+- Future Integration implementation must follow
+  `docs/modules/integration/integration-migration-plan.md`.
+- After Integration, API Gateway and External Connectors Module specification
+  and baseline audit are accepted, the next module specification should be
+  Module 17 - Configuration, Feature Flags and Platform Administration Module
+  Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
