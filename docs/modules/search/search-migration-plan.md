@@ -206,6 +206,10 @@ Module 17 - Configuration, Feature Flags and Platform Administration Module
 Architecture is now documented after Integration, API Gateway and External
 Connectors.
 
-The next recommended module specification after Configuration, Feature Flags
-and Platform Administration is Module 18 - Data Governance, Metadata and Master
-Data Management Module Architecture.
+Module 18 - Data Governance, Metadata and Master Data Management Module
+Architecture is now documented after Configuration, Feature Flags and Platform
+Administration.
+
+The next recommended module specification after Data Governance, Metadata and
+Master Data Management is Module 19 - Accessibility, Localization and
+Inclusive Experience Module Architecture.
