@@ -1866,10 +1866,60 @@ Rules:
   Distribution, and Phase 7 Step 16 behavior must be preserved.
 - Future Integration implementation must follow
   `docs/modules/integration/integration-migration-plan.md`.
-- After Integration, API Gateway and External Connectors Module specification
-  and baseline audit are accepted, the next module specification should be
-  Module 17 - Configuration, Feature Flags and Platform Administration Module
-  Architecture.
+- Module 17 - Configuration, Feature Flags and Platform Administration Module
+  Architecture is now documented after Integration, API Gateway and External
+  Connectors.
+
+### Configuration, Feature Flags and Platform Administration Module Architecture Directive
+
+Purpose:
+
+- Define Configuration, Feature Flags and Platform Administration as the
+  seventeenth detailed Phase II module specification after Library,
+  Translation, Proofreading/Editorial Review, Publishing, Rights and
+  Provenance, Magazine, AI Orchestration, Audio and Narration, Video and
+  Multimedia, Workflow Engine, Notification and Communication, IAM,
+  Observability, Backup, Search, and Integration.
+
+Rules:
+
+- Configuration is the official centralized administration boundary for
+  global configuration, environment-specific configuration, organization and
+  project configuration, Feature Flags, platform administration, module
+  configuration, AI parameters, editorial parameters, branding, localization,
+  licensing, and operational policies.
+- No component may contain business-critical hardcoded configuration or create
+  its own independent administration mechanism for shared platform concerns.
+- All modules must obtain shared runtime configuration through Configuration
+  Service contracts once the service is implemented.
+- Configuration must be scoped, typed, validated, versioned, auditable,
+  reversible where safe, and isolated by environment.
+- Feature Flags must be managed independently of deployments and evaluated
+  server-side for gated backend behavior.
+- Feature Flags do not replace IAM, RBAC, Need-to-Know access, subscription,
+  policy, or workflow authorization.
+- Development, Testing, Staging, and Production must remain isolated by
+  configuration, database targets, secrets, policies, and Feature Flag state.
+- Branding and localization must be configurable without code changes while
+  preserving the official Platform Language, Original Language, Authoring
+  Language, and Target Language separation.
+- Secrets, tokens, credentials, provider keys, and webhook secrets must be
+  stored only through approved secret references and must not be hardcoded,
+  logged, indexed, exported, embedded in JSON Master, or exposed in client
+  bundles.
+- AI may suggest configuration changes, summarize risks, and identify drift,
+  but must not activate production-impacting features, change security,
+  approve configuration changes, alter secrets, or bypass administrative
+  confirmation.
+- Existing Enterprise Administration, Workspace, Gateway, Security Governance,
+  Policy Engine, AI Governance, Observability, Backup, Search, Integration,
+  Publishing, Distribution, and Phase 7 Step 16 behavior must be preserved.
+- Future Configuration implementation must follow
+  `docs/modules/configuration/configuration-migration-plan.md`.
+- After Configuration, Feature Flags and Platform Administration Module
+  specification and baseline audit are accepted, the next module
+  specification should be Module 18 - Data Governance, Metadata and Master
+  Data Management Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
