@@ -175,6 +175,10 @@ documented after Backup, Disaster Recovery and Business Continuity.
 Module 16 - Integration, API Gateway and External Connectors Module
 Architecture is now documented after Search, Indexing and Knowledge Graph.
 
-The next recommended module specification after Integration, API Gateway and
-External Connectors is Module 17 - Configuration, Feature Flags and Platform
-Administration Module Architecture.
+Module 17 - Configuration, Feature Flags and Platform Administration Module
+Architecture is now documented after Integration, API Gateway and External
+Connectors.
+
+The next recommended module specification after Configuration, Feature Flags
+and Platform Administration is Module 18 - Data Governance, Metadata and Master
+Data Management Module Architecture.
