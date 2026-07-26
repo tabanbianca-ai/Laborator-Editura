@@ -940,9 +940,104 @@ Rights and Provenance module rules:
 - Existing Phase 7 Step 16 publishing, final preflight, and distribution
   tracking behavior must be preserved.
 
-After Rights and Provenance Module specification and baseline audit are
-accepted, the next recommended module specification is Module 6 - Magazine
-Module Architecture.
+Module 6 - Magazine Module Architecture is now documented as the next Phase II
+specification after Rights and Provenance.
+
+## Phase II Module 6 - Magazine Module Architecture
+
+The official Magazine module implementation specification begins in
+`docs/modules/magazine/magazine-overview.md`.
+
+The Magazine Module manages the complete lifecycle of periodical publications:
+magazines, volumes, issues, sections, articles, assets, layout, publication,
+archive, and distribution. Each article remains an independent Library Item,
+and each issue is published through the Publishing Module.
+
+The supporting Magazine module specification documents are:
+
+1. `docs/modules/magazine/magazine-overview.md`.
+2. `docs/modules/magazine/domain-model.md`.
+3. `docs/modules/magazine/issue-management.md`.
+4. `docs/modules/magazine/article-management.md`.
+5. `docs/modules/magazine/layout.md`.
+6. `docs/modules/magazine/publication.md`.
+7. `docs/modules/magazine/api-contracts.md`.
+8. `docs/modules/magazine/events.md`.
+9. `docs/modules/magazine/workflows.md`.
+10. `docs/modules/magazine/magazine-gap-analysis.md`.
+11. `docs/modules/magazine/magazine-migration-plan.md`.
+
+Magazine module rules:
+
+- Every magazine article must be represented as an independent Library Item.
+- Articles may be reused across issues and publications only through
+  references, never duplicated editorial content.
+- Magazine issues must be versioned and auditable.
+- Issue layout must be decoupled from article content.
+- Article translation must use the Translation Module.
+- Article approval must use the Editorial Review Module.
+- Rights validation must use Rights and Provenance.
+- Official issue publication must be delegated exclusively to the Publishing
+  Module.
+- Assets such as images, covers, PDFs, and source files must remain managed
+  through Library references.
+- Existing Magazine Digital Experience, Phase 7 Step 16 publishing/preflight/
+  distribution behavior, and architectural standards from Chapters 0-15 must
+  be preserved.
+
+Module 7 - AI Orchestration and Editorial Agents Module Architecture is now
+documented as the next Phase II specification after Magazine.
+
+## Phase II Module 7 - AI Orchestration and Editorial Agents Module Architecture
+
+The official AI Orchestration and Editorial Agents module implementation
+specification begins in
+`docs/modules/ai-orchestration/ai-orchestration-overview.md`.
+
+The AI Orchestration and Editorial Agents Module coordinates every AI request,
+agent execution, context package, prompt version, model route, validation
+result, human review handoff, cost signal, observability trace, and audit
+event. It is the only approved path through which platform modules may request
+AI capabilities.
+
+The supporting AI Orchestration module specification documents are:
+
+1. `docs/modules/ai-orchestration/ai-orchestration-overview.md`.
+2. `docs/modules/ai-orchestration/domain-model.md`.
+3. `docs/modules/ai-orchestration/agent-registry.md`.
+4. `docs/modules/ai-orchestration/context-builder.md`.
+5. `docs/modules/ai-orchestration/prompt-builder.md`.
+6. `docs/modules/ai-orchestration/model-router.md`.
+7. `docs/modules/ai-orchestration/validation-engine.md`.
+8. `docs/modules/ai-orchestration/api-contracts.md`.
+9. `docs/modules/ai-orchestration/events.md`.
+10. `docs/modules/ai-orchestration/workflows.md`.
+11. `docs/modules/ai-orchestration/ai-gap-analysis.md`.
+12. `docs/modules/ai-orchestration/ai-migration-plan.md`.
+
+AI Orchestration module rules:
+
+- No functional module may communicate directly with an external AI provider.
+- Every AI request must pass through AI Orchestration.
+- Context packages must be built from authorized sources only.
+- Prompts must be centralized, versioned, auditable, and selected through the
+  orchestrator.
+- Provider and model routing must be policy-driven, cost-aware, replaceable,
+  and auditable.
+- Agent registry and agent chains must be reusable, versioned, and governed.
+- AI output must be validated before being returned to functional modules.
+- Human Final Authority remains mandatory for approval, publication, rights,
+  security, governance, and workflow gates.
+- AI executions must record model, model version, prompt version, context
+  references, duration, token usage, estimated cost, result, errors,
+  validation status, audit references, and observability traces.
+- Existing AI Governance, Marketplace, Observability, Gateway, Editorial
+  Decision, Translation, Rights, Publishing, Magazine, and Quality behavior
+  must be preserved.
+
+After AI Orchestration and Editorial Agents Module specification and baseline
+audit are accepted, the next recommended module specification is Module 8 -
+Audio and Narration Module Architecture.
 
 ## Architecture Freeze & Governance Requirements
 
