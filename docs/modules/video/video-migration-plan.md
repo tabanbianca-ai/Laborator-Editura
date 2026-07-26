@@ -157,6 +157,8 @@ Each implementation phase requires:
 Module 10 - Workflow Engine and Business Process Automation Module
 Architecture is now documented after Video and Multimedia.
 
-The next recommended module specification after Workflow Engine and Business
-Process Automation is Module 11 - Notification and Communication Module
-Architecture.
+Module 11 - Notification and Communication Module Architecture is now
+documented after Workflow Engine and Business Process Automation.
+
+The next recommended module specification after Notification and Communication
+is Module 12 - Identity, Access Management and Security Module Architecture.
