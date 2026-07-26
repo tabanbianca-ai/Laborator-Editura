@@ -183,6 +183,18 @@ Each phase requires:
 
 ## Next Recommended Module
 
-After Identity, Access Management and Security Module specification and
-baseline audit are accepted, the next recommended module specification is
-Module 13 - Observability, Monitoring and Audit Module Architecture.
+Module 13 - Observability, Monitoring and Audit Module Architecture is now
+documented after Identity, Access Management and Security.
+
+Module 14 - Backup, Disaster Recovery and Business Continuity Module
+Architecture is now documented after Observability, Monitoring and Audit.
+
+Module 15 - Search, Indexing and Knowledge Graph Module Architecture is now
+documented after Backup, Disaster Recovery and Business Continuity.
+
+Module 16 - Integration, API Gateway and External Connectors Module
+Architecture is now documented after Search, Indexing and Knowledge Graph.
+
+The next recommended module specification after Integration, API Gateway and
+External Connectors is Module 17 - Configuration, Feature Flags and Platform
+Administration Module Architecture.
