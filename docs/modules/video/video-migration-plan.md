@@ -160,5 +160,9 @@ Architecture is now documented after Video and Multimedia.
 Module 11 - Notification and Communication Module Architecture is now
 documented after Workflow Engine and Business Process Automation.
 
-The next recommended module specification after Notification and Communication
-is Module 12 - Identity, Access Management and Security Module Architecture.
+Module 12 - Identity, Access Management and Security Module Architecture is
+now documented after Notification and Communication.
+
+The next recommended module specification after Identity, Access Management
+and Security is Module 13 - Observability, Monitoring and Audit Module
+Architecture.
