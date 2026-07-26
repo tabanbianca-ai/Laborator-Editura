@@ -222,6 +222,10 @@ Detailed module specifications now begin with:
   Publishing Module Architecture.
 - `docs/modules/rights/rights-overview.md` - Phase II Module 5, Rights and
   Provenance Module Architecture.
+- `docs/modules/magazine/magazine-overview.md` - Phase II Module 6, Magazine
+  Module Architecture.
+- `docs/modules/ai-orchestration/ai-orchestration-overview.md` - Phase II
+  Module 7, AI Orchestration and Editorial Agents Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -247,3 +251,14 @@ platform. It preserves verified provenance, rights, licenses, contracts,
 restrictions, and legal history so that no editorial resource can be
 published, distributed, translated, adapted, or reused without explicit,
 auditable authority.
+
+Magazine is the periodical publication layer. It organizes magazines, volumes,
+issues, sections, and article assignments while keeping every article as an
+independent Library Item and delegating translation, review, rights, layout,
+publishing, and distribution to the established platform modules.
+
+AI Orchestration and Editorial Agents is the centralized intelligence layer. It
+ensures every AI request passes through one governed orchestration boundary,
+builds authorized context, resolves versioned prompts, routes models through
+replaceable providers, validates outputs, records observability and audit
+evidence, and keeps every AI action subordinate to Human Final Authority.
