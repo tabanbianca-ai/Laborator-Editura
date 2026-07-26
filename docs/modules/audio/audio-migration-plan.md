@@ -159,6 +159,9 @@ Each implementation phase requires:
 Module 9 - Video and Multimedia Module Architecture is now documented as the
 next Phase II specification after Audio and Narration.
 
-The next recommended module specification after Video and Multimedia is
 Module 10 - Workflow Engine and Business Process Automation Module
+Architecture is now documented after Video and Multimedia.
+
+The next recommended module specification after Workflow Engine and Business
+Process Automation is Module 11 - Notification and Communication Module
 Architecture.
