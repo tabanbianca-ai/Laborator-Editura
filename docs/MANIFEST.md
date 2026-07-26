@@ -226,6 +226,8 @@ Detailed module specifications now begin with:
   Module Architecture.
 - `docs/modules/ai-orchestration/ai-orchestration-overview.md` - Phase II
   Module 7, AI Orchestration and Editorial Agents Module Architecture.
+- `docs/modules/audio/audio-overview.md` - Phase II Module 8, Audio and
+  Narration Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -262,3 +264,9 @@ ensures every AI request passes through one governed orchestration boundary,
 builds authorized context, resolves versioned prompts, routes models through
 replaceable providers, validates outputs, records observability and audit
 evidence, and keeps every AI action subordinate to Human Final Authority.
+
+Audio and Narration is the editorial audio production layer. It creates
+non-destructive, versioned, rights-aware audio derived from authoritative
+Library text, manages reusable voice profiles, preserves segment-level
+text-audio synchronization, routes AI-assisted narration through AI
+Orchestration, and publishes official audio only through Publishing.
