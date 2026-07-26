@@ -188,6 +188,9 @@ Architecture is now documented after Observability, Monitoring and Audit.
 Module 15 - Search, Indexing and Knowledge Graph Module Architecture is now
 documented after Backup, Disaster Recovery and Business Continuity.
 
-The next recommended module specification after Search, Indexing and
-Knowledge Graph is Module 16 - Integration, API Gateway and External
-Connectors Module Architecture.
+Module 16 - Integration, API Gateway and External Connectors Module
+Architecture is now documented after Search, Indexing and Knowledge Graph.
+
+The next recommended module specification after Integration, API Gateway and
+External Connectors is Module 17 - Configuration, Feature Flags and Platform
+Administration Module Architecture.
