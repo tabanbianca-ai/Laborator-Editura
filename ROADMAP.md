@@ -974,9 +974,52 @@ Roadmap impact:
   Pipeline, and Phase 7 Step 16 publishing/preflight/distribution behavior,
   and route all provider-based video, captioning, thumbnail, timing, or media
   operations through AI Orchestration.
-- After Video and Multimedia Module specification and baseline audit are
-  accepted, the next module specification should be Module 10 - Workflow
-  Engine and Business Process Automation Module Architecture.
+- Module 10 - Workflow Engine and Business Process Automation Module
+  Architecture is now documented after Video and Multimedia.
+
+## Phase II Module 10 - Workflow Engine and Business Process Automation Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/workflow/workflow-overview.md`.
+- `docs/modules/workflow/domain-model.md`.
+- `docs/modules/workflow/state-machine.md`.
+- `docs/modules/workflow/rule-engine.md`.
+- `docs/modules/workflow/task-management.md`.
+- `docs/modules/workflow/approval-engine.md`.
+- `docs/modules/workflow/scheduler.md`.
+- `docs/modules/workflow/api-contracts.md`.
+- `docs/modules/workflow/events.md`.
+- `docs/modules/workflow/workflow-gap-analysis.md`.
+- `docs/modules/workflow/workflow-migration-plan.md`.
+
+Roadmap impact:
+
+- Workflow Engine and Business Process Automation is the tenth detailed module
+  specification after Library, Translation, Proofreading/Editorial Review,
+  Publishing, Rights and Provenance, Magazine, AI Orchestration, Audio and
+  Narration, and Video and Multimedia.
+- Existing implementation already includes Workflow v1 document and segment
+  status gates, QA and Semantic Fidelity blockers, terminology blockers,
+  approval and export gates, audit events, Scheduling primitives, and
+  Editorial Pipeline frontend orchestration.
+- Future Workflow migration must add runtime workflow definitions, immutable
+  workflow versions, version-bound workflow instances, configurable state
+  machines, IF/THEN rule evaluation, generated workflow tasks, centralized
+  approval orchestration, scheduler/SLA/escalation integration, automation
+  metadata, versioned events, observability metrics, and Notification module
+  hooks.
+- Migration must be additive, preserve current Workflow v1, Scheduling,
+  Editorial Pipeline, Publishing, Preflight, Distribution, and Phase 7 Step 16
+  behavior, and keep domain validation inside the owning modules.
+- Workflow automation must remain subordinate to Human Final Authority and
+  must not approve, publish, grant rights, bypass workflow, modify security,
+  or call AI providers directly.
+- After Workflow Engine and Business Process Automation Module specification
+  and baseline audit are accepted, the next module specification should be
+  Module 11 - Notification and Communication Module Architecture.
 
 ## MVP Scope
 
