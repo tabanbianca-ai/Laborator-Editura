@@ -234,6 +234,8 @@ Detailed module specifications now begin with:
   Engine and Business Process Automation Module Architecture.
 - `docs/modules/notifications/notifications-overview.md` - Phase II Module 11,
   Notification and Communication Module Architecture.
+- `docs/modules/iam/iam-overview.md` - Phase II Module 12, Identity, Access
+  Management and Security Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -294,3 +296,8 @@ layer. It renders versioned localized templates, respects recipient
 preferences and Need-to-Know access, routes messages through independent
 channels, tracks delivery and retries, dispatches webhooks through governed
 contracts, and audits every communication event.
+
+Identity, Access Management and Security is the shared security foundation. It
+centralizes authentication, authorization, identity, roles, permissions,
+sessions, MFA policy, future SSO providers, security policies, and security
+audit so every module works from one server-derived access model.
