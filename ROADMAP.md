@@ -893,9 +893,49 @@ Roadmap impact:
   Observability, Gateway, Editorial Decision, Translation, Rights, Publishing,
   Magazine, Quality, and Phase 7 Step 16 publishing/preflight/distribution
   behavior, and prevent direct provider calls from functional modules.
-- After AI Orchestration and Editorial Agents Module specification and
-  baseline audit are accepted, the next module specification should be Module
-  8 - Audio and Narration Module Architecture.
+- Module 8 - Audio and Narration Module Architecture is now documented as the
+  next Phase II specification after AI Orchestration and Editorial Agents.
+
+## Phase II Module 8 - Audio and Narration Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/audio/audio-overview.md`.
+- `docs/modules/audio/domain-model.md`.
+- `docs/modules/audio/narration-projects.md`.
+- `docs/modules/audio/voice-profiles.md`.
+- `docs/modules/audio/tts-pipeline.md`.
+- `docs/modules/audio/synchronization.md`.
+- `docs/modules/audio/api-contracts.md`.
+- `docs/modules/audio/events.md`.
+- `docs/modules/audio/workflows.md`.
+- `docs/modules/audio/audio-gap-analysis.md`.
+- `docs/modules/audio/audio-migration-plan.md`.
+
+Roadmap impact:
+
+- Audio and Narration is the eighth detailed module specification after
+  Library, Translation, Proofreading/Editorial Review, Publishing, Rights and
+  Provenance, Magazine, and AI Orchestration.
+- Existing implementation already includes generic audio support in
+  Multimedia Creation, voice-over and dubbing metadata in Media Localization,
+  Audio Agent governance, audiobook rights flags, Public Portal audio chapter
+  references, Editorial Pipeline preview audio and official audiobook gating,
+  and runtime backup coverage for multimedia and media localization assets.
+- Future Audio migration must add canonical Narration Project, Audio Chapter,
+  Voice Profile, Narrator, Audio Asset, TTS Pipeline Run, Text-Audio
+  Synchronization Map, Voice Consent Record, audio-specific APIs, events,
+  rights gates, workflow gates, Publishing handoff, and async generation
+  planning.
+- Migration must be additive, preserve current Multimedia Creation, Media
+  Localization, AI Governance, Rights, Publishing, Public Portal, Pipeline,
+  and Phase 7 Step 16 publishing/preflight/distribution behavior, and route
+  all provider-based TTS or voice operations through AI Orchestration.
+- After Audio and Narration Module specification and baseline audit are
+  accepted, the next module specification should be Module 9 - Video and
+  Multimedia Module Architecture.
 
 ## MVP Scope
 
