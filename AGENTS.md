@@ -1497,9 +1497,45 @@ Rules:
   validation status, audit references, and observability traces.
 - Future AI Orchestration work must be additive and must follow
   `docs/modules/ai-orchestration/ai-migration-plan.md`.
-- After AI Orchestration and Editorial Agents Module specification and
-  baseline audit are accepted, the next module specification should be Module
-  8 - Audio and Narration Module Architecture.
+- Module 8 - Audio and Narration Module Architecture is now documented as the
+  next Phase II specification after AI Orchestration and Editorial Agents.
+
+### Phase II Audio and Narration Module Architecture Directive
+
+Purpose:
+
+- Define Audio and Narration as the eighth detailed module specification after
+  Library, Translation, Proofreading/Editorial Review, Publishing, Rights and
+  Provenance, Magazine, and AI Orchestration and establish the official rules
+  for narration projects, audio chapters, reusable voice profiles, TTS
+  pipeline metadata, human recording metadata, voice cloning governance,
+  text-audio synchronization, accessibility, audio publication handoff, and
+  audit.
+
+Rules:
+
+- Every audio project must be linked to a Library Item.
+- Library source text remains the authoritative source of truth.
+- Audio assets are derived resources and must be non-destructive, versioned,
+  and auditable.
+- Voice profiles must be reusable, versioned, and rights-aware.
+- Voice cloning requires documented consent and Rights and Provenance
+  validation.
+- TTS, transcription, voice generation, and AI-assisted narration must route
+  through AI Orchestration. Audio must not call providers directly.
+- Segment-level text-audio synchronization must preserve source text version,
+  segment IDs, timestamps, confidence, and review status.
+- Preview audio is draft-only and must never be published.
+- Official audio publication requires approved source text, voice rights,
+  publication rights, workflow approval, and Publishing handoff.
+- AI may suggest narration, pronunciation, timing, accessibility improvements,
+  and voice candidates, but it must not approve, publish, clone voices without
+  consent, bypass rights, or bypass workflow.
+- Future Audio work must be additive and must follow
+  `docs/modules/audio/audio-migration-plan.md`.
+- After Audio and Narration Module specification and baseline audit are
+  accepted, the next module specification should be Module 9 - Video and
+  Multimedia Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
