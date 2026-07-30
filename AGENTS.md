@@ -2304,6 +2304,48 @@ Rules:
   modules are specialized extensions unless explicitly approved as new
   fundamental architecture.
 
+### Enterprise Meta-Architecture and Codex Governance Framework Directive
+
+Purpose:
+
+- Define Phase III Module 26 as the supreme Codex governance layer above all
+  Phase I architecture chapters, Phase II fundamental modules, services, APIs,
+  data models, AI agents, workflows, standards, and future extensions.
+
+Rules:
+
+- This directive does not authorize new user-facing functionality.
+- No future module, service, API, data model, AI agent, workflow, standard, or
+  extension may bypass the Enterprise Meta-Architecture and Codex Governance
+  Framework.
+- All modules must define purpose, responsibilities, principles,
+  architecture, entities, workflows, APIs, events, integration, performance,
+  security, acceptance criteria, audit, deliverables, and final Codex
+  instruction.
+- Module lifecycle states are `PROPOSED`, `DRAFT`, `UNDER_REVIEW`,
+  `VALIDATED`, `APPROVED`, `IMPLEMENTED`, `OPERATIONAL`, `DEPRECATED`, and
+  `ARCHIVED`.
+- All module lifecycle transitions must be versioned and audited.
+- Every architectural change must include justification, impact on existing
+  modules, compatibility analysis, risk assessment, migration plan,
+  validation criteria, and architecture approval.
+- Dependencies between modules, APIs, events, data models, workflows, and AI
+  agents must be explicit.
+- Uncontrolled circular dependencies are not allowed.
+- Canonical reference models are the official reference for users, projects,
+  publications, translations, multimedia assets, workflows, AI, audit, and
+  configuration.
+- Codex versions, structural changes, reviews, approvals, architectural
+  exceptions, compatibility decisions, and migration plans must be audited.
+- AI may assist with analysis, summaries, dependency checks, maturity
+  assessments, impact analysis, and draft recommendations, but it must not
+  approve Codex changes, grant exceptions, alter governance, publish Codex
+  versions, or bypass architectural review.
+- Future capabilities after Module 26 are specialized extensions unless
+  explicitly approved through Codex Governance as fundamental architecture.
+- Future Codex Governance implementation must follow
+  `docs/codex/meta-architecture-migration-plan.md`.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
