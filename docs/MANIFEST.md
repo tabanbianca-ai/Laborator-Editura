@@ -263,6 +263,8 @@ Detailed module specifications now begin with:
 - `docs/modules/enterprise-architecture/architecture-overview.md` - Phase II
   Module 24, Enterprise Architecture, Portfolio and Strategic Governance
   Module Architecture.
+- `docs/modules/compliance/compliance-overview.md` - Phase II Module 25,
+  Compliance, Legal Governance and Risk Management Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -410,3 +412,10 @@ Decision Records, technology standards, technology lifecycle, strategic
 roadmap, portfolio governance, technical debt, architecture review, and
 architecture compliance so platform evolution remains business-driven,
 standardized, traceable, sustainable, and auditable.
+
+Compliance, Legal Governance and Risk Management is the compliance foundation.
+It centralizes policies, regulatory obligations, enterprise risk management,
+internal controls, privacy governance, consent, retention, legal hold,
+compliance assessments, audits, exceptions, and corrective actions so every
+platform process, service, publication, AI operation, and governance decision
+remains policy-driven, risk-aware, legally traceable, and auditable.
