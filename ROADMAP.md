@@ -1529,10 +1529,139 @@ Roadmap impact:
   monitoring, Chapter 13 DevOps documentation, and Phase 7 Step 21 behavior,
   and prevent unmanaged manual production deployment or operational changes
   outside approved DevSecOps procedure.
-- After DevSecOps, CI/CD, Release and Platform Operations Module
-  specification and baseline audit are accepted, the next module
-  specification should be Module 23 - Quality Assurance, Testing and
-  Validation Module Architecture.
+
+## Phase II Module 23 - Quality Assurance, Testing and Validation Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/quality-assurance/qa-overview.md`.
+- `docs/modules/quality-assurance/domain-model.md`.
+- `docs/modules/quality-assurance/test-management.md`.
+- `docs/modules/quality-assurance/test-automation.md`.
+- `docs/modules/quality-assurance/quality-gates.md`.
+- `docs/modules/quality-assurance/performance-testing.md`.
+- `docs/modules/quality-assurance/security-testing.md`.
+- `docs/modules/quality-assurance/accessibility-testing.md`.
+- `docs/modules/quality-assurance/ai-validation.md`.
+- `docs/modules/quality-assurance/api-contracts.md`.
+- `docs/modules/quality-assurance/events.md`.
+- `docs/modules/quality-assurance/qa-gap-analysis.md`.
+- `docs/modules/quality-assurance/qa-migration-plan.md`.
+
+Roadmap impact:
+
+- Quality Assurance, Testing and Validation is the twenty-third detailed
+  module specification after Library, Translation, Proofreading/Editorial
+  Review, Publishing, Rights and Provenance, Magazine, AI Orchestration,
+  Audio and Narration, Video and Multimedia, Workflow Engine, Notification
+  and Communication, IAM, Observability, Backup, Search, Integration,
+  Configuration, Data Governance, Accessibility, Analytics, AI Governance,
+  and DevSecOps.
+- Existing implementation already includes API contract and integration
+  tests, Web contract tests, runtime database and backup tests, shared JSON
+  Master tests, fixture validation, staging validation scripts, Infrastructure
+  Pack validators, GitHub Actions CI, dependency-aware typecheck/lint/test/
+  build/audit, and filesystem vulnerability scanning.
+- Future Quality Assurance migration must add a centralized test plan
+  registry, test case registry, test execution records, defect lifecycle,
+  coverage snapshots, quality gate records, manual validation evidence,
+  release validation records, QA event contracts, and formal runtime APIs.
+- Migration must be additive, preserve current API/Web/DB/shared test suites,
+  CI, staging validation, Infrastructure Pack, DevSecOps controls, existing
+  editorial QA Engine behavior, Chapter 14 quality architecture, and Phase 7
+  Step 22 behavior, and prevent release promotion without mandatory
+  validation evidence.
+
+## Phase II Module 24 - Enterprise Architecture, Portfolio and Strategic Governance Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/enterprise-architecture/architecture-overview.md`.
+- `docs/modules/enterprise-architecture/domain-model.md`.
+- `docs/modules/enterprise-architecture/capability-catalog.md`.
+- `docs/modules/enterprise-architecture/architecture-decision-records.md`.
+- `docs/modules/enterprise-architecture/technology-standards.md`.
+- `docs/modules/enterprise-architecture/technology-lifecycle.md`.
+- `docs/modules/enterprise-architecture/technical-debt-registry.md`.
+- `docs/modules/enterprise-architecture/strategic-roadmap.md`.
+- `docs/modules/enterprise-architecture/api-contracts.md`.
+- `docs/modules/enterprise-architecture/events.md`.
+- `docs/modules/enterprise-architecture/architecture-gap-analysis.md`.
+- `docs/modules/enterprise-architecture/architecture-migration-plan.md`.
+
+Roadmap impact:
+
+- Enterprise Architecture, Portfolio and Strategic Governance is the
+  twenty-fourth detailed module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, Data Governance, Accessibility, Analytics, AI
+  Governance, DevSecOps, and Quality Assurance.
+- Existing implementation already includes Manifest, development conventions,
+  architecture Chapters 1-15, SPEC, ROADMAP, AGENTS, detailed domain/data/
+  database/frontend/backend/security/operations/quality architecture
+  documents, Phase II module specifications, release checklists, readiness
+  reports, staging validation plans, and module migration plans.
+- Future Enterprise Architecture migration must add a structured capability
+  catalog, ADR repository, technology standards registry, technology
+  lifecycle records, strategic roadmap records, portfolio records, technical
+  debt registry, architecture review workflow, architecture governance API
+  contracts, and architecture governance events.
+- Migration must be additive, preserve all existing architecture documents,
+  module specifications, DevSecOps controls, Quality Assurance gates, IAM,
+  Data Governance, AI Governance, and Phase 7 Step 23 behavior, and prevent
+  architectural change outside approved governance.
+## Phase II Module 25 - Compliance, Legal Governance and Risk Management Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/compliance/compliance-overview.md`.
+- `docs/modules/compliance/domain-model.md`.
+- `docs/modules/compliance/policy-registry.md`.
+- `docs/modules/compliance/risk-registry.md`.
+- `docs/modules/compliance/control-framework.md`.
+- `docs/modules/compliance/privacy-governance.md`.
+- `docs/modules/compliance/legal-hold.md`.
+- `docs/modules/compliance/audit-management.md`.
+- `docs/modules/compliance/api-contracts.md`.
+- `docs/modules/compliance/events.md`.
+- `docs/modules/compliance/compliance-gap-analysis.md`.
+- `docs/modules/compliance/compliance-migration-plan.md`.
+
+Roadmap impact:
+
+- Compliance, Legal Governance and Risk Management is the twenty-fifth
+  detailed module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, Data Governance, Accessibility, Analytics, AI
+  Governance, DevSecOps, Quality Assurance, and Enterprise Architecture.
+- Existing implementation already includes security compliance documentation,
+  operations risk management, data retention, backup retention policies,
+  rights compliance validation, IAM, Data Governance, AI Governance,
+  DevSecOps, Quality Assurance, Enterprise Architecture, audit rules,
+  production readiness reports, and staging validation reports.
+- Future Compliance migration must add a centralized policy registry, risk
+  registry, control framework, privacy governance records, legal hold records,
+  compliance assessments, internal and external audit records, exception
+  management, corrective action tracking, compliance API contracts, and
+  compliance events.
+- Migration must be additive, preserve Rights and Provenance, Data Governance,
+  IAM, DevSecOps, Quality Assurance, AI Governance, Enterprise Architecture,
+  Backup, audit history, and Phase 7 Step 24 behavior, and prevent isolated
+  compliance implementations outside the centralized framework.
+- Module 25 completes the fundamental Phase II architecture chain by adding
+  compliance, legal governance, and risk management to editorial
+  capabilities, infrastructure, AI, operations, governance, quality, and
+  strategy.
 
 ## MVP Scope
 
