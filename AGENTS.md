@@ -2110,9 +2110,59 @@ Rules:
   Gateway, Backup, and Phase 7 Step 20 behavior must be preserved.
 - Future AI Governance implementation must follow
   `docs/modules/ai-governance/ai-governance-migration-plan.md`.
-- The next recommended module specification after AI Governance, Model
-  Management and Responsible AI is Module 22 - DevSecOps, CI/CD, Release and
-  Platform Operations Module Architecture.
+- Module 22 - DevSecOps, CI/CD, Release and Platform Operations Module
+  Architecture is now documented after AI Governance, Model Management and
+  Responsible AI.
+
+### DevSecOps, CI/CD, Release and Platform Operations Module Architecture Directive
+
+Purpose:
+
+- Define DevSecOps, CI/CD, Release and Platform Operations as the
+  twenty-second detailed Phase II module specification after Library,
+  Translation, Proofreading/Editorial Review, Publishing, Rights and
+  Provenance, Magazine, AI Orchestration, Audio and Narration, Video and
+  Multimedia, Workflow Engine, Notification and Communication, IAM,
+  Observability, Backup, Search, Integration, Configuration, Data Governance,
+  Accessibility, Analytics, and AI Governance.
+
+Rules:
+
+- DevSecOps is the mandatory platform boundary for source control, branch
+  strategy, CI/CD pipelines, build automation, release management,
+  environment promotion, Infrastructure as Code, container management,
+  Kubernetes operations readiness, secret management, artifact registry
+  governance, deployment automation, rollback management, patch management,
+  operational runbooks, and platform operations.
+- No service may be implemented, released, deployed, or operated outside the
+  approved DevSecOps process.
+- All builds must be automated, reproducible, traceable to source commits,
+  and validated through official CI.
+- All deployments must be versioned, environment-scoped, auditable,
+  rollback-capable, and promoted only after configured validation and
+  approvals.
+- Infrastructure must be managed as code where practical. Unmanaged manual
+  production changes are prohibited outside approved emergency procedure.
+- Secrets must be centrally governed and must not be committed, logged,
+  embedded in images, exposed in client bundles, or exported through project
+  data.
+- Artifacts must be immutable, versioned, checksummed, and traceable to
+  commits, dependencies, build number, security status, and deployment.
+- CI must validate repository structure, infrastructure syntax, secret
+  scanning, typecheck, tests, builds, runtime database/backup contracts,
+  fixture validation, Docker Compose configuration, and security scanning
+  where dependencies and tools are available.
+- CD must promote changes through controlled environments and require
+  explicit authorized approval before production.
+- Existing GitHub Actions CI, staging deployment, staging operations,
+  Infrastructure Pack, Docker Compose staging, backup/restore, rollback,
+  monitoring, Chapter 13 DevOps documentation, and Phase 7 Step 21 behavior
+  must be preserved.
+- Future DevSecOps implementation must follow
+  `docs/modules/devsecops/devsecops-migration-plan.md`.
+- The next recommended module specification after DevSecOps, CI/CD, Release
+  and Platform Operations is Module 23 - Quality Assurance, Testing and
+  Validation Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
