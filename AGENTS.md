@@ -2160,9 +2160,100 @@ Rules:
   must be preserved.
 - Future DevSecOps implementation must follow
   `docs/modules/devsecops/devsecops-migration-plan.md`.
-- The next recommended module specification after DevSecOps, CI/CD, Release
-  and Platform Operations is Module 23 - Quality Assurance, Testing and
-  Validation Module Architecture.
+- Module 23 - Quality Assurance, Testing and Validation Module Architecture
+  is now documented after DevSecOps, CI/CD, Release and Platform Operations.
+
+### Quality Assurance, Testing and Validation Module Architecture Directive
+
+Purpose:
+
+- Define Quality Assurance, Testing and Validation as the twenty-third
+  detailed Phase II module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, Data Governance, Accessibility, Analytics, AI
+  Governance, and DevSecOps.
+
+Rules:
+
+- Quality Assurance is the mandatory platform boundary for quality assurance,
+  test management, test planning, test execution, test automation, manual
+  validation, unit testing, integration testing, contract testing, API
+  testing, end-to-end testing, performance testing, load testing, stress
+  testing, security testing, accessibility testing, AI validation, regression
+  testing, and release validation.
+- No software component, API, AI agent, editorial workflow, publication
+  output, infrastructure change, or operational process may be promoted
+  without the required validation evidence.
+- Automated tests must be integrated with CI/CD where practical.
+- Manual validation must produce auditable evidence when automation is not
+  sufficient.
+- Quality gates must be configurable, mandatory, auditable, and connected to
+  release approval.
+- Critical vulnerabilities, failed mandatory tests, failed AI validation,
+  failed accessibility validation, and unmet minimum coverage thresholds block
+  promotion.
+- Every requirement should be traceable to test cases, executions, evidence,
+  defects when applicable, and release decisions.
+- AI may summarize quality status, identify risks, and recommend remediation,
+  but it must not approve releases, waive quality gate failures, hide failed
+  results, or bypass validation controls.
+- Existing API, Web, runtime database, backup, shared package, staging,
+  Infrastructure Pack, DevSecOps, Quality, Chapter 14, and Phase 7 Step 22
+  validation behavior must be preserved.
+- Future Quality Assurance implementation must follow
+  `docs/modules/quality-assurance/qa-migration-plan.md`.
+- Module 24 - Enterprise Architecture, Portfolio and Strategic Governance
+  Module Architecture is now documented after Quality Assurance, Testing and
+  Validation.
+
+### Enterprise Architecture, Portfolio and Strategic Governance Module Architecture Directive
+
+Purpose:
+
+- Define Enterprise Architecture, Portfolio and Strategic Governance as the
+  twenty-fourth detailed Phase II module specification after Library,
+  Translation, Proofreading/Editorial Review, Publishing, Rights and
+  Provenance, Magazine, AI Orchestration, Audio and Narration, Video and
+  Multimedia, Workflow Engine, Notification and Communication, IAM,
+  Observability, Backup, Search, Integration, Configuration, Data Governance,
+  Accessibility, Analytics, AI Governance, DevSecOps, and Quality Assurance.
+
+Rules:
+
+- Enterprise Architecture is the mandatory governance boundary for business
+  architecture, application architecture, data architecture, integration
+  architecture, security architecture, infrastructure architecture, AI
+  architecture, platform architecture, product portfolio, strategic roadmap,
+  technology standards, technology lifecycle, domain ownership, architecture
+  decisions, technical debt, innovation governance, and architecture
+  compliance.
+- All major architecture decisions must be documented through Architecture
+  Decision Records.
+- All capabilities must be cataloged with ownership, maturity, priority,
+  dependencies, and lifecycle status.
+- Technology standards must be centralized, versioned, lifecycle-governed,
+  and auditable.
+- No new technology may be adopted without architecture approval.
+- Strategic roadmap changes must preserve dependencies, risks, milestones,
+  budget metadata, success indicators, and audit evidence.
+- Technical debt must be registered, prioritized, assigned, and linked to
+  remediation plans.
+- Architecture deviations require authorized review, approved exception, and
+  audit trail.
+- AI may summarize architecture state, draft ADR proposals, identify risks,
+  and recommend standards, but it must not approve architecture decisions,
+  adopt technologies, approve exceptions, change governance, or bypass
+  architecture review.
+- Existing Manifest, development conventions, architecture Chapters 0-23,
+  SPEC, ROADMAP, AGENTS, DevSecOps, Quality Assurance, IAM, Data Governance,
+  AI Governance, and Phase 7 Step 23 behavior must be preserved.
+- Future Enterprise Architecture implementation must follow
+  `docs/modules/enterprise-architecture/architecture-migration-plan.md`.
+- Module 24 completes the Phase II high-level architecture sequence by
+  connecting strategy, architecture, development, operations, quality, and
+  platform evolution through auditable governance.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
