@@ -1803,10 +1803,62 @@ AI Governance module rules:
   Observability, Analytics, IAM, Policy Engine, Configuration, Integration
   Gateway, and Phase 7 Step 20 behavior must be preserved.
 
-After AI Governance, Model Management and Responsible AI Module specification
+## Phase II Module 22 - DevSecOps, CI/CD, Release and Platform Operations Module Architecture
+
+The official DevSecOps, CI/CD, Release and Platform Operations module
+implementation specification begins in
+`docs/modules/devsecops/devsecops-overview.md`.
+
+The DevSecOps, CI/CD, Release and Platform Operations Module provides the
+centralized framework for source control, branch strategy, CI/CD pipelines,
+build automation, release management, environment promotion, Infrastructure as
+Code, container management, Kubernetes operations readiness, secret
+management, DevSecOps controls, artifact registry governance, deployment
+automation, rollback management, patch management, operational runbooks, and
+platform operations.
+
+The supporting DevSecOps module specification documents are:
+
+1. `docs/modules/devsecops/devsecops-overview.md`.
+2. `docs/modules/devsecops/domain-model.md`.
+3. `docs/modules/devsecops/source-control.md`.
+4. `docs/modules/devsecops/ci-pipelines.md`.
+5. `docs/modules/devsecops/cd-pipelines.md`.
+6. `docs/modules/devsecops/release-management.md`.
+7. `docs/modules/devsecops/infrastructure-as-code.md`.
+8. `docs/modules/devsecops/secret-management.md`.
+9. `docs/modules/devsecops/platform-operations.md`.
+10. `docs/modules/devsecops/api-contracts.md`.
+11. `docs/modules/devsecops/events.md`.
+12. `docs/modules/devsecops/devsecops-gap-analysis.md`.
+13. `docs/modules/devsecops/devsecops-migration-plan.md`.
+
+DevSecOps module rules:
+
+- DevSecOps is the mandatory platform boundary for source control, CI/CD,
+  release, deployment, rollback, infrastructure, secrets, artifacts,
+  operational runbooks, and platform operations.
+- No service may be implemented, released, deployed, or operated outside the
+  approved DevSecOps process.
+- All builds must be automated, reproducible, traceable to source commits,
+  and validated through official CI.
+- All deployments must be versioned, environment-scoped, auditable,
+  rollback-capable, and promoted only after configured validation and
+  approvals.
+- Infrastructure must be managed as code where practical; unmanaged manual
+  production changes are prohibited outside approved emergency procedure.
+- Secrets must be centrally governed and must not be committed, logged,
+  embedded in images, exposed in client bundles, or exported through project
+  data.
+- Artifacts must be immutable, versioned, checksummed, and traceable to
+  commits, dependency state, build number, security status, and deployment.
+- Existing CI, staging deployment, staging operations, Infrastructure Pack,
+  backup/restore, rollback, monitoring, Chapter 13 DevOps documentation, and
+  Phase 7 Step 21 behavior must be preserved.
+
+After DevSecOps, CI/CD, Release and Platform Operations Module specification
 and baseline audit are accepted, the next recommended module specification is
-Module 22 - DevSecOps, CI/CD, Release and Platform Operations Module
-Architecture.
+Module 23 - Quality Assurance, Testing and Validation Module Architecture.
 
 ## Architecture Freeze & Governance Requirements
 
