@@ -250,6 +250,12 @@ Detailed module specifications now begin with:
 - `docs/modules/data-governance/data-governance-overview.md` - Phase II Module
   18, Data Governance, Metadata and Master Data Management Module
   Architecture.
+- `docs/modules/accessibility/accessibility-overview.md` - Phase II Module 19,
+  Accessibility, Localization and Inclusive Experience Module Architecture.
+- `docs/modules/analytics/analytics-overview.md` - Phase II Module 20,
+  Analytics, Business Intelligence and Decision Support Module Architecture.
+- `docs/modules/ai-governance/ai-governance-overview.md` - Phase II Module
+  21, AI Governance, Model Management and Responsible AI Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -351,3 +357,26 @@ metadata, schemas, reference data, quality, lineage, classification, retention,
 stewardship, entity resolution, and Golden Records so every editorial,
 technical, legal, and publication output can be traced to an authoritative
 master source without erasing module ownership or historical evidence.
+
+Accessibility, Localization and Inclusive Experience is the inclusive
+experience foundation. It governs accessible UI, localized interface resources,
+document accessibility, EPUB/PDF accessibility, captions, subtitles,
+transcripts, audio descriptions, alternative text, reading profiles, keyboard
+and screen-reader usability, and accessibility validation so every publication
+and platform surface can be used by people across languages and accessibility
+needs.
+
+Analytics, Business Intelligence and Decision Support is the decision
+intelligence foundation. It centralizes reporting, KPI management, dashboards,
+data warehouse integration, forecasts, decision recommendations, and analytics
+exports so strategic and operational decisions are based on canonical,
+auditable, privacy-aware, role-visible, and reproducible platform data rather
+than isolated module reports.
+
+AI Governance, Model Management and Responsible AI is the responsible
+intelligence foundation. It centralizes model registry, prompt registry,
+agent governance, provider governance, policy validation, model lifecycle,
+evaluation, benchmarking, cost controls, explainability, human oversight, risk
+management, and AI audit so every AI capability remains governed,
+reproducible, explainable, secure, cost-aware, and subordinate to authorized
+human responsibility.
