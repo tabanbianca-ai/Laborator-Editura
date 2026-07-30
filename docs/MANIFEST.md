@@ -266,6 +266,18 @@ Detailed module specifications now begin with:
 - `docs/modules/compliance/compliance-overview.md` - Phase II Module 25,
   Compliance, Legal Governance and Risk Management Module Architecture.
 
+## Phase III Codex Governance
+
+After the 25 fundamental Phase II modules, the Codex is governed by:
+
+- `docs/codex/meta-architecture.md` - Phase III Module 26, Enterprise
+  Meta-Architecture and Codex Governance Framework.
+- `docs/codex/module-catalog.md` - official Codex module catalog.
+- `docs/codex/dependency-registry.md` - official dependency governance
+  baseline.
+- `docs/codex/reference-models.md` - official canonical reference model
+  baseline.
+
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
 instead of creating duplicate repositories of editorial data.
@@ -419,3 +431,9 @@ internal controls, privacy governance, consent, retention, legal hold,
 compliance assessments, audits, exceptions, and corrective actions so every
 platform process, service, publication, AI operation, and governance decision
 remains policy-driven, risk-aware, legally traceable, and auditable.
+
+Enterprise Meta-Architecture and Codex Governance Framework is the supreme
+Codex governance layer. It defines how every module, service, API, data model,
+AI agent, workflow, standard, dependency, reference model, architectural
+exception, and future extension is proposed, reviewed, approved, versioned,
+validated, audited, and published into the Codex.
