@@ -2016,9 +2016,60 @@ Compliance module rules:
 
 With Module 25, the fundamental Phase II architecture covers the full
 enterprise chain: editorial capabilities, infrastructure, AI, operations,
-governance, quality, strategy, and compliance. Future modules should be
-treated as specialized extensions unless explicitly approved as new
+governance, quality, strategy, and compliance. Future capabilities are
+specialized extensions unless explicitly approved through Codex Governance as
 fundamental architecture.
+
+## Phase III Module 26 - Enterprise Meta-Architecture and Codex Governance Framework
+
+The official Enterprise Meta-Architecture and Codex Governance Framework
+specification begins in `docs/codex/meta-architecture.md`.
+
+This framework defines the mandatory rules used to build, extend, validate,
+version, and maintain the complete Laborator Editura Codex. It does not add
+user-facing functionality. It governs every existing module, service, API,
+data model, AI agent, workflow, standard, and future extension.
+
+The supporting Codex Governance documents are:
+
+1. `docs/codex/meta-architecture.md`.
+2. `docs/codex/reference-models.md`.
+3. `docs/codex/module-catalog.md`.
+4. `docs/codex/dependency-registry.md`.
+5. `docs/codex/architecture-principles.md`.
+6. `docs/codex/governance-framework.md`.
+7. `docs/codex/change-management.md`.
+8. `docs/codex/codex-versioning.md`.
+9. `docs/codex/api-contracts.md`.
+10. `docs/codex/events.md`.
+11. `docs/codex/meta-architecture-gap-analysis.md`.
+12. `docs/codex/meta-architecture-migration-plan.md`.
+
+Codex Governance rules:
+
+- No future extension may bypass the Enterprise Meta-Architecture and Codex
+  Governance Framework.
+- All modules must define purpose, responsibilities, principles,
+  architecture, entities, workflows, APIs, events, integration, performance,
+  security, acceptance criteria, audit, deliverables, and final Codex
+  instruction.
+- Module lifecycle transitions must be versioned and audited.
+- All changes must include justification, impact analysis, compatibility
+  analysis, risk assessment, migration plan, validation criteria, and
+  architecture approval.
+- Dependencies between modules, APIs, events, data models, workflows, and AI
+  agents must be explicit.
+- Uncontrolled circular dependencies are not allowed.
+- Canonical reference models are the official reference for users, projects,
+  publications, translations, multimedia assets, workflows, AI, audit, and
+  configuration.
+- Codex versions, structural changes, reviews, approvals, architectural
+  exceptions, compatibility decisions, and migration plans must be audited.
+- AI may assist with analysis, summaries, and draft recommendations, but it
+  must not approve Codex changes, grant exceptions, alter governance, publish
+  Codex versions, or bypass architectural review.
+- Existing Phase I-III validated behavior and all architectural standards
+  defined in the Codex must be preserved.
 
 ## Architecture Freeze & Governance Requirements
 
