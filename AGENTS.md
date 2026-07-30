@@ -2251,9 +2251,58 @@ Rules:
   AI Governance, and Phase 7 Step 23 behavior must be preserved.
 - Future Enterprise Architecture implementation must follow
   `docs/modules/enterprise-architecture/architecture-migration-plan.md`.
-- Module 24 completes the Phase II high-level architecture sequence by
-  connecting strategy, architecture, development, operations, quality, and
-  platform evolution through auditable governance.
+- Module 25 - Compliance, Legal Governance and Risk Management Module
+  Architecture is now documented after Enterprise Architecture, Portfolio and
+  Strategic Governance.
+
+### Compliance, Legal Governance and Risk Management Module Architecture Directive
+
+Purpose:
+
+- Define Compliance, Legal Governance and Risk Management as the twenty-fifth
+  detailed Phase II module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, Data Governance, Accessibility, Analytics, AI
+  Governance, DevSecOps, Quality Assurance, and Enterprise Architecture.
+
+Rules:
+
+- Compliance is the mandatory governance boundary for compliance management,
+  regulatory compliance, internal policies, legal governance, enterprise risk
+  management, control framework, privacy governance, consent management,
+  records management, retention policies, legal hold, compliance assessments,
+  internal audits, external audits, exception management, and corrective
+  actions.
+- Compliance and risk management must not be implemented as isolated,
+  module-local authorities outside this centralized framework.
+- All policies must be versioned, owned, reviewed, approved,
+  lifecycle-managed, and auditable.
+- All risks must have owners, score, status, linked controls, and mitigation
+  plans where required.
+- All controls must be traceable to policies, risks, evidence, owners,
+  frequency, execution mode, and effectiveness status.
+- Exceptions must be documented, approved, time-limited, monitored, and
+  audited.
+- Legal hold overrides retention deletion but does not grant unauthorized
+  access.
+- Compliance assessments, audit findings, and corrective actions must preserve
+  evidence and be tracked to closure.
+- AI may summarize policies, detect risks, suggest controls, and recommend
+  remediation, but it must not approve policies, accept risks, approve
+  exceptions, release legal holds, close audit findings, or bypass compliance.
+- Existing Manifest, development conventions, architecture Chapters 0-24,
+  SPEC, ROADMAP, AGENTS, IAM, Data Governance, AI Governance, DevSecOps,
+  Quality Assurance, Enterprise Architecture, Rights and Provenance, Backup,
+  and Phase 7 Step 24 behavior must be preserved.
+- Future Compliance implementation must follow
+  `docs/modules/compliance/compliance-migration-plan.md`.
+- Module 25 completes the fundamental Phase II architecture chain by adding
+  compliance, legal governance, and risk management to editorial capabilities,
+  infrastructure, AI, operations, governance, quality, and strategy. Future
+  modules are specialized extensions unless explicitly approved as new
+  fundamental architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
