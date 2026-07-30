@@ -232,6 +232,10 @@ Module 21 - AI Governance, Model Management and Responsible AI Module
 Architecture is now documented after Analytics, Business Intelligence and
 Decision Support.
 
-The next recommended module specification after AI Governance, Model
-Management and Responsible AI is Module 22 - DevSecOps, CI/CD, Release and
-Platform Operations Module Architecture.
+Module 22 - DevSecOps, CI/CD, Release and Platform Operations Module
+Architecture is now documented after AI Governance, Model Management and
+Responsible AI.
+
+The next recommended module specification after DevSecOps, CI/CD, Release
+and Platform Operations is Module 23 - Quality Assurance, Testing and
+Validation Module Architecture.
