@@ -1969,10 +1969,150 @@ Rules:
   behavior must be preserved.
 - Future Data Governance implementation must follow
   `docs/modules/data-governance/data-governance-migration-plan.md`.
-- After Data Governance, Metadata and Master Data Management Module
-  specification and baseline audit are accepted, the next module
-  specification should be Module 19 - Accessibility, Localization and
-  Inclusive Experience Module Architecture.
+- Module 19 - Accessibility, Localization and Inclusive Experience Module
+  Architecture is now documented after Data Governance, Metadata and Master
+  Data Management.
+
+### Accessibility, Localization and Inclusive Experience Module Architecture Directive
+
+Purpose:
+
+- Define Accessibility, Localization and Inclusive Experience as the nineteenth
+  detailed Phase II module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, and Data Governance.
+
+Rules:
+
+- Accessibility and localization are native platform capabilities, not
+  optional extensions.
+- Accessibility is the centralized governance boundary for UI accessibility,
+  document accessibility, EPUB/PDF accessibility, audio/video accessibility,
+  localization, internationalization, multilingual UI, captions, subtitles,
+  transcripts, audio descriptions, alternative text, screen reader support,
+  keyboard navigation, inclusive UX, and accessibility validation.
+- The platform targets WCAG 2.2 AA, EPUB Accessibility, PDF/UA, WAI-ARIA where
+  semantic HTML is insufficient, semantic HTML5, WebVTT, and SRT.
+- Platform Language controls UI text only and must not change Original
+  Language, Authoring Language, Target Language, manuscript content,
+  translation content, captions, transcripts, or imported content.
+- Localization resources must be centralized, versioned, reviewable, and
+  auditable before they become managed runtime resources.
+- Accessibility profiles may adjust presentation and interaction behavior, but
+  must not alter source content.
+- Caption, subtitle, transcript, audio description, and alternative text
+  records must remain linked to source media, localized media versions,
+  language/locale metadata, and master records where applicable.
+- Media Localization Studio remains the distinct media localization capability
+  and must integrate with this module for captions, subtitles, transcripts,
+  dubbing, voice-over, localized media, and accessibility metadata without
+  duplicating responsibility.
+- AI may suggest alt text, captions, transcripts, audio descriptions, and
+  accessibility findings, but must not approve compliance, publish, bypass
+  workflow, or replace authorized human review.
+- Existing frontend i18n, Platform Language behavior, Media Localization,
+  Multimedia, Publishing, Export, Library, Search, Configuration, Data
+  Governance, IAM, Observability, Backup, and Phase 7 Step 16 behavior must be
+  preserved.
+- Future Accessibility implementation must follow
+  `docs/modules/accessibility/accessibility-migration-plan.md`.
+- Module 20 - Analytics, Business Intelligence and Decision Support Module
+  Architecture is now documented after Accessibility, Localization and
+  Inclusive Experience.
+
+### Analytics, Business Intelligence and Decision Support Module Architecture Directive
+
+Purpose:
+
+- Define Analytics, Business Intelligence and Decision Support as the
+  twentieth detailed Phase II module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, Data Governance, and Accessibility.
+
+Rules:
+
+- Analytics is the centralized platform boundary for reporting, business
+  intelligence, KPI management, executive dashboards, operational analytics,
+  editorial analytics, AI analytics, workflow analytics, publishing analytics,
+  financial analytics, usage analytics, performance analytics, predictive
+  analytics, report building, data warehouse integration, OLAP queries, and
+  decision support.
+- Functional modules must not create isolated reporting, analytics, KPI,
+  dashboard, forecast, or BI authorities.
+- Analytics data must come from canonical sources defined by Data Governance
+  and Master Data Management.
+- KPI definitions must be configurable, versioned, explainable, and auditable.
+- Reports must be reproducible, exportable, version-aware, and source-lineage
+  aware.
+- Dashboards must enforce IAM, Need-to-Know visibility, tenant isolation, and
+  privacy by design.
+- Decision recommendations are informational and must not mutate source module
+  data, approve editorial decisions, publish, grant rights, grant access,
+  change budgets, bypass workflow, or hide audit history.
+- Analytics operations must be observable, traceable, and auditable.
+- Existing Observability, Workspace dashboards, Reports Center, QA, Semantic
+  Fidelity, Workflow, Publishing, Distribution, Rights, Public Portal,
+  Commerce, AI Governance, Data Governance, IAM, Backup, Configuration,
+  Search, Notifications, Integration, Audio, Video, Accessibility, and Phase 7
+  Step 16 behavior must be preserved.
+- Future Analytics implementation must follow
+  `docs/modules/analytics/analytics-migration-plan.md`.
+- Module 21 - AI Governance, Model Management and Responsible AI Module
+  Architecture is now documented after Analytics, Business Intelligence and
+  Decision Support.
+
+### AI Governance, Model Management and Responsible AI Module Architecture Directive
+
+Purpose:
+
+- Define AI Governance, Model Management and Responsible AI as the twenty-first
+  detailed Phase II module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, Data Governance, Accessibility, and Analytics.
+
+Rules:
+
+- AI Governance is the mandatory governance boundary for every AI model,
+  provider, prompt, agent, policy, evaluation, benchmark, risk record,
+  explainability record, cost record, approval, and audit event.
+- Functional modules must not invoke unmanaged AI models, call unmanaged AI
+  providers, or maintain independent production prompt repositories.
+- AI Orchestration remains the execution and coordination boundary. AI
+  Governance owns the registries, policies, lifecycle records, approvals,
+  evaluations, benchmarks, cost controls, and responsible AI evidence that AI
+  Orchestration must consult.
+- Every AI model must be registered, evaluated, policy-checked, and approved
+  where required before use.
+- Every production prompt must be centrally registered, versioned, evaluated,
+  approval-controlled, and auditable.
+- Every AI agent must define mission, responsibilities, collaboration, limits,
+  authority, assigned models, assigned prompts, workflows, permissions,
+  policies, monitoring profile, and lifecycle status.
+- AI policies must cover allowed models, forbidden models, cost limits, token
+  limits, data classification, required approvals, autonomy levels, external
+  provider usage, prompt retention, and response retention.
+- Every AI output used in platform workflows must preserve explainability
+  metadata including model, version, prompt, parameters, sources used,
+  temperature, provider, timestamp, user, workflow, cost, and token usage.
+- AI may recommend, explain, evaluate, classify, summarize, and generate
+  drafts when authorized, but it must not publish, approve, grant rights,
+  grant access, modify security, change governance, bypass workflow, approve
+  its own budget increase, or hide audit history.
+- Existing `/ai-governance/*` APIs, provider fallback metadata, AI usage and
+  cost governance, AI agent profiles, AI Orchestration, Marketplace,
+  Observability, Analytics, IAM, Policy Engine, Configuration, Integration
+  Gateway, Backup, and Phase 7 Step 20 behavior must be preserved.
+- Future AI Governance implementation must follow
+  `docs/modules/ai-governance/ai-governance-migration-plan.md`.
+- The next recommended module specification after AI Governance, Model
+  Management and Responsible AI is Module 22 - DevSecOps, CI/CD, Release and
+  Platform Operations Module Architecture.
 
 ### Intelligent Editorial Library & UX Finalization Directive
 
