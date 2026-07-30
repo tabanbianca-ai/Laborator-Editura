@@ -215,6 +215,13 @@ Module 22 - DevSecOps, CI/CD, Release and Platform Operations Module
 Architecture is now documented after AI Governance, Model Management and
 Responsible AI.
 
-The next recommended module specification after DevSecOps, CI/CD, Release
-and Platform Operations is Module 23 - Quality Assurance, Testing and
-Validation Module Architecture.
+Module 23 - Quality Assurance, Testing and Validation Module Architecture is
+now documented after DevSecOps, CI/CD, Release and Platform Operations.
+
+Module 24 - Enterprise Architecture, Portfolio and Strategic Governance
+Module Architecture is now documented after Quality Assurance, Testing and
+Validation.
+
+This completes the Phase II high-level architecture sequence by connecting
+strategy, architecture, development, operations, quality, and platform
+evolution through auditable governance.
