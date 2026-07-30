@@ -1856,9 +1856,169 @@ DevSecOps module rules:
   backup/restore, rollback, monitoring, Chapter 13 DevOps documentation, and
   Phase 7 Step 21 behavior must be preserved.
 
-After DevSecOps, CI/CD, Release and Platform Operations Module specification
-and baseline audit are accepted, the next recommended module specification is
-Module 23 - Quality Assurance, Testing and Validation Module Architecture.
+## Phase II Module 23 - Quality Assurance, Testing and Validation Module Architecture
+
+The official Quality Assurance, Testing and Validation module implementation
+specification begins in
+`docs/modules/quality-assurance/qa-overview.md`.
+
+The Quality Assurance, Testing and Validation Module provides the centralized
+framework for quality assurance, test management, test planning, test
+execution, test automation, manual validation, unit testing, integration
+testing, contract testing, API testing, end-to-end testing, performance
+testing, load testing, stress testing, security testing, accessibility
+testing, AI validation, regression testing, and release validation.
+
+The supporting Quality Assurance module specification documents are:
+
+1. `docs/modules/quality-assurance/qa-overview.md`.
+2. `docs/modules/quality-assurance/domain-model.md`.
+3. `docs/modules/quality-assurance/test-management.md`.
+4. `docs/modules/quality-assurance/test-automation.md`.
+5. `docs/modules/quality-assurance/quality-gates.md`.
+6. `docs/modules/quality-assurance/performance-testing.md`.
+7. `docs/modules/quality-assurance/security-testing.md`.
+8. `docs/modules/quality-assurance/accessibility-testing.md`.
+9. `docs/modules/quality-assurance/ai-validation.md`.
+10. `docs/modules/quality-assurance/api-contracts.md`.
+11. `docs/modules/quality-assurance/events.md`.
+12. `docs/modules/quality-assurance/qa-gap-analysis.md`.
+13. `docs/modules/quality-assurance/qa-migration-plan.md`.
+
+Quality Assurance module rules:
+
+- Quality Assurance is the mandatory validation boundary for tests, manual
+  evidence, coverage, quality gates, defects, regression, AI validation,
+  accessibility validation, security validation, performance validation, and
+  release validation.
+- No software component, API, AI agent, editorial workflow, publication
+  output, infrastructure change, or operational process may be promoted
+  without the required validation evidence.
+- Automated tests must be integrated with CI/CD where practical.
+- Manual validation must produce auditable evidence when automation is not
+  sufficient.
+- Quality gates must be configurable, mandatory, auditable, and connected to
+  release approval.
+- Critical vulnerabilities, failed mandatory tests, failed AI validation,
+  failed accessibility validation, and unmet minimum coverage thresholds block
+  promotion.
+- Every requirement should be traceable to test cases, executions, evidence,
+  defects when applicable, and release decisions.
+- Existing API, Web, runtime database, backup, shared package, staging,
+  Infrastructure Pack, DevSecOps, Quality, Chapter 14, and Phase 7 Step 22
+  validation behavior must be preserved.
+
+## Phase II Module 24 - Enterprise Architecture, Portfolio and Strategic Governance Module Architecture
+
+The official Enterprise Architecture, Portfolio and Strategic Governance module
+implementation specification begins in
+`docs/modules/enterprise-architecture/architecture-overview.md`.
+
+The Enterprise Architecture, Portfolio and Strategic Governance Module provides
+the centralized framework for enterprise architecture, architecture governance,
+product portfolio management, capability management, business capability
+mapping, strategic roadmap, Architecture Decision Records, technical
+standards, technology lifecycle, platform governance, architectural
+compliance, domain ownership, Architecture Review Board, strategic planning,
+technical debt governance, and innovation governance.
+
+The supporting Enterprise Architecture module specification documents are:
+
+1. `docs/modules/enterprise-architecture/architecture-overview.md`.
+2. `docs/modules/enterprise-architecture/domain-model.md`.
+3. `docs/modules/enterprise-architecture/capability-catalog.md`.
+4. `docs/modules/enterprise-architecture/architecture-decision-records.md`.
+5. `docs/modules/enterprise-architecture/technology-standards.md`.
+6. `docs/modules/enterprise-architecture/technology-lifecycle.md`.
+7. `docs/modules/enterprise-architecture/technical-debt-registry.md`.
+8. `docs/modules/enterprise-architecture/strategic-roadmap.md`.
+9. `docs/modules/enterprise-architecture/api-contracts.md`.
+10. `docs/modules/enterprise-architecture/events.md`.
+11. `docs/modules/enterprise-architecture/architecture-gap-analysis.md`.
+12. `docs/modules/enterprise-architecture/architecture-migration-plan.md`.
+
+Enterprise Architecture module rules:
+
+- Enterprise Architecture is the mandatory governance boundary for business,
+  application, data, integration, security, infrastructure, AI, operations,
+  quality, and platform evolution architecture.
+- All major architecture decisions must be documented through Architecture
+  Decision Records.
+- All capabilities must be cataloged with ownership, maturity, priority,
+  dependencies, and lifecycle status.
+- Technology standards must be centralized, versioned, lifecycle-governed,
+  and auditable.
+- New technologies must not be adopted without architecture approval.
+- Strategic roadmap changes must preserve dependency, risk, milestone,
+  budget, success indicator, and audit metadata.
+- Technical debt must be registered, prioritized, assigned, and linked to
+  remediation plans.
+- Architecture deviations require authorized review, approved exception, and
+  audit trail.
+- Existing Manifest, development conventions, architecture Chapters 0-23,
+  SPEC, ROADMAP, AGENTS, DevSecOps, Quality Assurance, IAM, Data Governance,
+  AI Governance, and Phase 7 Step 23 behavior must be preserved.
+
+## Phase II Module 25 - Compliance, Legal Governance and Risk Management Module Architecture
+
+The official Compliance, Legal Governance and Risk Management module
+implementation specification begins in
+`docs/modules/compliance/compliance-overview.md`.
+
+The Compliance, Legal Governance and Risk Management Module provides the
+centralized framework for compliance management, regulatory compliance,
+internal policies, legal governance, enterprise risk management, control
+framework, privacy governance, consent management, records management,
+retention policies, legal hold, compliance assessments, internal audits,
+external audits, exception management, and corrective actions.
+
+The supporting Compliance module specification documents are:
+
+1. `docs/modules/compliance/compliance-overview.md`.
+2. `docs/modules/compliance/domain-model.md`.
+3. `docs/modules/compliance/policy-registry.md`.
+4. `docs/modules/compliance/risk-registry.md`.
+5. `docs/modules/compliance/control-framework.md`.
+6. `docs/modules/compliance/privacy-governance.md`.
+7. `docs/modules/compliance/legal-hold.md`.
+8. `docs/modules/compliance/audit-management.md`.
+9. `docs/modules/compliance/api-contracts.md`.
+10. `docs/modules/compliance/events.md`.
+11. `docs/modules/compliance/compliance-gap-analysis.md`.
+12. `docs/modules/compliance/compliance-migration-plan.md`.
+
+Compliance module rules:
+
+- Compliance is the mandatory governance boundary for policies, regulatory
+  obligations, legal governance, enterprise risks, internal controls, privacy,
+  consent, retention, legal hold, audits, exceptions, and corrective actions.
+- Compliance and risk management must not be implemented as isolated,
+  module-local authorities outside this centralized framework.
+- All policies must be versioned, owned, reviewed, approved, lifecycle-managed,
+  and auditable.
+- All risks must have owners, score, status, linked controls, and mitigation
+  plans where required.
+- All controls must be traceable to policies, risks, evidence, owners,
+  frequency, execution mode, and effectiveness status.
+- Exceptions must be documented, approved, time-limited, monitored, and
+  audited.
+- Legal hold overrides retention deletion but does not grant unauthorized
+  access.
+- Compliance assessments, audit findings, and corrective actions must preserve
+  evidence and be tracked to closure.
+- AI may summarize policies, detect risks, suggest controls, and recommend
+  remediation, but it must not approve policies, accept risks, approve
+  exceptions, release legal holds, close audit findings, or bypass compliance.
+- Existing Manifest, development conventions, architecture Chapters 0-24,
+  SPEC, ROADMAP, AGENTS, IAM, Data Governance, AI Governance, DevSecOps,
+  Quality Assurance, Enterprise Architecture, Rights and Provenance, Backup,
+  and Phase 7 Step 24 behavior must be preserved.
+
+With Module 25, the fundamental Phase II architecture covers the full
+enterprise chain: editorial capabilities, infrastructure, AI, operations,
+governance, quality, strategy, and compliance. Future modules should be
+treated as specialized extensions unless explicitly approved as new
+fundamental architecture.
 
 ## Architecture Freeze & Governance Requirements
 
