@@ -199,6 +199,18 @@ Module 18 - Data Governance, Metadata and Master Data Management Module
 Architecture is now documented after Configuration, Feature Flags and Platform
 Administration.
 
-The next recommended module specification after Data Governance, Metadata and
-Master Data Management is Module 19 - Accessibility, Localization and
-Inclusive Experience Module Architecture.
+Module 19 - Accessibility, Localization and Inclusive Experience Module
+Architecture is now documented after Data Governance, Metadata and Master Data
+Management.
+
+Module 20 - Analytics, Business Intelligence and Decision Support Module
+Architecture is now documented after Accessibility, Localization and Inclusive
+Experience.
+
+Module 21 - AI Governance, Model Management and Responsible AI Module
+Architecture is now documented after Analytics, Business Intelligence and
+Decision Support.
+
+The next recommended module specification after AI Governance, Model
+Management and Responsible AI is Module 22 - DevSecOps, CI/CD, Release and
+Platform Operations Module Architecture.
