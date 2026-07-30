@@ -1442,6 +1442,7 @@ Roadmap impact:
   IAM, Need-to-Know, Observability, Workspace dashboards, Reports Center,
   source module audit, Backup, Accessibility, and Phase 7 Step 16 behavior,
   and prevent modules from creating isolated reporting or BI systems.
+
 ## Phase II Module 21 - AI Governance, Model Management and Responsible AI Module Architecture
 
 Status: Active specification.
@@ -1484,10 +1485,54 @@ Roadmap impact:
   Configuration, Integration Gateway, Backup, and Phase 7 Step 20 behavior,
   and prevent modules from invoking unmanaged AI models or maintaining
   independent production prompt repositories.
-- After AI Governance, Model Management and Responsible AI Module
+## Phase II Module 22 - DevSecOps, CI/CD, Release and Platform Operations Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/devsecops/devsecops-overview.md`.
+- `docs/modules/devsecops/domain-model.md`.
+- `docs/modules/devsecops/source-control.md`.
+- `docs/modules/devsecops/ci-pipelines.md`.
+- `docs/modules/devsecops/cd-pipelines.md`.
+- `docs/modules/devsecops/release-management.md`.
+- `docs/modules/devsecops/infrastructure-as-code.md`.
+- `docs/modules/devsecops/secret-management.md`.
+- `docs/modules/devsecops/platform-operations.md`.
+- `docs/modules/devsecops/api-contracts.md`.
+- `docs/modules/devsecops/events.md`.
+- `docs/modules/devsecops/devsecops-gap-analysis.md`.
+- `docs/modules/devsecops/devsecops-migration-plan.md`.
+
+Roadmap impact:
+
+- DevSecOps, CI/CD, Release and Platform Operations is the twenty-second
+  detailed module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, Data Governance, Accessibility, Analytics, and
+  AI Governance.
+- Existing implementation already includes GitHub Actions CI, manual staging
+  deployment, staging operations workflow, Docker Compose staging, API and Web
+  Dockerfiles, Infrastructure Pack v1.0, backup/restore/dry-run scripts,
+  rollback scripts, monitoring scripts, Nginx templates, systemd units,
+  validation scripts, and operational runbooks.
+- Future DevSecOps migration must add artifact registry publication,
+  immutable artifact promotion, release registry, semantic version automation,
+  production deployment workflow, central secret manager integration, artifact
+  signing, supply-chain provenance, and optional Kubernetes/GitOps/Terraform
+  infrastructure only when explicitly required.
+- Migration must be additive, preserve current CI, staging deployment,
+  staging operations, Infrastructure Pack, backup/restore, rollback,
+  monitoring, Chapter 13 DevOps documentation, and Phase 7 Step 21 behavior,
+  and prevent unmanaged manual production deployment or operational changes
+  outside approved DevSecOps procedure.
+- After DevSecOps, CI/CD, Release and Platform Operations Module
   specification and baseline audit are accepted, the next module
-  specification should be Module 22 - DevSecOps, CI/CD, Release and Platform
-  Operations Module Architecture.
+  specification should be Module 23 - Quality Assurance, Testing and
+  Validation Module Architecture.
 
 ## MVP Scope
 
