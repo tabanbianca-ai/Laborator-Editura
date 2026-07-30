@@ -348,6 +348,12 @@ Module 24 - Enterprise Architecture, Portfolio and Strategic Governance
 Module Architecture is now documented after Quality Assurance, Testing and
 Validation.
 
-This completes the Phase II high-level architecture sequence by connecting
-strategy, architecture, development, operations, quality, and platform
-evolution through auditable governance.
+Module 25 - Compliance, Legal Governance and Risk Management Module
+Architecture is now documented after Enterprise Architecture, Portfolio and
+Strategic Governance.
+
+With Module 25, the fundamental Phase II architecture covers the full
+enterprise chain: editorial capabilities, infrastructure, AI, operations,
+governance, quality, strategy, and compliance. Future modules should be
+treated as specialized extensions unless explicitly approved as new
+fundamental architecture.
