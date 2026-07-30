@@ -1360,10 +1360,134 @@ Roadmap impact:
   publication history, backup/restore compatibility, and Phase 7 Step 16
   behavior, and prevent modules from maintaining incompatible independent
   definitions of shared entities.
-- After Data Governance, Metadata and Master Data Management Module
+## Phase II Module 19 - Accessibility, Localization and Inclusive Experience Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/accessibility/accessibility-overview.md`.
+- `docs/modules/accessibility/domain-model.md`.
+- `docs/modules/accessibility/ui-accessibility.md`.
+- `docs/modules/accessibility/document-accessibility.md`.
+- `docs/modules/accessibility/audio-video-accessibility.md`.
+- `docs/modules/accessibility/localization.md`.
+- `docs/modules/accessibility/internationalization.md`.
+- `docs/modules/accessibility/accessibility-profiles.md`.
+- `docs/modules/accessibility/api-contracts.md`.
+- `docs/modules/accessibility/events.md`.
+- `docs/modules/accessibility/accessibility-gap-analysis.md`.
+- `docs/modules/accessibility/accessibility-migration-plan.md`.
+
+Roadmap impact:
+
+- Accessibility, Localization and Inclusive Experience is the nineteenth
+  detailed module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, and Data Governance.
+- Existing implementation already includes WCAG 2.2 AA frontend targets,
+  accessibility and i18n documentation, skip links, semantic main content,
+  localized navigation, shared UI primitives, focus styles, Platform Language
+  preferences, seven initial UI languages, Media Localization metadata for
+  subtitles and localized media, multimedia metadata, and manual release
+  accessibility recommendations.
+- Future Accessibility migration must add Accessibility Profiles, centralized
+  localization resource registry, automated WCAG validation, document
+  accessibility validation, EPUB/PDF accessibility reports, Caption Service,
+  Transcript Service, Audio Description metadata, Alternative Text metadata,
+  accessibility preflight integration, observability, and audit.
+- Migration must be additive, preserve Platform Language behavior, Media
+  Localization Studio, Multimedia, Publishing, Export, Library, Search,
+  Configuration, Data Governance, IAM, Observability, Backup, and Phase 7 Step
+  16 behavior, and prevent modules from creating isolated accessibility or
+  localization systems.
+
+## Phase II Module 20 - Analytics, Business Intelligence and Decision Support Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/analytics/analytics-overview.md`.
+- `docs/modules/analytics/domain-model.md`.
+- `docs/modules/analytics/kpi-management.md`.
+- `docs/modules/analytics/report-engine.md`.
+- `docs/modules/analytics/dashboard-engine.md`.
+- `docs/modules/analytics/decision-support.md`.
+- `docs/modules/analytics/data-warehouse.md`.
+- `docs/modules/analytics/api-contracts.md`.
+- `docs/modules/analytics/events.md`.
+- `docs/modules/analytics/analytics-gap-analysis.md`.
+- `docs/modules/analytics/analytics-migration-plan.md`.
+
+Roadmap impact:
+
+- Analytics, Business Intelligence and Decision Support is the twentieth
+  detailed module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, Data Governance, and Accessibility.
+- Existing implementation already includes Observability metrics and health
+  endpoints, Workspace dashboard widgets, static Reports Center surfaces, QA
+  and Semantic Fidelity reports, Workflow and Publishing status records, AI
+  Governance usage and budget records, and module audit events.
+- Future Analytics migration must add a centralized Analytics module runtime,
+  versioned KPI catalog, Analytics dataset registry, report engine, dashboard
+  engine, data warehouse connector, OLAP query definitions, forecast engine,
+  decision-support records, analytics export audit, and analytics IAM rules.
+- Migration must be additive, preserve canonical Data Governance ownership,
+  IAM, Need-to-Know, Observability, Workspace dashboards, Reports Center,
+  source module audit, Backup, Accessibility, and Phase 7 Step 16 behavior,
+  and prevent modules from creating isolated reporting or BI systems.
+## Phase II Module 21 - AI Governance, Model Management and Responsible AI Module Architecture
+
+Status: Active specification.
+
+Reference:
+
+- `docs/modules/ai-governance/ai-governance-overview.md`.
+- `docs/modules/ai-governance/domain-model.md`.
+- `docs/modules/ai-governance/model-registry.md`.
+- `docs/modules/ai-governance/prompt-registry.md`.
+- `docs/modules/ai-governance/agent-registry.md`.
+- `docs/modules/ai-governance/policy-engine.md`.
+- `docs/modules/ai-governance/model-evaluation.md`.
+- `docs/modules/ai-governance/cost-management.md`.
+- `docs/modules/ai-governance/explainability.md`.
+- `docs/modules/ai-governance/api-contracts.md`.
+- `docs/modules/ai-governance/events.md`.
+- `docs/modules/ai-governance/ai-governance-gap-analysis.md`.
+- `docs/modules/ai-governance/ai-governance-migration-plan.md`.
+
+Roadmap impact:
+
+- AI Governance, Model Management and Responsible AI is the twenty-first
+  detailed module specification after Library, Translation,
+  Proofreading/Editorial Review, Publishing, Rights and Provenance, Magazine,
+  AI Orchestration, Audio and Narration, Video and Multimedia, Workflow
+  Engine, Notification and Communication, IAM, Observability, Backup, Search,
+  Integration, Configuration, Data Governance, Accessibility, and Analytics.
+- Existing implementation already includes AI provider status metadata,
+  OpenAI primary and Anthropic fallback metadata, AI usage records, cost
+  summary, budgets, quotas, cost policies, override requests, agent governance
+  profiles, AI cost audit events, AI Orchestration documentation, and
+  provider registry documentation.
+- Future AI Governance migration must add a runtime model registry, prompt
+  registry, model lifecycle management, prompt approval workflow, AI policy
+  engine expansion, model evaluation, benchmarking, Responsible AI risk
+  records, explainability records, and AI governance event contracts.
+- Migration must be additive, preserve existing `/ai-governance/*` APIs, AI
+  Orchestration, Marketplace, Observability, Analytics, IAM, Policy Engine,
+  Configuration, Integration Gateway, Backup, and Phase 7 Step 20 behavior,
+  and prevent modules from invoking unmanaged AI models or maintaining
+  independent production prompt repositories.
+- After AI Governance, Model Management and Responsible AI Module
   specification and baseline audit are accepted, the next module
-  specification should be Module 19 - Accessibility, Localization and
-  Inclusive Experience Module Architecture.
+  specification should be Module 22 - DevSecOps, CI/CD, Release and Platform
+  Operations Module Architecture.
 
 ## MVP Scope
 
