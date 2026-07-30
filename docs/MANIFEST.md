@@ -258,6 +258,11 @@ Detailed module specifications now begin with:
   21, AI Governance, Model Management and Responsible AI Module Architecture.
 - `docs/modules/devsecops/devsecops-overview.md` - Phase II Module 22,
   DevSecOps, CI/CD, Release and Platform Operations Module Architecture.
+- `docs/modules/quality-assurance/qa-overview.md` - Phase II Module 23,
+  Quality Assurance, Testing and Validation Module Architecture.
+- `docs/modules/enterprise-architecture/architecture-overview.md` - Phase II
+  Module 24, Enterprise Architecture, Portfolio and Strategic Governance
+  Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -390,3 +395,18 @@ management, deployment automation, rollback, operational runbooks, patching,
 monitoring, and platform operations so every version of the platform is
 validated, reproducible, secure, auditable, recoverable, and promoted only
 through approved delivery paths.
+
+Quality Assurance, Testing and Validation is the validation foundation. It
+centralizes test planning, automated and manual validation, test execution,
+defect tracking, coverage, quality gates, release validation, AI validation,
+security validation, performance validation, accessibility validation, and
+auditable evidence so no platform component, workflow, AI agent, publication
+output, infrastructure change, or operational process can be promoted without
+mandatory quality controls.
+
+Enterprise Architecture, Portfolio and Strategic Governance is the strategic
+governance foundation. It centralizes capability management, Architecture
+Decision Records, technology standards, technology lifecycle, strategic
+roadmap, portfolio governance, technical debt, architecture review, and
+architecture compliance so platform evolution remains business-driven,
+standardized, traceable, sustainable, and auditable.
