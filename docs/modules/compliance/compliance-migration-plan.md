@@ -128,6 +128,9 @@ Strategic Governance.
 
 With Module 25, the fundamental Phase II architecture covers the full
 enterprise chain: editorial capabilities, infrastructure, AI, operations,
-governance, quality, strategy, and compliance. Future modules should be
-treated as specialized extensions unless explicitly approved as new
-fundamental architecture.
+governance, quality, strategy, and compliance.
+
+Phase III Module 26 - Enterprise Meta-Architecture and Codex Governance
+Framework is now documented as the supreme Codex governance layer. Future
+capabilities are specialized extensions unless explicitly approved through
+Codex Governance as fundamental architecture.
