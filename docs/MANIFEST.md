@@ -256,6 +256,8 @@ Detailed module specifications now begin with:
   Analytics, Business Intelligence and Decision Support Module Architecture.
 - `docs/modules/ai-governance/ai-governance-overview.md` - Phase II Module
   21, AI Governance, Model Management and Responsible AI Module Architecture.
+- `docs/modules/devsecops/devsecops-overview.md` - Phase II Module 22,
+  DevSecOps, CI/CD, Release and Platform Operations Module Architecture.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -380,3 +382,11 @@ evaluation, benchmarking, cost controls, explainability, human oversight, risk
 management, and AI audit so every AI capability remains governed,
 reproducible, explainable, secure, cost-aware, and subordinate to authorized
 human responsibility.
+
+DevSecOps, CI/CD, Release and Platform Operations is the software delivery and
+operations foundation. It centralizes source control governance, CI/CD,
+release management, Infrastructure as Code, artifact governance, secret
+management, deployment automation, rollback, operational runbooks, patching,
+monitoring, and platform operations so every version of the platform is
+validated, reproducible, secure, auditable, recoverable, and promoted only
+through approved delivery paths.
