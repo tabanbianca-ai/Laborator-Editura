@@ -1663,6 +1663,41 @@ Roadmap impact:
   capabilities, infrastructure, AI, operations, governance, quality, and
   strategy.
 
+## Phase III Module 26 - Enterprise Meta-Architecture and Codex Governance Framework
+
+Status: Active specification.
+
+Reference:
+
+- `docs/codex/meta-architecture.md`.
+- `docs/codex/reference-models.md`.
+- `docs/codex/module-catalog.md`.
+- `docs/codex/dependency-registry.md`.
+- `docs/codex/architecture-principles.md`.
+- `docs/codex/governance-framework.md`.
+- `docs/codex/change-management.md`.
+- `docs/codex/codex-versioning.md`.
+- `docs/codex/api-contracts.md`.
+- `docs/codex/events.md`.
+- `docs/codex/meta-architecture-gap-analysis.md`.
+- `docs/codex/meta-architecture-migration-plan.md`.
+
+Roadmap impact:
+
+- Enterprise Meta-Architecture and Codex Governance Framework is the first
+  Phase III specification after the 25 fundamental Phase II enterprise
+  modules.
+- It does not introduce user-facing functionality. It defines the supreme
+  Codex governance layer that controls future architecture evolution.
+- Future Codex migration must add a structured module catalog, dependency
+  registry, reference model registry, standards registry, exception registry,
+  Codex version registry, architecture maturity metrics, and controlled Codex
+  publication process.
+- Migration must preserve all validated Phase I-II behavior, all architecture
+  standards, all module specifications, and all governance constraints.
+- Future capabilities after Module 26 are specialized extensions unless
+  explicitly approved through Codex Governance as fundamental architecture.
+
 ## MVP Scope
 
 The MVP includes:
