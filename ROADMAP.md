@@ -2059,6 +2059,42 @@ Roadmap impact:
   destructive route or event renames, and map existing contracts before
   migration.
 
+## Phase IV Standard 04 - Canonical AI Assets, Prompt and Model
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/ai-assets/overview.md`.
+- `docs/standards/ai-assets/asset-catalog.md`.
+- `docs/standards/ai-assets/prompt-standard.md`.
+- `docs/standards/ai-assets/model-standard.md`.
+- `docs/standards/ai-assets/agent-standard.md`.
+- `docs/standards/ai-assets/rag-standard.md`.
+- `docs/standards/ai-assets/compliance-audit.md`.
+- `docs/standards/ai-assets/migration-plan.md`.
+
+Roadmap impact:
+
+- Standard 04 is the fourth Phase IV canonical standard and complements
+  Standards 01-03 and Framework 04.
+- It does not add external provider SDK integrations, real AI calls, runtime
+  prompt registry persistence, runtime model registry persistence, runtime
+  RAG indexing, runtime evaluation engine, new API contracts, database
+  migrations, UI changes, Docker changes, or staging changes by itself.
+- It defines canonical rules for AI agents, AI models, embedding models,
+  prompt templates, system prompts, AI workflows, knowledge bases, RAG
+  collections, evaluation datasets, AI policies, and AI configurations.
+- Future prompt registries, model registries, agent registries, RAG
+  registries, evaluation engines, AI execution lineage, provider adapters,
+  AI quality gates, and AI asset compliance automation must conform to this
+  standard.
+- Future implementation must remain incremental, preserve validated runtime
+  behavior, preserve Human Final Authority, preserve Need-to-Know, avoid
+  direct provider coupling from functional modules, avoid unmanaged
+  production prompts, avoid unapproved model promotion, and map existing AI
+  assets before migration.
+
 ## MVP Scope
 
 The MVP includes:
