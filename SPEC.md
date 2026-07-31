@@ -2118,6 +2118,60 @@ UI Governance rules:
 - UI changes must consider localization, accessibility, responsive behavior,
   performance, component reuse, token impact, and auditability.
 
+## Phase III Framework 03 - Data Engineering, Information Architecture and Data Governance
+
+The official Data Engineering, Information Architecture and Data Governance
+Framework is documented in `docs/frameworks/data-engineering/overview.md`.
+
+This framework defines mandatory standards for modeling, cataloging,
+validating, versioning, migrating, integrating, preserving, and governing all
+Laborator Editura data. It complements Data Governance, Enterprise
+Architecture, JSON Master Format, Chapter 4 Conceptual Domain Model, Chapter 5
+Logical Data Model, and Chapter 6 Physical Database Model.
+
+Framework 03 does not introduce new runtime behavior by itself. It establishes
+the mandatory data architecture baseline that all databases, canonical models,
+metadata definitions, migrations, integrations, analytics flows, search
+indexes, audit records, and AI data flows must follow.
+
+The supporting Data Engineering documents are:
+
+1. `docs/frameworks/data-engineering/overview.md`.
+2. `docs/frameworks/data-engineering/canonical-models.md`.
+3. `docs/frameworks/data-engineering/data-modeling-standards.md`.
+4. `docs/frameworks/data-engineering/data-catalog.md`.
+5. `docs/frameworks/data-engineering/data-quality.md`.
+6. `docs/frameworks/data-engineering/data-lineage.md`.
+7. `docs/frameworks/data-engineering/data-versioning.md`.
+8. `docs/frameworks/data-engineering/data-migration.md`.
+9. `docs/frameworks/data-engineering/compliance-audit.md`.
+10. `docs/frameworks/data-engineering/migration-plan.md`.
+
+Data Engineering rules:
+
+- All data must follow Single Source of Truth and Canonical First principles.
+- Every durable data structure must map to a canonical model or approved
+  derived model.
+- Data models must define stable identifiers, versioning, timestamps,
+  lifecycle state, ownership, tenant scope where applicable, localization
+  metadata where relevant, audit strategy, retention policy, and validation
+  rules.
+- Data assets must be represented in the Data Catalog with owner, steward,
+  classification, sensitivity, schema, lineage, retention, quality, consumers,
+  and dependencies.
+- Important transformations must preserve lineage from source to target,
+  including AI usage, imports, exports, synchronization, validation, approval,
+  and publication.
+- Schema evolution must be versioned, tested, documented, approved, and
+  compatible with backup, restore, tenant isolation, audit, and retention.
+- Data quality must be designed into models and validated for completeness,
+  uniqueness, consistency, validity, referential integrity, traceability, and
+  canonical conformance.
+- AI data flows must be scoped by Need-to-Know, audited, classified, and
+  treated as advisory until human approval where approval is required.
+- No schema, migration, integration, AI data flow, or data model may diverge
+  from this framework without an approved architectural exception.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
