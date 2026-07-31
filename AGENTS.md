@@ -2470,6 +2470,85 @@ Rules:
 - Any divergence from Framework 04 requires an approved architectural
   exception.
 
+### Cloud Infrastructure, Platform Engineering and Operations Framework Directive
+
+Purpose:
+
+- Define Phase III Framework 05 as the official governance layer for all cloud
+  infrastructure, platform engineering, Infrastructure as Code, container
+  platform, Kubernetes, networking, service mesh, storage, compute, secrets,
+  certificates, automation, capacity, high availability, disaster recovery,
+  and operations work.
+
+Rules:
+
+- The canonical Framework 05 entry point is
+  `docs/frameworks/platform-engineering/overview.md`.
+- This directive does not authorize Kubernetes implementation, cloud provider
+  provisioning, service mesh implementation, Docker changes, deployment
+  workflow changes, application changes, database changes, or staging changes
+  by itself.
+- No infrastructure resource, deployment process, operational workflow,
+  platform automation, network path, secret handling path, certificate
+  process, or recovery process may operate outside this framework.
+- Infrastructure must be represented as Infrastructure as Code or documented
+  as an approved, temporary, auditable manual exception.
+- Infrastructure changes must be versioned, validated, reviewed, rollback-aware,
+  and audited.
+- Production-critical infrastructure must be monitored, health checked,
+  backup-covered, restore-tested, rollback-capable, and recoverable.
+- Secrets, certificates, passwords, encryption keys, AI credentials, external
+  integration credentials, and backup encryption keys must not be committed,
+  logged, embedded in images, or exposed through frontend code.
+- Future production infrastructure must address high availability, capacity,
+  scalability, operational runbooks, SLOs, error budgets, disaster recovery,
+  and security by default.
+- The current Docker Compose staging baseline remains valid until a separate
+  approved migration phase changes it.
+- Any divergence from Framework 05 requires an approved architectural
+  exception.
+
+### Enterprise Integration, Messaging and Interoperability Framework Directive
+
+Purpose:
+
+- Define Phase III Framework 06 as the official governance layer for all
+  enterprise integration, API integration, event-driven integration,
+  messaging, service communication, external connectors, webhooks,
+  synchronization, file exchange, batch processing, streaming integration,
+  protocol standards, integration security, monitoring, and contract
+  governance work.
+
+Rules:
+
+- The canonical Framework 06 entry point is
+  `docs/frameworks/enterprise-integration/overview.md`.
+- This directive does not authorize new API routes, breaking API changes,
+  event bus runtime, message broker runtime, webhook dispatch runtime, inbound
+  webhook runtime, provider SDK adapters, GraphQL runtime, database
+  migrations, Docker changes, or staging changes by itself.
+- No API, connector, messaging channel, event stream, webhook,
+  synchronization workflow, batch process, file exchange, or interoperability
+  mechanism may operate outside this framework.
+- Stable APIs must be contract-first, versioned, owned, authenticated,
+  authorized, rate-limited where applicable, observable, auditable, and
+  backward-compatible or explicitly deprecated.
+- Events must be named, versioned, schema-governed, producer-owned,
+  consumer-declared, correlation-aware, retry-aware, retention-aware, and
+  auditable where state changes occur.
+- Messaging workflows must be idempotent, retry-safe, versioned, observable,
+  and designed for dead-letter handling before broker runtime is introduced.
+- External connectors must be registered, secured, scoped, monitored, audited,
+  and approved before activation.
+- Webhooks must be signed, versioned, retry-safe, delivery-logged, and
+  protected against replay before runtime dispatch or inbound processing is
+  approved.
+- Synchronization and file exchange must preserve canonical data mapping,
+  schema version, lineage, quality validation, security, tenant isolation, and
+  audit.
+- Any divergence from Framework 06 requires an approved architectural
+  exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
