@@ -74,6 +74,7 @@ fundamental enterprise modules.
 | --- | --- | --- |
 | Framework 02 | User Experience, Design System and UI Governance | `docs/frameworks/ui-governance/design-system.md` |
 | Framework 03 | Data Engineering, Information Architecture and Data Governance | `docs/frameworks/data-engineering/overview.md` |
+| Framework 04 | AI Engineering, Prompt Governance and Intelligent Automation | `docs/frameworks/ai-engineering/overview.md` |
 
 ## Fundamental Architecture Closure
 
