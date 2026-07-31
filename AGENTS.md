@@ -2953,6 +2953,62 @@ Rules:
 - Any divergence from Standard 05 requires an approved architectural
   exception.
 
+### Canonical Document, Digital Asset and Content Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 06 as the official canonical standard for
+  documents, editorial content, digital assets, publication derivatives,
+  media assets, metadata files, archival records, reusable content assets, and
+  the Canonical Master Document model.
+
+Rules:
+
+- The canonical Standard 06 entry point is
+  `docs/standards/digital-assets/overview.md`.
+- This directive does not authorize new storage infrastructure, file upload
+  runtime, media processing runtime, format conversion runtime, database
+  migrations, API changes, UI changes, Docker changes, staging changes, or
+  breaking behavior by itself.
+- All digital assets must follow Single Source of Truth, Canonical Master
+  Document, Content Before Format, Metadata First, Immutable History, Version
+  Controlled, Rights Aware, AI Ready, Accessibility by Design, and Long-Term
+  Preservation.
+- Every governed asset must define UUID, canonical identifier, canonical
+  name, display name, asset type, content type, language, version, status,
+  owner, rights information, metadata, lifecycle state, and audit
+  information.
+- Each work has exactly one Canonical Master Document. All publication
+  formats, media outputs, accessible versions, and print editions derive from
+  the canonical master.
+- PDF, EPUB, MOBI, DOCX, HTML, audio, video, print-ready files, flipbooks,
+  and accessibility outputs are derivatives unless explicitly promoted
+  through an approved, audited migration.
+- Required metadata includes UUID, title, subtitle where applicable, author,
+  translator where applicable, editor, reviewer, illustrator where
+  applicable, language, edition, publication date where applicable, keywords,
+  tags, rights, license, accessibility status, asset type, content type,
+  version, status, owner, lifecycle state, and audit information.
+- Canonical relationships include Original, Translation Of, Edition Of,
+  Derived From, Adaptation Of, Illustration For, Audio Version Of, Video
+  Version Of, Published In, and Referenced By.
+- Asset lifecycle states must map to Idea, Draft, Translation, Editorial
+  Review, Technical Review, Approval, Publication, Distribution, and
+  Archived.
+- Every governed asset must define retention policy, backup policy, archive
+  policy, deletion policy, preservation format, integrity verification,
+  rights constraints, restoration procedure, and audit information where
+  applicable.
+- AI may suggest, summarize, classify, validate readiness, and detect content
+  gaps, but it must not approve content, publish content, grant rights,
+  change provenance, delete history, or bypass Human Final Authority.
+- Existing Library, Documents, Author Studio, Translation, Rights,
+  Publishing, Export, Public Portal, Multimedia, Media Localization, Audio,
+  Video, Magazine, Accessibility, Backup, JSON Master, and validated runtime
+  behavior must not be changed without an approved implementation phase.
+- Any divergence from Standard 06 requires an approved architectural
+  exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
