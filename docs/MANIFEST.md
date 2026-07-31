@@ -309,6 +309,8 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   Canonical AI Assets, Prompt and Model Standard.
 - `docs/standards/security-identity/overview.md` - Phase IV Standard 05,
   official Canonical Security, Identity and Access Standard.
+- `docs/standards/digital-assets/overview.md` - Phase IV Standard 06,
+  official Canonical Document, Digital Asset and Content Standard.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -549,3 +551,9 @@ organization, role, permission, service account, API client, AI agent identity,
 secret, cryptographic asset, security event, and access decision is governed
 through Zero Trust, Least Privilege, Need-to-Know, server-derived identity,
 auditability, and Human Final Authority.
+
+Canonical Document, Digital Asset and Content Standard defines how every
+manuscript, translation, book, article, magazine issue, media asset, export,
+publication derivative, metadata file, archive, and reusable content asset is
+linked to one Canonical Master Document, complete metadata, rights,
+accessibility, preservation, version history, and audit.
