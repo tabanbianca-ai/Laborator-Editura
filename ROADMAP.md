@@ -2095,6 +2095,45 @@ Roadmap impact:
   production prompts, avoid unapproved model promotion, and map existing AI
   assets before migration.
 
+## Phase IV Standard 05 - Canonical Security, Identity and Access
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/security-identity/overview.md`.
+- `docs/standards/security-identity/identity-model.md`.
+- `docs/standards/security-identity/authentication-standard.md`.
+- `docs/standards/security-identity/authorization-standard.md`.
+- `docs/standards/security-identity/secrets-management.md`.
+- `docs/standards/security-identity/cryptography-standard.md`.
+- `docs/standards/security-identity/compliance-audit.md`.
+- `docs/standards/security-identity/migration-plan.md`.
+
+Roadmap impact:
+
+- Standard 05 is the fifth Phase IV canonical standard and complements
+  Standards 01-04 and Framework 07.
+- It does not add new authentication providers, runtime SSO, runtime OAuth or
+  OIDC login, runtime SAML login, real MFA challenge enforcement, external
+  secret vault integration, managed key service integration, certificate
+  authority integration, database migrations, API changes, UI changes, Docker
+  changes, or staging changes by itself.
+- It defines canonical rules for identities, authentication, authorization,
+  roles, permissions, groups, service accounts, API clients, AI agents,
+  applications, infrastructure components, secrets, certificates,
+  cryptographic keys, security events, and access governance.
+- Future IAM expansion, MFA enforcement, SSO providers, OAuth/OIDC/SAML
+  runtime, ABAC/PBAC authorization, centralized authorization decision
+  records, secret vault integration, managed key service integration,
+  certificate inventory, and security event centralization must conform to
+  this standard.
+- Future implementation must remain incremental, preserve validated Auth and
+  IAM behavior, preserve server-derived identity, preserve Founder and
+  Platform Creator protections, preserve Need-to-Know, avoid trusting client
+  identity headers, avoid exposing secrets, avoid weakening audit, and map
+  existing identities and permissions before migration.
+
 ## MVP Scope
 
 The MVP includes:
