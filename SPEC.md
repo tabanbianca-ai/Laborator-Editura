@@ -2615,6 +2615,68 @@ Canonical Data Model and Metadata rules:
 - Any divergence from Standard 02 requires an approved architectural
   exception.
 
+## Phase IV Standard 03 - Canonical API, Event and Integration
+
+The official Canonical API, Event and Integration Standard is documented in
+`docs/standards/api-governance/overview.md`.
+
+This standard defines mandatory rules for designing, implementing,
+documenting, versioning, securing, observing, auditing, and governing every
+integration interface across REST APIs, internal APIs, public APIs, GraphQL
+APIs if approved, events, message contracts, webhooks, batch integrations,
+streaming integrations, external APIs, AI interfaces, and service-to-service
+communication.
+
+Standard 03 does not introduce runtime API gateway replacement, route
+renaming, event bus implementation, webhook dispatch runtime, provider SDK
+adapters, database migrations, UI changes, Docker changes, or staging changes
+by itself. It establishes the canonical contract and integration governance
+baseline that all existing and future interfaces must follow.
+
+The supporting API Governance Standard documents are:
+
+1. `docs/standards/api-governance/overview.md`.
+2. `docs/standards/api-governance/rest-standard.md`.
+3. `docs/standards/api-governance/event-standard.md`.
+4. `docs/standards/api-governance/contract-versioning.md`.
+5. `docs/standards/api-governance/webhooks.md`.
+6. `docs/standards/api-governance/external-integrations.md`.
+7. `docs/standards/api-governance/compliance-audit.md`.
+8. `docs/standards/api-governance/migration-plan.md`.
+
+Canonical API, Event and Integration rules:
+
+- All integration interfaces must follow API First, Contract First, Event
+  First where asynchronous reactions are needed, backward compatibility,
+  loose coupling, idempotency, stateless request processing, secure by
+  default, observable by default, and documentation as code.
+- Stable public and partner APIs must be versioned and documented through
+  OpenAPI before they are treated as externally consumable contracts.
+- Stable integration-facing responses should expose request ID, timestamp,
+  status, data, metadata, and links.
+- Stable integration-facing errors should expose request ID, timestamp,
+  status, error code, safe error message, safe details, and correlation ID.
+- Every governed event must define event ID, event name, event version, event
+  type, source, timestamp, correlation ID, payload, and metadata.
+- Every governed API, event, webhook, connector, and service contract must use
+  Semantic Versioning, define an owner, preserve change history, maintain a
+  compatibility matrix, and define a deprecation policy.
+- Every external integration must define provider, endpoint, authentication,
+  scopes, rate limits, retry policy, timeout, monitoring, SLA or SLO where
+  applicable, tenant scope, secret references, status, contract version, and
+  audit requirements.
+- Every integration call or event processing action must preserve request ID,
+  correlation ID, trace ID when available, metrics, structured logs, and audit
+  records for state-changing or governance-relevant actions.
+- Protected APIs and integrations must use server-derived identity, enforce
+  authorization server-side, respect tenant isolation and Need-to-Know access,
+  and never trust client-provided user, tenant, role, or permission headers.
+- Existing validated routes, event names, webhook metadata, and provider
+  metadata must not be renamed or broken without an approved compatibility
+  migration.
+- Any divergence from Standard 03 requires an approved architectural
+  exception.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
