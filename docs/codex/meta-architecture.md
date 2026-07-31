@@ -15,7 +15,12 @@ No new component may be added without compliance with this framework.
 ## Canonical Definition Rule
 
 Cross-cutting definitions must exist in one canonical location and be
-referenced elsewhere. Repeated definitions should be consolidated into:
+referenced elsewhere. The canonical registry for repeated cross-cutting
+definitions is:
+
+- `docs/codex/canonical-definitions.md`.
+
+Supporting canonical ownership remains distributed by category:
 
 - `docs/codex/module-catalog.md` for module sequence and phase closure.
 - `docs/codex/dependency-registry.md` for dependency rules.
