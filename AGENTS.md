@@ -2385,6 +2385,50 @@ Rules:
   preserve existing validated routes, workflows, Human Final Authority,
   Need-to-Know access, security, and audit requirements.
 
+### Data Engineering, Information Architecture and Data Governance Framework Directive
+
+Purpose:
+
+- Define Phase III Framework 03 as the official governance layer for all data
+  engineering, information architecture, canonical models, metadata, data
+  catalog, quality, lineage, versioning, migration, integration, retention,
+  and AI data-flow work.
+
+Rules:
+
+- The canonical Framework 03 entry point is
+  `docs/frameworks/data-engineering/overview.md`.
+- This directive does not authorize database schema changes, migrations,
+  runtime persistence changes, API changes, integration changes, or data
+  deletion by itself.
+- No database, model, metadata definition, data pipeline, migration,
+  integration contract, analytics flow, search index, or AI data flow may be
+  implemented outside this framework.
+- All durable data must follow Single Source of Truth, Canonical First,
+  Metadata Driven, Schema Evolution, Data Quality by Design, Immutable Audit
+  Trail, Event Consistency, Data Lineage, Version First, and AI Ready Data
+  principles.
+- Every data structure must map to a canonical model or approved derived
+  model.
+- Every durable model must define stable identifiers, versioning, timestamps,
+  lifecycle state, ownership, tenant scope where applicable, localization
+  support where relevant, validation rules, audit strategy, retention policy,
+  and controlled extensibility.
+- Data assets must be cataloged with owner, steward, classification,
+  sensitivity, schema, source, consumers, lineage, quality, retention, and
+  dependencies.
+- Important data transformations must preserve lineage across origin,
+  transformation, synchronization, import, export, AI usage, validation,
+  approval, and publication.
+- Migrations must be versioned, tested, audited, approved before controlled
+  execution, backup-safe, restore-safe, tenant-safe, and compatible with
+  existing validated behavior.
+- AI data flows must use minimum necessary data, preserve classification and
+  lineage, remain auditable, and must not turn AI output into authoritative
+  data without required human approval.
+- Any divergence from Framework 03 requires an approved architectural
+  exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
