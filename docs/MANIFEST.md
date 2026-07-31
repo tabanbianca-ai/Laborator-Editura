@@ -277,6 +277,8 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   baseline.
 - `docs/codex/reference-models.md` - official canonical reference model
   baseline.
+- `docs/codex/canonical-definitions.md` - official registry of canonical
+  definitions for repeated cross-cutting Codex concepts.
 - `docs/codex/codex-consolidation-report.md` - documentation-only baseline
   consolidation report for overlapping Codex governance information.
 - `docs/frameworks/ui-governance/design-system.md` - Framework 02, official
@@ -289,6 +291,16 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   Cloud Infrastructure, Platform Engineering and Operations Framework.
 - `docs/frameworks/enterprise-integration/overview.md` - Framework 06,
   official Enterprise Integration, Messaging and Interoperability Framework.
+- `docs/frameworks/security-engineering/overview.md` - Framework 07, official
+  Enterprise Security Engineering and Cybersecurity Framework.
+- `docs/frameworks/documentation-governance/overview.md` - Framework 08,
+  official Enterprise Documentation, Knowledge Management and Technical
+  Writing Framework.
+- `docs/frameworks/quality-governance/overview.md` - Framework 09, official
+  Enterprise Quality, Architecture Review and Continuous Improvement
+  Framework.
+- `docs/standards/naming-versioning/overview.md` - Phase IV Standard 01,
+  official Canonical Naming, Identification and Versioning Standard.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -480,3 +492,28 @@ every API, event, message, connector, webhook, synchronization workflow, file
 exchange, batch process, streaming integration, and external system interface
 remains contract-first, versioned, secure, observable, retry-safe,
 interoperable, and auditable.
+
+Enterprise Security Engineering and Cybersecurity Framework defines how every
+application, service, API, database, AI capability, integration,
+infrastructure component, operational process, and future module remains
+Zero-Trust aligned, least-privilege, protected, monitored, continuously
+verified, auditable, and governed by a unified cybersecurity standard.
+
+Enterprise Documentation, Knowledge Management and Technical Writing Framework
+defines how every official specification, architecture document, module
+document, technical standard, API document, AI knowledge record, glossary,
+release note, user guide, administrator guide, and operational manual remains
+canonical, versioned, traceable, searchable, reviewed, approved, and governed
+as part of the platform's single source of truth.
+
+Enterprise Quality, Architecture Review and Continuous Improvement Framework
+defines how every module, framework, service, AI component, workflow,
+documentation set, infrastructure component, operational process, and release
+candidate is measured, reviewed, scored, improved, and certified through
+evidence-based quality governance.
+
+Canonical Naming, Identification and Versioning Standard defines how every
+platform artifact receives stable identity, canonical naming, Semantic
+Versioning, lifecycle state, metadata, traceability, and auditability across
+modules, services, APIs, databases, documentation, workflows, AI assets,
+events, UI components, configurations, and infrastructure.
