@@ -285,6 +285,10 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   Engineering, Information Architecture and Data Governance Framework.
 - `docs/frameworks/ai-engineering/overview.md` - Framework 04, official AI
   Engineering, Prompt Governance and Intelligent Automation Framework.
+- `docs/frameworks/platform-engineering/overview.md` - Framework 05, official
+  Cloud Infrastructure, Platform Engineering and Operations Framework.
+- `docs/frameworks/enterprise-integration/overview.md` - Framework 06,
+  official Enterprise Integration, Messaging and Interoperability Framework.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -464,3 +468,15 @@ how every AI agent, prompt, model, RAG workflow, knowledge base, evaluation,
 cost control, and intelligent automation remains registered, versioned,
 traceable, explainable, auditable, cost-aware, secure, and subordinate to
 authorized human authority.
+
+Cloud Infrastructure, Platform Engineering and Operations Framework defines
+how every infrastructure component, deployment process, operational workflow,
+secret, certificate, network path, backup, restore path, monitoring process,
+and disaster recovery procedure remains automated, secure, observable,
+resilient, versioned, auditable, and governed.
+
+Enterprise Integration, Messaging and Interoperability Framework defines how
+every API, event, message, connector, webhook, synchronization workflow, file
+exchange, batch process, streaming integration, and external system interface
+remains contract-first, versioned, secure, observable, retry-safe,
+interoperable, and auditable.
