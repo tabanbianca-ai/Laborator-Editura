@@ -172,32 +172,12 @@ Add:
 - Decision recommendations require human action.
 - No isolated reporting solution remains in functional modules.
 
-## Next Recommended Module
+## Codex Governance Reference
 
-Module 21 - AI Governance, Model Management and Responsible AI Module
-Architecture is now documented after Analytics, Business Intelligence and
-Decision Support.
+The canonical module sequence, dependency closure, and future-extension rule are
+maintained in `docs/codex/module-catalog.md`,
+`docs/codex/dependency-registry.md`, and `docs/codex/meta-architecture.md`.
 
-Module 22 - DevSecOps, CI/CD, Release and Platform Operations Module
-Architecture is now documented after AI Governance, Model Management and
-Responsible AI.
-
-Module 23 - Quality Assurance, Testing and Validation Module Architecture is
-now documented after DevSecOps, CI/CD, Release and Platform Operations.
-
-Module 24 - Enterprise Architecture, Portfolio and Strategic Governance
-Module Architecture is now documented after Quality Assurance, Testing and
-Validation.
-
-Module 25 - Compliance, Legal Governance and Risk Management Module
-Architecture is now documented after Enterprise Architecture, Portfolio and
-Strategic Governance.
-
-With Module 25, the fundamental Phase II architecture covers the full
-enterprise chain: editorial capabilities, infrastructure, AI, operations,
-governance, quality, strategy, and compliance.
-
-Phase III Module 26 - Enterprise Meta-Architecture and Codex Governance
-Framework is now documented as the supreme Codex governance layer. Future
-capabilities are specialized extensions unless explicitly approved through
-Codex Governance as fundamental architecture.
+This migration plan owns only the local migration strategy for this module. It
+does not redefine the platform module sequence, fundamental architecture
+closure, or future-extension approval rule.
