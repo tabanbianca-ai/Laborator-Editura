@@ -2033,17 +2033,19 @@ data model, AI agent, workflow, standard, and future extension.
 The supporting Codex Governance documents are:
 
 1. `docs/codex/meta-architecture.md`.
-2. `docs/codex/reference-models.md`.
-3. `docs/codex/module-catalog.md`.
-4. `docs/codex/dependency-registry.md`.
-5. `docs/codex/architecture-principles.md`.
-6. `docs/codex/governance-framework.md`.
-7. `docs/codex/change-management.md`.
-8. `docs/codex/codex-versioning.md`.
-9. `docs/codex/api-contracts.md`.
-10. `docs/codex/events.md`.
-11. `docs/codex/meta-architecture-gap-analysis.md`.
-12. `docs/codex/meta-architecture-migration-plan.md`.
+2. `docs/codex/canonical-definitions.md`.
+3. `docs/codex/reference-models.md`.
+4. `docs/codex/module-catalog.md`.
+5. `docs/codex/dependency-registry.md`.
+6. `docs/codex/architecture-principles.md`.
+7. `docs/codex/governance-framework.md`.
+8. `docs/codex/change-management.md`.
+9. `docs/codex/codex-versioning.md`.
+10. `docs/codex/api-contracts.md`.
+11. `docs/codex/events.md`.
+12. `docs/codex/codex-consolidation-report.md`.
+13. `docs/codex/meta-architecture-gap-analysis.md`.
+14. `docs/codex/meta-architecture-migration-plan.md`.
 
 Codex Governance rules:
 
@@ -2060,6 +2062,9 @@ Codex Governance rules:
 - Dependencies between modules, APIs, events, data models, workflows, and AI
   agents must be explicit.
 - Uncontrolled circular dependencies are not allowed.
+- Cross-cutting definitions must resolve to
+  `docs/codex/canonical-definitions.md` and must not be redefined
+  inconsistently in local module, framework, roadmap, or report documents.
 - Canonical reference models are the official reference for users, projects,
   publications, translations, multimedia assets, workflows, AI, audit, and
   configuration.
@@ -2327,6 +2332,232 @@ Enterprise Integration rules:
   runtime, GraphQL runtime, and provider SDK adapters require separate
   approved implementation phases.
 - Any divergence from Framework 06 requires an approved architectural
+  exception.
+
+## Phase III Framework 07 - Enterprise Security Engineering and Cybersecurity
+
+The official Enterprise Security Engineering and Cybersecurity Framework is
+documented in `docs/frameworks/security-engineering/overview.md`.
+
+This framework defines mandatory standards for security architecture, Zero
+Trust, identity security, access security, application security, API security,
+infrastructure security, data protection, AI security, supply chain security,
+cryptography, key management, secrets management, threat detection, incident
+response, vulnerability management, monitoring, and audit. It complements IAM,
+Compliance, DevSecOps, Observability, Platform Engineering, Data Engineering,
+AI Engineering, Enterprise Integration, and the Enterprise Meta-Architecture.
+
+Framework 07 does not introduce security runtime behavior by itself. It
+establishes the mandatory security baseline that every application, service,
+API, database, infrastructure component, AI capability, integration,
+operational process, and future module must follow.
+
+The supporting Security Engineering documents are:
+
+1. `docs/frameworks/security-engineering/overview.md`.
+2. `docs/frameworks/security-engineering/security-architecture.md`.
+3. `docs/frameworks/security-engineering/identity-security.md`.
+4. `docs/frameworks/security-engineering/data-protection.md`.
+5. `docs/frameworks/security-engineering/vulnerability-management.md`.
+6. `docs/frameworks/security-engineering/incident-response.md`.
+7. `docs/frameworks/security-engineering/security-monitoring.md`.
+8. `docs/frameworks/security-engineering/compliance-audit.md`.
+9. `docs/frameworks/security-engineering/migration-plan.md`.
+
+Security Engineering rules:
+
+- No application, infrastructure component, AI service, API, database,
+  integration, operational process, or future module may bypass this
+  framework.
+- All protected access must use centralized authentication and server-side
+  authorization.
+- Client-provided identity, tenant, role, or permission values must not be
+  trusted.
+- Security decisions must follow Zero Trust, Least Privilege, Defense in
+  Depth, Secure by Design, Privacy by Design, Default Deny, Continuous
+  Verification, Encryption by Default, Security Automation, and Continuous
+  Compliance.
+- Sensitive data must be protected through encryption, hashing, tokenization,
+  pseudonymization, masking, classification, Need-to-Know, audit, and
+  retention controls where applicable.
+- Security monitoring must cover authentication, authorization, privileged
+  access, configuration changes, API traffic, AI events, critical events, and
+  anomalies.
+- Vulnerability, dependency, container, infrastructure, secret, code, and AI
+  security validation must be governed and auditable.
+- MFA enforcement, SSO, federation, WAF, SIEM, managed key services, external
+  vault integration, and Kubernetes security controls require separate
+  approved implementation phases.
+- Any divergence from Framework 07 requires an approved architectural
+  exception.
+
+## Phase III Framework 08 - Enterprise Documentation, Knowledge Management and Technical Writing
+
+The official Enterprise Documentation, Knowledge Management and Technical
+Writing Framework is documented in
+`docs/frameworks/documentation-governance/overview.md`.
+
+This framework defines mandatory standards for technical documentation,
+functional documentation, architecture documentation, knowledge management,
+documentation governance, documentation versioning, technical writing,
+glossary management, decision documentation, standards documentation, AI
+documentation, API documentation, user documentation, administrator
+documentation, release documentation, and knowledge lifecycle governance.
+
+Framework 08 does not introduce documentation runtime behavior by itself. It
+establishes the mandatory documentation and knowledge baseline that every
+specification, module document, architecture document, framework document,
+operational procedure, AI knowledge record, API document, release note,
+glossary, and future user guide must follow.
+
+The supporting Documentation Governance documents are:
+
+1. `docs/frameworks/documentation-governance/overview.md`.
+2. `docs/frameworks/documentation-governance/documentation-standards.md`.
+3. `docs/frameworks/documentation-governance/knowledge-management.md`.
+4. `docs/frameworks/documentation-governance/glossary-governance.md`.
+5. `docs/frameworks/documentation-governance/versioning.md`.
+6. `docs/frameworks/documentation-governance/review-process.md`.
+7. `docs/frameworks/documentation-governance/publication-process.md`.
+8. `docs/frameworks/documentation-governance/compliance-audit.md`.
+9. `docs/frameworks/documentation-governance/migration-plan.md`.
+
+Documentation Governance rules:
+
+- No official documentation may exist outside this framework without an
+  approved governance exception.
+- Official documentation must follow Documentation as Code, Single Source of
+  Truth, Version First, Traceability, Canonical Documentation, Reusability,
+  Consistency, Review Before Publish, Searchability, and Long-Term
+  Maintainability.
+- Every canonical document must define title, identifier, version, status,
+  owner, reviewers, approval, purpose, scope, dependencies, references, and
+  change history when applicable.
+- Canonical terms must be governed through the official glossary model and
+  must preserve UUID, canonical name, definition, aliases, domain, owner,
+  approval status, version, and usage examples.
+- Documentation publication requires technical validation, functional
+  validation, terminology check, consistency check, official approval, and
+  preservation of the previous version.
+- AI may draft, summarize, compare, and recommend documentation improvements,
+  but only authorized humans may approve canonical documentation.
+- Documentation consolidation must preserve references, dependencies,
+  version history, auditability, and module traceability.
+- Any divergence from Framework 08 requires an approved architectural
+  exception.
+
+## Phase III Framework 09 - Enterprise Quality, Architecture Review and Continuous Improvement
+
+The official Enterprise Quality, Architecture Review and Continuous
+Improvement Framework is documented in
+`docs/frameworks/quality-governance/overview.md`.
+
+This framework defines mandatory standards for quality governance,
+architecture review, solution review, technical debt management, continuous
+improvement, architecture compliance, design review, code quality,
+documentation quality, AI quality, operational excellence, maturity
+assessment, quality metrics, corrective actions, and improvement roadmaps.
+
+Framework 09 does not introduce quality runtime behavior by itself. It
+establishes the mandatory evaluation and certification baseline that every
+module, framework, service, AI component, workflow, infrastructure component,
+documentation set, operational process, and release candidate must follow.
+
+The supporting Quality Governance documents are:
+
+1. `docs/frameworks/quality-governance/overview.md`.
+2. `docs/frameworks/quality-governance/architecture-review.md`.
+3. `docs/frameworks/quality-governance/quality-metrics.md`.
+4. `docs/frameworks/quality-governance/maturity-model.md`.
+5. `docs/frameworks/quality-governance/technical-debt.md`.
+6. `docs/frameworks/quality-governance/improvement-roadmap.md`.
+7. `docs/frameworks/quality-governance/compliance-audit.md`.
+8. `docs/frameworks/quality-governance/review-procedures.md`.
+9. `docs/frameworks/quality-governance/final-certification.md`.
+
+Quality Governance rules:
+
+- No module, framework, service, AI component, workflow, infrastructure
+  component, documentation set, operational process, or release candidate may
+  be considered final or production-ready without evaluation under Framework
+  09.
+- Quality evaluations must follow Quality by Design, Continuous Improvement,
+  Evidence-Based Decisions, Architecture First, Standardization, Reusability,
+  Measurable Quality, Objective Evaluation, Transparency, and Continuous
+  Governance.
+- Reviews must cover architecture, code, documentation, AI, security,
+  operations, compliance, release readiness, and continuous improvement where
+  applicable.
+- Every evaluation must record UUID, evaluated object, reviewer, date,
+  criteria, findings, recommendations, compliance score, maturity level, and
+  follow-up actions.
+- Technical debt must record UUID, description, impact, priority, affected
+  modules, owner, remediation plan, target version, and completion status.
+- Maturity is assessed through five levels: Initial, Managed, Standardized,
+  Optimized, and Continuous Excellence.
+- Critical findings block certification. High findings block release unless an
+  approved exception exists.
+- AI may assist reviews and propose improvements, but only authorized humans
+  may approve findings, exceptions, remediation closure, or final
+  certification.
+- Any divergence from Framework 09 requires an approved architectural
+  exception.
+
+## Phase IV Standard 01 - Canonical Naming, Identification and Versioning
+
+The official Canonical Naming, Identification and Versioning Standard is
+documented in `docs/standards/naming-versioning/overview.md`.
+
+This standard defines mandatory rules for identifying, naming, classifying,
+metadata-tagging, versioning, tracing, and auditing every platform artifact,
+including modules, services, applications, APIs, databases, documentation,
+workflows, AI agents, prompts, AI models, files, events, UI components,
+configuration objects, infrastructure assets, security assets, business
+objects, domain objects, and technical components.
+
+Standard 01 does not introduce runtime registry behavior by itself. It
+establishes the canonical naming, identity, metadata, lifecycle, and
+versioning baseline that all existing and future platform artifacts must
+follow.
+
+The supporting Naming and Versioning Standard documents are:
+
+1. `docs/standards/naming-versioning/overview.md`.
+2. `docs/standards/naming-versioning/naming-conventions.md`.
+3. `docs/standards/naming-versioning/identifiers.md`.
+4. `docs/standards/naming-versioning/versioning.md`.
+5. `docs/standards/naming-versioning/metadata-standard.md`.
+6. `docs/standards/naming-versioning/lifecycle.md`.
+7. `docs/standards/naming-versioning/compliance-audit.md`.
+8. `docs/standards/naming-versioning/migration-plan.md`.
+
+Canonical Naming and Versioning rules:
+
+- Every governed artifact must define UUID, canonical name, display name,
+  short name, version, status, domain, owner, classification, and lifecycle
+  state where applicable.
+- Identifiers must be globally unique where required, human readable,
+  machine readable, stable, immutable in identity, version controlled,
+  traceable, and canonical.
+- Implementation-facing names must follow official English development
+  conventions.
+- Modules, services, APIs, events, database objects, columns, classes,
+  methods, constants, files, UI components, AI assets, and infrastructure
+  assets must follow the naming conventions defined by this standard and the
+  applicable layer-specific standards.
+- Versioned artifacts use Semantic Versioning in `MAJOR.MINOR.PATCH` format.
+- The standard artifact lifecycle is Draft, Under Review, Approved, Released,
+  Deprecated, and Archived unless an approved specialized lifecycle exists.
+- Metadata must include UUID, version, owner, created by, updated by, created
+  date, updated date, status, tags, and description where applicable.
+- Traceability must cover origin, changes, approvals, dependencies, versions,
+  usage, and archival state.
+- Audit must cover renames, version changes, metadata changes, ownership
+  changes, approvals, releases, deprecations, and archival actions.
+- This standard does not authorize disruptive renaming, API breaking changes,
+  database table renaming, path changes, or migration of deployed artifacts by
+  itself.
+- Any divergence from Standard 01 requires an approved architectural
   exception.
 
 ## Architecture Freeze & Governance Requirements
