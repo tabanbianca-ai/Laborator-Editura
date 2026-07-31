@@ -2892,6 +2892,67 @@ Rules:
 - Any divergence from Standard 04 requires an approved architectural
   exception.
 
+### Canonical Security, Identity and Access Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 05 as the official canonical standard for
+  security, identities, authentication, authorization, roles, permissions,
+  groups, service accounts, API clients, AI agent identities, secrets,
+  cryptographic assets, security events, and access governance.
+
+Rules:
+
+- The canonical Standard 05 entry point is
+  `docs/standards/security-identity/overview.md`.
+- This directive does not authorize new authentication providers, runtime
+  SSO, runtime OAuth or OIDC login, runtime SAML login, real MFA challenge
+  enforcement, external secret vault integration, managed key service
+  integration, certificate authority integration, database migrations, API
+  changes, UI changes, Docker changes, staging changes, or breaking behavior
+  by itself.
+- All security, identity, and access components must follow Zero Trust, Least
+  Privilege, Need to Know, Identity First, Authentication Before
+  Authorization, Defense in Depth, Separation of Duties, Continuous
+  Verification, Secure by Default, Audit by Default, and Default Deny for
+  protected surfaces.
+- Every governed identity must define UUID, canonical identifier, identity
+  type, display name, owner, status, authentication method, authorization
+  profile, lifecycle state, security classification, metadata, and audit
+  information.
+- Protected requests must derive authenticated context from a validated
+  server-side session, access token, API key, or approved service credential.
+  Client-provided user, organization, role, permission, tenant, or workspace
+  headers must never be trusted.
+- Target authentication capabilities include password authentication, MFA,
+  SSO, OAuth 2.1, OpenID Connect, SAML, passkeys or WebAuthn, API keys,
+  session management, token rotation, and device verification. Runtime support
+  is introduced only through approved implementation phases.
+- Authorization combines RBAC, ABAC, PBAC, Need-to-Know, tenant isolation,
+  scope-based grants, temporary access, and Separation of Duties. The most
+  restrictive valid rule wins.
+- Every governed permission must define UUID, permission name, resource,
+  allowed operations, scope, constraints, owner, and audit policy.
+- Secrets must define secret identifier, type, owner, rotation policy,
+  expiration date, storage location, encryption method, audit policy, status,
+  classification, and rotation metadata.
+- Cryptographic assets must define UUID, key type, algorithm, key length,
+  validity period, rotation schedule, storage policy, usage policy, owner,
+  status, classification, dates, and audit information.
+- Secrets, tokens, password hashes, MFA secrets, recovery codes, private keys,
+  certificates with private material, and provider credentials must never be
+  logged or returned through APIs.
+- AI agents may detect risk, summarize security evidence, and suggest policy
+  improvements, but must not grant access, revoke users, assign roles, approve
+  access reviews, change security policies, expose secrets, rotate secrets, or
+  bypass Human Final Authority.
+- Existing Auth, IAM, Founder Protection, Platform Creator, Gateway,
+  Enterprise Admin, Workspace, Security Governance, Policy Engine, Launch
+  Essentials, and validated runtime behavior must not be changed without an
+  approved implementation phase.
+- Any divergence from Standard 05 requires an approved architectural
+  exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
