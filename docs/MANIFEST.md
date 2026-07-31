@@ -279,6 +279,8 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   baseline.
 - `docs/codex/codex-consolidation-report.md` - documentation-only baseline
   consolidation report for overlapping Codex governance information.
+- `docs/frameworks/ui-governance/design-system.md` - Framework 02, official
+  User Experience, Design System and UI Governance Framework.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -439,3 +441,10 @@ Codex governance layer. It defines how every module, service, API, data model,
 AI agent, workflow, standard, dependency, reference model, architectural
 exception, and future extension is proposed, reviewed, approved, versioned,
 validated, audited, and published into the Codex.
+
+User Experience, Design System and UI Governance Framework defines how every
+interface must remain coherent, accessible, responsive, localized,
+token-driven, component-based, and governed by the same official UI standards.
+It prevents independent UI systems and ensures that future web, mobile,
+desktop, public, editorial, and administrative surfaces remain one platform
+experience.
