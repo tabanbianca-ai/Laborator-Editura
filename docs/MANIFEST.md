@@ -283,6 +283,8 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   User Experience, Design System and UI Governance Framework.
 - `docs/frameworks/data-engineering/overview.md` - Framework 03, official Data
   Engineering, Information Architecture and Data Governance Framework.
+- `docs/frameworks/ai-engineering/overview.md` - Framework 04, official AI
+  Engineering, Prompt Governance and Intelligent Automation Framework.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -456,3 +458,9 @@ defines how every platform data asset must be modeled, cataloged, versioned,
 validated, migrated, preserved, traced, audited, integrated, and prepared for
 AI usage. It prevents parallel data models and protects the platform's
 information heritage as a single governed ecosystem.
+
+AI Engineering, Prompt Governance and Intelligent Automation Framework defines
+how every AI agent, prompt, model, RAG workflow, knowledge base, evaluation,
+cost control, and intelligent automation remains registered, versioned,
+traceable, explainable, auditable, cost-aware, secure, and subordinate to
+authorized human authority.
