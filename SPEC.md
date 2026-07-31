@@ -2560,6 +2560,61 @@ Canonical Naming and Versioning rules:
 - Any divergence from Standard 01 requires an approved architectural
   exception.
 
+## Phase IV Standard 02 - Canonical Data Model and Metadata
+
+The official Canonical Data Model and Metadata Standard is documented in
+`docs/standards/data-model/overview.md`.
+
+This standard defines mandatory rules for canonical data object structure,
+metadata, classification, relationships, validation, schema evolution,
+traceability, interoperability, AI readiness, backward compatibility, and audit
+across business entities, domain models, AI assets, editorial assets, digital
+assets, configuration objects, security objects, infrastructure objects,
+workflow objects, audit objects, and metadata records.
+
+Standard 02 does not introduce runtime Data Catalog behavior by itself. It
+establishes the canonical data model and metadata baseline that all persistent
+data objects must follow.
+
+The supporting Data Model Standard documents are:
+
+1. `docs/standards/data-model/overview.md`.
+2. `docs/standards/data-model/canonical-model.md`.
+3. `docs/standards/data-model/metadata-standard.md`.
+4. `docs/standards/data-model/classification.md`.
+5. `docs/standards/data-model/relationships.md`.
+6. `docs/standards/data-model/schema-evolution.md`.
+7. `docs/standards/data-model/compliance-audit.md`.
+8. `docs/standards/data-model/migration-plan.md`.
+
+Canonical Data Model and Metadata rules:
+
+- Every canonical data object must define UUID, canonical name, display name,
+  object type, version, status, owner, created date, updated date, lifecycle
+  state, metadata, relationships, and audit information.
+- Required metadata includes UUID, canonical identifier, title, description,
+  domain, category, classification, language, keywords, tags, version, status,
+  owner, source, and provenance.
+- Data classification must cover sensitivity, criticality, and provenance.
+- Canonical relationship types are parent, child, reference, dependency,
+  ownership, composition, association, and derived from.
+- Validation must cover required fields, unique constraints, referential
+  integrity, schema validation, metadata validation, lifecycle validation,
+  ownership validation, and classification validation.
+- Schema evolution must be versioned, documented, backward compatible when
+  possible, approved, audited, and traceable to affected APIs, events, exports,
+  backups, AI context, integrations, and documentation.
+- The official metadata catalog must preserve UUID, object type, description,
+  domain, owner, consumers, producers, retention policy, security
+  classification, and lifecycle status.
+- AI-generated data must preserve provenance and must not become canonical or
+  approved data without authorized human review.
+- This standard does not authorize runtime code changes, API changes,
+  database schema changes, UI changes, Docker changes, staging changes,
+  automatic metadata backfill, or destructive schema migration by itself.
+- Any divergence from Standard 02 requires an approved architectural
+  exception.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
