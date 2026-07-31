@@ -307,6 +307,8 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   official Canonical API, Event and Integration Standard.
 - `docs/standards/ai-assets/overview.md` - Phase IV Standard 04, official
   Canonical AI Assets, Prompt and Model Standard.
+- `docs/standards/security-identity/overview.md` - Phase IV Standard 05,
+  official Canonical Security, Identity and Access Standard.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -541,3 +543,9 @@ prompt, prompt template, system prompt, model, embedding model, RAG
 collection, knowledge base, evaluation dataset, AI workflow, AI policy, and AI
 configuration is identified, versioned, evaluated, governed, audited, and
 evolved under Human Final Authority.
+
+Canonical Security, Identity and Access Standard defines how every user,
+organization, role, permission, service account, API client, AI agent identity,
+secret, cryptographic asset, security event, and access decision is governed
+through Zero Trust, Least Privilege, Need-to-Know, server-derived identity,
+auditability, and Human Final Authority.
