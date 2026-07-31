@@ -277,6 +277,8 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   baseline.
 - `docs/codex/reference-models.md` - official canonical reference model
   baseline.
+- `docs/codex/codex-consolidation-report.md` - documentation-only baseline
+  consolidation report for overlapping Codex governance information.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
