@@ -21,39 +21,62 @@ Every module record must preserve:
 - Migration plan.
 - Acceptance criteria.
 
+## Canonical Module Sequence
+
+This section is the single canonical definition of the platform module
+sequence. Module migration plans must reference this section instead of
+repeating next-module or phase-closure statements.
+
 ## Phase II Fundamental Modules
 
 The 25 fundamental enterprise modules are:
 
-1. Library.
-2. Translation.
-3. Proofreading and Editorial Review.
-4. Publishing.
-5. Rights and Provenance.
-6. Magazine.
-7. AI Orchestration and Editorial Agents.
-8. Audio and Narration.
-9. Video and Multimedia.
-10. Workflow Engine and Business Process Automation.
-11. Notification and Communication.
-12. Identity, Access Management and Security.
-13. Observability, Monitoring and Audit.
-14. Backup, Disaster Recovery and Business Continuity.
-15. Search, Indexing and Knowledge Graph.
-16. Integration, API Gateway and External Connectors.
-17. Configuration, Feature Flags and Platform Administration.
-18. Data Governance, Metadata and Master Data Management.
-19. Accessibility, Localization and Inclusive Experience.
-20. Analytics, Business Intelligence and Decision Support.
-21. AI Governance, Model Management and Responsible AI.
-22. DevSecOps, CI/CD, Release and Platform Operations.
-23. Quality Assurance, Testing and Validation.
-24. Enterprise Architecture, Portfolio and Strategic Governance.
-25. Compliance, Legal Governance and Risk Management.
+| Module | Name | Canonical overview |
+| --- | --- | --- |
+| 1 | Library | `docs/modules/library/library-overview.md` |
+| 2 | Translation | `docs/modules/translation/translation-overview.md` |
+| 3 | Proofreading and Editorial Review | `docs/modules/editorial-review/editorial-review-overview.md` |
+| 4 | Publishing | `docs/modules/publishing/publishing-overview.md` |
+| 5 | Rights and Provenance | `docs/modules/rights/rights-overview.md` |
+| 6 | Magazine | `docs/modules/magazine/magazine-overview.md` |
+| 7 | AI Orchestration and Editorial Agents | `docs/modules/ai-orchestration/ai-orchestration-overview.md` |
+| 8 | Audio and Narration | `docs/modules/audio/audio-overview.md` |
+| 9 | Video and Multimedia | `docs/modules/video/video-overview.md` |
+| 10 | Workflow Engine and Business Process Automation | `docs/modules/workflow/workflow-overview.md` |
+| 11 | Notification and Communication | `docs/modules/notifications/notifications-overview.md` |
+| 12 | Identity, Access Management and Security | `docs/modules/iam/iam-overview.md` |
+| 13 | Observability, Monitoring and Audit | `docs/modules/observability/observability-overview.md` |
+| 14 | Backup, Disaster Recovery and Business Continuity | `docs/modules/backup/backup-overview.md` |
+| 15 | Search, Indexing and Knowledge Graph | `docs/modules/search/search-overview.md` |
+| 16 | Integration, API Gateway and External Connectors | `docs/modules/integration/integration-overview.md` |
+| 17 | Configuration, Feature Flags and Platform Administration | `docs/modules/configuration/configuration-overview.md` |
+| 18 | Data Governance, Metadata and Master Data Management | `docs/modules/data-governance/data-governance-overview.md` |
+| 19 | Accessibility, Localization and Inclusive Experience | `docs/modules/accessibility/accessibility-overview.md` |
+| 20 | Analytics, Business Intelligence and Decision Support | `docs/modules/analytics/analytics-overview.md` |
+| 21 | AI Governance, Model Management and Responsible AI | `docs/modules/ai-governance/ai-governance-overview.md` |
+| 22 | DevSecOps, CI/CD, Release and Platform Operations | `docs/modules/devsecops/devsecops-overview.md` |
+| 23 | Quality Assurance, Testing and Validation | `docs/modules/quality-assurance/qa-overview.md` |
+| 24 | Enterprise Architecture, Portfolio and Strategic Governance | `docs/modules/enterprise-architecture/architecture-overview.md` |
+| 25 | Compliance, Legal Governance and Risk Management | `docs/modules/compliance/compliance-overview.md` |
 
 ## Phase III Meta-Architecture
 
-26. Enterprise Meta-Architecture and Codex Governance Framework.
+| Module | Name | Canonical overview |
+| --- | --- | --- |
+| 26 | Enterprise Meta-Architecture and Codex Governance Framework | `docs/codex/meta-architecture.md` |
+
+## Fundamental Architecture Closure
+
+The 25 Phase II modules define the fundamental enterprise architecture:
+editorial capabilities, infrastructure, AI, operations, governance, quality,
+strategy, and compliance.
+
+Phase III Module 26 defines the supreme Codex governance layer. Future
+capabilities are specialized extensions unless explicitly approved through
+Codex Governance as fundamental architecture.
+
+Module migration plans must not restate this closure rule. They must reference
+this catalog and `docs/codex/meta-architecture.md`.
 
 ## Current Baseline
 
