@@ -131,10 +131,12 @@ Deliverables:
 - Performance baseline.
 - Operational metrics.
 
-## Next Recommended Module
+## Codex Governance Reference
 
-Module 5 - Rights and Provenance Module Architecture is now documented as the
-next Phase II specification after Publishing.
+The canonical module sequence, dependency closure, and future-extension rule are
+maintained in `docs/codex/module-catalog.md`,
+`docs/codex/dependency-registry.md`, and `docs/codex/meta-architecture.md`.
 
-The next recommended module specification after Rights and Provenance is
-Module 6 - Magazine Module Architecture.
+This migration plan owns only the local migration strategy for this module. It
+does not redefine the platform module sequence, fundamental architecture
+closure, or future-extension approval rule.
