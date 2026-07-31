@@ -92,6 +92,7 @@ The largest repeated concepts are:
 | API, event, webhook, and integration contracts | Repeated across backend API standards, integration contracts, enterprise integration framework, Codex API catalogs, event catalogs, webhook docs, gateway docs, and module API/event docs. | Canonical owner is Standard 03, with Framework 06 as integration governance framework. |
 | AI assets, prompts, models, RAG, and AI policies | Repeated across AI architecture, AI Engineering framework, AI Governance, AI Orchestration, Marketplace, Observability, Policy, and agent governance documentation. | Canonical owner is Standard 04, with Framework 04 as AI engineering framework. |
 | Security, identity, access, secrets, and cryptography | Repeated across Chapter 9, IAM, security docs, security engineering framework, Gateway, Enterprise Admin, Workspace, Launch Essentials, DevSecOps, and infrastructure security docs. | Canonical owner is Standard 05, with Framework 07 as security engineering framework. |
+| Documents, digital assets, editorial content, derivatives, and preservation | Repeated across Library, Documents, Author Studio, Translation, Publishing, Rights, Public Portal, Multimedia, Media Localization, Audio, Video, Magazine, Accessibility, Backup, JSON Master, and data model docs. | Canonical owner is Standard 06, with Library, Documentation Governance, Publishing, and Rights as operational owners. |
 | Phase closure and module sequence | Previously repeated in module migration plans. | Canonical owner remains `docs/codex/module-catalog.md`. |
 
 ## Canonical Definitions
@@ -145,6 +146,7 @@ after document owners review each area.
 | API, event, webhook, and integration governance | `docs/standards/api-governance/overview.md` |
 | AI assets, prompts, models, RAG, and AI policy governance | `docs/standards/ai-assets/overview.md` |
 | Security, identity, access, secrets, and cryptography governance | `docs/standards/security-identity/overview.md` |
+| Documents, digital assets, editorial content, derivatives, and preservation | `docs/standards/digital-assets/overview.md` |
 | Data and JSON Master governance | `docs/frameworks/data-engineering/overview.md`, `docs/JSON_MASTER_FORMAT.md` |
 | Security and access | `docs/frameworks/security-engineering/overview.md`, `docs/modules/iam/iam-overview.md` |
 | AI governance | `docs/frameworks/ai-engineering/overview.md`, `docs/modules/ai-governance/ai-governance-overview.md` |
