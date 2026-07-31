@@ -65,6 +65,17 @@ The 25 fundamental enterprise modules are:
 | --- | --- | --- |
 | 26 | Enterprise Meta-Architecture and Codex Governance Framework | `docs/codex/meta-architecture.md` |
 
+## Codex Canonical Registries
+
+Canonical registries define shared references used by every module,
+framework, and standard.
+
+| Registry | Purpose | Canonical document |
+| --- | --- | --- |
+| Canonical Definitions | Single canonical definitions for repeated cross-cutting concepts. | `docs/codex/canonical-definitions.md` |
+| Dependency Registry | Dependencies between modules, APIs, events, data models, workflows, AI agents, infrastructure, and governance rules. | `docs/codex/dependency-registry.md` |
+| Reference Models | Canonical data and ownership references for entities, APIs, events, workflows, and integrations. | `docs/codex/reference-models.md` |
+
 ## Phase III Specialized Frameworks
 
 Specialized frameworks extend Codex Governance without becoming new
@@ -77,6 +88,18 @@ fundamental enterprise modules.
 | Framework 04 | AI Engineering, Prompt Governance and Intelligent Automation | `docs/frameworks/ai-engineering/overview.md` |
 | Framework 05 | Cloud Infrastructure, Platform Engineering and Operations | `docs/frameworks/platform-engineering/overview.md` |
 | Framework 06 | Enterprise Integration, Messaging and Interoperability | `docs/frameworks/enterprise-integration/overview.md` |
+| Framework 07 | Enterprise Security Engineering and Cybersecurity | `docs/frameworks/security-engineering/overview.md` |
+| Framework 08 | Enterprise Documentation, Knowledge Management and Technical Writing | `docs/frameworks/documentation-governance/overview.md` |
+| Framework 09 | Enterprise Quality, Architecture Review and Continuous Improvement | `docs/frameworks/quality-governance/overview.md` |
+
+## Phase IV Canonical Standards
+
+Canonical standards are used by every module and framework. They define
+cross-platform implementation rules rather than new product modules.
+
+| Standard | Name | Canonical overview |
+| --- | --- | --- |
+| Standard 01 | Canonical Naming, Identification and Versioning | `docs/standards/naming-versioning/overview.md` |
 
 ## Fundamental Architecture Closure
 
