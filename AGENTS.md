@@ -2789,6 +2789,54 @@ Rules:
 - Any divergence from Standard 02 requires an approved architectural
   exception.
 
+### Canonical API, Event and Integration Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 03 as the official canonical standard for API,
+  event, webhook, external connector, message contract, AI interface, and
+  service-to-service integration governance across the platform.
+
+Rules:
+
+- The canonical Standard 03 entry point is
+  `docs/standards/api-governance/overview.md`.
+- This directive does not authorize runtime API gateway replacement, route
+  renaming, event bus implementation, message broker implementation, webhook
+  dispatch runtime, provider SDK adapters, database migrations, UI changes,
+  Docker changes, staging changes, or breaking API changes by itself.
+- All integration interfaces must follow API First, Contract First, Event
+  First where asynchronous reactions are needed, backward compatibility,
+  loose coupling, idempotency where retries are possible, stateless request
+  processing, secure by default, observable by default, and documentation as
+  code.
+- Stable public and partner APIs must be versioned and documented through
+  OpenAPI before they are treated as externally consumable contracts.
+- Stable integration-facing responses should expose request ID, timestamp,
+  status, data, metadata, and links.
+- Stable integration-facing errors should expose request ID, timestamp,
+  status, error code, safe error message, safe details, and correlation ID.
+- Every governed event must define event ID, event name, event version, event
+  type, source, timestamp, correlation ID, payload, and metadata.
+- Every API, event, webhook, connector, and service contract must use
+  Semantic Versioning, define a contract owner, preserve change history,
+  maintain a compatibility matrix, and define a deprecation policy.
+- Every external integration must define provider, endpoint, authentication,
+  scopes, rate limits, retry policy, timeout, monitoring, SLA or SLO where
+  applicable, tenant scope, secret references, status, contract version, and
+  audit requirements.
+- Every integration call and event processing action must preserve request ID,
+  correlation ID, trace ID when available, metrics, structured logs, and audit
+  records for state-changing or governance-relevant actions.
+- Protected APIs and integrations must use server-derived identity, enforce
+  authorization server-side, respect tenant isolation and Need-to-Know access,
+  and never trust client-provided user, tenant, role, or permission headers.
+- Existing validated routes, event names, webhook metadata, provider metadata,
+  tests, and runtime behavior must not be renamed, removed, or broken without
+  an approved compatibility migration.
+- Any divergence from Standard 03 requires an approved architectural
+  exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
