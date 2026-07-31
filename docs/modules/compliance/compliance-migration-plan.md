@@ -120,17 +120,12 @@ Compliance depends on:
 - Enterprise Architecture.
 - All functional modules.
 
-## Completion Statement
+## Codex Governance Reference
 
-Module 25 - Compliance, Legal Governance and Risk Management Module
-Architecture is now documented after Enterprise Architecture, Portfolio and
-Strategic Governance.
+The canonical module sequence, dependency closure, and future-extension rule are
+maintained in `docs/codex/module-catalog.md`,
+`docs/codex/dependency-registry.md`, and `docs/codex/meta-architecture.md`.
 
-With Module 25, the fundamental Phase II architecture covers the full
-enterprise chain: editorial capabilities, infrastructure, AI, operations,
-governance, quality, strategy, and compliance.
-
-Phase III Module 26 - Enterprise Meta-Architecture and Codex Governance
-Framework is now documented as the supreme Codex governance layer. Future
-capabilities are specialized extensions unless explicitly approved through
-Codex Governance as fundamental architecture.
+This migration plan owns only the local migration strategy for this module. It
+does not redefine the platform module sequence, fundamental architecture
+closure, or future-extension approval rule.
