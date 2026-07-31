@@ -1759,6 +1759,38 @@ Roadmap impact:
   behavior, preserve tenant isolation, preserve audit and backup/restore
   compatibility, and avoid broad schema redesign unless explicitly approved.
 
+## Phase III Framework 04 - AI Engineering, Prompt Governance and Intelligent Automation
+
+Status: Active specification.
+
+Reference:
+
+- `docs/frameworks/ai-engineering/overview.md`.
+- `docs/frameworks/ai-engineering/agent-registry.md`.
+- `docs/frameworks/ai-engineering/prompt-registry.md`.
+- `docs/frameworks/ai-engineering/model-registry.md`.
+- `docs/frameworks/ai-engineering/rag-architecture.md`.
+- `docs/frameworks/ai-engineering/evaluation.md`.
+- `docs/frameworks/ai-engineering/cost-management.md`.
+- `docs/frameworks/ai-engineering/compliance-audit.md`.
+- `docs/frameworks/ai-engineering/migration-plan.md`.
+
+Roadmap impact:
+
+- Framework 04 is a specialized Phase III governance framework after the
+  Enterprise Meta-Architecture and Codex Governance Framework.
+- It does not add runtime functionality by itself.
+- It defines the canonical standards for AI engineering, agent architecture,
+  prompt governance, model governance, RAG, knowledge bases, evaluation, cost
+  management, explainability, Human-in-the-Loop, AI lifecycle, and intelligent
+  automation.
+- Future AI provider integrations, prompt runtime, model runtime, RAG runtime,
+  automation workflows, and agent execution engines must conform to this
+  framework.
+- Future implementation must remain incremental, preserve Human Final
+  Authority, preserve Need-to-Know access, preserve auditability, preserve
+  cost governance, and avoid direct provider coupling.
+
 ## MVP Scope
 
 The MVP includes:
