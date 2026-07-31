@@ -2820,6 +2820,75 @@ Canonical Security, Identity and Access rules:
 - Any divergence from Standard 05 requires an approved architectural
   exception.
 
+## Phase IV Standard 06 - Canonical Document, Digital Asset and Content
+
+The official Canonical Document, Digital Asset and Content Standard is
+documented in `docs/standards/digital-assets/overview.md`.
+
+This standard defines mandatory rules for managing every document, editorial
+content object, digital asset, publication derivative, media asset, metadata
+file, archival record, and reusable content asset across the complete content
+lifecycle from creation and review through publication, distribution,
+archiving, restoration, and reuse.
+
+Standard 06 does not introduce new storage infrastructure, file upload
+runtime, media processing runtime, format conversion runtime, database
+migrations, API changes, UI changes, Docker changes, or staging changes by
+itself. It establishes the canonical document, digital asset, master document,
+metadata, relationship, lifecycle, preservation, and audit baseline that all
+current and future content assets must follow.
+
+The supporting Document and Digital Asset Standard documents are:
+
+1. `docs/standards/digital-assets/overview.md`.
+2. `docs/standards/digital-assets/master-document-standard.md`.
+3. `docs/standards/digital-assets/metadata-standard.md`.
+4. `docs/standards/digital-assets/content-lifecycle.md`.
+5. `docs/standards/digital-assets/relationships.md`.
+6. `docs/standards/digital-assets/preservation-policy.md`.
+7. `docs/standards/digital-assets/compliance-audit.md`.
+8. `docs/standards/digital-assets/migration-plan.md`.
+
+Canonical Document, Digital Asset and Content rules:
+
+- All digital assets must follow Single Source of Truth, Canonical Master
+  Document, Content Before Format, Metadata First, Immutable History, Version
+  Controlled, Rights Aware, AI Ready, Accessibility by Design, and Long-Term
+  Preservation.
+- Every governed asset must define UUID, canonical identifier, canonical
+  name, display name, asset type, content type, language, version, status,
+  owner, rights information, metadata, lifecycle state, and audit
+  information.
+- Canonical asset domains include Editorial, Multimedia, Publishing, and
+  Marketing.
+- Each work has exactly one Canonical Master Document. All publication
+  formats, media outputs, accessible versions, and print editions derive from
+  the canonical master.
+- PDF, EPUB, MOBI, DOCX, HTML, audio, video, print-ready files, flipbooks,
+  and accessibility outputs are derivatives unless explicitly promoted
+  through an approved, audited migration.
+- Required metadata includes UUID, title, subtitle where applicable, author,
+  translator where applicable, editor, reviewer, illustrator where
+  applicable, language, edition, publication date where applicable, keywords,
+  tags, rights, license, accessibility status, asset type, content type,
+  version, status, owner, lifecycle state, and audit information.
+- Canonical relationships include Original, Translation Of, Edition Of,
+  Derived From, Adaptation Of, Illustration For, Audio Version Of, Video
+  Version Of, Published In, and Referenced By.
+- Canonical lifecycle states map to Idea, Draft, Translation, Editorial
+  Review, Technical Review, Approval, Publication, Distribution, and
+  Archived.
+- Every governed asset must define retention policy, backup policy, archive
+  policy, deletion policy, preservation format, integrity verification,
+  rights constraints, restoration procedure, and audit information where
+  applicable.
+- Existing Library, Documents, Author Studio, Translation, Rights,
+  Publishing, Export, Public Portal, Multimedia, Media Localization, Audio,
+  Video, Magazine, Accessibility, Backup, JSON Master, and validated runtime
+  behavior must not be changed without an approved implementation phase.
+- Any divergence from Standard 06 requires an approved architectural
+  exception.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
