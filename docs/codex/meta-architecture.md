@@ -12,6 +12,21 @@ models, AI agents, workflows, standards, and future extensions.
 
 No new component may be added without compliance with this framework.
 
+## Canonical Definition Rule
+
+Cross-cutting definitions must exist in one canonical location and be
+referenced elsewhere. Repeated definitions should be consolidated into:
+
+- `docs/codex/module-catalog.md` for module sequence and phase closure.
+- `docs/codex/dependency-registry.md` for dependency rules.
+- `docs/codex/reference-models.md` for canonical data references.
+- `docs/codex/architecture-principles.md` for architecture principles.
+- `docs/codex/governance-framework.md` for governance workflows.
+- `docs/codex/codex-versioning.md` for Codex version rules.
+
+Module documents may summarize local implications, but they must not redefine
+canonical cross-module rules.
+
 ## Responsibilities
 
 The framework governs:
