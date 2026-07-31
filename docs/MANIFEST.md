@@ -281,6 +281,8 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   consolidation report for overlapping Codex governance information.
 - `docs/frameworks/ui-governance/design-system.md` - Framework 02, official
   User Experience, Design System and UI Governance Framework.
+- `docs/frameworks/data-engineering/overview.md` - Framework 03, official Data
+  Engineering, Information Architecture and Data Governance Framework.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -448,3 +450,9 @@ token-driven, component-based, and governed by the same official UI standards.
 It prevents independent UI systems and ensures that future web, mobile,
 desktop, public, editorial, and administrative surfaces remain one platform
 experience.
+
+Data Engineering, Information Architecture and Data Governance Framework
+defines how every platform data asset must be modeled, cataloged, versioned,
+validated, migrated, preserved, traced, audited, integrated, and prepared for
+AI usage. It prevents parallel data models and protects the platform's
+information heritage as a single governed ecosystem.
