@@ -1791,6 +1791,73 @@ Roadmap impact:
   Authority, preserve Need-to-Know access, preserve auditability, preserve
   cost governance, and avoid direct provider coupling.
 
+## Phase III Framework 05 - Cloud Infrastructure, Platform Engineering and Operations
+
+Status: Active specification.
+
+Reference:
+
+- `docs/frameworks/platform-engineering/overview.md`.
+- `docs/frameworks/platform-engineering/cloud-architecture.md`.
+- `docs/frameworks/platform-engineering/infrastructure-as-code.md`.
+- `docs/frameworks/platform-engineering/kubernetes.md`.
+- `docs/frameworks/platform-engineering/networking.md`.
+- `docs/frameworks/platform-engineering/secrets-management.md`.
+- `docs/frameworks/platform-engineering/operations.md`.
+- `docs/frameworks/platform-engineering/compliance-audit.md`.
+- `docs/frameworks/platform-engineering/disaster-recovery.md`.
+- `docs/frameworks/platform-engineering/migration-plan.md`.
+
+Roadmap impact:
+
+- Framework 05 is a specialized Phase III governance framework after the
+  Enterprise Meta-Architecture and Codex Governance Framework.
+- It does not add runtime infrastructure behavior by itself.
+- It defines the canonical standards for cloud infrastructure, platform
+  engineering, Infrastructure as Code, container platforms, Kubernetes
+  readiness, networking, service mesh readiness, storage, compute, secrets,
+  certificates, operations, high availability, scalability, disaster recovery,
+  and runbooks.
+- Future cloud provisioning, Kubernetes, service mesh, artifact registry,
+  image signing, production high availability, managed secrets, and operational
+  automation must conform to this framework.
+- Future implementation must remain incremental, preserve validated staging
+  behavior, preserve backup/restore, preserve observability, preserve security,
+  and avoid disruptive infrastructure rewrites unless explicitly approved.
+
+## Phase III Framework 06 - Enterprise Integration, Messaging and Interoperability
+
+Status: Active specification.
+
+Reference:
+
+- `docs/frameworks/enterprise-integration/overview.md`.
+- `docs/frameworks/enterprise-integration/api-governance.md`.
+- `docs/frameworks/enterprise-integration/event-governance.md`.
+- `docs/frameworks/enterprise-integration/messaging.md`.
+- `docs/frameworks/enterprise-integration/connectors.md`.
+- `docs/frameworks/enterprise-integration/interoperability.md`.
+- `docs/frameworks/enterprise-integration/monitoring.md`.
+- `docs/frameworks/enterprise-integration/compliance-audit.md`.
+- `docs/frameworks/enterprise-integration/migration-plan.md`.
+
+Roadmap impact:
+
+- Framework 06 is a specialized Phase III governance framework after the
+  Enterprise Meta-Architecture and Codex Governance Framework.
+- It does not add runtime integration behavior by itself.
+- It defines the canonical standards for API governance, event governance,
+  messaging, service communication, external connectors, webhooks, data
+  synchronization, file exchange, batch processing, streaming integration,
+  interoperability, integration security, monitoring, and contract governance.
+- Future event bus, message broker, provider adapters, webhook runtime,
+  synchronization runtime, file exchange runtime, and public API versioning
+  work must conform to this framework.
+- Future implementation must remain incremental, preserve validated APIs,
+  preserve tenant isolation, preserve auditability, preserve observability,
+  preserve data governance, and avoid breaking API contracts unless explicitly
+  approved through versioning and migration.
+
 ## MVP Scope
 
 The MVP includes:
