@@ -2837,6 +2837,61 @@ Rules:
 - Any divergence from Standard 03 requires an approved architectural
   exception.
 
+### Canonical AI Assets, Prompt and Model Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 04 as the official canonical standard for AI
+  agents, prompts, prompt templates, system prompts, models, embedding
+  models, RAG collections, knowledge bases, evaluation datasets, AI
+  workflows, AI policies, and AI configurations.
+
+Rules:
+
+- The canonical Standard 04 entry point is
+  `docs/standards/ai-assets/overview.md`.
+- This directive does not authorize external provider SDK integrations, real
+  AI calls, runtime prompt registry persistence, runtime model registry
+  persistence, runtime RAG indexing, runtime evaluation engine, new API
+  contracts, database migrations, UI changes, Docker changes, staging
+  changes, or breaking behavior by itself.
+- Every AI asset must define UUID, canonical name, display name, asset type,
+  version, status, owner, lifecycle state, description, dependencies,
+  metadata, and audit information.
+- Canonical AI asset types are AI Agent, Prompt Template, System Prompt, AI
+  Model, Embedding Model, RAG Collection, Knowledge Base, Evaluation Dataset,
+  AI Workflow, and AI Policy.
+- Prompt assets must define purpose, version, supported models, input schema,
+  output schema, constraints, safety rules, evaluation metrics, owner,
+  lifecycle state, approval status, classification, and audit information.
+- Model assets must define provider, model identifier, model version, context
+  window, token limits, cost profile, latency profile, supported languages,
+  supported modalities, compatibility matrix, safety profile, evaluation
+  results, owner, lifecycle state, and audit information.
+- AI agents must define mission, responsibilities, limits, authority, input
+  sources, output targets, permissions, accessible knowledge bases, allowed
+  models, allowed prompt versions, workflow dependencies, escalation rules,
+  human approval requirements, evaluation requirements, and audit
+  information.
+- RAG collections and knowledge bases must preserve source documents,
+  chunking strategy, embedding model, metadata schema, access policy, refresh
+  policy, retention policy, license status, source authority, evaluation
+  metrics, and audit information.
+- AI evaluation must cover accuracy, precision, recall, hallucination rate,
+  response consistency, latency, cost, safety score, and human review score
+  where applicable.
+- AI assets must remain provider-independent, reproducible, versioned,
+  documented, evaluated, secured, cost-aware, and auditable.
+- AI may recommend, draft, explain, summarize, evaluate, classify, and
+  coordinate when authorized, but it must not approve content, publish, grant
+  rights, grant access, modify security, change governance, approve its own
+  budget increase, hide audit history, or bypass Human Final Authority.
+- Existing AI Governance, AI Orchestration, Marketplace, Observability,
+  Policy, Cost Governance, and module behavior must not be changed without an
+  approved implementation phase.
+- Any divergence from Standard 04 requires an approved architectural
+  exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
