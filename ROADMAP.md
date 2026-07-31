@@ -1698,6 +1698,36 @@ Roadmap impact:
 - Future capabilities after Module 26 are specialized extensions unless
   explicitly approved through Codex Governance as fundamental architecture.
 
+## Phase III Framework 02 - User Experience, Design System and UI Governance
+
+Status: Active specification.
+
+Reference:
+
+- `docs/frameworks/ui-governance/design-system.md`.
+- `docs/frameworks/ui-governance/design-tokens.md`.
+- `docs/frameworks/ui-governance/component-library.md`.
+- `docs/frameworks/ui-governance/layout-standards.md`.
+- `docs/frameworks/ui-governance/navigation.md`.
+- `docs/frameworks/ui-governance/forms.md`.
+- `docs/frameworks/ui-governance/localization.md`.
+- `docs/frameworks/ui-governance/accessibility.md`.
+- `docs/frameworks/ui-governance/ui-gap-analysis.md`.
+- `docs/frameworks/ui-governance/migration-plan.md`.
+
+Roadmap impact:
+
+- Framework 02 is a specialized Phase III governance framework after the
+  Enterprise Meta-Architecture and Codex Governance Framework.
+- It does not add new user-facing functionality by itself.
+- It makes the official Design System, Design Tokens, Component Library,
+  navigation, forms, localization, accessibility, layout, performance, and UI
+  audit expectations explicit.
+- Future frontend work must reuse the official component library and Design
+  Tokens instead of introducing duplicate UI patterns.
+- Future UI migration must remain incremental, preserve validated routes and
+  workflows, and avoid broad rewrites unless explicitly approved.
+
 ## MVP Scope
 
 The MVP includes:
