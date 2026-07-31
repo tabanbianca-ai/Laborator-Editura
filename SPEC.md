@@ -2071,6 +2071,53 @@ Codex Governance rules:
 - Existing Phase I-III validated behavior and all architectural standards
   defined in the Codex must be preserved.
 
+## Phase III Framework 02 - User Experience, Design System and UI Governance
+
+The official User Experience, Design System and UI Governance Framework is
+documented in `docs/frameworks/ui-governance/design-system.md`.
+
+This framework defines mandatory standards for every current and future
+Laborator Editura interface. It complements the Engineering Standards
+framework, Chapter 11 Frontend and Design System Architecture, and the
+Enterprise Meta-Architecture and Codex Governance Framework.
+
+Framework 02 does not introduce new product functionality. It defines how UI
+work must be designed, reviewed, standardized, localized, made accessible,
+made responsive, and kept consistent across web, mobile, desktop, public,
+editorial, and administrative surfaces.
+
+The supporting UI Governance documents are:
+
+1. `docs/frameworks/ui-governance/design-system.md`.
+2. `docs/frameworks/ui-governance/design-tokens.md`.
+3. `docs/frameworks/ui-governance/component-library.md`.
+4. `docs/frameworks/ui-governance/layout-standards.md`.
+5. `docs/frameworks/ui-governance/navigation.md`.
+6. `docs/frameworks/ui-governance/forms.md`.
+7. `docs/frameworks/ui-governance/localization.md`.
+8. `docs/frameworks/ui-governance/accessibility.md`.
+9. `docs/frameworks/ui-governance/ui-gap-analysis.md`.
+10. `docs/frameworks/ui-governance/migration-plan.md`.
+
+UI Governance rules:
+
+- No production UI may be implemented outside the official Design System.
+- Design Tokens are the mandatory source for reusable visual decisions.
+- The official Component Library is the mandatory source for common UI
+  controls, states, layouts, and interaction patterns.
+- Applications must not create independent visual systems.
+- User-facing text must be externalized through localization resources.
+- The active Platform Language controls UI text only and must not alter
+  manuscript, original, authoring, or target language content.
+- Interfaces must be responsive across desktop, laptop, tablet, and mobile
+  form factors.
+- Accessibility is required by default and must be validated for critical
+  workflows.
+- Navigation, forms, loading states, empty states, error states, warnings,
+  confirmations, and approval gates must use consistent canonical patterns.
+- UI changes must consider localization, accessibility, responsive behavior,
+  performance, component reuse, token impact, and auditability.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
