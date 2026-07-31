@@ -138,7 +138,12 @@ Deliverables:
 - Security tests.
 - Quality Gate integration.
 
-## Next Recommended Module
+## Codex Governance Reference
 
-Module 2 - Translation Module Architecture is now documented as the next
-Phase II specification after Library.
+The canonical module sequence, dependency closure, and future-extension rule are
+maintained in `docs/codex/module-catalog.md`,
+`docs/codex/dependency-registry.md`, and `docs/codex/meta-architecture.md`.
+
+This migration plan owns only the local migration strategy for this module. It
+does not redefine the platform module sequence, fundamental architecture
+closure, or future-extension approval rule.
