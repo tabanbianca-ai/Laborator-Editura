@@ -90,6 +90,7 @@ The largest repeated concepts are:
 | Naming and versioning | Repeated across database, documentation, release, API, and Codex versioning docs. | Canonical owner is Standard 01. |
 | Canonical data model and metadata | Repeated across domain, logical data, physical database, data governance, JSON Master, API contracts, events, backup, and AI readiness documentation. | Canonical owner is Standard 02, with Framework 03 as data governance framework. |
 | API, event, webhook, and integration contracts | Repeated across backend API standards, integration contracts, enterprise integration framework, Codex API catalogs, event catalogs, webhook docs, gateway docs, and module API/event docs. | Canonical owner is Standard 03, with Framework 06 as integration governance framework. |
+| AI assets, prompts, models, RAG, and AI policies | Repeated across AI architecture, AI Engineering framework, AI Governance, AI Orchestration, Marketplace, Observability, Policy, and agent governance documentation. | Canonical owner is Standard 04, with Framework 04 as AI engineering framework. |
 | Phase closure and module sequence | Previously repeated in module migration plans. | Canonical owner remains `docs/codex/module-catalog.md`. |
 
 ## Canonical Definitions
@@ -141,6 +142,7 @@ after document owners review each area.
 | Naming and versioning | `docs/standards/naming-versioning/overview.md` |
 | Canonical data model and metadata | `docs/standards/data-model/overview.md` |
 | API, event, webhook, and integration governance | `docs/standards/api-governance/overview.md` |
+| AI assets, prompts, models, RAG, and AI policy governance | `docs/standards/ai-assets/overview.md` |
 | Data and JSON Master governance | `docs/frameworks/data-engineering/overview.md`, `docs/JSON_MASTER_FORMAT.md` |
 | Security and access | `docs/frameworks/security-engineering/overview.md`, `docs/modules/iam/iam-overview.md` |
 | AI governance | `docs/frameworks/ai-engineering/overview.md`, `docs/modules/ai-governance/ai-governance-overview.md` |
