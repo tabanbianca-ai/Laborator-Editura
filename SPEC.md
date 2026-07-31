@@ -2225,6 +2225,110 @@ AI Engineering rules:
 - Any divergence from Framework 04 requires an approved architectural
   exception.
 
+## Phase III Framework 05 - Cloud Infrastructure, Platform Engineering and Operations
+
+The official Cloud Infrastructure, Platform Engineering and Operations
+Framework is documented in `docs/frameworks/platform-engineering/overview.md`.
+
+This framework defines mandatory standards for infrastructure, cloud
+architecture, platform engineering, Infrastructure as Code, containers,
+Kubernetes readiness, networking, secrets, certificates, operational
+management, high availability, disaster recovery, and runbooks. It complements
+DevSecOps, Observability, Backup and Disaster Recovery, Enterprise
+Architecture, Security Governance, and the Enterprise Meta-Architecture.
+
+Framework 05 does not introduce infrastructure runtime behavior by itself. It
+establishes the mandatory infrastructure baseline that all cloud resources,
+deployment processes, operational workflows, platform automation, network
+paths, secrets handling, monitoring, and recovery processes must follow.
+
+The supporting Platform Engineering documents are:
+
+1. `docs/frameworks/platform-engineering/overview.md`.
+2. `docs/frameworks/platform-engineering/cloud-architecture.md`.
+3. `docs/frameworks/platform-engineering/infrastructure-as-code.md`.
+4. `docs/frameworks/platform-engineering/kubernetes.md`.
+5. `docs/frameworks/platform-engineering/networking.md`.
+6. `docs/frameworks/platform-engineering/secrets-management.md`.
+7. `docs/frameworks/platform-engineering/operations.md`.
+8. `docs/frameworks/platform-engineering/compliance-audit.md`.
+9. `docs/frameworks/platform-engineering/disaster-recovery.md`.
+10. `docs/frameworks/platform-engineering/migration-plan.md`.
+
+Platform Engineering rules:
+
+- No infrastructure resource, deployment process, operational workflow,
+  platform automation, network path, secret handling path, or recovery process
+  may bypass this framework.
+- Infrastructure must be represented as Infrastructure as Code or documented
+  as an approved temporary manual exception.
+- Infrastructure changes must be versioned, validated, reviewed, and audited.
+- Secrets, certificates, passwords, encryption keys, AI credentials, and
+  integration credentials must use centralized and safe secret management.
+- Production-critical infrastructure must be monitored, health checked,
+  backup-covered, rollback-capable, and recoverable.
+- Production architecture must address high availability, capacity,
+  scalability, disaster recovery, and operational runbooks.
+- Kubernetes, service mesh, managed cloud resources, artifact registries, and
+  production high availability require separate approved implementation
+  phases.
+- Any divergence from Framework 05 requires an approved architectural
+  exception.
+
+## Phase III Framework 06 - Enterprise Integration, Messaging and Interoperability
+
+The official Enterprise Integration, Messaging and Interoperability Framework
+is documented in `docs/frameworks/enterprise-integration/overview.md`.
+
+This framework defines mandatory standards for APIs, events, messaging,
+service communication, external connectors, webhooks, synchronization, file
+exchange, batch processing, streaming, integration security, monitoring, and
+contract governance. It complements Integration, API Gateway and External
+Connectors, Search, Workflow Engine, Enterprise Architecture, Data
+Engineering, Security Governance, Observability, and the Enterprise
+Meta-Architecture.
+
+Framework 06 does not introduce integration runtime behavior by itself. It
+establishes the mandatory interoperability baseline that all APIs, connectors,
+messaging channels, event streams, webhooks, synchronization workflows, batch
+processes, file exchanges, and integration monitoring must follow.
+
+The supporting Enterprise Integration documents are:
+
+1. `docs/frameworks/enterprise-integration/overview.md`.
+2. `docs/frameworks/enterprise-integration/api-governance.md`.
+3. `docs/frameworks/enterprise-integration/event-governance.md`.
+4. `docs/frameworks/enterprise-integration/messaging.md`.
+5. `docs/frameworks/enterprise-integration/connectors.md`.
+6. `docs/frameworks/enterprise-integration/interoperability.md`.
+7. `docs/frameworks/enterprise-integration/monitoring.md`.
+8. `docs/frameworks/enterprise-integration/compliance-audit.md`.
+9. `docs/frameworks/enterprise-integration/migration-plan.md`.
+
+Enterprise Integration rules:
+
+- No API, connector, messaging channel, event stream, webhook,
+  synchronization workflow, batch process, file exchange, or interoperability
+  mechanism may bypass this framework.
+- Stable APIs must be contract-first, versioned, owned, authenticated,
+  authorized, observable, auditable, and backward-compatible or explicitly
+  deprecated.
+- Events must define name, producer, consumers, schema version, timestamp,
+  correlation id, causation id, retry policy, retention policy, and audit
+  relationship where applicable.
+- Messaging workflows must be asynchronous where appropriate, idempotent,
+  retry-safe, observable, versioned, and designed for dead-letter handling.
+- External connectors must be registered, secured, monitored, scoped, and
+  audited before activation.
+- Webhooks must be signed, versioned, observable, retry-safe, and logged.
+- Synchronization and file exchange must preserve canonical data mapping,
+  schema version, lineage, quality validation, security, and audit.
+- Event bus, message broker, webhook dispatch runtime, inbound webhook
+  runtime, GraphQL runtime, and provider SDK adapters require separate
+  approved implementation phases.
+- Any divergence from Framework 06 requires an approved architectural
+  exception.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
