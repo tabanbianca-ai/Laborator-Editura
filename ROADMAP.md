@@ -1670,6 +1670,7 @@ Status: Active specification.
 Reference:
 
 - `docs/codex/meta-architecture.md`.
+- `docs/codex/canonical-definitions.md`.
 - `docs/codex/reference-models.md`.
 - `docs/codex/module-catalog.md`.
 - `docs/codex/dependency-registry.md`.
@@ -1679,6 +1680,7 @@ Reference:
 - `docs/codex/codex-versioning.md`.
 - `docs/codex/api-contracts.md`.
 - `docs/codex/events.md`.
+- `docs/codex/codex-consolidation-report.md`.
 - `docs/codex/meta-architecture-gap-analysis.md`.
 - `docs/codex/meta-architecture-migration-plan.md`.
 
@@ -1693,6 +1695,9 @@ Roadmap impact:
   registry, reference model registry, standards registry, exception registry,
   Codex version registry, architecture maturity metrics, and controlled Codex
   publication process.
+- Cross-cutting definitions must resolve to the canonical definition registry
+  instead of being redefined independently across modules, frameworks,
+  standards, roadmap sections, or reports.
 - Migration must preserve all validated Phase I-II behavior, all architecture
   standards, all module specifications, and all governance constraints.
 - Future capabilities after Module 26 are specialized extensions unless
@@ -1857,6 +1862,135 @@ Roadmap impact:
   preserve tenant isolation, preserve auditability, preserve observability,
   preserve data governance, and avoid breaking API contracts unless explicitly
   approved through versioning and migration.
+
+## Phase III Framework 07 - Enterprise Security Engineering and Cybersecurity
+
+Status: Active specification.
+
+Reference:
+
+- `docs/frameworks/security-engineering/overview.md`.
+- `docs/frameworks/security-engineering/security-architecture.md`.
+- `docs/frameworks/security-engineering/identity-security.md`.
+- `docs/frameworks/security-engineering/data-protection.md`.
+- `docs/frameworks/security-engineering/vulnerability-management.md`.
+- `docs/frameworks/security-engineering/incident-response.md`.
+- `docs/frameworks/security-engineering/security-monitoring.md`.
+- `docs/frameworks/security-engineering/compliance-audit.md`.
+- `docs/frameworks/security-engineering/migration-plan.md`.
+
+Roadmap impact:
+
+- Framework 07 is a specialized Phase III governance framework after the
+  Enterprise Meta-Architecture and Codex Governance Framework.
+- It does not add runtime security behavior by itself.
+- It defines the canonical standards for Zero Trust, identity security, access
+  security, application security, API security, infrastructure security, data
+  protection, AI security, supply chain security, cryptography, key
+  management, secrets management, threat detection, incident response,
+  vulnerability management, monitoring, audit, and continuous compliance.
+- Future MFA enforcement, SSO, federation, WAF, SIEM, managed vault, managed
+  key services, vulnerability registry, incident registry, advanced
+  monitoring, and Kubernetes security controls must conform to this framework.
+- Future implementation must remain incremental, preserve server-derived
+  identity, preserve tenant isolation, preserve Need-to-Know, preserve audit,
+  preserve validated APIs, and avoid weakening existing controls.
+
+## Phase III Framework 08 - Enterprise Documentation, Knowledge Management and Technical Writing
+
+Status: Active specification.
+
+Reference:
+
+- `docs/frameworks/documentation-governance/overview.md`.
+- `docs/frameworks/documentation-governance/documentation-standards.md`.
+- `docs/frameworks/documentation-governance/knowledge-management.md`.
+- `docs/frameworks/documentation-governance/glossary-governance.md`.
+- `docs/frameworks/documentation-governance/versioning.md`.
+- `docs/frameworks/documentation-governance/review-process.md`.
+- `docs/frameworks/documentation-governance/publication-process.md`.
+- `docs/frameworks/documentation-governance/compliance-audit.md`.
+- `docs/frameworks/documentation-governance/migration-plan.md`.
+
+Roadmap impact:
+
+- Framework 08 is a specialized Phase III governance framework after the
+  Enterprise Meta-Architecture and Codex Governance Framework.
+- It does not add runtime documentation tooling by itself.
+- It defines the canonical standards for documentation-as-code, single source
+  of truth, documentation structure, versioning, glossary governance, review,
+  publication, audit, knowledge management, searchability, and long-term
+  maintainability.
+- Future documentation portals, generated API references, documentation search,
+  knowledge graph exports, user manuals, administrator manuals, and release
+  publication automation must conform to this framework.
+- Future documentation work must remain incremental, preserve references,
+  preserve dependencies, preserve version history, preserve canonical
+  terminology, and avoid duplicating canonical definitions.
+
+## Phase III Framework 09 - Enterprise Quality, Architecture Review and Continuous Improvement
+
+Status: Active specification.
+
+Reference:
+
+- `docs/frameworks/quality-governance/overview.md`.
+- `docs/frameworks/quality-governance/architecture-review.md`.
+- `docs/frameworks/quality-governance/quality-metrics.md`.
+- `docs/frameworks/quality-governance/maturity-model.md`.
+- `docs/frameworks/quality-governance/technical-debt.md`.
+- `docs/frameworks/quality-governance/improvement-roadmap.md`.
+- `docs/frameworks/quality-governance/compliance-audit.md`.
+- `docs/frameworks/quality-governance/review-procedures.md`.
+- `docs/frameworks/quality-governance/final-certification.md`.
+
+Roadmap impact:
+
+- Framework 09 is a specialized Phase III governance framework after the
+  Enterprise Meta-Architecture and Codex Governance Framework.
+- It does not add runtime quality tooling by itself.
+- It defines the canonical standards for architecture review, solution review,
+  quality metrics, maturity assessment, technical debt management, corrective
+  actions, continuous improvement, review procedures, compliance audit, and
+  final certification.
+- Future quality dashboards, review engines, technical debt registries,
+  maturity reporting, certification workflows, and continuous improvement
+  automation must conform to this framework.
+- Future implementation must remain incremental, preserve validated
+  functionality, preserve auditability, preserve Human Final Authority,
+  preserve documentation governance, and avoid certifying components without
+  evidence.
+
+## Phase IV Standard 01 - Canonical Naming, Identification and Versioning
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/naming-versioning/overview.md`.
+- `docs/standards/naming-versioning/naming-conventions.md`.
+- `docs/standards/naming-versioning/identifiers.md`.
+- `docs/standards/naming-versioning/versioning.md`.
+- `docs/standards/naming-versioning/metadata-standard.md`.
+- `docs/standards/naming-versioning/lifecycle.md`.
+- `docs/standards/naming-versioning/compliance-audit.md`.
+- `docs/standards/naming-versioning/migration-plan.md`.
+
+Roadmap impact:
+
+- Standard 01 is the first Phase IV canonical standard after the nine Phase
+  III cross-cutting frameworks.
+- It does not add runtime registry behavior by itself.
+- It defines canonical rules for naming, identity, UUIDs, display names, short
+  names, versions, statuses, domains, owners, classifications, lifecycle
+  states, metadata, traceability, and audit.
+- Future artifact registries, API catalogs, event catalogs, database schema
+  catalogs, AI asset registries, documentation indexes, infrastructure
+  inventories, and compliance automation must conform to this standard.
+- Future implementation must remain incremental, preserve validated runtime
+  behavior, avoid breaking API contracts, avoid destructive database renames,
+  preserve references, and use aliases and compatibility mappings before
+  disruptive renames.
 
 ## MVP Scope
 
