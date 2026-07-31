@@ -65,6 +65,15 @@ The 25 fundamental enterprise modules are:
 | --- | --- | --- |
 | 26 | Enterprise Meta-Architecture and Codex Governance Framework | `docs/codex/meta-architecture.md` |
 
+## Phase III Specialized Frameworks
+
+Specialized frameworks extend Codex Governance without becoming new
+fundamental enterprise modules.
+
+| Framework | Name | Canonical overview |
+| --- | --- | --- |
+| Framework 02 | User Experience, Design System and UI Governance | `docs/frameworks/ui-governance/design-system.md` |
+
 ## Fundamental Architecture Closure
 
 The 25 Phase II modules define the fundamental enterprise architecture:
