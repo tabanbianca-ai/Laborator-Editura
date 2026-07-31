@@ -2172,6 +2172,59 @@ Data Engineering rules:
 - No schema, migration, integration, AI data flow, or data model may diverge
   from this framework without an approved architectural exception.
 
+## Phase III Framework 04 - AI Engineering, Prompt Governance and Intelligent Automation
+
+The official AI Engineering, Prompt Governance and Intelligent Automation
+Framework is documented in `docs/frameworks/ai-engineering/overview.md`.
+
+This framework defines mandatory standards for designing, developing,
+orchestrating, evaluating, auditing, and governing all AI-based capabilities in
+Laborator Editura. It complements AI Orchestration, AI Governance, Enterprise
+Meta-Architecture, Data Engineering, Policy Engine, Audit, Observability, and
+Need-to-Know access.
+
+Framework 04 does not introduce new runtime behavior by itself. It establishes
+the mandatory AI architecture baseline that all AI agents, prompt registries,
+model registries, provider integrations, RAG workflows, knowledge bases,
+evaluation processes, cost controls, and intelligent automation workflows must
+follow.
+
+The supporting AI Engineering documents are:
+
+1. `docs/frameworks/ai-engineering/overview.md`.
+2. `docs/frameworks/ai-engineering/agent-registry.md`.
+3. `docs/frameworks/ai-engineering/prompt-registry.md`.
+4. `docs/frameworks/ai-engineering/model-registry.md`.
+5. `docs/frameworks/ai-engineering/rag-architecture.md`.
+6. `docs/frameworks/ai-engineering/evaluation.md`.
+7. `docs/frameworks/ai-engineering/cost-management.md`.
+8. `docs/frameworks/ai-engineering/compliance-audit.md`.
+9. `docs/frameworks/ai-engineering/migration-plan.md`.
+
+AI Engineering rules:
+
+- No AI service, agent, prompt, model integration, RAG workflow, or automation
+  workflow may operate outside this framework.
+- Functional modules must request AI capabilities through AI Orchestration and
+  must not call provider SDKs directly.
+- Production prompts must be governed as versioned artifacts and must not be
+  embedded as unmanaged module code.
+- Models must be registered, evaluated, approved where required, and selected
+  through provider-independent capability routing.
+- AI workflows must record agent, prompt version, model version, provider,
+  context, cost, token usage, actor, organization, workflow, evaluation, and
+  audit metadata where available.
+- RAG workflows must use approved, classified, licensed, scoped, and cited
+  knowledge sources.
+- AI output must be explainable and reproducible as far as the execution
+  context allows.
+- AI cost and quota policies must be checked before restricted executions.
+- AI may recommend, explain, draft, summarize, evaluate, and coordinate, but
+  it must not approve, publish, grant rights, change security, alter
+  governance, or bypass workflow.
+- Any divergence from Framework 04 requires an approved architectural
+  exception.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
