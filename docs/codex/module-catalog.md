@@ -100,6 +100,7 @@ cross-platform implementation rules rather than new product modules.
 | Standard | Name | Canonical overview |
 | --- | --- | --- |
 | Standard 01 | Canonical Naming, Identification and Versioning | `docs/standards/naming-versioning/overview.md` |
+| Standard 02 | Canonical Data Model and Metadata | `docs/standards/data-model/overview.md` |
 
 ## Fundamental Architecture Closure
 
