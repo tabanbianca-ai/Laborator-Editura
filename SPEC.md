@@ -2677,6 +2677,75 @@ Canonical API, Event and Integration rules:
 - Any divergence from Standard 03 requires an approved architectural
   exception.
 
+## Phase IV Standard 04 - Canonical AI Assets, Prompt and Model
+
+The official Canonical AI Assets, Prompt and Model Standard is documented in
+`docs/standards/ai-assets/overview.md`.
+
+This standard defines mandatory rules for designing, identifying,
+documenting, versioning, evaluating, securing, auditing, and governing every
+AI asset across AI agents, AI models, embedding models, prompt templates,
+system prompts, AI workflows, knowledge bases, RAG collections, evaluation
+datasets, AI policies, and AI configurations.
+
+Standard 04 does not introduce external provider SDK integrations, real AI
+calls, runtime prompt registry persistence, runtime model registry
+persistence, runtime RAG indexing, runtime evaluation engine, new API
+contracts, database migrations, UI changes, Docker changes, or staging
+changes by itself. It establishes the canonical AI asset governance baseline
+that all existing and future AI capabilities must follow.
+
+The supporting AI Assets Standard documents are:
+
+1. `docs/standards/ai-assets/overview.md`.
+2. `docs/standards/ai-assets/asset-catalog.md`.
+3. `docs/standards/ai-assets/prompt-standard.md`.
+4. `docs/standards/ai-assets/model-standard.md`.
+5. `docs/standards/ai-assets/agent-standard.md`.
+6. `docs/standards/ai-assets/rag-standard.md`.
+7. `docs/standards/ai-assets/compliance-audit.md`.
+8. `docs/standards/ai-assets/migration-plan.md`.
+
+Canonical AI Assets, Prompt and Model rules:
+
+- Every AI asset must define UUID, canonical name, display name, asset type,
+  version, status, owner, lifecycle state, description, dependencies,
+  metadata, and audit information.
+- Canonical AI asset types are AI Agent, Prompt Template, System Prompt, AI
+  Model, Embedding Model, RAG Collection, Knowledge Base, Evaluation Dataset,
+  AI Workflow, and AI Policy.
+- Every prompt must define UUID, prompt name, purpose, prompt version,
+  supported models, input schema, output schema, constraints, safety rules,
+  evaluation metrics, owner, lifecycle state, approval status,
+  classification, and audit information.
+- Every AI model must define provider, model identifier, model version,
+  context window, token limits, cost profile, latency profile, supported
+  languages, supported modalities, compatibility matrix, safety profile,
+  evaluation results, owner, lifecycle state, and audit information.
+- Every AI agent must define mission, responsibilities, limits, authority,
+  input sources, output targets, permissions, accessible knowledge bases,
+  allowed models, allowed prompt versions, workflow dependencies, escalation
+  rules, human approval requirements, evaluation requirements, and audit
+  information.
+- Every RAG collection must define UUID, collection name, source documents,
+  chunking strategy, embedding model, metadata schema, access policy, refresh
+  policy, retention policy, classification, license status, source authority,
+  evaluation metrics, and audit information.
+- AI evaluation must cover accuracy, precision, recall, hallucination rate,
+  response consistency, latency, cost, safety score, and human review score
+  where applicable.
+- AI assets must remain provider-independent, reproducible, versioned,
+  documented, evaluated, secured, cost-aware, and auditable.
+- AI may recommend, draft, explain, summarize, evaluate, classify, and
+  coordinate when authorized, but must not approve content, publish, grant
+  rights, grant access, modify security, change governance, approve its own
+  budget increase, hide audit history, or bypass Human Final Authority.
+- Existing AI Governance, AI Orchestration, Marketplace, Observability,
+  Policy, Cost Governance, and module behavior must not be changed without an
+  approved implementation phase.
+- Any divergence from Standard 04 requires an approved architectural
+  exception.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
