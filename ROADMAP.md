@@ -2024,6 +2024,41 @@ Roadmap impact:
   isolation, preserve Need-to-Know, avoid breaking API contracts, avoid
   destructive schema changes, and map existing models before migration.
 
+## Phase IV Standard 03 - Canonical API, Event and Integration
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/api-governance/overview.md`.
+- `docs/standards/api-governance/rest-standard.md`.
+- `docs/standards/api-governance/event-standard.md`.
+- `docs/standards/api-governance/contract-versioning.md`.
+- `docs/standards/api-governance/webhooks.md`.
+- `docs/standards/api-governance/external-integrations.md`.
+- `docs/standards/api-governance/compliance-audit.md`.
+- `docs/standards/api-governance/migration-plan.md`.
+
+Roadmap impact:
+
+- Standard 03 is the third Phase IV canonical standard and complements
+  Standard 01 and Standard 02.
+- It does not add runtime API gateway replacement, route renaming, event bus
+  runtime, webhook dispatch runtime, provider SDK adapters, database
+  migrations, UI changes, Docker changes, or staging changes by itself.
+- It defines canonical rules for REST APIs, internal APIs, public APIs,
+  optional future GraphQL APIs, events, message contracts, webhooks, external
+  connectors, batch integrations, streaming integrations, AI interfaces, and
+  service-to-service communication.
+- Future API catalogs, OpenAPI contracts, event schema registries, webhook
+  registries, external connector registries, integration observability, and
+  compatibility automation must conform to this standard.
+- Future implementation must remain incremental, preserve validated runtime
+  behavior, preserve server-derived identity, preserve tenant isolation,
+  preserve Need-to-Know, avoid breaking existing API contracts, avoid
+  destructive route or event renames, and map existing contracts before
+  migration.
+
 ## MVP Scope
 
 The MVP includes:
