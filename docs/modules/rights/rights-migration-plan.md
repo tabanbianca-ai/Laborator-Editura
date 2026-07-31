@@ -142,81 +142,12 @@ Deliverables:
 - Search API.
 - Performance baselines.
 
-## Next Recommended Module
+## Codex Governance Reference
 
-Module 6 - Magazine Module Architecture is now documented as the next Phase II
-specification after Rights and Provenance.
+The canonical module sequence, dependency closure, and future-extension rule are
+maintained in `docs/codex/module-catalog.md`,
+`docs/codex/dependency-registry.md`, and `docs/codex/meta-architecture.md`.
 
-Module 7 - AI Orchestration and Editorial Agents Module Architecture is now
-documented after Magazine.
-
-Module 8 - Audio and Narration Module Architecture is now documented after AI
-Orchestration.
-
-Module 9 - Video and Multimedia Module Architecture is now documented after
-Audio and Narration.
-
-Module 10 - Workflow Engine and Business Process Automation Module
-Architecture is now documented after Video and Multimedia.
-
-Module 11 - Notification and Communication Module Architecture is now
-documented after Workflow Engine and Business Process Automation.
-
-Module 12 - Identity, Access Management and Security Module Architecture is
-now documented after Notification and Communication.
-
-Module 13 - Observability, Monitoring and Audit Module Architecture is now
-documented after Identity, Access Management and Security.
-
-Module 14 - Backup, Disaster Recovery and Business Continuity Module
-Architecture is now documented after Observability, Monitoring and Audit.
-
-Module 15 - Search, Indexing and Knowledge Graph Module Architecture is now
-documented after Backup, Disaster Recovery and Business Continuity.
-
-Module 16 - Integration, API Gateway and External Connectors Module
-Architecture is now documented after Search, Indexing and Knowledge Graph.
-
-Module 17 - Configuration, Feature Flags and Platform Administration Module
-Architecture is now documented after Integration, API Gateway and External
-Connectors.
-
-Module 18 - Data Governance, Metadata and Master Data Management Module
-Architecture is now documented after Configuration, Feature Flags and Platform
-Administration.
-
-Module 19 - Accessibility, Localization and Inclusive Experience Module
-Architecture is now documented after Data Governance, Metadata and Master Data
-Management.
-
-Module 20 - Analytics, Business Intelligence and Decision Support Module
-Architecture is now documented after Accessibility, Localization and Inclusive
-Experience.
-
-Module 21 - AI Governance, Model Management and Responsible AI Module
-Architecture is now documented after Analytics, Business Intelligence and
-Decision Support.
-
-Module 22 - DevSecOps, CI/CD, Release and Platform Operations Module
-Architecture is now documented after AI Governance, Model Management and
-Responsible AI.
-
-Module 23 - Quality Assurance, Testing and Validation Module Architecture is
-now documented after DevSecOps, CI/CD, Release and Platform Operations.
-
-Module 24 - Enterprise Architecture, Portfolio and Strategic Governance
-Module Architecture is now documented after Quality Assurance, Testing and
-Validation.
-
-Module 25 - Compliance, Legal Governance and Risk Management Module
-Architecture is now documented after Enterprise Architecture, Portfolio and
-Strategic Governance.
-
-With Module 25, the fundamental Phase II architecture covers the full
-enterprise chain: editorial capabilities, infrastructure, AI, operations,
-governance, quality, strategy, and compliance.
-
-Phase III Module 26 - Enterprise Meta-Architecture and Codex Governance
-Framework is now documented as the supreme Codex governance layer. Future
-capabilities are specialized extensions unless explicitly approved through
-Codex Governance as fundamental architecture.
+This migration plan owns only the local migration strategy for this module. It
+does not redefine the platform module sequence, fundamental architecture
+closure, or future-extension approval rule.
