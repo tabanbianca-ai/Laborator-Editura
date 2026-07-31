@@ -2346,6 +2346,45 @@ Rules:
 - Future Codex Governance implementation must follow
   `docs/codex/meta-architecture-migration-plan.md`.
 
+### User Experience, Design System and UI Governance Framework Directive
+
+Purpose:
+
+- Define Phase III Framework 02 as the official governance layer for all user
+  experience, Design System, component library, navigation, form,
+  localization, accessibility, responsive, and UI performance work.
+
+Rules:
+
+- The canonical Framework 02 entry point is
+  `docs/frameworks/ui-governance/design-system.md`.
+- This directive does not authorize new user-facing functionality by itself.
+- No production UI may be implemented outside the official Design System.
+- All visual decisions must use Design Tokens when a reusable token exists.
+- New reusable UI patterns must be added to the Component Library instead of
+  being duplicated in individual pages.
+- Applications must not create independent visual systems, duplicated
+  component libraries, or module-specific UI rules outside the official
+  framework.
+- User-facing strings must be loaded through localization resources. Mixed
+  language UI is not allowed.
+- Platform Language controls UI text only. It must not alter manuscript
+  content, original language, authoring language, or target language.
+- Interfaces must remain responsive across desktop, laptop, tablet, and mobile
+  form factors.
+- Accessibility is required by default and must be considered for every
+  component, form, navigation surface, editor, table, modal, and approval
+  flow.
+- Navigation, forms, loading states, empty states, error states, warning
+  banners, confirmations, and approval gates must use consistent canonical
+  patterns.
+- UI changes must document token impact, component reuse, accessibility
+  impact, localization impact, responsive behavior, performance impact, and
+  migration notes when relevant.
+- Future UI implementation must use the Framework 02 migration plan and must
+  preserve existing validated routes, workflows, Human Final Authority,
+  Need-to-Know access, security, and audit requirements.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
