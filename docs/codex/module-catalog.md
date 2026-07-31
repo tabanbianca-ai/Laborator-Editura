@@ -73,6 +73,7 @@ fundamental enterprise modules.
 | Framework | Name | Canonical overview |
 | --- | --- | --- |
 | Framework 02 | User Experience, Design System and UI Governance | `docs/frameworks/ui-governance/design-system.md` |
+| Framework 03 | Data Engineering, Information Architecture and Data Governance | `docs/frameworks/data-engineering/overview.md` |
 
 ## Fundamental Architecture Closure
 
