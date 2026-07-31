@@ -104,6 +104,7 @@ cross-platform implementation rules rather than new product modules.
 | Standard 03 | Canonical API, Event and Integration | `docs/standards/api-governance/overview.md` |
 | Standard 04 | Canonical AI Assets, Prompt and Model | `docs/standards/ai-assets/overview.md` |
 | Standard 05 | Canonical Security, Identity and Access | `docs/standards/security-identity/overview.md` |
+| Standard 06 | Canonical Document, Digital Asset and Content | `docs/standards/digital-assets/overview.md` |
 
 ## Fundamental Architecture Closure
 
