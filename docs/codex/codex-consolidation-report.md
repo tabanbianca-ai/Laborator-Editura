@@ -88,6 +88,7 @@ The largest repeated concepts are:
 | Auditability | Repeated across all governance-sensitive modules. | Canonical definition added; audit module and compliance remain owners for detailed audit behavior. |
 | Quality and production readiness | Repeated across release reports, QA, DevSecOps, and framework docs. | Canonical owner is Framework 09. |
 | Naming and versioning | Repeated across database, documentation, release, API, and Codex versioning docs. | Canonical owner is Standard 01. |
+| Canonical data model and metadata | Repeated across domain, logical data, physical database, data governance, JSON Master, API contracts, events, backup, and AI readiness documentation. | Canonical owner is Standard 02, with Framework 03 as data governance framework. |
 | Phase closure and module sequence | Previously repeated in module migration plans. | Canonical owner remains `docs/codex/module-catalog.md`. |
 
 ## Canonical Definitions
@@ -137,6 +138,7 @@ after document owners review each area.
 | Documentation governance | `docs/frameworks/documentation-governance/overview.md` |
 | Quality and certification | `docs/frameworks/quality-governance/overview.md` |
 | Naming and versioning | `docs/standards/naming-versioning/overview.md` |
+| Canonical data model and metadata | `docs/standards/data-model/overview.md` |
 | Data and JSON Master governance | `docs/frameworks/data-engineering/overview.md`, `docs/JSON_MASTER_FORMAT.md` |
 | Security and access | `docs/frameworks/security-engineering/overview.md`, `docs/modules/iam/iam-overview.md` |
 | AI governance | `docs/frameworks/ai-engineering/overview.md`, `docs/modules/ai-governance/ai-governance-overview.md` |
