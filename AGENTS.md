@@ -2429,6 +2429,47 @@ Rules:
 - Any divergence from Framework 03 requires an approved architectural
   exception.
 
+### AI Engineering, Prompt Governance and Intelligent Automation Framework Directive
+
+Purpose:
+
+- Define Phase III Framework 04 as the official governance layer for all AI
+  engineering, agent architecture, prompt governance, model governance, RAG,
+  knowledge bases, evaluation, cost management, safety, explainability,
+  Human-in-the-Loop, lifecycle, and intelligent automation work.
+
+Rules:
+
+- The canonical Framework 04 entry point is
+  `docs/frameworks/ai-engineering/overview.md`.
+- This directive does not authorize new provider integrations, real AI calls,
+  database migrations, runtime prompt registries, runtime model registries,
+  runtime RAG indexing, API changes, UI changes, Docker changes, or staging
+  changes by itself.
+- No AI service, agent, prompt, model integration, RAG workflow, knowledge
+  base workflow, automation workflow, or intelligent recommendation may
+  operate outside this framework.
+- Functional modules must request AI capabilities through AI Orchestration and
+  must not call provider SDKs directly.
+- Production prompts must be governed as versioned artifacts, must preserve
+  output schemas and evaluation expectations, and must not be embedded as
+  unmanaged module code.
+- Models must be registered, evaluated, approved where required, lifecycle
+  managed, and selected through provider-independent capability routing.
+- AI executions must preserve agent, prompt version, model version, provider,
+  context reference, parameters, cost, token usage, actor, organization,
+  workflow, evaluation, and audit metadata where available.
+- RAG workflows must retrieve only from approved, classified, licensed,
+  scoped, cited, and Need-to-Know-compliant knowledge sources.
+- AI cost and quota policies must be checked before restricted execution, and
+  AI must not approve its own budget increase or alter cost history.
+- AI may recommend, explain, draft, summarize, evaluate, coordinate, and
+  detect risks, but it must not approve, publish, grant rights, change
+  security, alter governance, bypass workflow, hide evidence, or expand its
+  own access.
+- Any divergence from Framework 04 requires an approved architectural
+  exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
