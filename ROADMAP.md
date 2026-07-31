@@ -1992,6 +1992,38 @@ Roadmap impact:
   preserve references, and use aliases and compatibility mappings before
   disruptive renames.
 
+## Phase IV Standard 02 - Canonical Data Model and Metadata
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/data-model/overview.md`.
+- `docs/standards/data-model/canonical-model.md`.
+- `docs/standards/data-model/metadata-standard.md`.
+- `docs/standards/data-model/classification.md`.
+- `docs/standards/data-model/relationships.md`.
+- `docs/standards/data-model/schema-evolution.md`.
+- `docs/standards/data-model/compliance-audit.md`.
+- `docs/standards/data-model/migration-plan.md`.
+
+Roadmap impact:
+
+- Standard 02 is the second Phase IV canonical standard and complements
+  Standard 01.
+- It does not add runtime Data Catalog behavior by itself.
+- It defines canonical rules for data object structure, required metadata,
+  data classification, canonical relationships, schema validation, schema
+  evolution, metadata catalog entries, traceability, AI readiness, backward
+  compatibility, and audit.
+- Future canonical data registries, metadata catalogs, schema registries,
+  lineage registries, event payload catalogs, AI data readiness checks, and
+  data compliance automation must conform to this standard.
+- Future implementation must remain incremental, preserve JSON Master
+  compatibility, preserve backup/restore compatibility, preserve tenant
+  isolation, preserve Need-to-Know, avoid breaking API contracts, avoid
+  destructive schema changes, and map existing models before migration.
+
 ## MVP Scope
 
 The MVP includes:
