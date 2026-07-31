@@ -2741,6 +2741,54 @@ Rules:
 - Any divergence from Standard 01 requires an approved architectural
   exception.
 
+### Canonical Data Model and Metadata Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 02 as the official canonical standard for data
+  object structure, metadata, classification, relationships, validation,
+  schema evolution, traceability, interoperability, AI readiness, backward
+  compatibility, and audit across the platform.
+
+Rules:
+
+- The canonical Standard 02 entry point is
+  `docs/standards/data-model/overview.md`.
+- This directive does not authorize runtime Data Catalog implementation,
+  database migrations, API changes, UI changes, Docker changes, staging
+  changes, automatic schema conversion, automatic metadata backfill, or
+  destructive data model migration by itself.
+- Every canonical data object must define UUID, canonical name, display name,
+  object type, version, status, owner, created date, updated date, lifecycle
+  state, metadata, relationships, and audit information.
+- Required metadata includes UUID, canonical identifier, title, description,
+  domain, category, classification, language, keywords, tags, version, status,
+  owner, source, and provenance.
+- Data classification must cover sensitivity, criticality, and provenance.
+- Canonical sensitivity levels are Public, Internal, Confidential, and
+  Restricted. Existing `Highly Restricted` usage maps to Restricted with
+  enhanced controls unless an approved specialized classification extension
+  exists.
+- Canonical criticality levels are Critical, High, Medium, and Low.
+- Canonical provenance types are Native, Imported, Generated, AI Generated,
+  External, and Archived.
+- Canonical relationship types are parent, child, reference, dependency,
+  ownership, composition, association, and derived from.
+- Data validation must cover required fields, unique constraints, referential
+  integrity, schema validation, metadata validation, lifecycle validation,
+  ownership validation, and classification validation.
+- Schema evolution must be versioned, documented, backward compatible when
+  possible, approved, audited, and traceable to impacted models, APIs, events,
+  JSON Master, backups, search indexes, analytics, AI context, integrations,
+  tests, tenant isolation, Need-to-Know, retention, and documentation.
+- AI-generated data must preserve provenance and must not become canonical or
+  approved data without authorized human review.
+- Existing runtime models, DTOs, tables, JSON Master structures, and backup
+  records must be mapped incrementally to the canonical model; they must not
+  be renamed or destructively migrated without approved migration.
+- Any divergence from Standard 02 requires an approved architectural
+  exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
