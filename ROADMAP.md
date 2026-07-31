@@ -1728,6 +1728,37 @@ Roadmap impact:
 - Future UI migration must remain incremental, preserve validated routes and
   workflows, and avoid broad rewrites unless explicitly approved.
 
+## Phase III Framework 03 - Data Engineering, Information Architecture and Data Governance
+
+Status: Active specification.
+
+Reference:
+
+- `docs/frameworks/data-engineering/overview.md`.
+- `docs/frameworks/data-engineering/canonical-models.md`.
+- `docs/frameworks/data-engineering/data-modeling-standards.md`.
+- `docs/frameworks/data-engineering/data-catalog.md`.
+- `docs/frameworks/data-engineering/data-quality.md`.
+- `docs/frameworks/data-engineering/data-lineage.md`.
+- `docs/frameworks/data-engineering/data-versioning.md`.
+- `docs/frameworks/data-engineering/data-migration.md`.
+- `docs/frameworks/data-engineering/compliance-audit.md`.
+- `docs/frameworks/data-engineering/migration-plan.md`.
+
+Roadmap impact:
+
+- Framework 03 is a specialized Phase III governance framework after the
+  Enterprise Meta-Architecture and Codex Governance Framework.
+- It does not add runtime functionality by itself.
+- It defines the canonical standards for data engineering, information
+  architecture, canonical data models, metadata, data catalog, data quality,
+  lineage, versioning, migration, retention, and AI-ready data.
+- Future database, schema, model, metadata, integration, analytics, search,
+  export, and AI data-flow work must conform to this framework.
+- Future implementation must remain incremental, preserve validated runtime
+  behavior, preserve tenant isolation, preserve audit and backup/restore
+  compatibility, and avoid broad schema redesign unless explicitly approved.
+
 ## MVP Scope
 
 The MVP includes:
