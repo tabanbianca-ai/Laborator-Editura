@@ -303,6 +303,8 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   official Canonical Naming, Identification and Versioning Standard.
 - `docs/standards/data-model/overview.md` - Phase IV Standard 02, official
   Canonical Data Model and Metadata Standard.
+- `docs/standards/api-governance/overview.md` - Phase IV Standard 03,
+  official Canonical API, Event and Integration Standard.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -525,3 +527,9 @@ domain model, editorial object, digital asset, workflow object, AI asset,
 security object, infrastructure object, audit object, and metadata record is
 structured, classified, related, validated, versioned, traced, and governed as
 part of the platform's canonical information model.
+
+Canonical API, Event and Integration Standard defines how every REST API,
+internal API, public API, event, message contract, webhook, external
+connector, AI interface, and service-to-service integration is designed,
+versioned, documented, secured, observed, audited, and evolved without
+breaking the unified editorial ecosystem.
