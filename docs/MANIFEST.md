@@ -305,6 +305,8 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   Canonical Data Model and Metadata Standard.
 - `docs/standards/api-governance/overview.md` - Phase IV Standard 03,
   official Canonical API, Event and Integration Standard.
+- `docs/standards/ai-assets/overview.md` - Phase IV Standard 04, official
+  Canonical AI Assets, Prompt and Model Standard.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
@@ -533,3 +535,9 @@ internal API, public API, event, message contract, webhook, external
 connector, AI interface, and service-to-service integration is designed,
 versioned, documented, secured, observed, audited, and evolved without
 breaking the unified editorial ecosystem.
+
+Canonical AI Assets, Prompt and Model Standard defines how every AI agent,
+prompt, prompt template, system prompt, model, embedding model, RAG
+collection, knowledge base, evaluation dataset, AI workflow, AI policy, and AI
+configuration is identified, versioned, evaluated, governed, audited, and
+evolved under Human Final Authority.
