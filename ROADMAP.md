@@ -2134,6 +2134,43 @@ Roadmap impact:
   identity headers, avoid exposing secrets, avoid weakening audit, and map
   existing identities and permissions before migration.
 
+## Phase IV Standard 06 - Canonical Document, Digital Asset and Content
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/digital-assets/overview.md`.
+- `docs/standards/digital-assets/master-document-standard.md`.
+- `docs/standards/digital-assets/metadata-standard.md`.
+- `docs/standards/digital-assets/content-lifecycle.md`.
+- `docs/standards/digital-assets/relationships.md`.
+- `docs/standards/digital-assets/preservation-policy.md`.
+- `docs/standards/digital-assets/compliance-audit.md`.
+- `docs/standards/digital-assets/migration-plan.md`.
+
+Roadmap impact:
+
+- Standard 06 is the sixth Phase IV canonical standard and complements
+  Standards 01-05, Documentation Governance, Data Governance, Library,
+  Publishing, Rights and Provenance, and JSON Master.
+- It does not add new storage infrastructure, file upload runtime, media
+  processing runtime, format conversion runtime, database migrations, API
+  changes, UI changes, Docker changes, or staging changes by itself.
+- It defines canonical rules for manuscripts, books, eBooks, articles,
+  magazine issues, poems, children's books, illustrations, images, audio,
+  video, PDFs, EPUB, DOCX, presentations, translation files, glossaries,
+  templates, marketing materials, metadata files, and archival records.
+- Future digital asset registries, canonical master mapping, derivative
+  registries, metadata completeness checks, relationship registries,
+  duplicate/orphan detection, preservation policies, and integrity checks must
+  conform to this standard.
+- Future implementation must remain incremental, preserve validated Library,
+  Documents, Author Studio, Translation, Rights, Publishing, Export, Public
+  Portal, Multimedia, Media Localization, Audio, Video, Magazine,
+  Accessibility, Backup, and JSON Master behavior, and map assets before
+  migration.
+
 ## MVP Scope
 
 The MVP includes:
