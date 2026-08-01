@@ -3239,6 +3239,72 @@ Rules:
 - Any divergence from Standard 10 requires an approved architectural
   exception.
 
+### Canonical Internationalization, Localization and Terminology Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 11 as the official canonical standard for
+  internationalization, localization, interface language purity, terminology,
+  regional formatting, multimedia localization, localized user messages, and
+  localization audit.
+
+Rules:
+
+- The canonical Standard 11 entry point is
+  `docs/standards/localization/overview.md`.
+- This directive does not authorize a new runtime localization store,
+  translation management runtime, mobile application code, database
+  migrations, API changes, UI behavior changes, Docker changes, staging
+  changes, or breaking behavior by itself.
+- Technical implementation remains English for code, identifiers, schemas,
+  contracts, database objects, technical configuration, tests, and technical
+  documentation.
+- User-facing text must be externalized through canonical localization
+  resources and must not be hardcoded in components, backend user messages,
+  notifications, document generators, or media pipelines.
+- Supported v1.0 interface language families are `ro`, `en`, `es`, `fr`,
+  `pt`, `it`, and `de`; Romanian is the primary interface language.
+- A localized interface must display only the active Platform Language except
+  for approved proper names, brands, legal names, technical standards or file
+  formats without approved localized equivalents, and intentionally quoted
+  content.
+- Platform Language controls interface text and AI conversation language only.
+  It must not change Original Language, Authoring Language, Target Language,
+  document content, subtitle language, audio language, or derived asset
+  language.
+- Localization keys must be English, semantic, stable, namespace-based, and
+  independent of visual position.
+- Published keys must not be renamed without compatibility analysis and a
+  migration plan.
+- General UI terminology must reuse established localized terminology from
+  operating systems and authoritative technical sources before platform terms
+  are created.
+- The platform terminology registry is reserved for specialized, ambiguous,
+  or platform-specific terms that require consistency.
+- Regional formatting must handle date, time, time zone, numbers, decimal
+  separators, currency, units, pluralization, name order, sorting, and text
+  direction while preserving canonical internal values.
+- Multimedia localization must preserve source asset, source version,
+  language, contributor or AI agent where applicable, approval, rights, and
+  accessibility metadata.
+- AI may propose translations, detect missing text, verify terminology,
+  compare variants, and identify mixed-language text, but it may not validate
+  official terminology, publish translations, override approved terminology,
+  hide missing translations, or replace required human approval.
+- Missing translations, fallback usage, localization resource changes,
+  terminology changes, approvals, rejections, published translations, AI
+  localization changes, and version changes must be audited.
+- Future localization work must inventory current strings, keys, files,
+  backend messages, notification templates, document generators, multimedia
+  resources, terminology definitions, regional formats, duplicate or
+  divergent translations, and mixed-language surfaces before consolidation.
+- Existing i18n helpers, language policy tests, Accessibility and
+  Localization Module behavior, UI Governance, Documentation Governance,
+  Testing Standard, and validated runtime behavior must not be changed without
+  an approved implementation phase.
+- Any divergence from Standard 11 requires an approved architectural
+  exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
