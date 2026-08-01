@@ -2889,6 +2889,296 @@ Canonical Document, Digital Asset and Content rules:
 - Any divergence from Standard 06 requires an approved architectural
   exception.
 
+## Phase IV Standard 07 - Canonical Workflow, Process and Business Rules
+
+The official Canonical Workflow, Process and Business Rules Standard is
+documented in `docs/standards/workflow-governance/overview.md`.
+
+This standard defines mandatory rules for designing, documenting, executing,
+observing, versioning, auditing, and governing every workflow, business
+process, operational rule, approval chain, state machine, decision table,
+automation process, and event-driven process in the platform.
+
+Standard 07 does not introduce new runtime workflow engine behavior, database
+migrations, API changes, UI changes, Docker changes, staging changes, or
+automation providers by itself. It establishes the canonical workflow model,
+business rule model, state machine model, exception handling model,
+observability model, compliance audit, and migration plan that all current
+and future workflows must follow.
+
+The supporting Workflow Governance Standard documents are:
+
+1. `docs/standards/workflow-governance/overview.md`.
+2. `docs/standards/workflow-governance/workflow-model.md`.
+3. `docs/standards/workflow-governance/business-rules.md`.
+4. `docs/standards/workflow-governance/state-machines.md`.
+5. `docs/standards/workflow-governance/exception-handling.md`.
+6. `docs/standards/workflow-governance/observability.md`.
+7. `docs/standards/workflow-governance/compliance-audit.md`.
+8. `docs/standards/workflow-governance/migration-plan.md`.
+
+Canonical Workflow, Process and Business Rules:
+
+- All workflows must follow Workflow First, Business Rule Separation, Event
+  Driven, Deterministic Execution, Idempotent Operations, Human in the Loop,
+  Full Traceability, Reusability, Version Controlled, and Observable by
+  Design.
+- Every workflow must define UUID, canonical identifier, workflow name,
+  workflow type, version, status, owner, trigger, input, output, business
+  rules, dependencies, lifecycle state, metadata, and audit information.
+- Every workflow must document trigger, preconditions, input, processing
+  steps, decision points, business rules, human tasks, AI tasks, outputs,
+  completion conditions, error handling, and rollback strategy.
+- Every business rule must define UUID, rule name, description, scope,
+  condition, action, priority, exception policy, owner, and version.
+- Workflow state machines must map to Created, Pending, In Progress, Waiting
+  Approval, Approved, Executing, and Completed, with Rejected, Cancelled,
+  Failed, Rolled Back, and Archived as alternative states.
+- Every workflow must define retry policy, timeout policy, compensation
+  actions, rollback strategy, escalation rules, and human intervention policy.
+- Every workflow execution must record workflow ID, execution ID, trigger,
+  start time, end time, duration, status, decision path, errors, and metrics.
+- Workflow changes, rule changes, version changes, approvals, executions,
+  exceptions, and manual interventions must be audited.
+- AI may suggest, explain, summarize, detect blockers, and provide workflow
+  evidence, but it must not approve, publish, grant rights, bypass workflow,
+  modify security, change governance, or replace Human Final Authority.
+- Existing Workflow, Editorial Pipeline, Translation, Review, QA, Semantic
+  Fidelity, Terminology, Publishing, Export, Rights, AI Governance,
+  Scheduling, Policy, Backup, Observability, Integration, and validated
+  runtime behavior must not be changed without an approved implementation
+  phase.
+- Any divergence from Standard 07 requires an approved architectural
+  exception.
+
+## Phase IV Standard 08 - Canonical Configuration, Environment and Deployment
+
+The official Canonical Configuration, Environment and Deployment Standard is
+documented in `docs/standards/configuration-governance/overview.md`.
+
+This standard defines mandatory rules for managing configuration, runtime
+environments, deployment artifacts, infrastructure configuration, feature
+flags, release configuration, runtime parameters, secret references, service
+discovery, and environment promotion across the platform.
+
+Standard 08 does not introduce new runtime Configuration Service behavior,
+feature flag runtime behavior, Kubernetes adoption, deployment pipeline
+replacement, database migrations, API changes, UI changes, Docker changes,
+staging changes, or secret vault provider integration by itself. It
+establishes the canonical configuration model, environment standard,
+deployment standard, feature flag standard, runtime configuration standard,
+compliance audit, and migration plan that all current and future
+configuration and deployment artifacts must follow.
+
+The supporting Configuration Governance Standard documents are:
+
+1. `docs/standards/configuration-governance/overview.md`.
+2. `docs/standards/configuration-governance/configuration-model.md`.
+3. `docs/standards/configuration-governance/environment-standard.md`.
+4. `docs/standards/configuration-governance/deployment-standard.md`.
+5. `docs/standards/configuration-governance/feature-flags.md`.
+6. `docs/standards/configuration-governance/runtime-configuration.md`.
+7. `docs/standards/configuration-governance/compliance-audit.md`.
+8. `docs/standards/configuration-governance/migration-plan.md`.
+
+Canonical Configuration, Environment and Deployment rules:
+
+- All configurations must follow Configuration as Code, Immutable
+  Infrastructure, Environment Isolation, Declarative Configuration, Secure by
+  Default, Reproducibility, Version Controlled, Audit by Default,
+  Environment Consistency, and Automated Deployment.
+- Every configuration must define UUID, canonical identifier, configuration
+  name, configuration type, environment, version, owner, status,
+  dependencies, security classification, metadata, and audit information.
+- The only canonical environments are Local, Development, Integration,
+  Testing, Staging, Production, and Disaster Recovery. Additional
+  environments require approved architecture exception.
+- Every configuration must define configuration scope, default values,
+  validation rules, dependencies, override policy, rollback strategy, change
+  history, and approval policy.
+- Every deployment must define deployment ID, target environment, version,
+  deployment strategy, rollback version, health checks, verification steps,
+  and approval status.
+- Supported deployment strategies are Rolling Update, Blue-Green Deployment,
+  Canary Deployment, and Recreate Deployment.
+- Every feature flag must define UUID, name, description, environment scope,
+  default state, activation rules, expiration date, and owner.
+- Promotion follows only Development -> Integration -> Testing -> Staging ->
+  Production unless a formal, audited exception is approved.
+- Configuration changes, environment changes, deployments, rollbacks, feature
+  flag activation or deactivation, runtime parameter changes, and approved
+  exceptions must be audited.
+- Secrets must be represented by approved secret references and must not be
+  stored as plaintext configuration values.
+- AI may suggest, explain, validate, and summarize configuration or
+  deployment risk, but it must not change protected configuration, expose
+  secrets, approve production changes, enable production-impacting flags,
+  bypass deployment validation, or replace Human Final Authority.
+- Existing Configuration, DevSecOps, Platform Engineering, Security
+  Engineering, Infrastructure Pack, staging deployment, GitHub Actions,
+  backup, restore, monitoring, validation, and runtime behavior must not be
+  changed without an approved implementation phase.
+- Any divergence from Standard 08 requires an approved architectural
+  exception.
+
+## Phase IV Standard 09 - Canonical Logging, Audit, Monitoring and Observability
+
+The official Canonical Logging, Audit, Monitoring and Observability Standard
+is documented in `docs/standards/observability/overview.md`.
+
+This standard defines mandatory rules for collecting, correlating,
+monitoring, auditing, retaining, and reviewing all observability and
+audit-relevant events generated by applications, services, APIs, AI agents,
+databases, workflow engines, infrastructure, integrations, deployment
+processes, and security services.
+
+Standard 09 does not introduce external APM integration, Prometheus, Grafana,
+Sentry, SIEM integration, runtime telemetry collector behavior, alert manager
+runtime behavior, dashboard runtime behavior, database migrations, API
+changes, UI changes, Docker changes, or staging changes by itself. It
+establishes the canonical observability event model, logging standard,
+metrics standard, tracing standard, health check standard, alerting standard,
+compliance audit, and migration plan that all current and future telemetry
+sources must follow.
+
+The supporting Observability Standard documents are:
+
+1. `docs/standards/observability/overview.md`.
+2. `docs/standards/observability/logging-standard.md`.
+3. `docs/standards/observability/metrics-standard.md`.
+4. `docs/standards/observability/tracing-standard.md`.
+5. `docs/standards/observability/health-checks.md`.
+6. `docs/standards/observability/alerting-standard.md`.
+7. `docs/standards/observability/compliance-audit.md`.
+8. `docs/standards/observability/migration-plan.md`.
+
+Canonical Logging, Audit, Monitoring and Observability rules:
+
+- All components must follow Observability by Default, Structured Logging,
+  End-to-End Traceability, Audit by Design, Correlation First, Real-Time
+  Monitoring, Immutable Audit, Centralized Collection, Automation First, and
+  Compliance Ready.
+- Every observability event must define UUID, timestamp, source, component,
+  environment, severity, category, correlation ID, trace ID, span ID,
+  user/service identity, message, and metadata.
+- Canonical log categories include system logs, functional logs, AI logs,
+  security logs, and audit logs.
+- All applicable services must publish CPU usage, memory usage, disk usage,
+  network usage, request rate, error rate, response time, queue length, AI
+  cost, token consumption, and availability metrics.
+- Every distributed trace must define trace ID, parent span, child span,
+  service name, operation, duration, dependencies, and status.
+- Every applicable service must expose or report liveness, readiness,
+  startup, dependency health, database health, AI provider health, and queue
+  health.
+- Every alert must define alert ID, severity, source, trigger condition,
+  escalation policy, notification channels, resolution status, and owner.
+- Standard dashboards include Platform Overview, Editorial Operations, AI
+  Operations, Infrastructure, Security, Compliance, Publishing, and Business
+  Metrics.
+- Observability explains system behavior. Audit proves who acted, under
+  which authority, against which resource, and when. Logs, metrics, and
+  traces must not replace audit events.
+- Configuration changes, privileged access, policy changes, AI executions,
+  deployments, incidents, and incident remediation must be audited.
+- AI may diagnose, summarize incidents, suggest remediation, and identify
+  telemetry gaps, but it must not hide alerts, delete alerts, suppress
+  critical alerts automatically, execute infrastructure actions
+  automatically, modify security policy, or approve incident resolution.
+- Existing Observability, Health, Platform Engineering, Security, Backup,
+  Workflow, AI Governance, Gateway, Infrastructure Pack, staging, CI, and
+  validated runtime behavior must not be changed without an approved
+  implementation phase.
+- Any divergence from Standard 09 requires an approved architectural
+  exception.
+
+## Phase IV Standard 10 - Canonical Testing, Validation and Quality Gates
+
+The official Canonical Testing, Validation and Quality Gates Standard is
+documented in `docs/standards/testing-validation/overview.md`.
+
+This standard defines mandatory rules for testing, validating, accepting, and
+promoting every platform component, including applications, services, APIs,
+events, data models, workflows, UI components, AI agents, editorial
+processes, publication formats, infrastructure, integrations, migrations,
+configuration, and deployments.
+
+Standard 10 does not introduce a new test management runtime, defect tracking
+runtime, quality gate runtime, coverage service, CI/CD workflows, database
+migrations, API changes, UI changes, Docker changes, or staging changes by
+itself. It establishes the canonical test case model, test execution model,
+requirements traceability standard, test data management standard, quality
+gate standard, AI validation standard, security testing standard,
+accessibility and localization testing standard, migration testing standard,
+compliance audit, and migration plan that all current and future validation
+must follow.
+
+The supporting Testing and Validation Standard documents are:
+
+1. `docs/standards/testing-validation/overview.md`.
+2. `docs/standards/testing-validation/test-case-model.md`.
+3. `docs/standards/testing-validation/test-execution-model.md`.
+4. `docs/standards/testing-validation/requirements-traceability.md`.
+5. `docs/standards/testing-validation/test-data-management.md`.
+6. `docs/standards/testing-validation/quality-gates.md`.
+7. `docs/standards/testing-validation/ai-validation.md`.
+8. `docs/standards/testing-validation/security-testing.md`.
+9. `docs/standards/testing-validation/accessibility-testing.md`.
+10. `docs/standards/testing-validation/migration-testing.md`.
+11. `docs/standards/testing-validation/compliance-audit.md`.
+12. `docs/standards/testing-validation/migration-plan.md`.
+
+Canonical Testing, Validation and Quality Gates rules:
+
+- All validation must follow Quality by Design, Early Testing, Automation by
+  Default, Full Traceability, Repeatability, Independent Verification,
+  Risk-Based Testing, Verifiable Evidence, Regression Protection, and No
+  Quality Gate Bypass.
+- Every test case must define ID, canonical identifier, title, description,
+  requirement IDs, module, test type, priority, risk level, preconditions,
+  test data, execution steps, expected result, automation status, owner,
+  version, lifecycle state, created date, and updated date.
+- Every test execution must define execution ID, test case ID, test case
+  version, environment, application version, source commit, executed by,
+  start time, completion time, result, evidence, defect IDs, and correlation
+  ID.
+- Allowed execution results are `PASSED`, `FAILED`, `BLOCKED`, `SKIPPED`,
+  and `NOT_EXECUTED`. `SKIPPED` and `BLOCKED` are not equivalent to
+  `PASSED`.
+- Every requirement must be traceable through Requirement -> Acceptance
+  Criterion -> Test Case -> Execution -> Evidence -> Approval.
+- Test data must be controlled, reproducible, versioned, separate from
+  production, free of secrets, anonymized or synthetic when derived from real
+  data, and cleaned after testing where necessary.
+- Testing environments follow Standard 08. Production allows only health
+  checks, controlled smoke tests, synthetic checks, non-destructive checks,
+  and explicitly approved validations.
+- Every release must meet minimum thresholds for critical tests, critical
+  vulnerabilities, data loss risk, contract compatibility, regression,
+  accessibility, migration reversibility, rollback, documentation, and
+  traceability.
+- Release approval must follow Code Validation -> Contract Validation ->
+  Security Validation -> Data Migration Validation -> Accessibility
+  Validation -> AI Validation -> Regression Validation -> Release Approval.
+- Defect severities are `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, and
+  `INFORMATIONAL`.
+- AI validation must use versioned evaluation sets, positive and negative
+  examples, edge cases, terminology rules, editorial criteria, reference
+  outputs, automated evaluation, and human evaluation where risk requires it.
+- AI must not definitively validate publication, rights, permissions, legal
+  compliance, final editorial decisions, security policy, governance changes,
+  or release approval.
+- Security, accessibility, localization, migration, backup, restore, and
+  regression validations must be included in release gating according to risk.
+- Test case changes, executions, results, defects, quality gates, approvals,
+  waivers, skipped tests, skip reasons, and release approval must be audited.
+- Existing tests, fixtures, CI, staging validation, infrastructure validation,
+  Quality Assurance, DevSecOps, Quality Governance, Observability, Security,
+  Backup, AI Governance, and validated runtime behavior must not be changed
+  without an approved implementation phase.
+- Any divergence from Standard 10 requires an approved architectural
+  exception.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
