@@ -311,6 +311,14 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   official Canonical Security, Identity and Access Standard.
 - `docs/standards/digital-assets/overview.md` - Phase IV Standard 06,
   official Canonical Document, Digital Asset and Content Standard.
+- `docs/standards/workflow-governance/overview.md` - Phase IV Standard 07,
+  official Canonical Workflow, Process and Business Rules Standard.
+- `docs/standards/configuration-governance/overview.md` - Phase IV Standard
+  08, official Canonical Configuration, Environment and Deployment Standard.
+- `docs/standards/observability/overview.md` - Phase IV Standard 09,
+  official Canonical Logging, Audit, Monitoring and Observability Standard.
+- `docs/standards/testing-validation/overview.md` - Phase IV Standard 10,
+  official Canonical Testing, Validation and Quality Gates Standard.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
