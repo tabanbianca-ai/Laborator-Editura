@@ -2171,6 +2171,162 @@ Roadmap impact:
   Accessibility, Backup, and JSON Master behavior, and map assets before
   migration.
 
+## Phase IV Standard 07 - Canonical Workflow, Process and Business Rules
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/workflow-governance/overview.md`.
+- `docs/standards/workflow-governance/workflow-model.md`.
+- `docs/standards/workflow-governance/business-rules.md`.
+- `docs/standards/workflow-governance/state-machines.md`.
+- `docs/standards/workflow-governance/exception-handling.md`.
+- `docs/standards/workflow-governance/observability.md`.
+- `docs/standards/workflow-governance/compliance-audit.md`.
+- `docs/standards/workflow-governance/migration-plan.md`.
+
+Roadmap impact:
+
+- Standard 07 is the seventh Phase IV canonical standard and complements
+  Standards 01-06, Workflow Engine, Editorial Pipeline, Enterprise
+  Integration Framework, AI Engineering Framework, Observability, Audit,
+  Policy Engine, Backup, Publishing, Distribution, and Quality Governance.
+- It does not add new runtime workflow engine behavior, database migrations,
+  API changes, UI changes, Docker changes, staging changes, automation
+  providers, or background workers by itself.
+- It defines canonical rules for editorial workflows, translation processes,
+  review processes, publication processes, AI automation, notification flows,
+  approval chains, scheduling processes, integration processes, backup
+  processes, quality gates, and administrative processes.
+- Future workflow inventories, business rule catalogs, state machine
+  mappings, exception policies, execution observability records, approval
+  chains, duplicate workflow reduction, and workflow compliance checks must
+  conform to this standard.
+- Future implementation must remain incremental, preserve validated Workflow,
+  Editorial Pipeline, Translation, Review, QA, Semantic Fidelity,
+  Terminology, Publishing, Export, Rights, AI Governance, Scheduling, Policy,
+  Backup, Observability, Integration, and runtime behavior, and map workflows
+  before migration.
+
+## Phase IV Standard 08 - Canonical Configuration, Environment and Deployment
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/configuration-governance/overview.md`.
+- `docs/standards/configuration-governance/configuration-model.md`.
+- `docs/standards/configuration-governance/environment-standard.md`.
+- `docs/standards/configuration-governance/deployment-standard.md`.
+- `docs/standards/configuration-governance/feature-flags.md`.
+- `docs/standards/configuration-governance/runtime-configuration.md`.
+- `docs/standards/configuration-governance/compliance-audit.md`.
+- `docs/standards/configuration-governance/migration-plan.md`.
+
+Roadmap impact:
+
+- Standard 08 is the eighth Phase IV canonical standard and complements
+  Standards 01-07, Configuration, DevSecOps, Platform Engineering, Security
+  Engineering, Workflow Governance, Observability, Backup, AI Governance,
+  Gateway, and Infrastructure Pack.
+- It does not add new runtime Configuration Service behavior, feature flag
+  runtime behavior, Kubernetes adoption, deployment pipeline replacement,
+  database migrations, API changes, UI changes, Docker changes, staging
+  changes, or secret vault provider integration by itself.
+- It defines canonical rules for environment management, configuration
+  management, deployment management, infrastructure configuration, feature
+  flags, release configuration, runtime parameters, secret references,
+  service discovery, and environment promotion.
+- Future configuration inventories, canonical environment registries,
+  deployment catalogs, feature flag records, runtime configuration contracts,
+  service discovery records, drift detection, promotion evidence, and
+  configuration audit mapping must conform to this standard.
+- Future implementation must remain incremental, preserve validated
+  Configuration, DevSecOps, Platform Engineering, Security Engineering,
+  Infrastructure Pack, staging deployment, GitHub Actions, backup, restore,
+  monitoring, validation, and runtime behavior, and map configuration before
+  migration.
+
+## Phase IV Standard 09 - Canonical Logging, Audit, Monitoring and Observability
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/observability/overview.md`.
+- `docs/standards/observability/logging-standard.md`.
+- `docs/standards/observability/metrics-standard.md`.
+- `docs/standards/observability/tracing-standard.md`.
+- `docs/standards/observability/health-checks.md`.
+- `docs/standards/observability/alerting-standard.md`.
+- `docs/standards/observability/compliance-audit.md`.
+- `docs/standards/observability/migration-plan.md`.
+
+Roadmap impact:
+
+- Standard 09 is the ninth Phase IV canonical standard and complements
+  Standards 01-08, Observability, Platform Engineering, Security
+  Engineering, Compliance, DevSecOps, Workflow Governance, Configuration
+  Governance, AI Governance, Backup, Gateway, and Infrastructure Pack.
+- It does not add external APM integration, Prometheus, Grafana, Sentry, SIEM
+  integration, runtime telemetry collector behavior, alert manager runtime
+  behavior, dashboard runtime behavior, database migrations, API changes, UI
+  changes, Docker changes, or staging changes by itself.
+- It defines canonical rules for structured logging, audit correlation,
+  metrics, distributed tracing, health monitoring, alerting, telemetry,
+  operational dashboards, compliance monitoring, and AI monitoring.
+- Future log inventories, metric families, trace propagation, health check
+  definitions, alert rules, dashboard definitions, telemetry retention
+  policies, and audit correlation maps must conform to this standard.
+- Future implementation must remain incremental, preserve validated
+  Observability, Health, Platform Engineering, Security, Backup, Workflow, AI
+  Governance, Gateway, Infrastructure Pack, staging, CI, and runtime
+  behavior, and map observability sources before migration.
+
+## Phase IV Standard 10 - Canonical Testing, Validation and Quality Gates
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/testing-validation/overview.md`.
+- `docs/standards/testing-validation/test-case-model.md`.
+- `docs/standards/testing-validation/test-execution-model.md`.
+- `docs/standards/testing-validation/requirements-traceability.md`.
+- `docs/standards/testing-validation/test-data-management.md`.
+- `docs/standards/testing-validation/quality-gates.md`.
+- `docs/standards/testing-validation/ai-validation.md`.
+- `docs/standards/testing-validation/security-testing.md`.
+- `docs/standards/testing-validation/accessibility-testing.md`.
+- `docs/standards/testing-validation/migration-testing.md`.
+- `docs/standards/testing-validation/compliance-audit.md`.
+- `docs/standards/testing-validation/migration-plan.md`.
+
+Roadmap impact:
+
+- Standard 10 is the tenth Phase IV canonical standard and complements
+  Standards 01-09, Quality Assurance, Quality Governance, DevSecOps,
+  Observability, Security Engineering, AI Governance, Accessibility, Backup,
+  Configuration Governance, Workflow Governance, and release preparation.
+- It does not add a new test management runtime, defect tracking runtime,
+  quality gate runtime, coverage service, CI/CD workflows, database
+  migrations, API changes, UI changes, Docker changes, or staging changes by
+  itself.
+- It defines canonical rules for test plans, test cases, automated and
+  manual tests, functional and non-functional checks, workflow validation, AI
+  agent validation, quality thresholds, defect management, evidence, and
+  release approval.
+- Future test inventories, requirements-to-tests traceability matrices,
+  canonical execution records, evidence stores, quality gate definitions,
+  defect risk analysis, AI evaluation datasets, accessibility and
+  localization gates, migration validation, and release approval evidence
+  must conform to this standard.
+- Future implementation must remain incremental, preserve validated tests,
+  fixtures, CI, staging validation, infrastructure validation, Quality
+  Assurance, DevSecOps, Quality Governance, Observability, Security, Backup,
+  AI Governance, and runtime behavior, and map tests before consolidation.
+
 ## MVP Scope
 
 The MVP includes:
