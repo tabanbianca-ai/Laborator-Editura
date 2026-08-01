@@ -109,6 +109,7 @@ cross-platform implementation rules rather than new product modules.
 | Standard 08 | Canonical Configuration, Environment and Deployment | `docs/standards/configuration-governance/overview.md` |
 | Standard 09 | Canonical Logging, Audit, Monitoring and Observability | `docs/standards/observability/overview.md` |
 | Standard 10 | Canonical Testing, Validation and Quality Gates | `docs/standards/testing-validation/overview.md` |
+| Standard 11 | Canonical Internationalization, Localization and Terminology | `docs/standards/localization/overview.md` |
 
 ## Fundamental Architecture Closure
 
