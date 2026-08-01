@@ -4,7 +4,7 @@
 
 - Title: Codex Redundancy Consolidation Report.
 - Identifier: CODEX-REDUNDANCY-CONSOLIDATION-REPORT.
-- Version: 2.1.0.
+- Version: 2.2.0.
 - Status: Active consolidation report.
 - Owner: Enterprise Meta-Architecture.
 - Reviewers: Documentation Governance, Quality Governance, Data Governance,
@@ -20,6 +20,8 @@
   - 2.1.0: Added repository-wide consolidation pass for repeated module,
     framework, standard, governance, validation, and launch readiness
     information.
+  - 2.2.0: Added Standard 11 localization and terminology ownership to the
+    consolidation baseline.
 
 ## Purpose
 
@@ -112,6 +114,7 @@ The consolidation decision is documentation-only:
 | Configuration, environments, deployment, feature flags, runtime parameters, staging, rollback, and Infrastructure Pack rules repeated across operations docs. | `docs/standards/configuration-governance/overview.md`. | Local docs may provide environment-specific values and procedures; canonical configuration governance owns model and promotion rules. |
 | Logs, audit, metrics, traces, health checks, alerts, dashboards, telemetry, and monitoring repeated across Observability, Security, Platform Engineering, Workflow, AI Governance, Backup, Gateway, and CI/CD. | `docs/standards/observability/overview.md`, `docs/modules/observability/observability-overview.md`. | Local docs list events and signals; canonical observability owns structure and retention/access rules. |
 | Tests, validation, quality gates, evidence, defects, release approval, migration testing, accessibility testing, security testing, and AI validation repeated across QA, Quality Governance, DevSecOps, release reports, and staging plans. | `docs/standards/testing-validation/overview.md`, `docs/modules/quality-assurance/qa-overview.md`, Quality Governance. | Local docs list required tests; canonical validation standard owns traceability, evidence, gates, and waiver rules. |
+| Internationalization, localization, interface language purity, terminology, fallback, regional formatting, and localized user messages repeated across Development Conventions, UI Governance, Accessibility, Configuration, Language Policy, and frontend docs. | `docs/standards/localization/overview.md`, `docs/DEVELOPMENT_CONVENTIONS.md`, UI Governance localization. | Local docs may describe surface-specific behavior; Standard 11 owns canonical localization resource, key, fallback, terminology, regional formatting, and audit rules. |
 | Translation, terminology, lexicography, semantic fidelity, Translation Memory, glossary hierarchy, and confidence scoring repeated across linguistic modules. | Translation, Terminology, Integrated Linguistic Knowledge Base, and Advanced Linguistic Resources directives in `AGENTS.md`; module docs. | Local docs preserve language-pair/domain behavior; canonical linguistic priority and evidence rules remain shared. |
 
 ### Dependency Preservation
@@ -146,6 +149,7 @@ The largest repeated concepts are:
 | Configuration, environments, deployment, feature flags, runtime parameters, and promotion | Repeated across Configuration, DevSecOps, Platform Engineering, Security, Observability, Backup, Gateway, AI Governance, Infrastructure Pack, staging deployment, and CI/CD docs. | Canonical owner is Standard 08, with Configuration Governance, Platform Engineering, and DevSecOps as operational owners. |
 | Logging, audit trails, metrics, traces, health checks, alerts, dashboards, and telemetry | Repeated across Observability, Platform Engineering, Security, DevSecOps, Workflow, AI Governance, Backup, Gateway, Configuration, Infrastructure Pack, staging scripts, and CI/CD docs. | Canonical owner is Standard 09, with Observability, Monitoring and Audit Governance as operational owner. |
 | Testing, validation, quality gates, defects, evidence, and release approval | Repeated across Quality Assurance, Quality Governance, DevSecOps, release reports, CI/CD, staging validation, security, accessibility, AI Governance, Backup, and workflow docs. | Canonical owner is Standard 10, with Quality Assurance, Testing and Validation Governance as operational owner. |
+| Internationalization, localization, terminology, regional formatting, fallback, and localized user messages | Repeated across Development Conventions, UI Governance, Accessibility, Configuration Localization, Language Policy, frontend i18n docs, and Testing Validation docs. | Canonical owner is Standard 11, with Localization, Terminology and Inclusive Experience Governance as operational owner. |
 | Phase closure and module sequence | Previously repeated in module migration plans. | Canonical owner remains `docs/codex/module-catalog.md`. |
 
 ## Canonical Definitions
@@ -208,6 +212,7 @@ snapshot only as consolidation evidence for the audited pass.
 | Configuration, environment, deployment, feature flag, and runtime governance | `docs/standards/configuration-governance/overview.md` |
 | Logging, audit, monitoring, metrics, tracing, alerting, and observability governance | `docs/standards/observability/overview.md` |
 | Testing, validation, quality gate, defect, evidence, and release approval governance | `docs/standards/testing-validation/overview.md` |
+| Internationalization, localization, terminology, regional formatting, fallback, and localized message governance | `docs/standards/localization/overview.md` |
 | Data and JSON Master governance | `docs/frameworks/data-engineering/overview.md`, `docs/JSON_MASTER_FORMAT.md` |
 | Security and access | `docs/frameworks/security-engineering/overview.md`, `docs/modules/iam/iam-overview.md` |
 | AI governance | `docs/frameworks/ai-engineering/overview.md`, `docs/modules/ai-governance/ai-governance-overview.md` |
