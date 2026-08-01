@@ -319,6 +319,9 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   official Canonical Logging, Audit, Monitoring and Observability Standard.
 - `docs/standards/testing-validation/overview.md` - Phase IV Standard 10,
   official Canonical Testing, Validation and Quality Gates Standard.
+- `docs/standards/localization/overview.md` - Phase IV Standard 11,
+  official Canonical Internationalization, Localization and Terminology
+  Standard.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
