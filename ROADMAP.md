@@ -2327,6 +2327,48 @@ Roadmap impact:
   Assurance, DevSecOps, Quality Governance, Observability, Security, Backup,
   AI Governance, and runtime behavior, and map tests before consolidation.
 
+## Phase IV Standard 11 - Canonical Internationalization, Localization and Terminology
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/localization/overview.md`.
+- `docs/standards/localization/locale-policy.md`.
+- `docs/standards/localization/resource-model.md`.
+- `docs/standards/localization/key-conventions.md`.
+- `docs/standards/localization/terminology-governance.md`.
+- `docs/standards/localization/regional-formatting.md`.
+- `docs/standards/localization/multimedia-localization.md`.
+- `docs/standards/localization/ai-assisted-localization.md`.
+- `docs/standards/localization/compliance-audit.md`.
+- `docs/standards/localization/consolidation-plan.md`.
+
+Roadmap impact:
+
+- Standard 11 is the eleventh Phase IV canonical standard and complements
+  Development Conventions, UI Governance, Accessibility and Localization,
+  Language Policy, Terminology Governance, Media Localization, Documentation
+  Governance, Testing and Validation, and all frontend/mobile/PWA surfaces.
+- It does not add a new runtime localization store, translation management
+  runtime, mobile application code, database migrations, API changes, UI
+  behavior changes, Docker changes, or staging changes by itself.
+- It defines canonical rules for supported interface languages, Platform
+  Language purity, localization resource records, key conventions,
+  terminology governance, regional formatting, multimedia localization,
+  AI-assisted localization, fallback behavior, localized metadata, localized
+  user messages, compliance audit, and incremental consolidation.
+- Future resource inventories, hardcoded-string scans, missing-key reports,
+  unused-key reports, mixed-language scans, duplicate translation analysis,
+  backend user-message mapping, terminology catalogs, regional formatting
+  checks, multimedia localization checks, and CI localization gates must
+  conform to this standard.
+- Future implementation must remain incremental, preserve existing i18n
+  helpers, shared language policy, localization tests, Accessibility and
+  Localization Module behavior, UI Governance, Documentation Governance,
+  Standard 10 gates, and validated runtime behavior, and map localization
+  resources before consolidation.
+
 ## MVP Scope
 
 The MVP includes:
