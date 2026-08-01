@@ -3179,6 +3179,96 @@ Canonical Testing, Validation and Quality Gates rules:
 - Any divergence from Standard 10 requires an approved architectural
   exception.
 
+## Phase IV Standard 11 - Canonical Internationalization, Localization and Terminology
+
+The official Canonical Internationalization, Localization and Terminology
+Standard is documented in `docs/standards/localization/overview.md`.
+
+This standard defines mandatory rules for separating technical
+implementation from user-facing text, localizing the interface, governing
+terminology, formatting regional values, localizing multimedia assets,
+mapping user-facing messages, auditing language changes, and validating
+language coverage.
+
+Standard 11 does not introduce a new runtime localization store, translation
+management runtime, mobile application code, database migrations, API
+changes, UI behavior changes, Docker changes, or staging changes by itself.
+It establishes the canonical locale policy, resource model, key conventions,
+terminology governance standard, regional formatting standard, multimedia
+localization standard, AI-assisted localization rules, compliance audit, and
+consolidation plan that current and future localization work must follow.
+
+The supporting Localization Standard documents are:
+
+1. `docs/standards/localization/overview.md`.
+2. `docs/standards/localization/locale-policy.md`.
+3. `docs/standards/localization/resource-model.md`.
+4. `docs/standards/localization/key-conventions.md`.
+5. `docs/standards/localization/terminology-governance.md`.
+6. `docs/standards/localization/regional-formatting.md`.
+7. `docs/standards/localization/multimedia-localization.md`.
+8. `docs/standards/localization/ai-assisted-localization.md`.
+9. `docs/standards/localization/compliance-audit.md`.
+10. `docs/standards/localization/consolidation-plan.md`.
+
+Canonical Internationalization, Localization and Terminology rules:
+
+- Technical implementation remains English for code, identifiers, schemas,
+  contracts, database objects, technical configuration, tests, and technical
+  documentation.
+- User-facing content must be loaded from canonical localization resources
+  and must not be hardcoded in frontend components, backend user messages,
+  notifications, document generators, or multimedia pipelines.
+- Supported v1.0 interface language families are `ro`, `en`, `es`, `fr`,
+  `pt`, `it`, and `de`; Romanian is the primary interface language.
+- A localized interface must display only the active Platform Language except
+  for approved proper names, brands, legal names, technical standards or file
+  formats without approved localized equivalents, and intentionally quoted
+  content.
+- Platform Language controls UI and AI conversation language only. It must
+  not change Original Language, Authoring Language, Target Language,
+  editorial content, subtitles, audio, or derived asset language.
+- Localization resources must preserve canonical key, namespace, source
+  locale, target locale, source value, translated value, context,
+  description, status, version, owner, reviewer, creation timestamp, and
+  update timestamp.
+- Allowed localization resource statuses are `DRAFT`, `UNDER_REVIEW`,
+  `VALIDATED`, `PUBLISHED`, `SUSPENDED`, and `ARCHIVED`.
+- Localization keys must be English, semantic, namespace-based, stable, and
+  independent of visual position.
+- Published keys must not be renamed without compatibility analysis and a
+  migration plan.
+- General UI terminology must reuse established localized terminology from
+  operating systems and authoritative technical sources before
+  platform-specific terms are created.
+- The platform-specific terminology registry is reserved for specialized,
+  ambiguous, or unique Laborator Editura terms.
+- Regional formatting must cover date, time, time zone, numbers, decimal
+  separators, currency, measurement units, pluralization, name order,
+  sorting, and text direction.
+- Multimedia localization must preserve source asset, source version,
+  language, contributor or AI agent where applicable, approval, rights, and
+  accessibility metadata.
+- AI may propose translations, detect missing text, verify terminology,
+  identify inconsistencies, compare variants, and detect mixed-language
+  content, but it may not validate official terminology, publish
+  translations, override approved terminology, hide missing translations, or
+  replace required human approval.
+- Missing translations, fallback usage, localization resource changes,
+  terminology changes, approvals, rejections, published translations, AI
+  localization changes, and version changes must be audited.
+- Components are localization-compliant only when they use canonical keys,
+  support the seven v1.0 interface language families, avoid mixed-language
+  UI, reuse shared resources across web/PWA/tablet/future mobile clients,
+  apply regional formatting, respect official terminology, and are tested and
+  audited.
+- Existing i18n helpers, language policy tests, Accessibility and
+  Localization Module behavior, UI Governance, Documentation Governance,
+  Testing Standard, and validated runtime behavior must not be changed
+  without an approved implementation phase.
+- Any divergence from Standard 11 requires an approved architectural
+  exception.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
