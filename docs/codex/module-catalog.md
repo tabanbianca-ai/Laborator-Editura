@@ -105,6 +105,10 @@ cross-platform implementation rules rather than new product modules.
 | Standard 04 | Canonical AI Assets, Prompt and Model | `docs/standards/ai-assets/overview.md` |
 | Standard 05 | Canonical Security, Identity and Access | `docs/standards/security-identity/overview.md` |
 | Standard 06 | Canonical Document, Digital Asset and Content | `docs/standards/digital-assets/overview.md` |
+| Standard 07 | Canonical Workflow, Process and Business Rules | `docs/standards/workflow-governance/overview.md` |
+| Standard 08 | Canonical Configuration, Environment and Deployment | `docs/standards/configuration-governance/overview.md` |
+| Standard 09 | Canonical Logging, Audit, Monitoring and Observability | `docs/standards/observability/overview.md` |
+| Standard 10 | Canonical Testing, Validation and Quality Gates | `docs/standards/testing-validation/overview.md` |
 
 ## Fundamental Architecture Closure
 
