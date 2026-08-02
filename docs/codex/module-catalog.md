@@ -139,6 +139,15 @@ implementation work without creating new architecture standards.
 | --- | --- | --- |
 | Plan 01 | Codex Canonical Implementation Master Plan | `docs/implementation/master-plan.md` |
 
+## Phase V Execution Frameworks
+
+Execution frameworks define how approved implementation plans are executed
+without creating new architecture standards.
+
+| Execution framework | Name | Canonical document |
+| --- | --- | --- |
+| Execution 01 | Codex Canonical Implementation Execution Framework | `docs/implementation/implementation-tasks.md` |
+
 ## Fundamental Architecture Closure
 
 The 25 Phase II modules define the fundamental enterprise architecture:
