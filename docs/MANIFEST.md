@@ -322,6 +322,24 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
 - `docs/standards/localization/overview.md` - Phase IV Standard 11,
   official Canonical Internationalization, Localization and Terminology
   Standard.
+- `docs/standards/accessibility/overview.md` - Phase IV Standard 12,
+  official Canonical Accessibility and Inclusive Experience Standard.
+- `docs/standards/rights-provenance/overview.md` - Phase IV Standard 13,
+  official Canonical Rights, Licensing and Provenance Standard.
+- `docs/standards/publishing-distribution/overview.md` - Phase IV Standard
+  14, official Canonical Publishing, Distribution and Publication Withdrawal
+  Standard.
+- `docs/standards/backup-continuity/overview.md` - Phase IV Standard 15,
+  official Canonical Backup, Restore, Disaster Recovery and Business
+  Continuity Standard.
+- `docs/standards/governance/overview.md` - Phase IV Standard 16, official
+  Canonical Governance, Compliance and Risk Management Standard.
+- `docs/standards/enterprise-architecture/overview.md` - Phase IV Standard
+  17, official Canonical Enterprise Architecture and Dependency Governance
+  Standard.
+- `docs/standards/documentation/overview.md` - Phase IV Standard 18,
+  official Canonical Documentation, Knowledge Management and Specification
+  Governance Standard.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
