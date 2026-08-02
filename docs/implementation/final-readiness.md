@@ -21,9 +21,9 @@ and Release Candidate validation.
 NOT_READY_FOR_RC1
 ```
 
-Reason: CIMP has been created as the official implementation plan, but module
-execution, validation evidence, and Release Candidate checks have not yet been
-completed under this plan.
+Reason: CIMP and CIEF have been created as the official implementation plan
+and execution framework, but module execution, validation evidence, and Release
+Candidate checks have not yet been completed under this plan.
 
 ## Readiness Categories
 
@@ -32,7 +32,7 @@ completed under this plan.
 | Architecture | Standards and CEMI references preserved | Baseline present |
 | Implementation | Approved modules implemented through CIMP gates | Pending |
 | Testing | Required tests pass with retained evidence | Pending |
-| Documentation | CEMI, CIMP, standards, modules, runbooks updated | CIMP baseline present |
+| Documentation | CEMI, CIMP, CIEF, standards, modules, runbooks updated | CIMP and CIEF baselines present |
 | Compliance | Applicable standards validated | Pending |
 | Security | No Critical blockers | Pending |
 | Data and backup | Backup/restore validated | Pending |
@@ -52,7 +52,7 @@ Codex v1.0 may be declared ready only when:
 - Required test and build evidence is retained.
 - Staging deployment validation is complete.
 - Backup and restore evidence is complete.
-- CEMI and CIMP are current.
+- CEMI, CIMP, and CIEF are current.
 - Human release approval is recorded.
 
 ## Final Output
