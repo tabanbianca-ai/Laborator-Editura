@@ -3987,6 +3987,71 @@ Rules:
 - Any divergence from Standard 19 requires an approved lifecycle governance
   exception.
 
+### Canonical Consolidation and Certification Standard for Codex v1.0 Directive
+
+Purpose:
+
+- Define Phase IV Standard 20 as the official canonical standard for final
+  consolidation, certification, release readiness, certification evidence, and
+  Codex v1.1 planning.
+
+Rules:
+
+- The canonical Standard 20 certification entry point is
+  `docs/certification/codex-v1/certification-report.md`.
+- The mandatory Standard 20 certification pack is stored under
+  `docs/certification/codex-v1`.
+- This directive does not authorize destructive consolidation, removal of
+  historical information, runtime API changes, database schema changes, UI
+  changes, Docker changes, staging changes, infrastructure changes, automated
+  approval, or breaking behavior by itself.
+- Certification follows Inventory, Duplication Analysis, Consolidation, Gap
+  Analysis, Architecture Validation, Security Validation, Quality Validation,
+  Documentation Validation, Compliance Validation, Final Certification, and
+  Release v1.0.
+- Certification must preserve Single Source of Truth, Zero Functional
+  Regression, Enterprise Readiness, Full Traceability, Documentation
+  Completeness, Architecture Consistency, Quality Before Release, Controlled
+  Consolidation, Evidence-Based Certification, and Continuous Evolution.
+- Codex must inventory standards, modules, frameworks, AI Agents, APIs,
+  workflows, databases, documentation, UI components, integrations,
+  connectors, infrastructure, and publications before certification.
+- Codex must identify overlapping standards, duplicate modules, repeated
+  rules, redundant models, duplicate documentation, similar APIs, and
+  identical workflows without deleting information before complete mapping and
+  validation.
+- Consolidation must preserve canonical versions, references, history,
+  approvals, traceability, dependencies, and audit trails.
+- Traceability must link Requirement, Standard, Module, Specification,
+  Implementation, Test, Evidence, and Audit.
+- Final validation must cover architecture, security, performance,
+  accessibility, localization, rights, publishing, backup, AI, integration,
+  observability, documentation, quality, governance, and lifecycle.
+- Certification outcomes are `CERTIFIED`,
+  `CERTIFIED_WITH_RECOMMENDATIONS`, `CONDITIONALLY_CERTIFIED`, and
+  `NOT_CERTIFIED`.
+- Codex v1.0 may be certified only when mandatory standards are represented,
+  mandatory modules are documented, required tests and evidence are retained
+  where available, critical risks are closed or formally accepted,
+  documentation is complete enough for certification, audits are completed,
+  traceability is established, and no major architectural violation blocks
+  certification.
+- After Codex v1.0 certification, new work starts the Codex v1.1 cycle:
+  New Requirements, Architecture Review, Implementation, Testing, and
+  Certification.
+- New development must not retrospectively change certified v1.0
+  specifications without approved versioned change governance.
+- AI may inventory, map duplicates, summarize evidence, detect gaps, propose
+  consolidation roadmaps, generate traceability drafts, and prepare
+  certification reports, but it must not certify itself, approve exceptions,
+  erase history, remove artifacts, bypass validation, or alter approved v1.0
+  records.
+- Existing identifiers, versions, approvals, audit history, Codex Governance,
+  all modules, all frameworks, all standards, documentation, runtime
+  behavior, and certification evidence must be preserved.
+- Any divergence from Standard 20 requires an approved certification
+  governance exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
