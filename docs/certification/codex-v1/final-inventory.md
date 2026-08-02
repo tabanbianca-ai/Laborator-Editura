@@ -33,6 +33,7 @@ components.
 | Codex standards governance deliverables from Standard 21 | 7 |
 | CEMI master documents from Phase V Master Document 01 | 8 |
 | CIMP implementation documents from Phase V Execution Plan 01 | 6 |
+| CIEF execution documents from Phase V Execution 01 | 6 |
 | Documentation files under `docs` before certification pack | 725 |
 | Module API contract documents | 25 |
 | Module event documents | 25 |
@@ -147,6 +148,13 @@ Phase V Execution Plan 01 introduces CIMP as the official implementation plan
 for turning approved standards into code, documentation, tests, validation,
 audit evidence, Release Candidate preparation, and final readiness. It does
 not add new architecture rules.
+
+## Execution Framework Baseline
+
+Phase V Execution 01 introduces CIEF as the official implementation execution
+framework for backlog, task generation, Definition of Ready, Definition of
+Done, execution dashboard, module status, release readiness, and
+implementation metrics. It does not add new architecture rules.
 
 ## Baseline Conclusion
 
