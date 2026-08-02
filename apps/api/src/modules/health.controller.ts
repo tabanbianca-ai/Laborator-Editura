@@ -10,4 +10,31 @@ export class HealthController {
       status: "ok"
     };
   }
+
+  @Get("liveness")
+  getLiveness() {
+    return {
+      name: PRODUCT_NAME,
+      status: "ok",
+      check: "liveness"
+    };
+  }
+
+  @Get("readiness")
+  getReadiness() {
+    return {
+      name: PRODUCT_NAME,
+      status: "ok",
+      check: "readiness"
+    };
+  }
+
+  @Get("startup")
+  getStartup() {
+    return {
+      name: PRODUCT_NAME,
+      status: "ok",
+      check: "startup"
+    };
+  }
 }
