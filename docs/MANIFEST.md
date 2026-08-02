@@ -345,6 +345,15 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
 - `docs/certification/codex-v1/certification-report.md` - Phase IV Standard
   20, official Canonical Consolidation and Certification Standard for Codex
   v1.0.
+- `docs/codex/catalog.md` - Phase IV Standard 21, official Codex Standards
+  Governance Meta-Standard.
+- `docs/master/codex-index.md` - Phase V Master Document 01, official Codex
+  Canonical Enterprise Master Index and single entry point for navigating the
+  approved Codex corpus.
+- `docs/implementation/master-plan.md` - Phase V Execution Plan 01, official
+  Codex Canonical Implementation Master Plan for turning approved standards
+  into implementation, validation, audit evidence, and Release Candidate
+  readiness.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
