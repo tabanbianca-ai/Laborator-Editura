@@ -24,7 +24,8 @@ Every new analysis, implementation, review, audit, or AI-assisted development
 task starts here, then follows references to the canonical owner document.
 
 Implementation execution is governed by
-`docs/implementation/master-plan.md`.
+`docs/implementation/master-plan.md` and executed through the CIEF
+deliverables under `docs/implementation`.
 
 ## Navigation Rule
 
@@ -40,7 +41,8 @@ Priority for navigation:
 4. `docs/master/dependency-map.md`.
 5. `docs/master/traceability-matrix.md`.
 6. `docs/implementation/master-plan.md`.
-7. Canonical owner documents referenced by those master files.
+7. `docs/implementation/implementation-tasks.md`.
+8. Canonical owner documents referenced by those master files.
 
 ## Codex Structure
 
@@ -79,6 +81,12 @@ Codex
 | `docs/master/executive-dashboard.md` | Executive status, compliance, risk, maturity, and progress dashboard. |
 | `docs/master/roadmap.md` | Roadmap v1.0 final, v1.1, and v2.0 navigation baseline. |
 | `docs/implementation/master-plan.md` | Official implementation execution plan. |
+| `docs/implementation/implementation-backlog.md` | Official execution backlog. |
+| `docs/implementation/implementation-tasks.md` | Official task model, Definition of Ready, and Definition of Done. |
+| `docs/implementation/execution-dashboard.md` | Official execution progress dashboard. |
+| `docs/implementation/module-status.md` | Official module status register. |
+| `docs/implementation/release-readiness.md` | Official release readiness state. |
+| `docs/implementation/implementation-metrics.md` | Official execution metrics registry. |
 
 ## Canonical Owners
 
@@ -96,6 +104,7 @@ Codex
 | Consolidation evidence | `docs/codex/codex-consolidation-report.md` |
 | Codex v1.0 certification | `docs/certification/codex-v1/certification-report.md` |
 | Codex implementation execution | `docs/implementation/master-plan.md` |
+| Codex task execution framework | `docs/implementation/implementation-tasks.md` |
 
 ## Enterprise Domains
 
@@ -128,3 +137,6 @@ duplicating canonical definitions.
 
 Whenever implementation status changes, update the relevant CIMP deliverable
 without redefining the underlying standard.
+
+Whenever task execution status changes, update the relevant CIEF deliverable
+without changing approved architecture.
