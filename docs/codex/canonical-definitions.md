@@ -4,7 +4,7 @@
 
 - Title: Codex Canonical Definitions.
 - Identifier: CODEX-CANONICAL-DEFINITIONS.
-- Version: 1.10.0.
+- Version: 1.11.0.
 - Status: Active specification.
 - Owner: Enterprise Meta-Architecture.
 - Reviewers: Platform Architecture, Documentation Governance, Quality
@@ -17,7 +17,8 @@
   `docs/standards/naming-versioning/overview.md`,
   `docs/standards/enterprise-architecture/overview.md`,
   `docs/standards/documentation/overview.md`,
-  `docs/standards/platform-lifecycle/overview.md`.
+  `docs/standards/platform-lifecycle/overview.md`,
+  `docs/certification/codex-v1/certification-report.md`.
 - References: `SPEC.md`, `ROADMAP.md`, `AGENTS.md`, `docs/MANIFEST.md`.
 - Change history:
   - 1.0.0: Initial canonical definition registry for repeated Codex concepts.
@@ -41,6 +42,8 @@
     and specification governance ownership.
   - 1.10.0: Added Standard 19 canonical platform lifecycle management
     ownership.
+  - 1.11.0: Added Standard 20 canonical consolidation and certification
+    ownership for Codex v1.0.
 
 ## Purpose
 
@@ -136,6 +139,7 @@ Rules:
 | Canonical Enterprise Architecture and Dependency Governance | Every module, service, application, AI agent, API, database, workflow, connector, infrastructure component, UI component, external service, dependency, interface, contract, event, and data ownership relationship requires explicit ownership, documented and versioned dependencies, approved contracts, no circular dependencies, one canonical data owner, governed interface use, dependency maps, architecture audit, controlled evolution, and auditability. | `docs/standards/enterprise-architecture/overview.md` | Codex Governance, Enterprise Meta-Architecture, Dependency Registry, Reference Models, Module Catalog, all modules, frameworks, standards, APIs, events, data models, integrations, infrastructure, and architecture consolidation. |
 | Canonical Documentation, Knowledge Management and Specification Governance | Every specification, architecture document, API document, AI document, workflow definition, standard, framework, policy, guide, manual, knowledge record, and Architecture Decision Record requires canonical identity, document type, ownership, approval, lifecycle status, versioning, traceability to modules, standards, requirements, tests, risks, policies, and ADRs, semantic search readiness, AI readiness, auditability, and preservation of approved history. | `docs/standards/documentation/overview.md` | Documentation Governance, Codex Governance, Enterprise Meta-Architecture, Module Catalog, Canonical Definitions, Knowledge Base, Search, AI Governance, Quality Governance, Testing, Observability, all modules, frameworks, standards, and documentation consolidation. |
 | Canonical Platform Lifecycle Management | Every module, application, service, AI agent, API, database, workflow, UI component, infrastructure component, documentation asset, publication, package, standard, framework, and policy requires a governed lifecycle stage, maturity level, version, owner, dependencies, status, support level, compatibility assessment, deprecation policy, retirement policy, end-of-life planning where applicable, auditability, and controlled evolution from idea to archive. | `docs/standards/platform-lifecycle/overview.md` | Codex Governance, Enterprise Meta-Architecture, Enterprise Architecture and Dependency Governance, Documentation Governance, Configuration Governance, Testing, Observability, Backup, Platform Engineering, all modules, frameworks, standards, releases, and long-term evolution. |
+| Canonical Consolidation and Certification for Codex v1.0 | Codex v1.0 certification requires complete inventory, duplication analysis, controlled consolidation, gap analysis, architecture validation, security validation, quality validation, documentation validation, compliance validation, final certification, traceability from requirement to audit, preserved history, zero functional regression, evidence-based certification, and Codex v1.1 planning. Certification outcomes are `CERTIFIED`, `CERTIFIED_WITH_RECOMMENDATIONS`, `CONDITIONALLY_CERTIFIED`, and `NOT_CERTIFIED`. | `docs/certification/codex-v1/certification-report.md` | Codex Governance, Enterprise Meta-Architecture, Module Catalog, all modules, all frameworks, all standards, applications, APIs, data models, workflows, AI agents, documentation, infrastructure, publications, release readiness, certification evidence, and v1.1 planning. |
 | Phase Classification | Phase II defines the 25 fundamental enterprise modules; Phase III defines cross-cutting governance frameworks; Phase IV defines canonical standards used by all modules and frameworks. | `docs/codex/module-catalog.md` | SPEC, ROADMAP, AGENTS, Manifest, future planning. |
 
 ## Canonical Ownership Map
@@ -151,6 +155,7 @@ preserving references and dependencies in the local documents that use it.
 | Enterprise architecture, module model, dependency model, data ownership, interface contracts, event topology, dependency graph, architecture audit, and consolidation roadmap. | `docs/standards/enterprise-architecture/overview.md`. | Codex Governance, Enterprise Meta-Architecture, Module Catalog, Dependency Registry, Reference Models, Application Architecture, Module Architecture, Data Governance, API Governance, Event Governance, Integration Governance, Observability, Quality Governance, all modules and standards. |
 | Documentation, specifications, knowledge base, ADRs, traceability, semantic search readiness, AI-ready documentation, and documentation consolidation. | `docs/standards/documentation/overview.md`, `docs/frameworks/documentation-governance/overview.md`. | Codex Governance, Enterprise Meta-Architecture, Module Catalog, Canonical Definitions, API documentation, AI documentation, workflow documentation, standards, frameworks, policies, manuals, guides, Search, Quality Governance, Testing, Observability. |
 | Platform lifecycle, maturity, semantic versioning, compatibility, deprecation, retirement, support levels, end-of-life planning, lifecycle dashboards, and controlled evolution. | `docs/standards/platform-lifecycle/overview.md`. | Codex Governance, Enterprise Meta-Architecture, Enterprise Architecture and Dependency Governance, Documentation Governance, Configuration Governance, Testing and Validation, Observability, Backup and Continuity, Platform Engineering, Release Management, all modules, frameworks, standards, applications, packages, and publications. |
+| Final Codex v1.0 certification, consolidation, traceability matrix, compliance scorecard, maturity assessment, certification dashboard, executive summary, and Codex v1.1 planning baseline. | `docs/certification/codex-v1/certification-report.md`. | Codex Governance, Enterprise Meta-Architecture, Module Catalog, Canonical Definitions, Documentation Governance, Quality Governance, Testing and Validation, Security Governance, Lifecycle Governance, all approved modules, frameworks, standards, runtime foundations, infrastructure, documentation, and release readiness. |
 | Module sequence, phase classification, framework classification, standard classification, and architecture closure. | `docs/codex/module-catalog.md`. | `SPEC.md`, `ROADMAP.md`, `AGENTS.md`, module migration plans, future phase planning. |
 | Conceptual, logical, and physical data modeling. | `docs/ARCHITECTURE_CHAPTER_4.md`, `docs/ARCHITECTURE_CHAPTER_5.md`, `docs/ARCHITECTURE_CHAPTER_6.md`. | Domain model, aggregate map, entity relationships, database conventions, migration strategy, gap analyses. |
 | Canonical data objects, metadata, JSON Master, schema evolution, and data governance. | `docs/standards/data-model/overview.md`, `docs/frameworks/data-engineering/overview.md`, `docs/JSON_MASTER_FORMAT.md`. | Export, backup, APIs, events, search, AI context, integrations, master data, publication metadata. |
