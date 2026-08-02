@@ -4,7 +4,7 @@
 
 - Title: Codex Redundancy Consolidation Report.
 - Identifier: CODEX-REDUNDANCY-CONSOLIDATION-REPORT.
-- Version: 2.9.0.
+- Version: 2.10.0.
 - Status: Active consolidation report.
 - Owner: Enterprise Meta-Architecture.
 - Reviewers: Documentation Governance, Quality Governance, Data Governance,
@@ -36,6 +36,8 @@
     governance ownership to the consolidation baseline.
   - 2.9.0: Added Standard 18 documentation, knowledge management, and
     specification governance ownership to the consolidation baseline.
+  - 2.10.0: Added Standard 19 platform lifecycle management ownership to the
+    consolidation baseline.
 
 ## Purpose
 
@@ -98,6 +100,10 @@ The audit searched repeated cross-cutting terms including:
 - `Architecture Decision Record`.
 - `knowledge base`.
 - `semantic search`.
+- `platform lifecycle`.
+- `deprecation`.
+- `retirement`.
+- `end-of-life`.
 
 ## 2026-08-01 Consolidation Pass
 
@@ -143,6 +149,7 @@ The consolidation decision is documentation-only:
 | Governance, compliance, risk, policies, architecture review, standards, exceptions, controls, internal audit, maturity assessment, scorecards, and remediation repeated across Codex Governance, Compliance Module, Quality Governance, Security Governance, AI Governance, Platform Engineering, release reports, and module gap analyses. | `docs/standards/governance/overview.md`, `docs/codex/governance-framework.md`, `docs/modules/compliance/compliance-overview.md`. | Local docs may describe module operations and current implementation; Standard 16 owns canonical policy, risk, change, control, exception, internal audit, dashboard, conformance, and remediation rules. |
 | Enterprise architecture, module boundaries, dependencies, data ownership, API contracts, events, architecture audit, dependency graphs, and consolidation roadmaps repeated across Codex Governance, architecture chapters, module documentation, data models, API/event docs, integration docs, and roadmap sections. | `docs/standards/enterprise-architecture/overview.md`, `docs/codex/meta-architecture.md`, `docs/codex/dependency-registry.md`. | Local docs may describe module-specific dependencies and contracts; Standard 17 owns canonical module model, dependency model, data ownership model, API/event contract governance, dependency graph, architecture audit, and consolidation roadmap rules. |
 | Documentation as Code, specifications, document metadata, versioning, ADRs, knowledge base, traceability, semantic search readiness, AI-ready documentation, and documentation consolidation repeated across Documentation Governance, Codex Governance, architecture chapters, module docs, standards, frameworks, API docs, AI docs, workflow docs, release reports, and operations docs. | `docs/standards/documentation/overview.md`, `docs/frameworks/documentation-governance/overview.md`, `docs/codex/canonical-definitions.md`. | Local docs may preserve operational guidance and module-specific documentation context; Standard 18 owns canonical document model, specification standard, ADR standard, knowledge base model, semantic search readiness, compliance audit, and documentation consolidation roadmap rules. |
+| Lifecycle stages, maturity levels, semantic versioning, compatibility, deprecation, retirement, support levels, release readiness, operation, monitoring, improvement, and end-of-life planning repeated across roadmaps, module plans, release reports, operations docs, DevSecOps, Platform Engineering, Configuration, Testing, Observability, Backup, and standards. | `docs/standards/platform-lifecycle/overview.md`, `docs/codex/module-catalog.md`, `docs/standards/naming-versioning/overview.md`. | Local docs may describe release-specific or component-specific lifecycle context; Standard 19 owns canonical lifecycle stages, maturity model, compatibility assessment, deprecation policy, retirement policy, dashboard model, baseline audit, and lifecycle roadmap rules. |
 | Translation, terminology, lexicography, semantic fidelity, Translation Memory, glossary hierarchy, and confidence scoring repeated across linguistic modules. | Translation, Terminology, Integrated Linguistic Knowledge Base, and Advanced Linguistic Resources directives in `AGENTS.md`; module docs. | Local docs preserve language-pair/domain behavior; canonical linguistic priority and evidence rules remain shared. |
 
 ### Dependency Preservation
@@ -185,6 +192,7 @@ The largest repeated concepts are:
 | Governance, compliance, risk, policies, architecture exceptions, change management, internal controls, audit, scorecards, conformance reports, and remediation | Repeated across Codex Governance, Meta-Architecture, Compliance Module, Policy Engine, Quality Governance, Security Governance, AI Governance, Platform Engineering, Observability, release reports, standards, and module gap analyses. | Canonical owner is Standard 16, with Governance, Compliance and Risk Management as operational owner. |
 | Enterprise architecture, module boundaries, dependency declarations, data ownership, interface contracts, event topology, dependency graph, architecture audit, and consolidation roadmap | Repeated across Codex Governance, Meta-Architecture, Dependency Registry, Reference Models, architecture chapters, module documentation, data/domain docs, API/event docs, integration docs, and roadmap sections. | Canonical owner is Standard 17, with Enterprise Architecture and Dependency Governance as operational owner. |
 | Documentation, specifications, knowledge base, ADRs, document metadata, traceability, semantic search readiness, AI-ready documentation, and documentation consolidation | Repeated across Documentation Governance, Codex Governance, architecture chapters, module documentation, framework docs, standard docs, API docs, AI docs, workflow docs, release reports, operations docs, and root specifications. | Canonical owner is Standard 18, with Documentation, Knowledge Management and Specification Governance as operational owner. |
+| Platform lifecycle, component maturity, semantic versioning, compatibility, release operation, monitoring, improvement, deprecation, retirement, support levels, and end-of-life planning | Repeated across roadmap sections, module plans, release readiness documents, operations documents, DevSecOps, Platform Engineering, Configuration, Testing, Observability, Backup, and standards. | Canonical owner is Standard 19, with Platform Lifecycle Management as operational owner. |
 | Phase closure and module sequence | Previously repeated in module migration plans. | Canonical owner remains `docs/codex/module-catalog.md`. |
 
 ## Canonical Definitions
@@ -255,6 +263,7 @@ snapshot only as consolidation evidence for the audited pass.
 | Governance, compliance, risk, policies, change management, architecture exceptions, internal controls, internal audit, dashboards, conformance, and remediation governance | `docs/standards/governance/overview.md` |
 | Enterprise architecture, dependency governance, module ownership, data ownership, interface contracts, event topology, dependency graphs, architecture audit, and consolidation roadmap governance | `docs/standards/enterprise-architecture/overview.md` |
 | Documentation, knowledge management, specifications, ADRs, traceability, semantic search readiness, AI-ready documentation, and documentation consolidation governance | `docs/standards/documentation/overview.md` |
+| Platform lifecycle, maturity, semantic versioning, compatibility, deprecation, retirement, support, end-of-life, lifecycle dashboard, and controlled evolution governance | `docs/standards/platform-lifecycle/overview.md` |
 | Data and JSON Master governance | `docs/frameworks/data-engineering/overview.md`, `docs/JSON_MASTER_FORMAT.md` |
 | Security and access | `docs/frameworks/security-engineering/overview.md`, `docs/modules/iam/iam-overview.md` |
 | AI governance | `docs/frameworks/ai-engineering/overview.md`, `docs/modules/ai-governance/ai-governance-overview.md` |
