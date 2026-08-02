@@ -4,7 +4,7 @@
 
 - Title: Codex Redundancy Consolidation Report.
 - Identifier: CODEX-REDUNDANCY-CONSOLIDATION-REPORT.
-- Version: 2.14.0.
+- Version: 2.15.0.
 - Status: Active consolidation report.
 - Owner: Enterprise Meta-Architecture.
 - Reviewers: Documentation Governance, Quality Governance, Data Governance,
@@ -15,7 +15,8 @@
   `docs/frameworks/documentation-governance/overview.md`,
   `docs/frameworks/quality-governance/overview.md`,
   `docs/master/codex-index.md`,
-  `docs/implementation/master-plan.md`.
+  `docs/implementation/master-plan.md`,
+  `docs/implementation/implementation-tasks.md`.
 - Change history:
   - 1.0.0: Initial consolidation of repeated Phase II closure statements.
   - 2.0.0: Expanded consolidation for cross-cutting Codex definitions.
@@ -47,6 +48,9 @@
     orientation.
   - 2.14.0: Added CIMP implementation plan ownership for execution,
     progress, Release Candidate preparation, and final readiness.
+  - 2.15.0: Added CIEF execution framework ownership for backlog, task model,
+    Definition of Ready, Definition of Done, execution dashboards, module
+    status, release readiness, and implementation metrics.
 
 ## Purpose
 
@@ -72,6 +76,8 @@ This consolidation establishes:
   master navigation index.
 - `docs/implementation/master-plan.md` as the official implementation
   execution plan.
+- `docs/implementation/implementation-tasks.md` as the official
+  implementation execution framework.
 - `docs/codex/meta-architecture.md` as the canonical owner for Codex evolution
   and governance rules.
 - Framework 08 as the canonical owner for documentation governance.
@@ -175,6 +181,7 @@ The consolidation decision is documentation-only:
 | Standard catalogs, standards indexes, dependency matrices, version matrices, compliance matrices, review calendars, standard lifecycle, standard change approval, standard consolidation, deprecation, and archival repeated across Codex Governance, Documentation Governance, Quality Governance, Standard 16, Standard 18, Standard 19, Standard 20, and roadmap sections. | `docs/codex/catalog.md`, `docs/codex/standards-index.md`, `docs/codex/governance-report.md`. | Local docs may describe domain-specific governance requirements; Standard 21 owns how standards themselves are created, modified, consolidated, deprecated, reviewed, and archived. |
 | Enterprise navigation, master index, standards catalog, module catalog, dependency map, enterprise inventory, traceability matrix, executive dashboard, and master roadmap repeated across root docs, certification docs, roadmap sections, catalogs, and reports. | `docs/master/codex-index.md`, `docs/master/standards-catalog.md`, `docs/master/module-catalog.md`, `docs/master/dependency-map.md`, `docs/master/enterprise-inventory.md`, `docs/master/traceability-matrix.md`, `docs/master/executive-dashboard.md`, `docs/master/roadmap.md`. | CEMI owns navigation and orientation only. Canonical rules stay in their domain owner documents. |
 | Implementation execution order, module gate workflow, progress metrics, blocker register, Release Candidate path, RC checklist, and final readiness repeated across roadmap, release, quality, certification, and implementation planning docs. | `docs/implementation/master-plan.md`, `docs/implementation/module-roadmap.md`, `docs/implementation/progress-dashboard.md`, `docs/implementation/release-plan.md`, `docs/implementation/rc-checklist.md`, `docs/implementation/final-readiness.md`. | CIMP owns execution planning only. Standards and module specifications remain canonical owners for requirements. |
+| Specification-first execution, task model, Definition of Ready, Definition of Done, test-first delivery, security checks, static analysis, execution dashboards, module status, release readiness, implementation metrics, and task traceability repeated across implementation, quality, release, and certification docs. | `docs/implementation/implementation-backlog.md`, `docs/implementation/implementation-tasks.md`, `docs/implementation/execution-dashboard.md`, `docs/implementation/module-status.md`, `docs/implementation/release-readiness.md`, `docs/implementation/implementation-metrics.md`. | CIEF owns execution mechanics only. CIMP owns the implementation plan, and standards own requirements. |
 | Translation, terminology, lexicography, semantic fidelity, Translation Memory, glossary hierarchy, and confidence scoring repeated across linguistic modules. | Translation, Terminology, Integrated Linguistic Knowledge Base, and Advanced Linguistic Resources directives in `AGENTS.md`; module docs. | Local docs preserve language-pair/domain behavior; canonical linguistic priority and evidence rules remain shared. |
 
 ### Dependency Preservation
@@ -222,6 +229,7 @@ The largest repeated concepts are:
 | Standards governance, standard lifecycle, standard change approval, standards catalog, dependency matrix, version matrix, compliance matrix, review calendar, standard consolidation, deprecation, and archival | Repeated across Codex Governance, Documentation Governance, Quality Governance, governance standards, lifecycle standards, certification docs, and roadmap sections. | Canonical owner is Standard 21, with Codex Standards Governance as operational owner. |
 | Enterprise navigation, master index, master catalog, enterprise inventory, traceability dashboard, executive dashboard, and master roadmap | Repeated across root governance docs, certification docs, roadmap sections, module catalog, standards catalog, and consolidation reports. | Canonical owner is CEMI, with Codex Enterprise Governance as operational owner. |
 | Implementation execution stages, module gates, progress dashboard, release plan, RC checklist, final readiness, and Release Candidate path | Repeated across root roadmap docs, release plans, quality docs, certification docs, and implementation planning docs. | Canonical owner is CIMP, with Codex Implementation Governance as operational owner. |
+| Specification-first execution, task model, Definition of Ready, Definition of Done, execution dashboard, module status, release readiness, implementation metrics, task traceability, and task-level compliance reporting | Repeated across implementation planning, quality, release, certification, and operational readiness docs. | Canonical owner is CIEF, with Codex Execution Governance as operational owner. |
 | Phase closure and module sequence | Previously repeated in module migration plans. | Canonical owner remains `docs/codex/module-catalog.md`. |
 
 ## Canonical Definitions
@@ -297,6 +305,7 @@ snapshot only as consolidation evidence for the audited pass.
 | Codex standards governance, standards catalog, dependency matrix, version matrix, compliance matrix, review calendar, standard lifecycle, change approval, consolidation, deprecation, archival, and future standard governance | `docs/codex/catalog.md` |
 | Codex entry point, master navigation, master standards catalog, master module catalog, master dependency map, enterprise inventory, master traceability matrix, executive dashboard, and master roadmap | `docs/master/codex-index.md` |
 | Codex implementation plan, execution stages, module gates, progress metrics, release plan, RC checklist, and final readiness | `docs/implementation/master-plan.md` |
+| Codex execution framework, implementation backlog, task model, Definition of Ready, Definition of Done, execution workflow, execution dashboard, module status, release readiness, implementation metrics, and task traceability | `docs/implementation/implementation-tasks.md` |
 | Data and JSON Master governance | `docs/frameworks/data-engineering/overview.md`, `docs/JSON_MASTER_FORMAT.md` |
 | Security and access | `docs/frameworks/security-engineering/overview.md`, `docs/modules/iam/iam-overview.md` |
 | AI governance | `docs/frameworks/ai-engineering/overview.md`, `docs/modules/ai-governance/ai-governance-overview.md` |
