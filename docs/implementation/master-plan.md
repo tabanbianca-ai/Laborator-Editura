@@ -11,6 +11,7 @@
 | Owner | Codex Implementation Governance |
 | Related master index | `docs/master/codex-index.md` |
 | Standards baseline | Standards 01-21 |
+| Execution framework | `docs/implementation/implementation-tasks.md` |
 
 ## Purpose
 
@@ -21,6 +22,9 @@ It does not define new architecture rules and does not modify existing
 standards. It turns the approved Codex corpus into an incremental execution
 sequence for code, documentation, tests, validation, audit, and release
 candidate preparation.
+
+Execution mechanics are defined by the Canonical Implementation Execution
+Framework deliverables under `docs/implementation`.
 
 ## Objectives
 
@@ -116,6 +120,17 @@ Implementation Baseline
 | `docs/implementation/release-plan.md` | Release Candidate sequence and readiness process. |
 | `docs/implementation/rc-checklist.md` | RC1, RC2, and Final RC gate checklist. |
 | `docs/implementation/final-readiness.md` | Final readiness assessment template and baseline. |
+
+## Execution Framework Deliverables
+
+| Deliverable | Purpose |
+| --- | --- |
+| `docs/implementation/implementation-backlog.md` | CIEF backlog for approved implementation work. |
+| `docs/implementation/implementation-tasks.md` | CIEF task model, Definition of Ready, Definition of Done, and initial task register. |
+| `docs/implementation/execution-dashboard.md` | Execution progress, defects, blockers, and RC readiness dashboard. |
+| `docs/implementation/module-status.md` | Module execution status and completion evidence. |
+| `docs/implementation/release-readiness.md` | Release readiness state under CIEF. |
+| `docs/implementation/implementation-metrics.md` | Implementation, testing, documentation, compliance, blocker, and release metrics. |
 
 ## Maintenance Rule
 
