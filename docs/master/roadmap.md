@@ -27,6 +27,7 @@ sequencing remains in `ROADMAP.md` and module-specific plans.
 | Certification pack | Complete baseline |
 | CEMI master index | Complete baseline |
 | CIMP implementation plan | Complete baseline |
+| CIEF execution framework | Complete baseline |
 | Runtime foundations | Implemented baseline, with maturity varying by module |
 | Frontend workspace foundations | Implemented baseline, with continued polish expected |
 | Staging preparation | Prepared baseline |
@@ -44,6 +45,7 @@ sequencing remains in `ROADMAP.md` and module-specific plans.
 | ADR coverage | Add structured ADRs for architecture-impacting decisions already present in prose. |
 | CEMI maintenance | Keep CEMI as the single entry point for new approved work. |
 | CIMP execution | Implement approved standards through module gates and Release Candidate preparation. |
+| CIEF task execution | Convert approved specifications into backlog, tasks, tests, documentation, compliance reports, and RC evidence. |
 
 ## Roadmap v2.0
 
@@ -60,9 +62,10 @@ sequencing remains in `ROADMAP.md` and module-specific plans.
 1. New work starts from `docs/master/codex-index.md`.
 2. If the work is already covered, link to the canonical owner document.
 3. If the work implements approved scope, follow CIMP.
-4. If the work changes architecture, follow Standard 21 and existing
+4. If the work executes implementation tasks, follow CIEF.
+5. If the work changes architecture, follow Standard 21 and existing
    governance.
-5. If the work changes implementation, update tests, evidence, and audit
+6. If the work changes implementation, update tests, evidence, and audit
    expectations.
-6. Do not create a new fundamental standard unless explicitly approved by the
+7. Do not create a new fundamental standard unless explicitly approved by the
    project owner.
