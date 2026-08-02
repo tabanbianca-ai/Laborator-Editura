@@ -4333,6 +4333,54 @@ The Release Candidate path is:
 RC1 -> RC2 -> Final Release Candidate -> Codex v1.0
 ```
 
+## Phase V Execution 01 - Canonical Implementation Execution Framework
+
+The official Codex Canonical Implementation Execution Framework is documented
+through the CIEF deliverables in `docs/implementation`.
+
+CIEF defines how Codex executes implementation work. It does not introduce
+new requirements, new standards, new modules, or runtime behavior by itself.
+
+The mandatory CIEF deliverables are:
+
+1. `docs/implementation/implementation-backlog.md`.
+2. `docs/implementation/implementation-tasks.md`.
+3. `docs/implementation/execution-dashboard.md`.
+4. `docs/implementation/module-status.md`.
+5. `docs/implementation/release-readiness.md`.
+6. `docs/implementation/implementation-metrics.md`.
+
+CIEF execution principles:
+
+- Specification First.
+- Test First.
+- Security by Default.
+- AI Assisted.
+- Incremental Delivery.
+- Continuous Validation.
+- Zero Regression.
+- Full Traceability.
+- Documentation First.
+- Canonical Before Custom.
+
+CIEF workflow:
+
+```text
+Analyze -> Validate Specification -> Generate Design -> Generate Tasks -> Implement -> Run Tests -> Static Analysis -> Security Scan -> Documentation -> Review -> Approve -> Merge -> Release Candidate
+```
+
+Every CIEF task must include Task ID, module, priority, dependencies,
+description, acceptance criteria, tests, documentation, estimated effort,
+status, and owner.
+
+A task is ready only when the specification is approved, dependencies are
+available, architecture is validated, and risks are assessed.
+
+A task is done only when applicable code compiles, required tests pass, static
+analysis has no Critical errors, security checks pass or blockers are
+accepted, documentation is updated, audit expectations are recorded, and no
+Critical defect remains open.
+
 ## Architecture Freeze & Governance Requirements
 
 Status: Frozen for phased MVP implementation.
