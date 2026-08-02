@@ -22,6 +22,7 @@ documentation dashboard, not a live analytics dashboard.
 | Codex architecture | Complete baseline | Manifest, conventions, architecture chapters, modules, frameworks, standards, certification, and CEMI exist. |
 | Standards | Complete baseline | 21 canonical standards, including Standard 21 standards governance. |
 | Implementation plan | Complete baseline | CIMP exists and defines execution stages, module gates, dashboard, release plan, RC checklist, and final readiness. |
+| Execution framework | Complete baseline | CIEF exists and defines backlog, task model, DoR, DoD, execution dashboard, module status, readiness, and metrics. |
 | Frameworks | Complete baseline | 8 specialized frameworks. |
 | Fundamental modules | Complete baseline | 25 documented Phase II modules. |
 | Runtime foundations | Implemented baseline | Existing runtime modules are present in `apps/api/src/modules`. |
@@ -37,6 +38,7 @@ documentation dashboard, not a live analytics dashboard.
 | Governance documentation | Complete baseline |
 | Standards documentation | Complete baseline |
 | Implementation planning | Complete baseline |
+| Implementation execution framework | Complete baseline |
 | Module documentation | Complete baseline |
 | Runtime implementation | Foundation implemented; module maturity varies |
 | Frontend implementation | Foundation implemented; UX maturity varies |
@@ -104,8 +106,8 @@ Test coverage governance is owned by:
 
 ## Executive Recommendation
 
-Use CEMI as the single entry point and CIMP as the implementation execution
-plan. Stop creating new fundamental Codex v1.0 standards unless explicitly
-requested. Move work toward controlled consolidation, implementation
-hardening, evidence automation, Release Candidate preparation, and Codex v1.1
-planning.
+Use CEMI as the single entry point, CIMP as the implementation plan, and CIEF
+as the execution framework. Stop creating new fundamental Codex v1.0 standards
+unless explicitly requested. Move work toward controlled consolidation,
+implementation hardening, evidence automation, Release Candidate preparation,
+and Codex v1.1 planning.
