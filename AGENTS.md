@@ -3917,6 +3917,76 @@ Rules:
 - Any divergence from Standard 18 requires an approved documentation
   governance exception.
 
+### Canonical Platform Lifecycle Management Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 19 as the official canonical standard for managing
+  the complete lifecycle of modules, applications, services, AI agents, APIs,
+  databases, workflows, UI components, infrastructure, documentation, and
+  publications from idea to archive.
+
+Rules:
+
+- The canonical Standard 19 entry point is
+  `docs/standards/platform-lifecycle/overview.md`.
+- This directive does not authorize runtime lifecycle dashboards, automated
+  lifecycle transitions, automated deprecation enforcement, automated
+  component removal, database migrations, API changes, UI changes, Docker
+  changes, staging changes, destructive cleanup, or breaking behavior by
+  itself.
+- All components must follow Lifecycle by Design, Continuous Evolution,
+  Backward Compatibility, Incremental Delivery, Version Governance,
+  Controlled Deprecation, Continuous Validation, Zero Unmanaged Changes,
+  Audit by Default, and Enterprise Traceability.
+- The canonical lifecycle stages are `IDEA`, `ANALYSIS`, `SPECIFICATION`,
+  `ARCHITECTURE_APPROVAL`, `DEVELOPMENT`, `TESTING`, `VALIDATION`,
+  `RELEASE`, `OPERATION`, `MONITORING`, `IMPROVEMENT`, `DEPRECATION`,
+  `RETIREMENT`, and `ARCHIVE`.
+- Every governed component must define UUID, canonical identifier, name,
+  component type, owner, current lifecycle stage, version, dependencies,
+  status, support level, end-of-life date when applicable, and audit
+  information.
+- Canonical component types include `APPLICATION`, `SERVICE`, `MODULE`,
+  `AI_AGENT`, `API`, `DATABASE`, `WORKFLOW`, `UI_COMPONENT`,
+  `INFRASTRUCTURE_COMPONENT`, `DOCUMENTATION`, `PUBLICATION`, `PACKAGE`,
+  `STANDARD`, `FRAMEWORK`, and `POLICY`.
+- Canonical maturity levels are `CONCEPT`, `PROTOTYPE`, `ALPHA`, `BETA`,
+  `RELEASE_CANDIDATE`, `PRODUCTION`, `LONG_TERM_SUPPORT`, `DEPRECATED`,
+  `RETIRED`, and `ARCHIVED`.
+- Platform components use Semantic Versioning. Incompatible changes require
+  major versions and migration plans.
+- Codex must assess API compatibility, database compatibility, workflow
+  compatibility, AI compatibility, documentation compatibility, interface
+  compatibility, configuration compatibility, deployment compatibility,
+  backup and restore compatibility, security compatibility, and tenant
+  isolation compatibility for lifecycle-impacting changes.
+- Deprecation records must include reason, impact, alternative, migration
+  plan, removal deadline, support level, affected dependencies,
+  documentation updates, communication plan, approval, and audit information.
+- Retirement requires dependency review, usage review, migration completion,
+  documentation updates, backup evidence, restore ability where relevant,
+  security impact review, tenant impact review, approvals, and audit history.
+- Deprecated components must not be silently removed. Components must not be
+  removed during baseline audits unless an approved retirement plan exists.
+- Lifecycle dashboards must link to authoritative source records and must not
+  replace component owners, compatibility assessments, deprecation records,
+  retirement records, or audit evidence.
+- Audit must cover lifecycle state changes, versions, deprecations,
+  retirements, approvals, migrations, and incidents.
+- AI may inventory components, classify maturity, detect compatibility risks,
+  identify deprecation candidates, summarize lifecycle dashboards, and propose
+  evolution roadmaps, but it must not approve lifecycle transitions, retire
+  components, remove components, bypass compatibility review, or overwrite
+  approved versions.
+- Existing identifiers, versions, approvals, audit history, Codex Governance,
+  Enterprise Meta-Architecture, Enterprise Architecture and Dependency
+  Governance, Documentation Governance, all approved modules, frameworks,
+  standards, and validated runtime behavior must not be changed without an
+  approved implementation phase.
+- Any divergence from Standard 19 requires an approved lifecycle governance
+  exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
