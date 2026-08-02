@@ -2870,6 +2870,39 @@ Roadmap impact:
 - From this point, new work should execute the approved plan instead of
   extending the architecture unless explicitly requested by the project owner.
 
+## Phase V Execution 01 - Canonical Implementation Execution Framework
+
+Status: Official execution framework baseline.
+
+Reference:
+
+- `docs/implementation/implementation-backlog.md`.
+- `docs/implementation/implementation-tasks.md`.
+- `docs/implementation/execution-dashboard.md`.
+- `docs/implementation/module-status.md`.
+- `docs/implementation/release-readiness.md`.
+- `docs/implementation/implementation-metrics.md`.
+
+Roadmap impact:
+
+- CIEF defines how CIMP execution is performed task by task.
+- CIEF does not add architecture standards, product modules, runtime behavior,
+  API changes, database changes, UI changes, Docker changes, staging changes,
+  destructive consolidation, deletion of historical information, or breaking
+  behavior by itself.
+- CIEF requires Specification First, Test First, Security by Default, AI
+  Assisted, Incremental Delivery, Continuous Validation, Zero Regression, Full
+  Traceability, Documentation First, and Canonical Before Custom.
+- Every approved specification must be transformed into backlog items, tasks,
+  dependencies, acceptance criteria, tests, documentation updates, and
+  compliance evidence.
+- CIEF uses Definition of Ready before work starts and Definition of Done
+  before work is marked complete.
+- CIEF tracks module progress, task progress, test coverage, defects,
+  blockers, estimated remaining effort, and total implementation percentage.
+- From this point, implementation should proceed through CIEF toward RC1
+  rather than extending architecture.
+
 ## MVP Scope
 
 The MVP includes:
