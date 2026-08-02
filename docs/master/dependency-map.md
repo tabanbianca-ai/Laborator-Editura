@@ -25,6 +25,7 @@ Manifest and Development Conventions
 -> Standard 21 Standards Governance
 -> CEMI
 -> CIMP
+-> CIEF
 ```
 
 Canonical source: `docs/codex/dependency-matrix.md`.
@@ -174,3 +175,9 @@ CIMP execution must follow this dependency map. Implementation work must not
 start from an isolated module assumption when upstream standards, modules,
 services, data models, workflows, API contracts, AI governance, or deployment
 dependencies remain unresolved.
+
+## Task Execution Dependency Rule
+
+CIEF tasks must declare dependencies before execution starts. A task cannot be
+Ready if required specifications, upstream modules, test expectations,
+security constraints, or documentation references are unavailable.
