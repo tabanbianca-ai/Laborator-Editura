@@ -35,6 +35,9 @@ Requirement -> Standard -> Module -> Specification -> Implementation -> Test -> 
 | Documentation and knowledge | Standard 18 | Documentation Governance, Search, Knowledge Base | Documentation standard docs and audit | Baseline present |
 | Platform lifecycle | Standard 19 | Platform Engineering, DevSecOps, Release | Lifecycle standard docs and audit | Baseline present |
 | Final certification | Standard 20 | All platform areas | This certification pack | Baseline present |
+| Standards governance | Standard 21 | All standards, frameworks, policies, specifications, guides, conventions, and canonical models | Codex catalog, standards index, dependency matrix, version matrix, compliance matrix, review calendar, governance report | Baseline present |
+| Master navigation | CEMI | All standards, frameworks, modules, policies, specifications, inventories, dependencies, traceability, dashboards, and roadmaps | `docs/master` deliverables | Baseline present |
+| Implementation execution | CIMP | All approved implementation areas | `docs/implementation` deliverables | Baseline present |
 
 ## Gaps
 
@@ -51,4 +54,3 @@ Requirement -> Standard -> Module -> Specification -> Implementation -> Test -> 
 The canonical chain exists and is sufficient for a baseline certification
 assessment. Codex v1.1 should turn this matrix into a structured registry with
 automated evidence links.
-
