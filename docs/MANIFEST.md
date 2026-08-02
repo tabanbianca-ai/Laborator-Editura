@@ -342,6 +342,9 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   Governance Standard.
 - `docs/standards/platform-lifecycle/overview.md` - Phase IV Standard 19,
   official Canonical Platform Lifecycle Management Standard.
+- `docs/certification/codex-v1/certification-report.md` - Phase IV Standard
+  20, official Canonical Consolidation and Certification Standard for Codex
+  v1.0.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
