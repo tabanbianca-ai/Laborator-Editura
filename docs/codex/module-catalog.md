@@ -119,6 +119,25 @@ cross-platform implementation rules rather than new product modules.
 | Standard 18 | Canonical Documentation, Knowledge Management and Specification Governance | `docs/standards/documentation/overview.md` |
 | Standard 19 | Canonical Platform Lifecycle Management | `docs/standards/platform-lifecycle/overview.md` |
 | Standard 20 | Canonical Consolidation and Certification for Codex v1.0 | `docs/certification/codex-v1/certification-report.md` |
+| Standard 21 | Codex Standards Governance Meta-Standard | `docs/codex/catalog.md` |
+
+## Phase V Master Documents
+
+Master documents organize approved Codex content without becoming new
+architecture standards.
+
+| Master document | Name | Canonical document |
+| --- | --- | --- |
+| Master 01 | Codex Canonical Enterprise Master Index | `docs/master/codex-index.md` |
+
+## Phase V Execution Plans
+
+Execution plans turn approved Codex standards and master catalogs into
+implementation work without creating new architecture standards.
+
+| Execution plan | Name | Canonical document |
+| --- | --- | --- |
+| Plan 01 | Codex Canonical Implementation Master Plan | `docs/implementation/master-plan.md` |
 
 ## Fundamental Architecture Closure
 
