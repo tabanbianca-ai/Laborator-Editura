@@ -1,7 +1,11 @@
 node_modules
+.pnpm-store
+.swift-module-cache
 dist
 .next
 coverage
+backups
+.deps
 render_translation
 render_translation_final
 render_translation_mac
