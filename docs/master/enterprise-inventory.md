@@ -27,8 +27,9 @@ navigation and audit inventory, not a runtime discovery system.
 | Canonical standards | 21 |
 | CEMI master documents | 8 |
 | CIMP implementation documents | 6 |
+| CIEF execution documents | 6 |
 | Codex catalog documents | 21 markdown files under `docs/codex` |
-| Documentation corpus | 756 markdown files after the CIMP baseline |
+| Documentation corpus | 762 markdown files after the CIEF baseline |
 
 ## Applications
 
