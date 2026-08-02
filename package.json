@@ -26,7 +26,10 @@
     "infra:validate": "bash infrastructure/validation/validate-infrastructure.sh",
     "infra:scan-secrets": "bash infrastructure/validation/scan-secrets.sh",
     "infra:backup:dry-run": "bash infrastructure/backup/backup-laborator.sh --config infrastructure/backup/laborator-backup.env.example --dry-run",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\""
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
+    "format:check": "prettier --check .github/workflows/ci.yml package.json scripts/validate-configuration.mjs apps/api/src/modules/health.controller.ts apps/api/src/modules/auth/request-context.middleware.ts apps/api/tests/foundation-ci-security-contract.test.mjs apps/api/tests/foundation-health-contract.test.mjs packages/shared/package.json packages/shared/scripts/ensure-esm-file-exports.mjs packages/shared/src/index.ts packages/shared/src/configuration.ts packages/shared/src/errors.ts packages/shared/src/localization.ts packages/shared/src/structured-logging.ts packages/shared/tests/foundation-contract.test.mjs 'packages/shared/locales/*/common.json'",
+    "validate:config": "node scripts/validate-configuration.mjs",
+    "check": "pnpm validate:config && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
