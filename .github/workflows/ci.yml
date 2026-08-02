@@ -37,6 +37,9 @@ jobs:
       - name: Scan for committed secrets
         run: bash infrastructure/validation/scan-secrets.sh
 
+      - name: Validate configuration examples
+        run: node scripts/validate-configuration.mjs
+
       - name: Validate shell syntax
         run: |
           find infrastructure deploy/staging/scripts -type f -name '*.sh' -print0 | xargs -0 -r bash -n
@@ -115,6 +118,10 @@ jobs:
       - name: Run TypeScript checks
         if: steps.dependencies.outputs.available == 'true'
         run: pnpm typecheck
+
+      - name: Run format check
+        if: steps.dependencies.outputs.available == 'true'
+        run: pnpm format:check
 
       - name: Run lint
         if: steps.dependencies.outputs.available == 'true'
