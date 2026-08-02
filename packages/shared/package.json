@@ -17,6 +17,22 @@
     "./language-policy": {
       "types": "./dist/language-policy.d.ts",
       "default": "./dist/language-policy.js"
+    },
+    "./configuration": {
+      "types": "./dist/configuration.d.ts",
+      "default": "./dist/configuration.js"
+    },
+    "./errors": {
+      "types": "./dist/errors.d.ts",
+      "default": "./dist/errors.js"
+    },
+    "./localization": {
+      "types": "./dist/localization.d.ts",
+      "default": "./dist/localization.js"
+    },
+    "./structured-logging": {
+      "types": "./dist/structured-logging.d.ts",
+      "default": "./dist/structured-logging.js"
     }
   },
   "scripts": {
