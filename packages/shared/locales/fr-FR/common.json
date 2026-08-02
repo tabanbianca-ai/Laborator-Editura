@@ -1,0 +1,17 @@
+{
+  "action.cancel": "Annuler",
+  "action.confirm": "Confirmer",
+  "action.continue": "Continuer",
+  "action.save": "Enregistrer",
+  "auth.login": "Se connecter",
+  "auth.logout": "Se déconnecter",
+  "auth.resetPassword": "Réinitialiser le mot de passe",
+  "common.empty": "Aucun élément disponible.",
+  "common.error": "Une erreur s’est produite.",
+  "common.loading": "Chargement.",
+  "health.liveness": "Le service est actif.",
+  "health.readiness": "Le service est prêt.",
+  "health.startup": "Le service a démarré.",
+  "navigation.dashboard": "Tableau de bord",
+  "navigation.pipeline": "Chaîne de production éditoriale"
+}
