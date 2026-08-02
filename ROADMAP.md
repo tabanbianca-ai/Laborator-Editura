@@ -2369,6 +2369,362 @@ Roadmap impact:
   Standard 10 gates, and validated runtime behavior, and map localization
   resources before consolidation.
 
+## Phase IV Standard 12 - Canonical Accessibility and Inclusive Experience
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/accessibility/overview.md`.
+- `docs/standards/accessibility/ui-accessibility.md`.
+- `docs/standards/accessibility/component-standard.md`.
+- `docs/standards/accessibility/keyboard-navigation.md`.
+- `docs/standards/accessibility/forms-and-errors.md`.
+- `docs/standards/accessibility/images-and-alternative-text.md`.
+- `docs/standards/accessibility/pdf-accessibility.md`.
+- `docs/standards/accessibility/epub-accessibility.md`.
+- `docs/standards/accessibility/audio-video-accessibility.md`.
+- `docs/standards/accessibility/accessibility-profiles.md`.
+- `docs/standards/accessibility/testing-and-evidence.md`.
+- `docs/standards/accessibility/compliance-audit.md`.
+- `docs/standards/accessibility/remediation-plan.md`.
+
+Roadmap impact:
+
+- Standard 12 is the twelfth Phase IV canonical standard and complements the
+  Accessibility and Localization Module, UI Governance, Digital Assets,
+  Publishing, Media Localization, Testing and Validation, Localization
+  Standard, Observability, and release preparation.
+- It does not add a new accessibility runtime, validation engine, document
+  generation engine, media processing engine, database migrations, API
+  changes, UI redesign, Docker changes, or staging changes by itself.
+- It defines canonical rules for UI accessibility, accessible components,
+  keyboard navigation, forms and errors, images and alternative text, PDF
+  accessibility, EPUB accessibility, audio/video accessibility,
+  accessibility profiles, testing evidence, waivers, audit, and remediation.
+- Future interface inventories, component accessibility contracts,
+  critical-journey matrices, keyboard/focus reviews, semantic structure
+  reviews, contrast checks, PDF/UA checks, EPUB accessibility checks,
+  caption/transcript/audio-description checks, accessibility profile
+  governance, and release gates must conform to this standard.
+- Future implementation must remain incremental, preserve existing
+  Accessibility Module behavior, UI Governance, Localization Standard,
+  Standard 10 gates, frontend components, localization resources, and
+  validated runtime behavior, and map accessibility resources before
+  remediation.
+
+## Phase IV Standard 13 - Canonical Rights, Licensing and Provenance
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/rights-provenance/overview.md`.
+- `docs/standards/rights-provenance/rights-record-model.md`.
+- `docs/standards/rights-provenance/rights-holder-model.md`.
+- `docs/standards/rights-provenance/contracts-and-licenses.md`.
+- `docs/standards/rights-provenance/language-territory-format-channel.md`.
+- `docs/standards/rights-provenance/public-domain-validation.md`.
+- `docs/standards/rights-provenance/provenance-model.md`.
+- `docs/standards/rights-provenance/derived-assets.md`.
+- `docs/standards/rights-provenance/translation-rights.md`.
+- `docs/standards/rights-provenance/media-and-voice-rights.md`.
+- `docs/standards/rights-provenance/ai-content-rights.md`.
+- `docs/standards/rights-provenance/publication-gate.md`.
+- `docs/standards/rights-provenance/compliance-audit.md`.
+- `docs/standards/rights-provenance/consolidation-plan.md`.
+
+Roadmap impact:
+
+- Standard 13 is the thirteenth Phase IV canonical standard and complements
+  Rights and Provenance, Library, Publishing, Distribution, Public Portal,
+  Commerce, Translation, Media, Audio, Video, AI Governance, Workflow, Data
+  Governance, Compliance, and release preparation.
+- It does not add a legal ERP, digital signature provider, billing,
+  invoicing, royalties, litigation management, database migrations, API
+  changes, UI changes, Docker changes, or staging changes by itself.
+- It defines canonical rules for rights records, rights holders, contracts,
+  licenses, language rights, territory rights, format rights, channel rights,
+  public-domain validation, provenance, derived assets, translation rights,
+  media and voice rights, AI content rights, publication gates, expiration,
+  revocation, preservation, permissions, audit, and consolidation.
+- Future rights inventories, provenance maps, contract and license registers,
+  public-domain assessments, derived-asset relationship maps, voice consent
+  reviews, AI content rights checks, publication gate checks, duplication
+  analyses, and risk registers must conform to this standard.
+- Future implementation must remain incremental, preserve existing Rights and
+  Provenance behavior, Library ownership, Publishing and Distribution gates,
+  Workflow, Compliance, AI Governance, backup/restore, audit history, and
+  validated runtime behavior, and map rights records before consolidation.
+
+## Phase IV Standard 14 - Canonical Publishing, Distribution and Publication Withdrawal
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/publishing-distribution/overview.md`.
+- `docs/standards/publishing-distribution/publication-model.md`.
+- `docs/standards/publishing-distribution/publication-package.md`.
+- `docs/standards/publishing-distribution/metadata-requirements.md`.
+- `docs/standards/publishing-distribution/digital-formats.md`.
+- `docs/standards/publishing-distribution/print-publication.md`.
+- `docs/standards/publishing-distribution/distribution-model.md`.
+- `docs/standards/publishing-distribution/channel-connectors.md`.
+- `docs/standards/publishing-distribution/update-policy.md`.
+- `docs/standards/publishing-distribution/withdrawal-policy.md`.
+- `docs/standards/publishing-distribution/integrity-validation.md`.
+- `docs/standards/publishing-distribution/compliance-audit.md`.
+- `docs/standards/publishing-distribution/consolidation-plan.md`.
+
+Roadmap impact:
+
+- Standard 14 is the fourteenth Phase IV canonical standard and complements
+  Library, Publishing, Export, Rights and Provenance, Accessibility,
+  Workflow, Integration Gateway, Public Portal, Commerce, Magazine, Audio,
+  Video, Quality Agent, Testing Standard, and release preparation.
+- It does not add a new Publishing module, new Distribution module, separate
+  Archive module, external provider integration, billing, social-media
+  publishing, database migrations, API changes, UI changes, Docker changes,
+  or staging changes by itself.
+- It defines canonical rules for publishable editions, publication statuses,
+  publication packages, metadata requirements, digital formats, print
+  publication, distribution records, distribution statuses, channel
+  connectors, external synchronization, updates and corrections, withdrawal,
+  archival preservation, audio/video publication evidence, children's
+  publication evidence, integrity validation, permissions, audit, and
+  consolidation.
+- Future publication inventories, source-to-output lineage maps, package and
+  manifest implementation, metadata compliance reports, distribution
+  topology, connector contracts, duplicate and orphan publication analyses,
+  withdrawal-readiness assessments, risk registers, and publication
+  consolidation plans must conform to this standard.
+- Future implementation must remain incremental, preserve existing Library,
+  Publishing, Export, Rights and Provenance, Accessibility, Workflow, Public
+  Portal, Commerce, backup/restore, audit history, Phase 7 Step 16 behavior,
+  and validated runtime behavior, and map publication records before
+  consolidation.
+
+## Phase IV Standard 15 - Canonical Backup, Restore, Disaster Recovery and Business Continuity
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/backup-continuity/overview.md`.
+- `docs/standards/backup-continuity/resource-classification.md`.
+- `docs/standards/backup-continuity/backup-policy-model.md`.
+- `docs/standards/backup-continuity/backup-execution-model.md`.
+- `docs/standards/backup-continuity/encryption-and-immutability.md`.
+- `docs/standards/backup-continuity/retention-policy.md`.
+- `docs/standards/backup-continuity/restore-model.md`.
+- `docs/standards/backup-continuity/restore-validation.md`.
+- `docs/standards/backup-continuity/rpo-rto.md`.
+- `docs/standards/backup-continuity/disaster-recovery.md`.
+- `docs/standards/backup-continuity/business-continuity.md`.
+- `docs/standards/backup-continuity/degraded-operation.md`.
+- `docs/standards/backup-continuity/testing-and-evidence.md`.
+- `docs/standards/backup-continuity/compliance-audit.md`.
+- `docs/standards/backup-continuity/consolidation-plan.md`.
+
+Roadmap impact:
+
+- Standard 15 is the fifteenth Phase IV canonical standard and complements
+  Backup and Recovery, Platform Engineering, Security, Data Governance,
+  Publishing, Rights and Provenance, Observability, Testing, Infrastructure
+  Pack, Configuration Governance, Digital Asset Governance, and release
+  preparation.
+- It does not add a new backup runtime, new cloud backup provider, new vault
+  provider, automatic production failover, destructive cleanup, database
+  migrations, API changes, UI changes, Docker changes, or staging changes by
+  itself.
+- It defines canonical rules for resource classification, 3-2-1 protection,
+  backup policies, backup execution records, backup types, derived asset
+  recoverability, database recoverability, infrastructure protection, secrets
+  and key recovery, encryption, immutability, retention, controlled deletion,
+  restore records, restore validation, RPO/RTO, disaster recovery, business
+  continuity, degraded operation, monitoring, permissions, audit, and
+  consolidation.
+- Future protected-resource inventories, policy coverage matrices, RPO/RTO
+  assessments, storage topology maps, restore-readiness reports,
+  single-point-of-failure analyses, degraded-operation assessments, risk
+  registers, and backup consolidation plans must conform to this standard.
+- Future implementation must remain incremental, preserve existing Backup and
+  Recovery behavior, Platform Engineering, Security, Data Governance,
+  Publishing, Rights and Provenance, Observability, Testing, Infrastructure
+  Pack, backup evidence, restore evidence, audit history, and validated
+  runtime behavior, and map backup copies before consolidation.
+
+## Phase IV Standard 16 - Canonical Governance, Compliance and Risk Management
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/governance/overview.md`.
+- `docs/standards/governance/policy-model.md`.
+- `docs/standards/governance/risk-management.md`.
+- `docs/standards/governance/change-management.md`.
+- `docs/standards/governance/compliance-controls.md`.
+- `docs/standards/governance/architecture-exceptions.md`.
+- `docs/standards/governance/internal-audit.md`.
+- `docs/standards/governance/governance-dashboard.md`.
+- `docs/standards/governance/compliance-audit.md`.
+- `docs/standards/governance/remediation-roadmap.md`.
+
+Roadmap impact:
+
+- Standard 16 is the sixteenth Phase IV canonical standard and complements
+  Codex Governance, Enterprise Meta-Architecture, Compliance, Policy Engine,
+  Security Governance, AI Governance, Quality Governance, Observability,
+  Platform Engineering, all previously approved modules, all frameworks, all
+  standards, release preparation, and continuous improvement.
+- It does not add a new runtime governance engine, new compliance provider
+  integration, new enterprise module, database migrations, API changes, UI
+  changes, Docker changes, staging changes, automated approval, or breaking
+  behavior by itself.
+- It defines canonical rules for policy models, risk management, change
+  management, architecture exceptions, compliance controls, internal audit,
+  governance dashboards, governance maturity assessment, compliance
+  scorecards, risk registers, exception registers, architecture conformance
+  reports, remediation roadmaps, and governance evidence.
+- Future governance policy inventories, standard inventories, risk registers,
+  exception registers, compliance controls, audit evidence inventories,
+  governance maturity assessments, compliance scorecards, architecture
+  conformance reports, and remediation roadmaps must conform to this
+  standard.
+- Future implementation must remain incremental, preserve existing Codex
+  Governance, Enterprise Meta-Architecture, Compliance, Policy Engine,
+  Security Governance, AI Governance, Quality Governance, Observability,
+  Platform Engineering, all approved modules, frameworks, standards, audit
+  history, and validated runtime behavior, and map governance artifacts before
+  consolidation.
+
+## Phase IV Standard 17 - Canonical Enterprise Architecture and Dependency Governance
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/enterprise-architecture/overview.md`.
+- `docs/standards/enterprise-architecture/module-model.md`.
+- `docs/standards/enterprise-architecture/dependency-model.md`.
+- `docs/standards/enterprise-architecture/data-ownership.md`.
+- `docs/standards/enterprise-architecture/api-contracts.md`.
+- `docs/standards/enterprise-architecture/event-topology.md`.
+- `docs/standards/enterprise-architecture/dependency-graph.md`.
+- `docs/standards/enterprise-architecture/architecture-audit.md`.
+- `docs/standards/enterprise-architecture/consolidation-roadmap.md`.
+
+Roadmap impact:
+
+- Standard 17 is the seventeenth Phase IV canonical standard and complements
+  Codex Governance, Enterprise Meta-Architecture, Application Architecture,
+  Module Architecture, Data Governance, API Governance, Event Governance,
+  Integration Governance, Observability, Quality Governance, all approved
+  modules, all frameworks, all standards, release preparation, and future
+  architecture evolution.
+- It does not add a new runtime architecture engine, dependency analysis tool,
+  module registry service, database migration, API change, UI change, Docker
+  change, staging change, or breaking behavior by itself.
+- It defines canonical rules for module ownership, module type, module
+  lifecycle, service boundaries, explicit dependencies, versioned dependency
+  declarations, dependency maps, circular dependency prevention, data
+  ownership, cross-module access, API contracts, event topology, interface
+  versioning, architecture audit, dependency risk classification, and
+  controlled consolidation.
+- Future module introductions, module splits, module merges, shared service
+  changes, dependency changes, API/event contract changes, data ownership
+  changes, read model introductions, and architecture cleanup initiatives must
+  conform to this standard.
+- Future implementation must remain incremental, preserve existing validated
+  behavior, maintain tenant isolation, avoid circular dependencies, prevent
+  duplicate ownership, preserve audit history, document dependency impact, and
+  create migration and compatibility plans before architectural consolidation.
+
+## Phase IV Standard 18 - Canonical Documentation, Knowledge Management and Specification Governance
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/documentation/overview.md`.
+- `docs/standards/documentation/document-model.md`.
+- `docs/standards/documentation/specification-standard.md`.
+- `docs/standards/documentation/adr-standard.md`.
+- `docs/standards/documentation/knowledge-base.md`.
+- `docs/standards/documentation/semantic-search.md`.
+- `docs/standards/documentation/compliance-audit.md`.
+- `docs/standards/documentation/consolidation-roadmap.md`.
+
+Roadmap impact:
+
+- Standard 18 is the eighteenth Phase IV canonical standard and complements
+  Documentation Governance, Codex Governance, Enterprise Meta-Architecture,
+  Module Catalog, Canonical Definitions, Knowledge Management, Search, AI
+  Governance, Quality Governance, Testing, Observability, all approved
+  modules, all frameworks, all standards, release preparation, and future
+  documentation evolution.
+- It does not add a runtime documentation portal, semantic indexing service,
+  RAG ingestion pipeline, search infrastructure change, database migration,
+  API change, UI change, Docker change, staging change, destructive document
+  consolidation, or breaking behavior by itself.
+- It defines canonical rules for documentation-as-code, document metadata,
+  document type, ownership, approval, versioning, lifecycle, traceability,
+  specification structure, ADR structure, knowledge base records, semantic
+  search readiness, AI readiness, documentation audit, and documentation
+  consolidation.
+- Future specifications, ADR catalogs, API documentation inventories, AI
+  documentation inventories, workflow documentation inventories, traceability
+  matrices, duplication analyses, semantic indexing reports, and knowledge
+  base consolidation plans must conform to this standard.
+- Future implementation must remain incremental, preserve existing
+  identifiers, versions, approvals, history, canonical references, audit
+  history, and validated runtime behavior, and must not perform destructive
+  consolidation during baseline audits.
+
+## Phase IV Standard 19 - Canonical Platform Lifecycle Management
+
+Status: Active specification.
+
+Reference:
+
+- `docs/standards/platform-lifecycle/overview.md`.
+- `docs/standards/platform-lifecycle/lifecycle-model.md`.
+- `docs/standards/platform-lifecycle/versioning.md`.
+- `docs/standards/platform-lifecycle/compatibility.md`.
+- `docs/standards/platform-lifecycle/deprecation-policy.md`.
+- `docs/standards/platform-lifecycle/retirement-policy.md`.
+- `docs/standards/platform-lifecycle/lifecycle-dashboard.md`.
+- `docs/standards/platform-lifecycle/compliance-audit.md`.
+- `docs/standards/platform-lifecycle/roadmap.md`.
+
+Roadmap impact:
+
+- Standard 19 is the nineteenth Phase IV canonical standard and complements
+  Codex Governance, Enterprise Meta-Architecture, Enterprise Architecture and
+  Dependency Governance, Documentation Governance, Configuration Governance,
+  Testing and Validation, Observability, Backup and Continuity, all approved
+  modules, all frameworks, all standards, release preparation, and long-term
+  platform evolution.
+- It does not add a runtime lifecycle dashboard, automated lifecycle
+  transition engine, automated deprecation enforcement, automated component
+  removal, database migration, API change, UI change, Docker change, staging
+  change, destructive cleanup, or breaking behavior by itself.
+- It defines canonical rules for lifecycle stages, component records,
+  component types, maturity levels, support levels, semantic versioning,
+  compatibility assessment, deprecation records, retirement records,
+  lifecycle dashboards, lifecycle audit, and controlled evolution roadmaps.
+- Future lifecycle inventories, maturity matrices, compatibility
+  assessments, deprecation registers, end-of-life roadmaps, lifecycle
+  dashboards, support policies, release policies, patch policies, and LTS
+  policies must conform to this standard.
+- Future implementation must remain incremental, preserve existing
+  identifiers, versions, approvals, audit history, validated runtime behavior,
+  compatibility evidence, documentation evidence, backup evidence, and
+  release evidence, and must not remove deprecated components without an
+  approved retirement plan.
+
 ## MVP Scope
 
 The MVP includes:
