@@ -22,7 +22,9 @@ improvement items.
 
 | Domain | Status | Notes |
 | --- | --- | --- |
-| Standards coverage | Complete | Standards 01 through 20 are represented. |
+| Standards coverage | Complete | Standards 01 through 21 are represented, including Standard 21 standards governance. |
+| Master index coverage | Complete | CEMI master documents provide the single navigation entry point for the approved Codex corpus. |
+| Implementation plan coverage | Complete | CIMP implementation documents define execution stages, module gates, progress metrics, release plan, RC checklist, and final readiness. |
 | Module documentation | Complete baseline | 25 Phase II module directories exist. |
 | Framework documentation | Complete baseline | 8 specialized framework directories exist. |
 | Architecture consistency | Pass with recommendations | Standard 17 defines future dependency governance. |
@@ -57,4 +59,3 @@ improvement items.
 - Expand ADR coverage.
 - Add continuous evidence collection in CI/CD.
 - Convert high-value reports into maintained dashboards.
-
