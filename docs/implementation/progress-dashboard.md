@@ -24,6 +24,7 @@ It is a documentation dashboard until automated metrics are implemented.
 | Architecture standards | Complete documentation baseline |
 | CEMI | Complete master index baseline |
 | CIMP | Created as implementation planning baseline |
+| CIEF | Created as execution framework baseline |
 | Runtime implementation | Foundation present; detailed module hardening required |
 | Test evidence | Present; traceability automation pending |
 | Release Candidate status | Not started |
@@ -35,6 +36,7 @@ It is a documentation dashboard until automated metrics are implemented.
 | Implementation progress | 0% for CIMP execution | Count modules that pass Analyse through Approve gates. |
 | Testing progress | 0% for CIMP execution | Count modules with passing required tests and retained evidence. |
 | Documentation progress | 100% for CIMP baseline | Count required CIMP deliverables created and linked. |
+| Execution framework progress | 100% for CIEF baseline | Count required CIEF deliverables created and linked. |
 | Compliance progress | 0% for CIMP execution | Count modules validated against applicable standards. |
 | Release Candidate readiness | 0% | Count RC checklist categories passing. |
 
