@@ -4194,6 +4194,52 @@ Rules:
   evidence, modules, frameworks, standards, specifications, and validated
   runtime behavior must be preserved.
 
+### Canonical Implementation Execution Framework Directive
+
+Purpose:
+
+- Define Phase V Execution 01, the Codex Canonical Implementation Execution
+  Framework, as the official process for executing implementation tasks across
+  Laborator Editura.
+
+Rules:
+
+- The canonical CIEF task entry point is
+  `docs/implementation/implementation-tasks.md`.
+- CIEF is an execution framework. It does not introduce new architecture
+  standards, product modules, runtime behavior, API contracts, database
+  schemas, UI requirements, Docker configuration, staging configuration, or
+  scope expansion by itself.
+- CIEF follows Specification First, Test First, Security by Default, AI
+  Assisted, Incremental Delivery, Continuous Validation, Zero Regression, Full
+  Traceability, Documentation First, and Canonical Before Custom.
+- The mandatory CIEF deliverables are
+  `docs/implementation/implementation-backlog.md`,
+  `docs/implementation/implementation-tasks.md`,
+  `docs/implementation/execution-dashboard.md`,
+  `docs/implementation/module-status.md`,
+  `docs/implementation/release-readiness.md`, and
+  `docs/implementation/implementation-metrics.md`.
+- The execution workflow is Analyze, Validate Specification, Generate Design,
+  Generate Tasks, Implement, Run Tests, Static Analysis, Security Scan,
+  Documentation, Review, Approve, Merge, and Release Candidate.
+- Every task must define Task ID, module, priority, dependencies,
+  description, acceptance criteria, tests, documentation, estimated effort,
+  status, and owner.
+- Definition of Ready requires approved specification, available
+  dependencies, validated architecture, and assessed risks.
+- Definition of Done requires compiling code where applicable, passing tests,
+  no Critical static analysis errors, passed security checks or accepted
+  blockers, updated documentation, recorded audit expectations, traceability,
+  and no open Critical defect.
+- CIEF progress must track module progress, task progress, test coverage,
+  defects, blockers, estimated remaining effort, and total implementation
+  percentage.
+- CIEF must maintain traceability between requirements, standards,
+  implementation, tests, documentation, and audit history.
+- Do not create new architectural standards while executing CIEF unless the
+  project owner explicitly requests them.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
