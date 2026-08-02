@@ -18,6 +18,9 @@ certification.
   inventory, traceability record, dashboard, and roadmap.
 - Use CIMP as the execution plan for implementation stages, module gates,
   progress metrics, Release Candidate preparation, and final readiness.
+- Use CIEF as the execution framework for backlog, tasks, Definition of
+  Ready, Definition of Done, dashboards, module status, release readiness, and
+  implementation metrics.
 - Treat new requirements as v1.1 changes.
 - Require architecture review for v1.1 changes.
 - Require implementation, testing, evidence, and certification before v1.1
@@ -37,7 +40,8 @@ certification.
 10. Standards governance registry.
 11. CEMI maintenance and master navigation automation.
 12. CIMP execution dashboard and RC evidence automation.
-13. Runtime hardening and production validation.
+13. CIEF task execution and metrics automation.
+14. Runtime hardening and production validation.
 
 ## v1.1 Certification Loop
 
@@ -70,3 +74,6 @@ Codex v1.1 -> New Requirements -> Architecture Review -> Implementation -> Testi
 - Convert the CIMP module roadmap, progress dashboard, release plan, RC
   checklist, and final readiness records into maintained implementation
   evidence.
+- Convert the CIEF backlog, task register, execution dashboard, module
+  status, release readiness, and implementation metrics into maintained
+  execution evidence.
