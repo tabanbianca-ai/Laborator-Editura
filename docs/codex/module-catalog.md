@@ -110,6 +110,13 @@ cross-platform implementation rules rather than new product modules.
 | Standard 09 | Canonical Logging, Audit, Monitoring and Observability | `docs/standards/observability/overview.md` |
 | Standard 10 | Canonical Testing, Validation and Quality Gates | `docs/standards/testing-validation/overview.md` |
 | Standard 11 | Canonical Internationalization, Localization and Terminology | `docs/standards/localization/overview.md` |
+| Standard 12 | Canonical Accessibility and Inclusive Experience | `docs/standards/accessibility/overview.md` |
+| Standard 13 | Canonical Rights, Licensing and Provenance | `docs/standards/rights-provenance/overview.md` |
+| Standard 14 | Canonical Publishing, Distribution and Publication Withdrawal | `docs/standards/publishing-distribution/overview.md` |
+| Standard 15 | Canonical Backup, Restore, Disaster Recovery and Business Continuity | `docs/standards/backup-continuity/overview.md` |
+| Standard 16 | Canonical Governance, Compliance and Risk Management | `docs/standards/governance/overview.md` |
+| Standard 17 | Canonical Enterprise Architecture and Dependency Governance | `docs/standards/enterprise-architecture/overview.md` |
+| Standard 18 | Canonical Documentation, Knowledge Management and Specification Governance | `docs/standards/documentation/overview.md` |
 
 ## Fundamental Architecture Closure
 
