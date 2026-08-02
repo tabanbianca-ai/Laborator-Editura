@@ -14,6 +14,7 @@ The certification baseline consolidates:
 - 21 Phase IV canonical standards.
 - Phase V CEMI master documents.
 - Phase V CIMP implementation documents.
+- Phase V CIEF execution documents.
 - Runtime API modules.
 - Workspace applications and packages.
 - Root governance documents.
