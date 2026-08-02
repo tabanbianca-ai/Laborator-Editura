@@ -127,6 +127,8 @@ Draft -> Review -> Approved -> Implemented -> Validated -> Certified -> Deprecat
 | `docs/codex/api-contracts.md` | Specification | Canonical Codex API contract guidance | Active baseline |
 | `docs/codex/events.md` | Specification | Canonical Codex event guidance | Active baseline |
 | `docs/master/codex-index.md` | Master index | Single navigation entry point for the approved Codex corpus | Active baseline |
+| `docs/implementation/master-plan.md` | Implementation plan | Official implementation plan for turning approved standards into execution, validation, and RC readiness | Active baseline |
+| `docs/implementation/implementation-tasks.md` | Execution framework | Official implementation task model, Definition of Ready, Definition of Done, and execution workflow | Active baseline |
 
 ## Root Governance Artifacts
 
@@ -138,6 +140,8 @@ Draft -> Review -> Approved -> Implemented -> Validated -> Certified -> Deprecat
 | `ROADMAP.md` | Implementation and governance roadmap. |
 | `AGENTS.md` | Agent and implementation governance. |
 | `docs/master/codex-index.md` | Canonical Enterprise Master Index and entry point. |
+| `docs/implementation/master-plan.md` | Canonical Implementation Master Plan. |
+| `docs/implementation/implementation-tasks.md` | Canonical Implementation Execution Framework. |
 | `docs/codex/canonical-definitions.md` | Canonical definition registry. |
 | `docs/codex/module-catalog.md` | Module, framework, and standard sequence. |
 | `docs/codex/governance-framework.md` | Codex governance workflow. |
