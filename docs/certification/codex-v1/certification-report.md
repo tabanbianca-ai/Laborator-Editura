@@ -64,6 +64,7 @@ Codex v1.0 has:
 - Complete Phase IV canonical standards baseline through Standard 21.
 - Complete Phase V CEMI master navigation baseline.
 - Complete Phase V CIMP implementation planning baseline.
+- Complete Phase V CIEF implementation execution framework baseline.
 - Complete final certification documentation pack.
 - Canonical definitions and consolidation governance.
 - Baseline traceability from requirements to standards, modules,
