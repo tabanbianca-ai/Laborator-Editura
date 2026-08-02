@@ -354,6 +354,9 @@ After the 25 fundamental Phase II modules, the Codex is governed by:
   Codex Canonical Implementation Master Plan for turning approved standards
   into implementation, validation, audit evidence, and Release Candidate
   readiness.
+- `docs/implementation/implementation-tasks.md` - Phase V Execution 01,
+  official Codex Canonical Implementation Execution Framework task model,
+  Definition of Ready, Definition of Done, and execution flow.
 
 Library is the central editorial repository and Single Source of Truth for
 all editorial resources. Future module specifications must depend on Library
