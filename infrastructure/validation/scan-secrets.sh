@@ -34,12 +34,24 @@ for file in "${forbidden_files[@]}"; do
   fi
 done
 
-if git grep -n -I -E '(BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY|ghp_[A-Za-z0-9_]{20,}|xox[baprs]-|sk-[A-Za-z0-9]{20,})' -- . \
-  ':!infrastructure/docs' \
-  ':!*.md' \
-  ':!*.example' \
-  ':!*.template'; then
-  die "Potential secret detected. Review output above."
+secret_pattern='(BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY|ghp_[A-Za-z0-9_]{20,}|xox[baprs]-|sk-[A-Za-z0-9]{20,})'
+suspected_files=()
+while IFS= read -r suspected_file; do
+  [[ -n "$suspected_file" ]] && suspected_files+=("$suspected_file")
+done < <(
+  git grep -l -I -E "$secret_pattern" -- . \
+    ':!infrastructure/docs' \
+    ':!*.md' \
+    ':!*.example' \
+    ':!*.template' || true
+)
+
+if [[ "${#suspected_files[@]}" -gt 0 ]]; then
+  warn "Potential secret patterns detected in tracked files. Matched values are intentionally not printed."
+  for suspected_file in "${suspected_files[@]}"; do
+    warn "Review file for possible secret rotation: $suspected_file"
+  done
+  die "Potential secret detected. Rotate any real exposed credentials before release."
 fi
 
 success "Secret scan completed."
