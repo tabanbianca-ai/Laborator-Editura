@@ -117,6 +117,7 @@ cross-platform implementation rules rather than new product modules.
 | Standard 16 | Canonical Governance, Compliance and Risk Management | `docs/standards/governance/overview.md` |
 | Standard 17 | Canonical Enterprise Architecture and Dependency Governance | `docs/standards/enterprise-architecture/overview.md` |
 | Standard 18 | Canonical Documentation, Knowledge Management and Specification Governance | `docs/standards/documentation/overview.md` |
+| Standard 19 | Canonical Platform Lifecycle Management | `docs/standards/platform-lifecycle/overview.md` |
 
 ## Fundamental Architecture Closure
 
