@@ -19,6 +19,8 @@ infrastructure/**/rclone.conf
 *.tar.gz
 *.sha256
 .turbo
+.pnpm-store
+.swift-module-cache
 *.log
 __pycache__
 .python-cache
