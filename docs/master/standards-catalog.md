@@ -71,6 +71,7 @@ documents. It points to them.
 | `docs/codex/catalog.md` | Standards governance | Standard 21 catalog and standards lifecycle. |
 | `docs/master/codex-index.md` | Master index | Single entry point for navigating the approved Codex corpus. |
 | `docs/implementation/master-plan.md` | Implementation plan | Official execution plan for implementation, validation, audit, and Release Candidate readiness. |
+| `docs/implementation/implementation-tasks.md` | Execution framework | Official task model, Definition of Ready, Definition of Done, and implementation execution flow. |
 
 ## Maintenance Rule
 
