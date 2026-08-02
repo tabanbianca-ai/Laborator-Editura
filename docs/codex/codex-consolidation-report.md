@@ -4,7 +4,7 @@
 
 - Title: Codex Redundancy Consolidation Report.
 - Identifier: CODEX-REDUNDANCY-CONSOLIDATION-REPORT.
-- Version: 2.11.0.
+- Version: 2.14.0.
 - Status: Active consolidation report.
 - Owner: Enterprise Meta-Architecture.
 - Reviewers: Documentation Governance, Quality Governance, Data Governance,
@@ -13,7 +13,9 @@
 - Dependencies: `docs/codex/canonical-definitions.md`,
   `docs/codex/module-catalog.md`, `docs/codex/meta-architecture.md`,
   `docs/frameworks/documentation-governance/overview.md`,
-  `docs/frameworks/quality-governance/overview.md`.
+  `docs/frameworks/quality-governance/overview.md`,
+  `docs/master/codex-index.md`,
+  `docs/implementation/master-plan.md`.
 - Change history:
   - 1.0.0: Initial consolidation of repeated Phase II closure statements.
   - 2.0.0: Expanded consolidation for cross-cutting Codex definitions.
@@ -40,6 +42,11 @@
     consolidation baseline.
   - 2.11.0: Added Standard 20 final consolidation and certification
     ownership for Codex v1.0.
+  - 2.12.0: Added Standard 21 standards governance meta-standard ownership.
+  - 2.13.0: Added CEMI master index ownership for enterprise navigation and
+    orientation.
+  - 2.14.0: Added CIMP implementation plan ownership for execution,
+    progress, Release Candidate preparation, and final readiness.
 
 ## Purpose
 
@@ -61,6 +68,10 @@ This consolidation establishes:
   repeated cross-cutting concepts.
 - `docs/codex/module-catalog.md` as the canonical owner for module,
   framework, standard, and phase classification.
+- `docs/master/codex-index.md` as the single enterprise entry point and
+  master navigation index.
+- `docs/implementation/master-plan.md` as the official implementation
+  execution plan.
 - `docs/codex/meta-architecture.md` as the canonical owner for Codex evolution
   and governance rules.
 - Framework 08 as the canonical owner for documentation governance.
@@ -110,6 +121,10 @@ The audit searched repeated cross-cutting terms including:
 - `traceability matrix`.
 - `compliance scorecard`.
 - `v1.1 planning`.
+- `standards governance`.
+- `standard lifecycle`.
+- `review calendar`.
+- `version matrix`.
 
 ## 2026-08-01 Consolidation Pass
 
@@ -157,6 +172,9 @@ The consolidation decision is documentation-only:
 | Documentation as Code, specifications, document metadata, versioning, ADRs, knowledge base, traceability, semantic search readiness, AI-ready documentation, and documentation consolidation repeated across Documentation Governance, Codex Governance, architecture chapters, module docs, standards, frameworks, API docs, AI docs, workflow docs, release reports, and operations docs. | `docs/standards/documentation/overview.md`, `docs/frameworks/documentation-governance/overview.md`, `docs/codex/canonical-definitions.md`. | Local docs may preserve operational guidance and module-specific documentation context; Standard 18 owns canonical document model, specification standard, ADR standard, knowledge base model, semantic search readiness, compliance audit, and documentation consolidation roadmap rules. |
 | Lifecycle stages, maturity levels, semantic versioning, compatibility, deprecation, retirement, support levels, release readiness, operation, monitoring, improvement, and end-of-life planning repeated across roadmaps, module plans, release reports, operations docs, DevSecOps, Platform Engineering, Configuration, Testing, Observability, Backup, and standards. | `docs/standards/platform-lifecycle/overview.md`, `docs/codex/module-catalog.md`, `docs/standards/naming-versioning/overview.md`. | Local docs may describe release-specific or component-specific lifecycle context; Standard 19 owns canonical lifecycle stages, maturity model, compatibility assessment, deprecation policy, retirement policy, dashboard model, baseline audit, and lifecycle roadmap rules. |
 | Certification, final consolidation, release readiness, traceability matrix, compliance scorecards, maturity assessment, certification dashboards, final reports, and v1.1 planning repeated across release reports, quality governance, roadmap sections, standards, modules, framework docs, and production readiness documents. | `docs/certification/codex-v1/certification-report.md`, `docs/certification/codex-v1/executive-summary.md`, `docs/certification/codex-v1/roadmap-v1.1.md`. | Local docs may preserve release-specific evidence and recommendations; Standard 20 owns the Codex v1.0 certification process, certification outcomes, final evidence pack, certification decision, and v1.1 planning baseline. |
+| Standard catalogs, standards indexes, dependency matrices, version matrices, compliance matrices, review calendars, standard lifecycle, standard change approval, standard consolidation, deprecation, and archival repeated across Codex Governance, Documentation Governance, Quality Governance, Standard 16, Standard 18, Standard 19, Standard 20, and roadmap sections. | `docs/codex/catalog.md`, `docs/codex/standards-index.md`, `docs/codex/governance-report.md`. | Local docs may describe domain-specific governance requirements; Standard 21 owns how standards themselves are created, modified, consolidated, deprecated, reviewed, and archived. |
+| Enterprise navigation, master index, standards catalog, module catalog, dependency map, enterprise inventory, traceability matrix, executive dashboard, and master roadmap repeated across root docs, certification docs, roadmap sections, catalogs, and reports. | `docs/master/codex-index.md`, `docs/master/standards-catalog.md`, `docs/master/module-catalog.md`, `docs/master/dependency-map.md`, `docs/master/enterprise-inventory.md`, `docs/master/traceability-matrix.md`, `docs/master/executive-dashboard.md`, `docs/master/roadmap.md`. | CEMI owns navigation and orientation only. Canonical rules stay in their domain owner documents. |
+| Implementation execution order, module gate workflow, progress metrics, blocker register, Release Candidate path, RC checklist, and final readiness repeated across roadmap, release, quality, certification, and implementation planning docs. | `docs/implementation/master-plan.md`, `docs/implementation/module-roadmap.md`, `docs/implementation/progress-dashboard.md`, `docs/implementation/release-plan.md`, `docs/implementation/rc-checklist.md`, `docs/implementation/final-readiness.md`. | CIMP owns execution planning only. Standards and module specifications remain canonical owners for requirements. |
 | Translation, terminology, lexicography, semantic fidelity, Translation Memory, glossary hierarchy, and confidence scoring repeated across linguistic modules. | Translation, Terminology, Integrated Linguistic Knowledge Base, and Advanced Linguistic Resources directives in `AGENTS.md`; module docs. | Local docs preserve language-pair/domain behavior; canonical linguistic priority and evidence rules remain shared. |
 
 ### Dependency Preservation
@@ -201,6 +219,9 @@ The largest repeated concepts are:
 | Documentation, specifications, knowledge base, ADRs, document metadata, traceability, semantic search readiness, AI-ready documentation, and documentation consolidation | Repeated across Documentation Governance, Codex Governance, architecture chapters, module documentation, framework docs, standard docs, API docs, AI docs, workflow docs, release reports, operations docs, and root specifications. | Canonical owner is Standard 18, with Documentation, Knowledge Management and Specification Governance as operational owner. |
 | Platform lifecycle, component maturity, semantic versioning, compatibility, release operation, monitoring, improvement, deprecation, retirement, support levels, and end-of-life planning | Repeated across roadmap sections, module plans, release readiness documents, operations documents, DevSecOps, Platform Engineering, Configuration, Testing, Observability, Backup, and standards. | Canonical owner is Standard 19, with Platform Lifecycle Management as operational owner. |
 | Final certification, certification evidence, compliance scorecards, maturity assessments, certification dashboards, release readiness, final consolidation, and v1.1 planning | Repeated across release reports, quality governance, roadmap sections, standards, module plans, framework docs, production readiness documents, and certification docs. | Canonical owner is Standard 20, with Codex v1.0 Certification Governance as operational owner. |
+| Standards governance, standard lifecycle, standard change approval, standards catalog, dependency matrix, version matrix, compliance matrix, review calendar, standard consolidation, deprecation, and archival | Repeated across Codex Governance, Documentation Governance, Quality Governance, governance standards, lifecycle standards, certification docs, and roadmap sections. | Canonical owner is Standard 21, with Codex Standards Governance as operational owner. |
+| Enterprise navigation, master index, master catalog, enterprise inventory, traceability dashboard, executive dashboard, and master roadmap | Repeated across root governance docs, certification docs, roadmap sections, module catalog, standards catalog, and consolidation reports. | Canonical owner is CEMI, with Codex Enterprise Governance as operational owner. |
+| Implementation execution stages, module gates, progress dashboard, release plan, RC checklist, final readiness, and Release Candidate path | Repeated across root roadmap docs, release plans, quality docs, certification docs, and implementation planning docs. | Canonical owner is CIMP, with Codex Implementation Governance as operational owner. |
 | Phase closure and module sequence | Previously repeated in module migration plans. | Canonical owner remains `docs/codex/module-catalog.md`. |
 
 ## Canonical Definitions
@@ -273,6 +294,9 @@ snapshot only as consolidation evidence for the audited pass.
 | Documentation, knowledge management, specifications, ADRs, traceability, semantic search readiness, AI-ready documentation, and documentation consolidation governance | `docs/standards/documentation/overview.md` |
 | Platform lifecycle, maturity, semantic versioning, compatibility, deprecation, retirement, support, end-of-life, lifecycle dashboard, and controlled evolution governance | `docs/standards/platform-lifecycle/overview.md` |
 | Codex v1.0 certification, final consolidation, traceability matrix, compliance scorecard, maturity assessment, certification dashboard, executive summary, and v1.1 planning governance | `docs/certification/codex-v1/certification-report.md` |
+| Codex standards governance, standards catalog, dependency matrix, version matrix, compliance matrix, review calendar, standard lifecycle, change approval, consolidation, deprecation, archival, and future standard governance | `docs/codex/catalog.md` |
+| Codex entry point, master navigation, master standards catalog, master module catalog, master dependency map, enterprise inventory, master traceability matrix, executive dashboard, and master roadmap | `docs/master/codex-index.md` |
+| Codex implementation plan, execution stages, module gates, progress metrics, release plan, RC checklist, and final readiness | `docs/implementation/master-plan.md` |
 | Data and JSON Master governance | `docs/frameworks/data-engineering/overview.md`, `docs/JSON_MASTER_FORMAT.md` |
 | Security and access | `docs/frameworks/security-engineering/overview.md`, `docs/modules/iam/iam-overview.md` |
 | AI governance | `docs/frameworks/ai-engineering/overview.md`, `docs/modules/ai-governance/ai-governance-overview.md` |
