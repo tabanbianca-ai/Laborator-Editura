@@ -25,6 +25,7 @@ improvement items.
 | Standards coverage | Complete | Standards 01 through 21 are represented, including Standard 21 standards governance. |
 | Master index coverage | Complete | CEMI master documents provide the single navigation entry point for the approved Codex corpus. |
 | Implementation plan coverage | Complete | CIMP implementation documents define execution stages, module gates, progress metrics, release plan, RC checklist, and final readiness. |
+| Execution framework coverage | Complete | CIEF execution documents define backlog, task model, Definition of Ready, Definition of Done, dashboard, module status, readiness, and metrics. |
 | Module documentation | Complete baseline | 25 Phase II module directories exist. |
 | Framework documentation | Complete baseline | 8 specialized framework directories exist. |
 | Architecture consistency | Pass with recommendations | Standard 17 defines future dependency governance. |
