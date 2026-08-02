@@ -3305,6 +3305,618 @@ Rules:
 - Any divergence from Standard 11 requires an approved architectural
   exception.
 
+### Canonical Accessibility and Inclusive Experience Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 12 as the official canonical standard for
+  accessibility and inclusive experience across interfaces, components,
+  forms, documents, publications, media, accessibility profiles, validation,
+  evidence, waivers, audit, and release gates.
+
+Rules:
+
+- The canonical Standard 12 entry point is
+  `docs/standards/accessibility/overview.md`.
+- This directive does not authorize a new accessibility runtime, validation
+  engine, document generation engine, media processing engine, database
+  migrations, API changes, UI redesign, Docker changes, staging changes, or
+  breaking behavior by itself.
+- Accessibility is required by design and must not be treated as an optional
+  extension.
+- The platform must target at least WCAG 2.2 AA, WAI-ARIA where native
+  semantics are insufficient, semantic HTML, EPUB Accessibility, PDF/UA where
+  policy requires it, WebVTT, SRT, and applicable store or distribution
+  accessibility requirements.
+- Every interface must provide full keyboard navigation, logical focus order,
+  visible focus, no focus traps, semantic headings and landmarks, labels for
+  every control, field-associated errors, clear instructions, sufficient
+  contrast, text resizing, reflow, screen reader compatibility, and usable
+  phone, tablet, laptop, and desktop behavior.
+- Every official Design System component must document semantic role,
+  accessible name, keyboard behavior, focus behavior, screen reader behavior,
+  contrast requirements, error behavior, supported states, and accessibility
+  tests.
+- Non-compliant components must not be published to the official component
+  library. Accessibility fixes belong in canonical reusable components, not
+  isolated one-off application variants.
+- Forms must use persistent labels. Placeholder text must not replace a
+  label.
+- Images must be classified as `INFORMATIVE`, `DECORATIVE`, `FUNCTIONAL`,
+  `COMPLEX`, or `TEXTUAL`, with appropriate alternative text or extended
+  description.
+- AI-generated alternative text, captions, transcripts, or descriptions
+  require human validation before publication according to risk.
+- Accessible PDFs must include tagged structure, correct reading order, title
+  and language, headings, bookmarks, alternative text, accessible tables,
+  descriptive links, contrast, compatible fonts and encoding, and PDF/UA
+  validation when policy requires it.
+- Accessible EPUB outputs must include semantic structure, reading order,
+  navigation, accessibility metadata, declared language, alternative text,
+  accessible tables, navigable notes and references, assistive reader
+  compatibility, and automated validation before publication.
+- Audio and video outputs must preserve required transcripts, captions,
+  speaker identification, accessible controls, synchronization metadata,
+  WebVTT/SRT export where applicable, and source version linkage.
+- Accessibility profiles may include `DEFAULT`, `LOW_VISION`, `BLIND`,
+  `COLOR_VISION_DEFICIENCY`, `DYSLEXIA_SUPPORT`, `MOTOR_ASSISTANCE`,
+  `HEARING_ASSISTANCE`, `REDUCED_MOTION`, `SENIOR_MODE`, and `CHILD_MODE`;
+  profiles must not change content meaning, reduce security, or change
+  permissions.
+- Critical flows such as authentication, access recovery, navigation, project
+  creation, document upload, translation, proofreading, approval,
+  publication, reading, audio/video playback, profile administration,
+  language switching, and accessibility preference management must be fully
+  validated.
+- Automated validation is required but is not sufficient for final
+  certification. Human validation must include keyboard navigation, screen
+  reader use, zoom and reflow, real critical-flow testing, message clarity,
+  alternative text review, audio description review, and device testing.
+- Accessibility issue severities are `BLOCKING`, `CRITICAL`, `MAJOR`,
+  `MINOR`, and `ADVISORY`. `BLOCKING` and `CRITICAL` issues block release.
+- Accessibility validation integrates into Design Review -> Component Tests
+  -> Application Tests -> Document Validation -> Multimedia Validation ->
+  Staging Review -> Release Gate.
+- Releases must not be promoted when a critical flow is inaccessible,
+  blocking violations remain unresolved, required transcripts or captions are
+  missing, document accessibility policy is not met, or validation evidence
+  is missing.
+- Accessibility evaluations, violations, remediation, waivers, approvals,
+  validated versions, tools, evidence, profile changes, AI-generated
+  alternative text, and human validations must be audited.
+- Existing Accessibility Module behavior, UI Governance, Localization
+  Standard, Testing Standard, frontend components, localization resources,
+  and validated runtime behavior must not be changed without an approved
+  implementation phase.
+- Any divergence from Standard 12 requires an approved architectural
+  exception.
+
+### Canonical Rights, Licensing and Provenance Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 13 as the official canonical standard for rights,
+  licensing, provenance, rights holders, contracts, permissions, public-domain
+  validation, derived assets, translation rights, media and voice rights, AI
+  content rights, publication gates, audit, and consolidation.
+
+Rules:
+
+- The canonical Standard 13 entry point is
+  `docs/standards/rights-provenance/overview.md`.
+- This directive does not authorize a legal ERP, digital signature provider,
+  billing, invoicing, royalties, litigation management, database migrations,
+  API changes, UI changes, Docker changes, staging changes, or breaking
+  behavior by itself.
+- No work or derivative asset may be published without valid rights
+  verification.
+- Rights must be separated by language, territory, format, distribution
+  channel, commercial use, adaptation permission, validity period, and
+  restrictions.
+- Missing, ambiguous, expired, revoked, rejected, or incompatible rights must
+  block publication until reviewed.
+- A general authorization must not be interpreted as worldwide,
+  multilingual, multimedia, commercial, derivative, or promotional
+  authorization unless explicitly documented.
+- Rights records must preserve canonical identifier, resource type, resource
+  ID, resource version, rights holder, rights type, authorization basis,
+  license, contract, languages, territories, formats, channels, commercial
+  use, adaptation permission, derivative use, AI processing permission,
+  validity period, restrictions, evidence, verification status, reviewer,
+  version, and audit information.
+- Allowed rights verification statuses are `DRAFT`, `UNDER_REVIEW`,
+  `INFORMATION_MISSING`, `VALIDATED`, `VALIDATED_WITH_RESTRICTIONS`,
+  `EXPIRED`, `REVOKED`, `REJECTED`, and `ARCHIVED`.
+- Only `VALIDATED` and `VALIDATED_WITH_RESTRICTIONS` allow controlled
+  continuation, and restrictions must be applied automatically.
+- Rights holder identity must remain separate from author, translator,
+  editor, file owner, uploader, publisher, contributor, and AI agent.
+- Contracts and licenses must be versioned and structured. A contract file
+  does not replace structured rights data needed for verification.
+- Public domain status requires documented jurisdiction, author, dates,
+  protection term, edition, translation, added elements, and distinct rights
+  review. A public-domain original does not automatically make modern
+  translations, forewords, illustrations, critical editions, recordings,
+  covers, or adaptations free of rights.
+- Provenance must preserve source type, source ID, source location, source
+  owner, source version, acquisition method, acquisition actor, import
+  process, transformation history, validation status, and confidence.
+- Derived assets must preserve exact source version, transformation history,
+  inherited restrictions, additional permissions, actor or agent, approval,
+  and generation date.
+- Translation rights must distinguish original work rights, translation
+  rights, translator rights, and publication rights for the resulting
+  edition.
+- Images, illustrations, fonts, audio, video, human voices, cloned voices,
+  synthetic voices, AI-generated resources, and promotional materials require
+  rights and provenance verification before use or publication.
+- Voice cloning requires explicit and verifiable consent and must preserve
+  allowed purposes, projects, languages, commercial use, model training
+  allowance, cloning allowance, validity period, and revocation terms.
+- AI may assist with discovery, extraction, summarization, inconsistency
+  detection, and risk detection, but it may not issue final legal validation,
+  declare material rights-free, grant rights, approve publication, infer
+  consent, or override rights restrictions.
+- Publication and Distribution & Promotion are distinct processes.
+  Publication produces the official edition; distribution and promotion use
+  the validated official edition and must not create independent source
+  copies.
+- Rights and provenance records must not be physically deleted by ordinary
+  operations. Corrections create new versions, history is preserved, and legal
+  hold requirements must be respected.
+- Sensitive rights operations may require recent MFA, mandatory
+  justification, multiple approvals, separation of duties, and consolidated
+  audit.
+- Rights creation, evidence upload, contract changes, validations,
+  rejections, expirations, revocations, authorized publications, blocked
+  publications, exceptions, holder changes, AI resource use, and derivative
+  asset generation must be audited.
+- Existing Rights and Provenance, Library, Publishing, Data Governance, AI
+  Governance, Workflow, Compliance, public portal, commerce, media, and
+  validated runtime behavior must not be changed without an approved
+  implementation phase.
+- Any divergence from Standard 13 requires an approved architectural
+  exception.
+
+### Canonical Publishing, Distribution and Publication Withdrawal Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 14 as the official canonical standard for
+  publishable editions, publication packages, derived formats, metadata,
+  digital formats, print publication, distribution records, channel
+  connectors, publication updates, publication withdrawal, integrity
+  validation, audit, and consolidation.
+
+Rules:
+
+- The canonical Standard 14 entry point is
+  `docs/standards/publishing-distribution/overview.md`.
+- This directive does not authorize a new Publishing module, new Distribution
+  module, separate Archive module, external provider integration, billing,
+  social-media publishing, database migrations, API changes, UI changes,
+  Docker changes, staging changes, or breaking behavior by itself.
+- No official edition may be published directly from a working file or from an
+  unvalidated derived format.
+- Publishing creates the official edition. Distribution submits that approved
+  edition to authorized channels through centrally governed connectors.
+- Library remains the canonical owner of publication identity, lifecycle,
+  editions, versions, metadata, files, rights/provenance references, and
+  publication history.
+- Publishing owns official edition selection, publication readiness state,
+  human release gates, publication timestamps, immutable official publication
+  snapshots, selected channels, preflight, and distribution tracking.
+- Export owns generated files and format artifacts.
+- Rights and Provenance owns rights validation and rights warnings.
+- Accessibility requirements follow Standard 12, and rights requirements
+  follow Standard 13.
+- Publishable editions must preserve canonical identifier, work ID, source
+  master ID, source master version, edition number, publication type,
+  language, publisher, publication status, publication date, rights record,
+  metadata record, accessibility record, approval record, version, timestamps,
+  and audit information.
+- Canonical publication statuses are `DRAFT`, `UNDER_REVIEW`,
+  `READY_FOR_PUBLICATION`, `PUBLICATION_BLOCKED`, `APPROVED`, `GENERATING`,
+  `VALIDATING`, `PUBLISHED`, `DISTRIBUTED`, `UPDATED`, `WITHDRAWN`,
+  `ARCHIVED`, and `FAILED`.
+- Only `APPROVED` allows official edition generation to begin.
+- `PUBLICATION_BLOCKED` must preserve exact blocking reasons.
+- Every publication generation must produce an immutable publication package
+  with publication, metadata, rights, accessibility, integrity, generated
+  assets, validation reports, and distribution profile evidence.
+- PDF, EPUB, print, audio, video, accessibility outputs, JSON/XML metadata,
+  and other generated files are controlled derivatives and must reference the
+  exact source master version, publication ID, generator version, generation
+  profile, generation time, checksum, and validation report.
+- Print publications must preserve page format, dimensions, margins, bleed,
+  color profile, fonts, cover type, page count, paper recommendation, print
+  profile, provider metadata, and final validated file.
+- Translation publication requires identified source work, registered source
+  edition, source language, target language, valid translation rights,
+  translator attribution, approved editorial review, validated terminology,
+  documented resulting-edition rights, and original-edition metadata.
+- Distribution records must preserve publication ID, publication version,
+  channel ID, external product ID, territory, language, format, status,
+  submission timestamps, synchronization metadata, validation result, and
+  audit information.
+- Canonical distribution statuses are `NOT_SUBMITTED`, `READY`,
+  `SUBMITTING`, `SUBMITTED`, `UNDER_CHANNEL_REVIEW`, `ACCEPTED`,
+  `REJECTED`, `AVAILABLE`, `SUSPENDED`, `WITHDRAWING`, `WITHDRAWN`, and
+  `FAILED`.
+- A channel rejection must not automatically change the official edition
+  state.
+- External channel copies must never become master sources.
+- Distributed files must not be edited directly. Corrections require a new
+  master version, justification, impact analysis, regeneration of affected
+  formats, applicable revalidation, new publication version, channel
+  synchronization, and preservation of previous versions.
+- Publication withdrawal must stop new distribution, update connected
+  channels, update Library availability, preserve evidence, notify affected
+  parties according to policy, and retain history.
+- `WITHDRAWN` means no longer publicly available, `ARCHIVED` means retained
+  for history and audit, and `SUPERSEDED` may indicate replacement by a later
+  version.
+- Physical deletion is allowed only through a separate justified and audited
+  process.
+- Each published format must preserve checksum, size, MIME type, version,
+  generation date, signature where required, validation report, manifest link,
+  and integrity status. A file modified after approval must be invalidated.
+- Critical publication operations may require recent MFA, multiple approvals,
+  mandatory justification, separation of duties, and human verification.
+- Publication approvals, generations, validations, publications,
+  distributions, synchronizations, channel rejections, updates, withdrawals,
+  restorations, metadata changes, rights changes, involved users, and involved
+  AI agents must be audited.
+- Existing Library, Publishing, Export, Rights and Provenance, Accessibility,
+  Data Governance, Integration Gateway, Workflow Engine, Testing Standard,
+  Phase 7 Step 16 behavior, and validated runtime behavior must not be
+  changed without an approved implementation phase.
+- Any divergence from Standard 14 requires an approved architectural
+  exception.
+
+### Canonical Backup, Restore, Disaster Recovery and Business Continuity Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 15 as the official canonical standard for backups,
+  snapshots, replication, restore, point-in-time recovery, disaster recovery,
+  business continuity, degraded operation, restore testing, RPO/RTO,
+  integrity, retention, audit, and consolidation.
+
+Rules:
+
+- The canonical Standard 15 entry point is
+  `docs/standards/backup-continuity/overview.md`.
+- This directive does not authorize a new backup runtime, new cloud backup
+  provider, new vault provider, automatic production failover, destructive
+  cleanup, database migrations, API changes, UI changes, Docker changes,
+  staging changes, or breaking behavior by itself.
+- A backup is not considered valid until its restoration has been verified.
+- Critical data must follow minimum 3-2-1 protection: three copies, two
+  distinct storage types or locations, and one geographically and
+  operationally separated copy.
+- Highly critical resources should also have an immutable or isolated copy and
+  periodically verified restore evidence.
+- Copies on the same server or same volume are not independent copies.
+- Every protected resource must have classification, criticality, backup
+  policy, retention policy, storage targets, encryption profile, immutability
+  policy, replication policy, approved RPO, approved RTO, restore test
+  frequency, owner, approval status, version, and audit information.
+- Minimum resource tiers are `TIER_0` for identity, security, and critical
+  keys, `TIER_1` for master editorial data and rights, `TIER_2` for
+  publications, assets, and operational configurations, `TIER_3` for indexes,
+  caches, and regenerable data, and `TIER_4` for temporary data.
+- Backup execution statuses are `SCHEDULED`, `RUNNING`, `VERIFYING`,
+  `COMPLETED`, `COMPLETED_WITH_WARNINGS`, `FAILED`, `EXPIRED`,
+  `DELETED_BY_POLICY`, and `QUARANTINED`.
+- `COMPLETED_WITH_WARNINGS` is not acceptable for critical resources without
+  review.
+- Master documents must restore with identifier, version, structured content,
+  schema, metadata, rights, provenance, derived-asset relationships, change
+  history, approvals, and integrity values.
+- Derived assets must be classified as `BACKUP_REQUIRED`, `REGENERABLE`,
+  `ARCHIVE_REQUIRED`, or `TEMPORARY`. Regenerable assets must preserve every
+  source version, generator version, configuration profile, rights record, and
+  validation artifact required for exact regeneration.
+- Database backups must support transactional consistency, point-in-time
+  recovery, schema verification, migration preservation, relationship
+  validation, identifier preservation, record-count verification, corruption
+  detection, and compatibility with the restored application version.
+- Restoring a database without a compatible application version is prohibited.
+- Infrastructure as Code, container definitions, service configurations,
+  policies, environment definitions, routing rules, monitoring configuration,
+  automation processes, connector versions, and publishing configurations must
+  be protected in versioned and replicated repositories.
+- Secrets must not be included uncontrolled in general-purpose backups.
+  Secrets and cryptographic keys require specialized storage, encryption,
+  separate access, rotation, documented recovery, separation of duties,
+  consolidated audit, and compromise procedure.
+- Loss of an encryption key must not make backups impossible to restore. Key
+  recovery must be documented and tested without exposing raw secret values.
+- All backups must use encryption in transit, encryption at rest, integrity
+  checks, checksums, access control, access logging, key/data separation, and
+  key rotation where applicable.
+- Critical resources should use append-only storage, modification lock,
+  immutable retention windows, separate administrative accounts, multifactor
+  authentication, logical or physical isolation, and ransomware protection.
+- An application administrator must not be able to delete all backups alone.
+- Retention must be defined separately for daily, weekly, monthly, yearly,
+  permanent archive, transaction log, legal document, audit, withdrawn
+  publication, and historical-version categories.
+- Backup deletion is allowed only through retention policy, after mandatory
+  retention expiry, outside legal hold and investigation requirements, through
+  authorized operation, and with complete audit.
+- Restores must preserve source backup, requested resource and version,
+  restore type, target environment, requester, approver, status, validation
+  result, data-loss result, integrity result, rollback plan, evidence, and
+  audit information.
+- Selective restore must not violate referential integrity.
+- Direct production restore is allowed only in justified and approved
+  situations.
+- Restore validation must check file integrity, record counts, relationships,
+  identifiers, versions, rights, metadata, logs, authentication, critical
+  functions, derived-format regeneration, and application compatibility.
+- Periodic tests must include integrity checks, selective restores, full
+  restores, recovery exercises, region-loss tests, provider-outage tests,
+  compromise tests, and failback tests according to resource tier.
+- Disaster recovery must define disaster scenarios, critical services,
+  recovery order, dependencies, owners, communication channels, alternative
+  infrastructure, emergency access, activation criteria, return criteria,
+  validation procedures, and security measures.
+- Recommended disaster recovery order is identity and access, secrets and
+  keys, network and base infrastructure, critical databases, master documents
+  and rights, core services, Library and publishing, integrations and
+  notifications, search and analytics, and regenerable assets.
+- Business continuity must define minimum functions, degraded operation,
+  suspended operations, manual procedures, user communication, editorial work
+  protection, phased recovery, data reconciliation, and return to normal
+  operation.
+- Degraded operation may permit controlled consultation of existing
+  publications, limited document access, multimedia generation suspension, new
+  publication suspension, non-essential integration deactivation, AI
+  limitation, or read-only operation, but must not allow uncontrolled loss of
+  changes.
+- Technical restore, editorial version rollback, deployment rollback, and
+  disaster recovery are separate processes and must be audited separately.
+- Monitoring must cover failed backups, delayed backups, missing replication,
+  data corruption, storage capacity, policy expiration, failed restores, RPO
+  breaches, RTO breaches, unusual deletions, policy changes, and privileged
+  access.
+- Critical backup and restore operations may require recent MFA, multiple
+  approvals, separation of duties, mandatory justification, time-limited
+  access, and complete audit.
+- Audit must record policy changes, backup executions, integrity checks,
+  replications, restores, tests, disaster recovery activation, failback,
+  backup access, deletions, exceptions, RPO/RTO breaches, and involved users
+  or services.
+- Existing Backup and Recovery, Platform Engineering, Security, Data
+  Governance, Publishing, Rights and Provenance, Observability, Testing,
+  Infrastructure Pack, and validated runtime behavior must not be changed
+  without an approved implementation phase.
+- Any divergence from Standard 15 requires an approved architectural
+  exception.
+
+### Canonical Governance, Compliance and Risk Management Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 16 as the official canonical standard for
+  architecture governance, risk management, compliance, architecture
+  exceptions, policies, standards, technical decisions, internal controls,
+  internal audit, governance dashboards, continuous improvement, and
+  remediation.
+
+Rules:
+
+- The canonical Standard 16 entry point is
+  `docs/standards/governance/overview.md`.
+- This directive does not authorize a new runtime governance engine, new
+  compliance provider integration, new enterprise module, database
+  migrations, API changes, UI changes, Docker changes, staging changes,
+  automated approval, or breaking behavior by itself.
+- No major platform change may be implemented without following Standard 16.
+- Governance applies to modules, services, applications, AI agents, APIs,
+  databases, documentation, infrastructure, editorial processes, AI workflows,
+  external integrations, and Codex standards.
+- Governance decisions must follow Governance by Design, Compliance by
+  Default, Risk-Based Decisions, Architecture First, Separation of Duties,
+  Continuous Improvement, Full Traceability, Independent Audit,
+  Evidence-Based Decisions, and Controlled Change.
+- Policies must preserve UUID, canonical identifier, policy name, category,
+  scope, owner, approver, effective date, review date, status, version,
+  related standards, and audit information.
+- Canonical policy categories are `SECURITY_POLICY`, `DATA_POLICY`,
+  `AI_POLICY`, `EDITORIAL_POLICY`, `ACCESSIBILITY_POLICY`,
+  `LOCALIZATION_POLICY`, `BACKUP_POLICY`, `PUBLICATION_POLICY`,
+  `COMPLIANCE_POLICY`, `RISK_POLICY`, `QUALITY_POLICY`, and
+  `ARCHITECTURE_POLICY`.
+- Risks must preserve risk ID, category, description, probability, impact,
+  risk level, affected assets, mitigation plan, contingency plan, owner,
+  status, review date, and evidence.
+- Canonical risk categories are `STRATEGIC`, `OPERATIONAL`, `TECHNICAL`,
+  `SECURITY`, `PRIVACY`, `LEGAL`, `EDITORIAL`, `AI`, `FINANCIAL`, and
+  `REPUTATIONAL`.
+- High and Critical risks require owners, mitigation plans, contingency plans,
+  review dates, evidence, and governance visibility.
+- Exceptions must preserve reason, justification, impact assessment, risk
+  assessment, approval duration, elimination plan, owner, architecture
+  approval, and audit information.
+- Permanent exceptions are prohibited.
+- Exceptions must be time-limited, monitored, remediated, and audited.
+- Every governed change must include change ID, description, justification,
+  impact, affected components, risk, implementation plan, rollback plan, test
+  results, approval, and audit information.
+- Automated and manual compliance controls must verify standard conformance,
+  policy conformance, architecture conformance, documentation completeness,
+  test coverage, rights compliance, accessibility, security, configuration,
+  and observability.
+- Compliance controls must map to policies, standards, or risks and preserve
+  evidence.
+- Internal audits must verify module compliance, standard conformance,
+  approved exceptions, open risks, automated controls, documentation,
+  traceability, and remediation plans.
+- Governance indicators include compliance score, number of exceptions,
+  critical risks, remediation time, standard coverage, test coverage,
+  incidents, availability, AI costs, and implementation progress.
+- Platform compliance requires mandatory standards implemented, exceptions
+  approved and limited, critical risks controlled, audits completed,
+  documentation updated, and indicators monitored.
+- Every architectural decision, exception, policy, and risk must have an
+  owner, approval, review cycle, evidence, and audit trail.
+- AI may summarize proposals, identify affected modules, suggest risks, draft
+  migration plans, compare versions, and summarize compliance evidence, but
+  it must not approve changes, accept risks, grant exceptions, change
+  governance, publish Codex versions, or bypass reviews.
+- Existing Codex Governance, Enterprise Meta-Architecture, Compliance, Policy
+  Engine, Security Governance, AI Governance, Quality Governance,
+  Observability, Platform Engineering, all previously approved modules,
+  frameworks, standards, audit history, and validated runtime behavior must
+  not be changed without an approved implementation phase.
+- Any divergence from Standard 16 requires an approved architectural
+  exception.
+
+### Canonical Enterprise Architecture and Dependency Governance Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 17 as the official canonical standard for
+  enterprise architecture, module organization, technical and functional
+  dependencies, public and internal interfaces, data ownership, API contracts,
+  event topology, dependency graphs, service maps, AI dependency maps,
+  integration maps, architecture audit, and architecture consolidation.
+
+Rules:
+
+- The canonical Standard 17 entry point is
+  `docs/standards/enterprise-architecture/overview.md`.
+- This directive does not authorize runtime architecture tooling, runtime
+  graph generation, service mesh changes, database migrations, API changes,
+  UI changes, Docker changes, staging changes, destructive consolidation, or
+  breaking behavior by itself.
+- Standard 17 unifies all Codex modules, frameworks, and standards into one
+  coherent enterprise architecture.
+- All components must follow Single Source of Truth, Loose Coupling, High
+  Cohesion, Dependency Inversion, Separation of Concerns, Event-Driven
+  Architecture, Modular First, API First, AI Native, and Evolutionary
+  Architecture.
+- Every module must define UUID, canonical identifier, module name, module
+  type, owner, dependencies, public interfaces, internal interfaces, events
+  published, events consumed, data owned, lifecycle, version, status, and
+  audit information.
+- Canonical module types are `CORE_MODULE`, `BUSINESS_MODULE`,
+  `EDITORIAL_MODULE`, `AI_MODULE`, `INFRASTRUCTURE_MODULE`,
+  `INTEGRATION_MODULE`, `UI_MODULE`, `ANALYTICS_MODULE`, and
+  `SHARED_MODULE`.
+- Every dependency must be explicit, documented, versioned, audited, and
+  justified.
+- Circular dependencies are prohibited unless approved as temporary
+  architectural exceptions with remediation plans.
+- Direct access to another module's database ownership boundary is prohibited
+  unless an approved read model or repository contract exists.
+- Internal APIs must not be used across module boundaries without documented
+  contracts.
+- Code reuse by copying is prohibited when a shared module, service, package,
+  or documented contract is the correct mechanism.
+- Each business entity has exactly one owning module and one canonical
+  modification path.
+- Only the owning module may modify owned data. Other modules must use
+  approved APIs, events, authorized queries, approved read models, or
+  documented contracts.
+- Every inter-module contract must define contract ID, version, consumer,
+  provider, API or event, schema, compatibility policy, and deprecation
+  policy.
+- Public APIs must follow Standard 03. Internal service contracts must be
+  documented before cross-module use.
+- Event payloads must not redefine canonical data models inconsistently.
+- Events must be versioned, producers and consumers must be documented, and
+  event-driven dependencies must be explicit.
+- Codex must maintain or be able to generate Dependency Graph, Service Map,
+  Event Map, Data Ownership Map, AI Dependency Map, and Integration Map.
+- Architecture changes must be compatible, documented, analyzed, tested,
+  approved, and audited.
+- Incompatible architecture changes require migration plans.
+- Architecture audit must record new modules, modifications, dependencies,
+  contracts, events, APIs, architectural violations, and approved exceptions.
+- A module is compliant only when it follows the canonical module model,
+  introduces no circular dependencies, uses approved contracts, manages its
+  own data, is fully documented, and is audited.
+- AI may identify dependencies, propose maps, detect risks, and summarize
+  architecture findings, but it must not approve architecture changes, grant
+  exceptions, bypass dependency governance, or alter module ownership.
+- Existing Codex Governance, Enterprise Meta-Architecture, Dependency
+  Registry, Reference Models, Module Catalog, Canonical Definitions,
+  architecture chapters, all approved modules, frameworks, standards, audit
+  history, and validated runtime behavior must not be changed without an
+  approved implementation phase.
+- Any divergence from Standard 17 requires an approved architectural
+  exception.
+
+### Canonical Documentation, Knowledge Management and Specification Governance Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 18 as the official canonical standard for
+  documentation, knowledge management, specifications, Architecture Decision
+  Records, documentation traceability, semantic search readiness, and AI-ready
+  knowledge base governance.
+
+Rules:
+
+- The canonical Standard 18 entry point is
+  `docs/standards/documentation/overview.md`.
+- This directive does not authorize runtime documentation portals, runtime
+  semantic indexing, RAG ingestion pipelines, database migrations, API
+  changes, UI changes, Docker changes, staging changes, destructive document
+  consolidation, or breaking behavior by itself.
+- All documentation is a governed, versioned, traceable, searchable, and
+  AI-ready platform asset.
+- All documentation must follow Documentation as Code, Single Source of
+  Truth, Version Controlled, Review Before Publication, Traceability,
+  Reusability, Consistency, Searchability, AI Readiness, and Living
+  Documentation.
+- Standard 18 applies to specifications, architecture documents, API
+  documentation, AI documentation, workflow definitions, standards,
+  frameworks, policies, guides, manuals, knowledge base content, and
+  Architecture Decision Records.
+- Every governed document must define UUID, canonical identifier, document
+  title, document type, owner, approver, status, version, related modules,
+  related standards, dependencies, review cycle, metadata, and audit
+  information.
+- Canonical document types include Functional Specification, Technical
+  Specification, Architecture Decision Record, API Specification, Database
+  Specification, AI Specification, Workflow Specification, UI Specification,
+  Deployment Guide, Operations Guide, User Guide, Administrator Guide,
+  Standard, Framework, and Policy.
+- Approved document versions must not be overwritten. Changes require a new
+  version or auditable revision record.
+- Every specification must be traceable to related modules, standards,
+  implemented requirements, APIs, events, tests, risks, policies, and ADRs.
+- Architecture-impacting decisions require ADR records with context, problem,
+  options analyzed, decision, consequences, rejected alternatives, approval,
+  date, and links to standards.
+- The knowledge base may summarize technical, editorial, glossary, FAQ,
+  procedure, best-practice, lesson-learned, and reusable-example knowledge,
+  but summaries must reference authoritative source documents and must not
+  replace canonical specifications.
+- Documentation must be indexable, classified, tagged, version-aware,
+  permission-aware, prepared for semantic retrieval, and prepared for AI agent
+  consultation.
+- AI agents may use documentation as evidence only when source, version,
+  status, and access classification are preserved.
+- Restricted documentation must not be exposed to AI agents outside
+  Need-to-Know context.
+- Audit must cover document creation, modification, approval, rejection,
+  versioning, relationship changes, archiving, and logical deletion.
+- Codex must preserve all existing identifiers, versions, approvals, and
+  history. It must not perform destructive consolidation during baseline
+  audits.
+- Existing Codex Governance, Documentation Governance, Enterprise
+  Meta-Architecture, Module Catalog, Canonical Definitions, all approved
+  modules, frameworks, standards, audit history, and validated runtime
+  behavior must not be changed without an approved implementation phase.
+- Any divergence from Standard 18 requires an approved documentation
+  governance exception.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
