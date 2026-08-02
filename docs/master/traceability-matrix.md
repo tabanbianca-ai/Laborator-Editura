@@ -45,6 +45,7 @@ Business Goal
 | Accessibility and localization | Platform language, accessibility baseline, inclusive UX | Standards 11, 12 | Localization and accessibility docs | Web i18n, UI components, shared language policy | Frontend tests and accessibility checks | Web build | UX operations | Localization and accessibility audit |
 | Codex governance | No duplicate standards, controlled evolution, certification | Standards 16, 18, 20, 21 | CEMI, Codex catalog, certification pack | Documentation corpus and governance registries | Documentation checks | Release governance | Codex governance | Governance audit |
 | Implementation execution | Approved standards become working code, documentation, tests, validation, audit, and Release Candidate evidence | Standards 01-21 | CIMP and module specifications | Incremental module implementation | Module, contract, integration, typecheck, build, and acceptance tests | RC release plan | Implementation governance | Implementation and release audit |
+| Task execution | Approved specifications become traceable backlog items and tasks with Definition of Ready and Definition of Done | CIMP, CIEF, Standards 01-21 | CIEF backlog and task register | Module implementation tasks | Required tests listed per task | Merge and RC gates | Execution dashboard | Task audit and release evidence |
 
 ## Evidence Rule
 
