@@ -118,6 +118,7 @@ cross-platform implementation rules rather than new product modules.
 | Standard 17 | Canonical Enterprise Architecture and Dependency Governance | `docs/standards/enterprise-architecture/overview.md` |
 | Standard 18 | Canonical Documentation, Knowledge Management and Specification Governance | `docs/standards/documentation/overview.md` |
 | Standard 19 | Canonical Platform Lifecycle Management | `docs/standards/platform-lifecycle/overview.md` |
+| Standard 20 | Canonical Consolidation and Certification for Codex v1.0 | `docs/certification/codex-v1/certification-report.md` |
 
 ## Fundamental Architecture Closure
 
