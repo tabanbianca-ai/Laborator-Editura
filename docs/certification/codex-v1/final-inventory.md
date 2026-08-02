@@ -30,6 +30,9 @@ components.
 | Phase II documented module directories | 25 |
 | Phase III documented framework directories | 8 |
 | Phase IV standard directories before Standard 20 | 19 |
+| Codex standards governance deliverables from Standard 21 | 7 |
+| CEMI master documents from Phase V Master Document 01 | 8 |
+| CIMP implementation documents from Phase V Execution Plan 01 | 6 |
 | Documentation files under `docs` before certification pack | 725 |
 | Module API contract documents | 25 |
 | Module event documents | 25 |
@@ -128,13 +131,25 @@ components.
 
 ## Standards Baseline
 
-Codex v1.0 includes Phase IV Standards 01 through 20. Standards 01 through 19
+Codex v1.0 includes Phase IV Standards 01 through 21. Standards 01 through 19
 define canonical governance domains. Standard 20 defines final consolidation,
-certification, release readiness, and v1.1 planning.
+certification, release readiness, and v1.1 planning. Standard 21 governs the
+standards themselves and closes the Codex v1.0 standards governance baseline.
+
+## Master Index Baseline
+
+Phase V Master Document 01 introduces CEMI as the single navigation entry
+point for approved Codex documents. It does not add new architecture rules.
+
+## Implementation Plan Baseline
+
+Phase V Execution Plan 01 introduces CIMP as the official implementation plan
+for turning approved standards into code, documentation, tests, validation,
+audit evidence, Release Candidate preparation, and final readiness. It does
+not add new architecture rules.
 
 ## Baseline Conclusion
 
 The repository contains the required Codex architecture, module, framework,
 standard, documentation, runtime module, deployment, and validation artifacts
 needed to perform a v1.0 certification baseline.
-
