@@ -1,13 +1,20 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { type AuthActor } from "./auth.types";
-import { permissionsForRoles, type RequestWithAuthContext } from "./request-context.types";
+import {
+  permissionsForRoles,
+  type RequestWithAuthContext
+} from "./request-context.types";
 
 @Injectable()
 export class RequestContextMiddleware implements NestMiddleware {
   constructor(private readonly authService: AuthService) {}
 
-  async use(request: RequestWithAuthContext, _response: unknown, next: () => void): Promise<void> {
+  async use(
+    request: RequestWithAuthContext,
+    _response: unknown,
+    next: () => void
+  ): Promise<void> {
     if (this.isPublicRoute(request)) {
       next();
       return;
@@ -33,24 +40,28 @@ export class RequestContextMiddleware implements NestMiddleware {
     const method = (request.method ?? "").toUpperCase();
     const routePath = this.routePath(request);
 
-    return (method === "GET" && this.isHealthRoute(routePath)) ||
+    return (
+      (method === "GET" && this.isHealthRoute(routePath)) ||
       (method === "GET" && this.isPublicCatalogRoute(routePath)) ||
       (method === "GET" && this.isPublicStoreRoute(routePath)) ||
       (method === "GET" && this.isPublicCommunityRoute(routePath)) ||
       (method === "POST" && routePath === "/auth/login") ||
       (method === "POST" && routePath === "/auth/password/reset") ||
-      (method === "POST" && routePath === "/auth/email/verify");
+      (method === "POST" && routePath === "/auth/email/verify")
+    );
   }
 
   private routePath(request: RequestWithAuthContext): string {
     const rawPath = request.originalUrl ?? request.path ?? request.url ?? "/";
     const pathWithoutQuery = rawPath.split("?")[0] ?? "/";
 
-    return pathWithoutQuery.length > 1 ? pathWithoutQuery.replace(/\/+$/u, "") : pathWithoutQuery;
+    return pathWithoutQuery.length > 1
+      ? pathWithoutQuery.replace(/\/+$/u, "")
+      : pathWithoutQuery;
   }
 
   private isHealthRoute(routePath: string): boolean {
-    return routePath === "/health";
+    return routePath === "/health" || routePath.startsWith("/health/");
   }
 
   private isPublicCatalogRoute(routePath: string): boolean {
@@ -68,7 +79,10 @@ export class RequestContextMiddleware implements NestMiddleware {
   private readAccessToken(request: RequestWithAuthContext): string | undefined {
     const authorization = this.firstHeader(request.headers?.authorization);
 
-    if (authorization !== undefined && authorization.toLocaleLowerCase().startsWith("bearer ")) {
+    if (
+      authorization !== undefined &&
+      authorization.toLocaleLowerCase().startsWith("bearer ")
+    ) {
       return authorization.slice("bearer ".length).trim();
     }
 
