@@ -15,6 +15,8 @@ The platform now has:
 - Phase V CEMI master index as the single navigation entry point.
 - Phase V CIMP implementation plan for execution and Release Candidate
   readiness.
+- Phase V CIEF execution framework for backlog, task execution, Definition of
+  Ready, Definition of Done, metrics, and Release Candidate evidence.
 - Runtime foundations for core backend modules.
 - Frontend workspace foundations.
 - Staging and infrastructure preparation.
@@ -40,6 +42,7 @@ as the v1.0 certification baseline. Future work should focus on:
 - Codex v1.1 planning.
 - CEMI-driven navigation for future approved work.
 - CIMP-driven execution toward RC1 and final release readiness.
+- CIEF-driven task execution and evidence tracking.
 
 ## What This Does Not Mean
 
