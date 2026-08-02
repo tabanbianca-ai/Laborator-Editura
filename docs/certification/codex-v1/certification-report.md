@@ -9,12 +9,14 @@
 | Version | 1.0.0 |
 | Status | Certification baseline |
 | Owner | Codex Certification Governance |
-| Scope | Complete Codex v1.0 architecture, standards, frameworks, modules, documentation, runtime foundations, and release governance |
+| Scope | Complete Codex v1.0 architecture, standards, frameworks, modules, documentation, runtime foundations, release governance, and standards governance |
 
 ## Purpose
 
 This report is the official Standard 20 certification record for Codex v1.0 of
-Laborator Editura.
+Laborator Editura, with Standard 21 defining the ongoing governance of the
+standards catalog, lifecycle, dependencies, versions, compliance, and review
+calendar.
 
 ## Certification Process
 
@@ -59,7 +61,9 @@ Codex v1.0 has:
 
 - Complete Phase II module architecture baseline.
 - Complete Phase III framework baseline.
-- Complete Phase IV canonical standards baseline through Standard 20.
+- Complete Phase IV canonical standards baseline through Standard 21.
+- Complete Phase V CEMI master navigation baseline.
+- Complete Phase V CIMP implementation planning baseline.
 - Complete final certification documentation pack.
 - Canonical definitions and consolidation governance.
 - Baseline traceability from requirements to standards, modules,
@@ -75,6 +79,7 @@ Recommendations remain for v1.1:
 - Structured lifecycle metadata for every component.
 - Automated quality, security, accessibility, localization, and documentation
   evidence dashboards.
+- Standard 21 governed change records for any v1.1 standards or revisions.
 
 ## Certification Outcomes
 
@@ -95,4 +100,3 @@ The repository is ready for Codex v1.0 certification baseline. The next phase
 is not the creation of additional fundamental standards, but controlled
 consolidation, implementation hardening, evidence automation, and Codex v1.1
 planning.
-
