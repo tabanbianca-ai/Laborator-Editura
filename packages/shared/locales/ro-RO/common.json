@@ -1,0 +1,17 @@
+{
+  "action.cancel": "Anulează",
+  "action.confirm": "Confirmă",
+  "action.continue": "Continuă",
+  "action.save": "Salvează",
+  "auth.login": "Autentificare",
+  "auth.logout": "Deconectare",
+  "auth.resetPassword": "Resetare parolă",
+  "common.empty": "Nu există elemente disponibile.",
+  "common.error": "A apărut o eroare.",
+  "common.loading": "Se încarcă.",
+  "health.liveness": "Serviciul este pornit.",
+  "health.readiness": "Serviciul este pregătit.",
+  "health.startup": "Serviciul a pornit.",
+  "navigation.dashboard": "Panou de control",
+  "navigation.pipeline": "Linie de producție editorială"
+}
