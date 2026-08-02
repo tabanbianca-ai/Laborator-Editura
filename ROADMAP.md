@@ -2725,6 +2725,49 @@ Roadmap impact:
   release evidence, and must not remove deprecated components without an
   approved retirement plan.
 
+## Phase IV Standard 20 - Canonical Consolidation and Certification for Codex v1.0
+
+Status: Certification baseline.
+
+Reference:
+
+- `docs/certification/codex-v1/final-inventory.md`.
+- `docs/certification/codex-v1/duplication-analysis.md`.
+- `docs/certification/codex-v1/consolidation-report.md`.
+- `docs/certification/codex-v1/traceability-matrix.md`.
+- `docs/certification/codex-v1/compliance-report.md`.
+- `docs/certification/codex-v1/quality-report.md`.
+- `docs/certification/codex-v1/security-report.md`.
+- `docs/certification/codex-v1/certification-report.md`.
+- `docs/certification/codex-v1/executive-summary.md`.
+- `docs/certification/codex-v1/roadmap-v1.1.md`.
+
+Roadmap impact:
+
+- Standard 20 is the twentieth and final Phase IV canonical standard for
+  Codex v1.0. It consolidates all approved modules, frameworks, standards,
+  applications, AI Agents, APIs, databases, workflows, infrastructure,
+  documentation, editorial processes, publications, governance evidence, and
+  release readiness into one certification baseline.
+- It does not add runtime certification tooling, destructive consolidation,
+  runtime API changes, database schema changes, UI changes, Docker changes,
+  staging changes, infrastructure changes, automated approval, or breaking
+  behavior by itself.
+- It defines canonical rules for inventory, duplication analysis,
+  consolidation, gap analysis, architecture validation, security validation,
+  quality validation, documentation validation, compliance validation, final
+  certification, release v1.0, certification outcomes, certification
+  dashboards, traceability matrices, final reports, and v1.1 planning.
+- Future certification dashboards, implementation coverage reports,
+  compliance scorecards, standard coverage reports, test coverage reports,
+  risk registers, exception registers, maturity matrices, final release
+  decisions, and v1.1 planning must conform to this standard.
+- Codex v1.0 certification result is
+  `CERTIFIED_WITH_RECOMMENDATIONS` at baseline level. Future work should
+  focus on controlled consolidation, implementation hardening, automated
+  evidence collection, structured registries, expanded ADR coverage, and
+  Codex v1.1 planning rather than adding new fundamental v1.0 standards.
+
 ## MVP Scope
 
 The MVP includes:
