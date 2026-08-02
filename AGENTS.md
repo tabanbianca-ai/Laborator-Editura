@@ -4052,6 +4052,148 @@ Rules:
 - Any divergence from Standard 20 requires an approved certification
   governance exception.
 
+### Codex Standards Governance Meta-Standard Directive
+
+Purpose:
+
+- Define Phase IV Standard 21 as the official meta-standard that governs how
+  every Codex standard, framework, policy, canonical model, specification,
+  guide, convention, and extension is created, approved, modified,
+  consolidated, deprecated, and archived.
+
+Rules:
+
+- The canonical Standard 21 entry point is `docs/codex/catalog.md`.
+- The mandatory Standard 21 governance deliverables are
+  `docs/codex/catalog.md`, `docs/codex/standards-index.md`,
+  `docs/codex/dependency-matrix.md`, `docs/codex/version-matrix.md`,
+  `docs/codex/compliance-matrix.md`, `docs/codex/review-calendar.md`, and
+  `docs/codex/governance-report.md`.
+- This directive does not authorize runtime changes, API changes, database
+  changes, UI changes, Docker changes, staging changes, destructive
+  consolidation, deletion of historical information, automated approval, or
+  breaking behavior by itself.
+- All standards must follow Single Source of Truth, Canonical Before Local,
+  No Duplication, Backward Compatibility, Version Governance, Traceability by
+  Default, Documentation First, Review Before Approval, Controlled Evolution,
+  and Continuous Improvement.
+- Every standard must define Standard ID, canonical identifier, title,
+  category, purpose, scope, dependencies, related standards, owner, approver,
+  status, version, lifecycle stage, review cycle, and audit information.
+- Standard lifecycle states are `DRAFT`, `REVIEW`, `APPROVED`,
+  `IMPLEMENTED`, `VALIDATED`, `CERTIFIED`, `DEPRECATED`, and `ARCHIVED`.
+- Every standard change must include justification, impact analysis,
+  compatibility assessment, migration plan, approval, and audit.
+- Standards use Semantic Versioning in `MAJOR.MINOR.PATCH` format.
+- A new standard must not invalidate certified standards, must declare
+  dependencies, and must define compatibility impact.
+- Codex must detect duplicate chapters, repeated definitions, similar models,
+  overlapping policies, and identical rules before approving new or changed
+  standards.
+- Consolidation must preserve history, identifiers, references, approvals,
+  dependencies, version history, and audit records.
+- Codex must maintain a Standard Catalog, Dependency Matrix, Version Matrix,
+  Coverage Matrix, Compliance Matrix, and Review Calendar.
+- A standard is compliant only when it is unique, documented, versioned,
+  approved, traceable, and does not duplicate another standard.
+- No future Codex v1.0 fundamental standard should be created after Standard
+  21 without explicit project owner approval and a documented governance
+  exception.
+- Future Codex v1.1 standards or revisions must follow Standard 21 and must
+  preserve backward compatibility with the certified Codex v1.0 baseline.
+- AI may inventory standards, detect overlap, draft dependency matrices,
+  propose consolidation references, prepare compliance matrices, and suggest
+  review schedules, but it must not approve standards, erase history,
+  depreciate standards, archive standards, change certified baselines, or
+  bypass project owner approval.
+- Existing identifiers, versions, approvals, audit history, Standards 01-20,
+  Codex v1.0 certification evidence, all modules, all frameworks, all
+  specifications, and validated runtime behavior must be preserved.
+- Any divergence from Standard 21 requires an approved standards governance
+  exception.
+
+### Canonical Enterprise Master Index Directive
+
+Purpose:
+
+- Define Phase V Master Document 01, the Codex Canonical Enterprise Master
+  Index, as the single navigation entry point for the approved Codex corpus.
+
+Rules:
+
+- The canonical CEMI entry point is `docs/master/codex-index.md`.
+- CEMI is an index and enterprise navigation layer. It does not introduce new
+  architecture rules, product scope, runtime behavior, API contracts, database
+  schemas, UI requirements, Docker configuration, staging configuration, or
+  implementation authority by itself.
+- CEMI organizes approved standards, frameworks, modules, specifications,
+  policies, inventories, dependency maps, traceability records, executive
+  reporting, and roadmaps into one structure.
+- The mandatory CEMI deliverables are `docs/master/codex-index.md`,
+  `docs/master/standards-catalog.md`, `docs/master/module-catalog.md`,
+  `docs/master/dependency-map.md`, `docs/master/enterprise-inventory.md`,
+  `docs/master/traceability-matrix.md`,
+  `docs/master/executive-dashboard.md`, and `docs/master/roadmap.md`.
+- Every new analysis, implementation, review, audit, or AI-assisted
+  development task should start from CEMI, then follow references to the
+  canonical owner document.
+- CEMI must not duplicate canonical definitions. It must point to canonical
+  owners such as `SPEC.md`, `ROADMAP.md`, `AGENTS.md`,
+  `docs/MANIFEST.md`, `docs/DEVELOPMENT_CONVENTIONS.md`,
+  `docs/JSON_MASTER_FORMAT.md`, `docs/codex/catalog.md`,
+  `docs/codex/canonical-definitions.md`, and
+  `docs/codex/module-catalog.md`.
+- Whenever a new approved specification, policy, module, framework, or
+  standard is added, register it in CEMI without redefining existing rules.
+- Do not create new architectural standards from this point unless the
+  project owner explicitly requests them.
+- Existing identifiers, versions, approvals, audit history, certification
+  evidence, modules, frameworks, standards, specifications, and validated
+  runtime behavior must be preserved.
+
+### Canonical Implementation Master Plan Directive
+
+Purpose:
+
+- Define Phase V Execution Plan 01, the Codex Canonical Implementation Master
+  Plan, as the official execution plan for turning approved Codex standards
+  into code, documentation, tests, validation, audit evidence, and Release
+  Candidate readiness.
+
+Rules:
+
+- The canonical CIMP entry point is `docs/implementation/master-plan.md`.
+- CIMP is an implementation plan. It does not introduce new architecture
+  standards, product modules, runtime behavior, API contracts, database
+  schemas, UI requirements, Docker configuration, staging configuration, or
+  scope expansion by itself.
+- CIMP uses all approved Codex standards as mandatory implementation
+  requirements.
+- The mandatory CIMP deliverables are
+  `docs/implementation/master-plan.md`,
+  `docs/implementation/module-roadmap.md`,
+  `docs/implementation/progress-dashboard.md`,
+  `docs/implementation/release-plan.md`,
+  `docs/implementation/rc-checklist.md`, and
+  `docs/implementation/final-readiness.md`.
+- Implementation proceeds in the order Foundation, Editorial Core, AI, User
+  Experience, Operations, and Validation.
+- Every module must follow Analyse, Design, Implement, Test, Validate,
+  Document, Audit, and Approve before it can be marked complete.
+- A module is complete only when code, documentation, tests, standards
+  conformance, audit expectations, and Critical defect closure are satisfied
+  for the approved scope.
+- CIMP progress must track implementation percentage, testing percentage,
+  documentation percentage, compliance percentage, risks, blockers, and
+  remaining estimate.
+- The Release Candidate path is RC1, RC2, Final Release Candidate, and Codex
+  v1.0.
+- Do not create new architectural standards while executing CIMP unless the
+  project owner explicitly requests them.
+- Existing identifiers, versions, approvals, audit history, certification
+  evidence, modules, frameworks, standards, specifications, and validated
+  runtime behavior must be preserved.
+
 ### Intelligent Editorial Library & UX Finalization Directive
 
 Purpose:
