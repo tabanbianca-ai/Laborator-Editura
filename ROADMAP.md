@@ -2768,6 +2768,108 @@ Roadmap impact:
   evidence collection, structured registries, expanded ADR coverage, and
   Codex v1.1 planning rather than adding new fundamental v1.0 standards.
 
+## Phase IV Standard 21 - Codex Standards Governance Meta-Standard
+
+Status: Certified baseline.
+
+Reference:
+
+- `docs/codex/catalog.md`.
+- `docs/codex/standards-index.md`.
+- `docs/codex/dependency-matrix.md`.
+- `docs/codex/version-matrix.md`.
+- `docs/codex/compliance-matrix.md`.
+- `docs/codex/review-calendar.md`.
+- `docs/codex/governance-report.md`.
+
+Roadmap impact:
+
+- Standard 21 is the final Codex v1.0 meta-standard for governing standards.
+  It defines how all standards, frameworks, policies, canonical models,
+  specifications, guides, conventions, and approved Codex extensions are
+  created, approved, modified, consolidated, deprecated, and archived.
+- It does not add runtime functionality, API changes, database changes, UI
+  changes, Docker changes, staging changes, destructive consolidation,
+  deletion of historical information, automated approval, or breaking
+  behavior by itself.
+- It defines canonical rules for standard records, lifecycle states, semantic
+  versioning, change requirements, dependency declarations, compatibility
+  review, duplication detection, consolidation, standard catalog, dependency
+  matrix, version matrix, compliance matrix, review calendar, and governance
+  reports.
+- After Standard 21, no additional fundamental Codex v1.0 standards are
+  recommended. Future work should consolidate Standards 01-21, replace
+  duplicated local definitions with canonical references, generate the final
+  coherent Codex v1.0 corpus, implement repository conformance, maintain
+  certification evidence, and plan Codex v1.1 through Standard 21 governance.
+- Future Codex v1.1 standards or revisions must preserve all approved Codex
+  v1.0 identifiers, versions, approvals, audit history, certification
+  evidence, modules, frameworks, specifications, and validated runtime
+  behavior unless an approved versioned change and migration plan exists.
+
+## Phase V Master Document 01 - Canonical Enterprise Master Index
+
+Status: Official master document baseline.
+
+Reference:
+
+- `docs/master/codex-index.md`.
+- `docs/master/standards-catalog.md`.
+- `docs/master/module-catalog.md`.
+- `docs/master/dependency-map.md`.
+- `docs/master/enterprise-inventory.md`.
+- `docs/master/traceability-matrix.md`.
+- `docs/master/executive-dashboard.md`.
+- `docs/master/roadmap.md`.
+
+Roadmap impact:
+
+- CEMI becomes the single entry point for navigating the approved Codex v1.0
+  corpus.
+- CEMI does not add a new standard and does not authorize runtime
+  functionality, API changes, database changes, UI changes, Docker changes,
+  staging changes, destructive consolidation, deletion of historical
+  information, or breaking behavior by itself.
+- CEMI links all standards, frameworks, modules, policies, specifications,
+  dependency maps, traceability records, enterprise inventory, executive
+  status, and roadmap views.
+- After CEMI, work should focus on implementation hardening, documentation
+  consolidation, evidence automation, operational validation, and Codex v1.1
+  planning.
+- New architectural standards should not be created unless the project owner
+  explicitly requests them.
+
+## Phase V Execution Plan 01 - Canonical Implementation Master Plan
+
+Status: Official implementation plan baseline.
+
+Reference:
+
+- `docs/implementation/master-plan.md`.
+- `docs/implementation/module-roadmap.md`.
+- `docs/implementation/progress-dashboard.md`.
+- `docs/implementation/release-plan.md`.
+- `docs/implementation/rc-checklist.md`.
+- `docs/implementation/final-readiness.md`.
+
+Roadmap impact:
+
+- CIMP begins the execution phase after the Codex v1.0 architecture,
+  standards governance, and master index baselines.
+- CIMP does not add architecture standards, product modules, runtime behavior,
+  API changes, database changes, UI changes, Docker changes, staging changes,
+  destructive consolidation, deletion of historical information, or breaking
+  behavior by itself.
+- Implementation proceeds through Foundation, Editorial Core, AI, User
+  Experience, Operations, and Validation.
+- Every module must pass Analyse, Design, Implement, Test, Validate,
+  Document, Audit, and Approve before it is considered complete.
+- CIMP progress must track implementation, testing, documentation,
+  compliance, risks, blockers, and remaining estimate.
+- The release path is RC1, RC2, Final Release Candidate, and Codex v1.0.
+- From this point, new work should execute the approved plan instead of
+  extending the architecture unless explicitly requested by the project owner.
+
 ## MVP Scope
 
 The MVP includes:
