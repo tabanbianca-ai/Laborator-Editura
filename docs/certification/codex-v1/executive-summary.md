@@ -10,7 +10,11 @@ The platform now has:
 - A complete architecture chapter sequence.
 - 25 fundamental Phase II enterprise modules.
 - Phase III meta-architecture and eight specialized frameworks.
-- 20 Phase IV canonical standards.
+- 21 Phase IV canonical standards, with Standard 21 governing future standards
+  and revisions.
+- Phase V CEMI master index as the single navigation entry point.
+- Phase V CIMP implementation plan for execution and Release Candidate
+  readiness.
 - Runtime foundations for core backend modules.
 - Frontend workspace foundations.
 - Staging and infrastructure preparation.
@@ -34,6 +38,8 @@ as the v1.0 certification baseline. Future work should focus on:
 - Lifecycle metadata normalization.
 - ADR expansion.
 - Codex v1.1 planning.
+- CEMI-driven navigation for future approved work.
+- CIMP-driven execution toward RC1 and final release readiness.
 
 ## What This Does Not Mean
 
@@ -52,4 +58,3 @@ This certification does not:
 Freeze creation of new fundamental standards for Codex v1.0. Move to
 controlled consolidation, validation, implementation readiness, and Codex v1.1
 planning.
-
