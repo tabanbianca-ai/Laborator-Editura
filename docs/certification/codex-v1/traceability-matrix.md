@@ -38,6 +38,7 @@ Requirement -> Standard -> Module -> Specification -> Implementation -> Test -> 
 | Standards governance | Standard 21 | All standards, frameworks, policies, specifications, guides, conventions, and canonical models | Codex catalog, standards index, dependency matrix, version matrix, compliance matrix, review calendar, governance report | Baseline present |
 | Master navigation | CEMI | All standards, frameworks, modules, policies, specifications, inventories, dependencies, traceability, dashboards, and roadmaps | `docs/master` deliverables | Baseline present |
 | Implementation execution | CIMP | All approved implementation areas | `docs/implementation` deliverables | Baseline present |
+| Task execution framework | CIEF | All approved implementation tasks | CIEF backlog, task register, execution dashboard, module status, release readiness, metrics | Baseline present |
 
 ## Gaps
 
