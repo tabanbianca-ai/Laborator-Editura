@@ -1,0 +1,17 @@
+{
+  "action.cancel": "Cancel",
+  "action.confirm": "Confirm",
+  "action.continue": "Continue",
+  "action.save": "Save",
+  "auth.login": "Log in",
+  "auth.logout": "Log out",
+  "auth.resetPassword": "Reset password",
+  "common.empty": "No items are available.",
+  "common.error": "Something went wrong.",
+  "common.loading": "Loading.",
+  "health.liveness": "Service is alive.",
+  "health.readiness": "Service is ready.",
+  "health.startup": "Service has started.",
+  "navigation.dashboard": "Dashboard",
+  "navigation.pipeline": "Editorial Production Pipeline"
+}
