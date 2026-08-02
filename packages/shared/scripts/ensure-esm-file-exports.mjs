@@ -9,9 +9,17 @@ const rewrites = [
     file: "dist/index.js",
     replacements: [
       ['"./json-master-format"', '"./json-master-format/index.js"'],
+      ['"./configuration"', '"./configuration.js"'],
+      ['"./errors"', '"./errors.js"'],
       ["'./json-master-format'", "'./json-master-format/index.js'"],
+      ["'./configuration'", "'./configuration.js'"],
+      ["'./errors'", "'./errors.js'"],
       ['"./language-policy"', '"./language-policy.js"'],
-      ["'./language-policy'", "'./language-policy.js'"]
+      ['"./localization"', '"./localization.js"'],
+      ['"./structured-logging"', '"./structured-logging.js"'],
+      ["'./language-policy'", "'./language-policy.js'"],
+      ["'./localization'", "'./localization.js'"],
+      ["'./structured-logging'", "'./structured-logging.js'"]
     ]
   },
   {
