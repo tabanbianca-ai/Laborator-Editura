@@ -11,7 +11,9 @@ The certification baseline consolidates:
 
 - 25 Phase II fundamental enterprise modules.
 - Phase III meta-architecture and eight specialized frameworks.
-- 20 Phase IV canonical standards.
+- 21 Phase IV canonical standards.
+- Phase V CEMI master documents.
+- Phase V CIMP implementation documents.
 - Runtime API modules.
 - Workspace applications and packages.
 - Root governance documents.
@@ -58,6 +60,7 @@ The certification baseline consolidates:
 | Documentation and knowledge | Standard 18 |
 | Platform lifecycle | Standard 19 |
 | Final certification | Standard 20 |
+| Standards governance | Standard 21 |
 
 ## Consolidation Status
 
@@ -65,7 +68,7 @@ The certification baseline consolidates:
 | --- | --- |
 | Canonical definitions | Consolidated |
 | Module catalog | Consolidated |
-| Standards sequence | Consolidated through Standard 20 |
+| Standards sequence | Consolidated through Standard 21 |
 | Framework sequence | Consolidated |
 | Runtime module inventory | Baseline inventoried |
 | Documentation inventory | Baseline inventoried |
@@ -77,4 +80,3 @@ The certification baseline consolidates:
 Codex v1.0 has a coherent canonical consolidation structure. Remaining work is
 implementation maturity, automated evidence collection, structured metadata,
 and continuous validation rather than new fundamental standards.
-
