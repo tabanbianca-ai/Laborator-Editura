@@ -33,6 +33,10 @@
     "./structured-logging": {
       "types": "./dist/structured-logging.d.ts",
       "default": "./dist/structured-logging.js"
+    },
+    "./canonical-data": {
+      "types": "./dist/canonical-data.d.ts",
+      "default": "./dist/canonical-data.js"
     }
   },
   "scripts": {
