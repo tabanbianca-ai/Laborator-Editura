@@ -6,11 +6,17 @@ import {
   type AuthAuditEvent,
   type AuthCredential,
   type AuthActivityEvent,
+  type CanonicalIdentity,
+  type DelegationSession,
   type AuthEmailVerificationRequest,
+  type IdentitySecurityAuditEvent,
   type AuthLoginAttempt,
   type AuthOrganization,
   type AuthPasswordResetRequest,
+  type PrivilegedOperationPolicy,
   type AuthSecurityEvent,
+  type ScopedRoleAssignment,
+  type ServiceAccount,
   type AuthSession,
   type AuthUser,
   type FounderOwnershipTransfer,
@@ -49,6 +55,21 @@ export class DatabaseAuthRepository {
     return this.database.upsert("users", user);
   }
 
+  async upsertCanonicalIdentity(identity: CanonicalIdentity): Promise<CanonicalIdentity> {
+    return this.database.upsert("auth_identities", identity);
+  }
+
+  async findCanonicalIdentityByIdForTenant(
+    id: string,
+    organizationId: string
+  ): Promise<CanonicalIdentity | null> {
+    return this.database.findByIdForTenant<CanonicalIdentity>(
+      "auth_identities",
+      id,
+      organizationId
+    );
+  }
+
   async findUserByEmail(email: string): Promise<AuthUser | null> {
     return this.database.select<AuthUser>(
       "users",
@@ -73,11 +94,60 @@ export class DatabaseAuthRepository {
           role,
           createdAt: new Date().toISOString()
         });
+        await this.upsertOrganizationScopedRoleAssignment(organizationId, userId, role);
         existingRoles.add(role);
       }
     }
 
     return Array.from(existingRoles);
+  }
+
+  async upsertOrganizationScopedRoleAssignment(
+    organizationId: string,
+    userId: string,
+    role: MvpRole,
+    assignedBy?: string,
+    reason?: string
+  ): Promise<ScopedRoleAssignment> {
+    const now = new Date().toISOString();
+    const existing = this.database.selectForTenant<ScopedRoleAssignment>(
+      "auth_role_assignments",
+      organizationId,
+      (assignment) =>
+        assignment.identityId === userId &&
+        assignment.role === role &&
+        assignment.scopeType === "ORGANIZATION" &&
+        assignment.scopeId === organizationId &&
+        assignment.status === "ACTIVE"
+    )[0];
+
+    const assignment: ScopedRoleAssignment = {
+      id: existing?.id ?? randomUUID(),
+      organizationId,
+      identityId: userId,
+      userId,
+      role,
+      scopeType: "ORGANIZATION",
+      scopeId: organizationId,
+      status: "ACTIVE",
+      assignedBy,
+      reason,
+      createdAt: existing?.createdAt ?? now,
+      updatedAt: now
+    };
+
+    return this.database.upsert("auth_role_assignments", assignment);
+  }
+
+  async listScopedRoleAssignments(
+    organizationId: string,
+    identityId: string
+  ): Promise<ScopedRoleAssignment[]> {
+    return this.database.selectForTenant<ScopedRoleAssignment>(
+      "auth_role_assignments",
+      organizationId,
+      (assignment) => assignment.identityId === identityId && assignment.status === "ACTIVE"
+    );
   }
 
   async syncUserSessionRoles(organizationId: string, userId: string, roles: MvpRole[]): Promise<void> {
@@ -101,6 +171,28 @@ export class DatabaseAuthRepository {
 
   async updateSession(session: AuthSession): Promise<AuthSession> {
     return this.database.upsert("auth_sessions", session);
+  }
+
+  async revokeUserSessions(
+    organizationId: string,
+    userId: string,
+    revokedAt: string,
+    reason: string,
+    exceptSessionId?: string
+  ): Promise<AuthSession[]> {
+    const sessions = this.database.selectForTenant<AuthSession>(
+      "auth_sessions",
+      organizationId,
+      (session) => session.userId === userId && !session.revokedAt && session.id !== exceptSessionId
+    );
+
+    return sessions.map((session) =>
+      this.database.upsert<AuthSession>("auth_sessions", {
+        ...session,
+        revokedAt,
+        revocationReason: reason
+      })
+    );
   }
 
   async findSessionByToken(token: string): Promise<AuthSession | null> {
@@ -160,6 +252,35 @@ export class DatabaseAuthRepository {
 
   async appendSecurityEvent(event: AuthSecurityEvent): Promise<void> {
     this.database.insert("auth_security_events", event);
+  }
+
+  async appendIdentitySecurityAuditEvent(event: IdentitySecurityAuditEvent): Promise<void> {
+    this.database.insert("auth_security_audit_events", event);
+  }
+
+  async upsertServiceAccount(account: ServiceAccount): Promise<ServiceAccount> {
+    return this.database.upsert("auth_service_accounts", account);
+  }
+
+  async findServiceAccountByIdForTenant(
+    id: string,
+    organizationId: string
+  ): Promise<ServiceAccount | null> {
+    return this.database.findByIdForTenant<ServiceAccount>(
+      "auth_service_accounts",
+      id,
+      organizationId
+    );
+  }
+
+  async upsertDelegationSession(session: DelegationSession): Promise<DelegationSession> {
+    return this.database.upsert("auth_delegation_sessions", session);
+  }
+
+  async upsertPrivilegedOperationPolicy(
+    policy: PrivilegedOperationPolicy
+  ): Promise<PrivilegedOperationPolicy> {
+    return this.database.upsert("auth_privileged_operation_policies", policy);
   }
 
   async createPasswordResetRequest(
@@ -295,10 +416,17 @@ export class DatabaseAuthRepository {
       organizationId,
       (event) =>
         event.entityType === "AUTH_ORGANIZATION" ||
+        event.entityType === "AUTH_IDENTITY" ||
         event.entityType === "AUTH_USER" ||
         event.entityType === "AUTH_USER_PROFILE" ||
         event.entityType === "AUTH_CREDENTIAL" ||
         event.entityType === "AUTH_SESSION" ||
+        event.entityType === "AUTH_ROLE_ASSIGNMENT" ||
+        event.entityType === "AUTH_PERMISSION" ||
+        event.entityType === "AUTH_SERVICE_ACCOUNT" ||
+        event.entityType === "AUTH_DELEGATION_SESSION" ||
+        event.entityType === "AUTH_PRIVILEGED_OPERATION_POLICY" ||
+        event.entityType === "AUTH_SECURITY_AUDIT_EVENT" ||
         event.entityType === "AUTH_PASSWORD_RESET_REQUEST" ||
         event.entityType === "AUTH_EMAIL_VERIFICATION" ||
         event.entityType === "AUTH_ACTIVITY_EVENT" ||
