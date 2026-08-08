@@ -1,3 +1,13 @@
+import type {
+  CorrectionFinding,
+  EditorialAiExecutionRecord,
+  EditorialApproval,
+  EditorialComment,
+  EditorialDocumentVersion,
+  EditorialSuggestion,
+  StructuredMasterDocument
+} from "../editorial-core";
+
 export const JSON_MASTER_FORMAT_VERSION = "1.0" as const;
 
 export type JsonMasterFormatVersion = typeof JSON_MASTER_FORMAT_VERSION;
@@ -56,6 +66,13 @@ export interface JsonMasterFormatV1 {
   workflow: JsonMasterWorkflow;
   audit: JsonMasterAudit;
   versionHistory: JsonMasterVersionHistory;
+  masterDocuments?: JsonMasterStructuredMasterDocument[];
+  editorialVersions?: JsonMasterEditorialVersion[];
+  editorialComments?: JsonMasterEditorialComment[];
+  editorialSuggestions?: JsonMasterEditorialSuggestion[];
+  correctionFindings?: JsonMasterCorrectionFinding[];
+  editorialApprovals?: JsonMasterEditorialApproval[];
+  editorialAiExecutions?: JsonMasterEditorialAiExecution[];
   mediaLocalization?: JsonMasterMediaLocalization;
   layout?: JsonMasterLayout;
   pageTemplates?: JsonMasterPageTemplate[];
@@ -76,6 +93,14 @@ export interface JsonMasterFormatV1 {
   voiceOverTracks?: JsonMasterLocalizedAudio[];
   dubbingProjects?: JsonMasterDubbingProject[];
 }
+
+export type JsonMasterStructuredMasterDocument = StructuredMasterDocument;
+export type JsonMasterEditorialVersion = EditorialDocumentVersion;
+export type JsonMasterEditorialComment = EditorialComment;
+export type JsonMasterEditorialSuggestion = EditorialSuggestion;
+export type JsonMasterCorrectionFinding = CorrectionFinding;
+export type JsonMasterEditorialApproval = EditorialApproval;
+export type JsonMasterEditorialAiExecution = EditorialAiExecutionRecord;
 
 export interface JsonMasterProject {
   id: string;
