@@ -51,6 +51,48 @@ export const jsonMasterFormatV1Schema = {
     versionHistory: {
       $ref: "#/$defs/versionHistory"
     },
+    masterDocuments: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/editorialRecord"
+      }
+    },
+    editorialVersions: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/editorialRecord"
+      }
+    },
+    editorialComments: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/editorialRecord"
+      }
+    },
+    editorialSuggestions: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/editorialRecord"
+      }
+    },
+    correctionFindings: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/editorialRecord"
+      }
+    },
+    editorialApprovals: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/editorialRecord"
+      }
+    },
+    editorialAiExecutions: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/editorialRecord"
+      }
+    },
     mediaLocalization: {
       $ref: "#/$defs/mediaLocalization"
     },
@@ -168,6 +210,10 @@ export const jsonMasterFormatV1Schema = {
     timestamp: {
       type: "string",
       format: "date-time"
+    },
+    editorialRecord: {
+      type: "object",
+      additionalProperties: true
     },
     languageCode: {
       type: "string",
