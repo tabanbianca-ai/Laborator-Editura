@@ -483,6 +483,210 @@ export const jsonMasterFormatV1Schema = {
         $ref: "#/$defs/distributionCommerceRecord"
       }
     },
+    audioProductions: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    audioProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    narratorProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    ssmlDocuments: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    pronunciationEntries: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    audioSegments: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    audioAssemblies: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    audioOutputs: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    transcripts: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    videoProductions: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    videoProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    videoScenes: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    multimediaSubtitleTracks: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    audioDescriptions: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    videoBuilds: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    multimediaManifests: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    childrenProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    childrenAgeClassifications: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    illustrationAssets: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    aiIllustrationGenerations: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    visualIdentityProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    characterRegistry: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    localizedTextLayers: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    localizedImageDerivatives: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    textAudioSyncSegments: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    multimediaAccessibilityReports: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    multimediaRightsValidations: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    musicSoundAssets: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    multimediaPackages: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    multimediaBuildJobs: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    multimediaCostRecords: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    multimediaObservabilityMetrics: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    multimediaAuditEvents: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
+    legacyMultimediaResources: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/multimediaProductionRecord"
+      }
+    },
     mediaLocalization: {
       $ref: "#/$defs/mediaLocalization"
     },
@@ -614,6 +818,10 @@ export const jsonMasterFormatV1Schema = {
       additionalProperties: true
     },
     distributionCommerceRecord: {
+      type: "object",
+      additionalProperties: true
+    },
+    multimediaProductionRecord: {
       type: "object",
       additionalProperties: true
     },
