@@ -122,6 +122,22 @@ export const TABLE_NAMES = [
   "layout_publishing_records",
   "layout_publishing_distribution_records",
   "layout_publication_audit_events",
+  "publishing_publications",
+  "publishing_builds",
+  "publishing_publication_profiles",
+  "publishing_layout_profiles",
+  "publishing_typography_profiles",
+  "publishing_font_registry",
+  "publishing_style_mappings",
+  "publishing_generated_assets",
+  "publishing_image_derivatives",
+  "publishing_covers",
+  "publishing_validation_reports",
+  "publishing_publication_packages",
+  "publishing_approvals",
+  "publishing_build_jobs",
+  "publishing_observability_metrics",
+  "publishing_audit_events",
   "media_localization_projects",
   "media_localization_assets",
   "media_localization_audit_events",
@@ -302,6 +318,22 @@ const TENANT_SCOPED_TABLES = new Set([
   "layout_publishing_records",
   "layout_publishing_distribution_records",
   "layout_publication_audit_events",
+  "publishing_publications",
+  "publishing_builds",
+  "publishing_publication_profiles",
+  "publishing_layout_profiles",
+  "publishing_typography_profiles",
+  "publishing_font_registry",
+  "publishing_style_mappings",
+  "publishing_generated_assets",
+  "publishing_image_derivatives",
+  "publishing_covers",
+  "publishing_validation_reports",
+  "publishing_publication_packages",
+  "publishing_approvals",
+  "publishing_build_jobs",
+  "publishing_observability_metrics",
+  "publishing_audit_events",
   "media_localization_projects",
   "media_localization_assets",
   "media_localization_audit_events",
@@ -724,6 +756,65 @@ function validateTenantBoundaries(data, issues) {
     "layout_publication_audit_events",
     "distributionRecordId",
     "layout_publishing_distribution_records"
+  );
+  validateReferenceTenant(data, issues, "publishing_publications", "libraryPublicationId", "library_publications");
+  validateReferenceTenant(data, issues, "publishing_publications", "projectId", "projects");
+  validateReferenceTenant(data, issues, "publishing_publications", "documentId", "documents");
+  validateReferenceTenant(data, issues, "publishing_builds", "publicationId", "publishing_publications");
+  validateReferenceTenant(
+    data,
+    issues,
+    "publishing_generated_assets",
+    "publicationId",
+    "publishing_publications"
+  );
+  validateReferenceTenant(data, issues, "publishing_generated_assets", "buildId", "publishing_builds");
+  validateReferenceTenant(data, issues, "publishing_image_derivatives", "imageAssetId", "publishing_generated_assets");
+  validateReferenceTenant(data, issues, "publishing_covers", "publicationId", "publishing_publications");
+  validateReferenceTenant(
+    data,
+    issues,
+    "publishing_validation_reports",
+    "publicationId",
+    "publishing_publications"
+  );
+  validateReferenceTenant(data, issues, "publishing_validation_reports", "buildId", "publishing_builds");
+  validateReferenceTenant(
+    data,
+    issues,
+    "publishing_publication_packages",
+    "publicationId",
+    "publishing_publications"
+  );
+  validateReferenceTenant(data, issues, "publishing_publication_packages", "buildId", "publishing_builds");
+  validateReferenceTenant(data, issues, "publishing_approvals", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "publishing_approvals", "buildId", "publishing_builds");
+  validateReferenceTenant(
+    data,
+    issues,
+    "publishing_approvals",
+    "validationReportId",
+    "publishing_validation_reports"
+  );
+  validateReferenceTenant(data, issues, "publishing_approvals", "packageId", "publishing_publication_packages");
+  validateReferenceTenant(data, issues, "publishing_build_jobs", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "publishing_build_jobs", "buildId", "publishing_builds");
+  validateReferenceTenant(
+    data,
+    issues,
+    "publishing_observability_metrics",
+    "publicationId",
+    "publishing_publications"
+  );
+  validateReferenceTenant(data, issues, "publishing_observability_metrics", "buildId", "publishing_builds");
+  validateReferenceTenant(data, issues, "publishing_audit_events", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "publishing_audit_events", "buildId", "publishing_builds");
+  validateReferenceTenant(
+    data,
+    issues,
+    "publishing_audit_events",
+    "packageId",
+    "publishing_publication_packages"
   );
   validateReferenceTenant(
     data,
