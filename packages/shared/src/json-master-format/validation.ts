@@ -307,7 +307,29 @@ function validateEditorialCore(
     "libraryReservations",
     "searchIndexRecords",
     "publicationReadiness",
-    "duplicateCandidates"
+    "duplicateCandidates",
+    "canonicalPublications",
+    "publicationBuilds",
+    "canonicalPublicationProfiles",
+    "layoutProfiles",
+    "typographyProfiles",
+    "fontRegistry",
+    "styleMappings",
+    "publicationGeneratedAssets",
+    "publicationImageAssets",
+    "publicationImageDerivatives",
+    "publicationCovers",
+    "publicationManifests",
+    "rightsManifests",
+    "accessibilityManifests",
+    "integrityManifests",
+    "publicationPackages",
+    "publicationValidationReports",
+    "publicationPreviews",
+    "publicationApprovals",
+    "publicationBuildJobs",
+    "publishingObservabilityMetrics",
+    "legacyPublicationOutputs"
   ]) {
     if (value[key] !== undefined && !Array.isArray(value[key])) {
       addIssue(issues, `$.${key}`, `${key} must be an array.`);
