@@ -53,6 +53,10 @@
     "./distribution-commerce": {
       "types": "./dist/distribution-commerce.d.ts",
       "default": "./dist/distribution-commerce.js"
+    },
+    "./multimedia-production": {
+      "types": "./dist/multimedia-production.d.ts",
+      "default": "./dist/multimedia-production.js"
     }
   },
   "scripts": {
