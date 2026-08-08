@@ -74,6 +74,7 @@ export function validateJsonMasterFormatV1(value: unknown): JsonMasterValidation
   validateWorkflow(value.workflow, issues);
   validateAudit(value.audit, issues);
   validateVersionHistory(value.versionHistory, issues);
+  validateEditorialCore(value, issues);
   validateMediaLocalization(value.mediaLocalization, issues);
   validateLayoutPublishing(value, issues);
   validateMultimediaCreation(value, issues);
@@ -276,6 +277,25 @@ function validateVersionHistory(
 
   if (!Array.isArray(value.versions)) {
     addIssue(issues, "$.versionHistory.versions", "versions must be an array.");
+  }
+}
+
+function validateEditorialCore(
+  value: Record<string, unknown>,
+  issues: JsonMasterValidationIssue[]
+): void {
+  for (const key of [
+    "masterDocuments",
+    "editorialVersions",
+    "editorialComments",
+    "editorialSuggestions",
+    "correctionFindings",
+    "editorialApprovals",
+    "editorialAiExecutions"
+  ]) {
+    if (value[key] !== undefined && !Array.isArray(value[key])) {
+      addIssue(issues, `$.${key}`, `${key} must be an array.`);
+    }
   }
 }
 
