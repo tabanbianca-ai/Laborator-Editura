@@ -163,6 +163,20 @@ commerce_editions
 commerce_distribution_channels
 commerce_print_profiles
 commerce_audit_events
+library_works
+library_original_editions
+library_canonical_editions
+library_resource_relationships
+library_contributors
+library_edition_contributors
+library_rights_records
+library_provenance_records
+library_digital_assets
+library_records
+library_reservations
+library_metadata_history
+library_search_index
+library_duplicate_reviews
 library_items
 library_publications
 library_publication_editions
@@ -211,4 +225,3 @@ scheduling_audit_events
 - `object_storage`, `search_index`, `cache_store`, and `vector_store` are
   planned but not configured. They are marked `OWNER_UNRESOLVED` until an
   implementation batch approves them.
-
