@@ -291,7 +291,23 @@ function validateEditorialCore(
     "editorialSuggestions",
     "correctionFindings",
     "editorialApprovals",
-    "editorialAiExecutions"
+    "editorialAiExecutions",
+    "works",
+    "originalEditions",
+    "editions",
+    "resourceRelationships",
+    "contributors",
+    "editionContributors",
+    "editorialMetadata",
+    "metadataHistory",
+    "rightsRecords",
+    "provenanceRecords",
+    "digitalAssets",
+    "libraryRecords",
+    "libraryReservations",
+    "searchIndexRecords",
+    "publicationReadiness",
+    "duplicateCandidates"
   ]) {
     if (value[key] !== undefined && !Array.isArray(value[key])) {
       addIssue(issues, `$.${key}`, `${key} must be an array.`);
