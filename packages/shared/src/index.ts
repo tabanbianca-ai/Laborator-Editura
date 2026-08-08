@@ -31,3 +31,4 @@ export * from "./structured-logging";
 export * from "./canonical-data";
 export * from "./editorial-core";
 export * from "./unified-library";
+export * from "./publishing-engine";
