@@ -23,6 +23,7 @@ const rewrites = [
       ['"./publishing-engine"', '"./publishing-engine.js"'],
       ['"./distribution-commerce"', '"./distribution-commerce.js"'],
       ['"./multimedia-production"', '"./multimedia-production.js"'],
+      ['"./ai-orchestration"', '"./ai-orchestration.js"'],
       ["'./language-policy'", "'./language-policy.js'"],
       ["'./localization'", "'./localization.js'"],
       ["'./structured-logging'", "'./structured-logging.js'"],
@@ -31,7 +32,8 @@ const rewrites = [
       ["'./unified-library'", "'./unified-library.js'"],
       ["'./publishing-engine'", "'./publishing-engine.js'"],
       ["'./distribution-commerce'", "'./distribution-commerce.js'"],
-      ["'./multimedia-production'", "'./multimedia-production.js'"]
+      ["'./multimedia-production'", "'./multimedia-production.js'"],
+      ["'./ai-orchestration'", "'./ai-orchestration.js'"]
     ]
   },
   {
