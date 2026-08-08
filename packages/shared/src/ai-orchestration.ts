@@ -48,7 +48,7 @@ export type KnowledgeSourceType =
   | "PROJECT_DOCUMENTS"
   | "TERMINOLOGY";
 
-export type DataClassification =
+export type AiDataClassification =
   | "CONFIDENTIAL"
   | "INTERNAL"
   | "PUBLIC"
@@ -290,7 +290,7 @@ export interface KnowledgeSourceDefinition {
   canonicalName: string;
   sourceType: KnowledgeSourceType;
   owningModule: string;
-  classification: DataClassification;
+  classification: AiDataClassification;
   organizationScope: "SINGLE_ORGANIZATION";
   rightsRecordId?: string;
   aiProcessingAllowed: boolean;
@@ -346,7 +346,7 @@ export interface VectorRecord {
   chunkHash: string;
   embeddingModelId: string;
   embeddingModelVersion: string;
-  classification: DataClassification;
+  classification: AiDataClassification;
   rightsReference?: string;
   indexedAt: string;
   status: RagVectorStatus;
@@ -356,7 +356,7 @@ export interface RetrievalPolicy {
   organizationId: string;
   projectId?: string;
   roles: string[];
-  allowedClassifications: DataClassification[];
+  allowedClassifications: AiDataClassification[];
   requiredRights: string[];
   languages: string[];
   approvedSourceIds: string[];
@@ -367,7 +367,7 @@ export interface RetrievalRequestContext {
   organizationId: string;
   projectId?: string;
   roles: string[];
-  classificationsAllowed: DataClassification[];
+  classificationsAllowed: AiDataClassification[];
   rightsReferences: string[];
   languages: string[];
   accessibleSourceIds: string[];
@@ -416,7 +416,7 @@ export interface OrchestratorRequest {
   sourceResourceIds: string[];
   sourceVersions: string[];
   requiredPermissions: string[];
-  dataClassification: DataClassification;
+  dataClassification: AiDataClassification;
   rightsRecordIds: string[];
   aiProcessingAllowed: boolean;
   correlationId: string;
@@ -438,7 +438,7 @@ export interface ModelRoutingInput {
   taskType: string;
   language: string;
   modality: AiModality;
-  dataClassification: DataClassification;
+  dataClassification: AiDataClassification;
   requiredCapabilities: string[];
   requiredQuality: number;
   riskLevel: AiRiskLevel;
@@ -452,7 +452,7 @@ export interface ProviderFallbackPolicy {
   primaryModelId: string;
   secondaryModelIds: string[];
   optionalThirdModelIds: string[];
-  allowedDataClassifications: DataClassification[];
+  allowedDataClassifications: AiDataClassification[];
   allowedModalities: AiModality[];
   allowedLanguages: string[];
 }
@@ -567,7 +567,7 @@ export interface SemanticCacheEntry {
 export interface AIDataPolicy {
   id: string;
   organizationId: string;
-  classification: DataClassification;
+  classification: AiDataClassification;
   externalProviderAction: AiDataProtectionAction;
   allowedProviderIds: string[];
   localModelRequired: boolean;
@@ -857,7 +857,7 @@ export function selectModelForRequest(input: ModelRoutingInput): AIModelDefiniti
 export function canUseFallbackModel(input: {
   fallbackPolicy: ProviderFallbackPolicy;
   candidateModel: AIModelDefinition;
-  dataClassification: DataClassification;
+  dataClassification: AiDataClassification;
   language: string;
   modality: AiModality;
   rightsAllowTransfer: boolean;
@@ -930,7 +930,7 @@ export function createSemanticCacheKey(input: {
 }
 
 export function evaluateExternalAiDataPolicy(input: {
-  classification: DataClassification;
+  classification: AiDataClassification;
   providerId: string;
   policies: AIDataPolicy[];
 }): AiDataProtectionAction {
