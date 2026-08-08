@@ -49,6 +49,10 @@
     "./publishing-engine": {
       "types": "./dist/publishing-engine.d.ts",
       "default": "./dist/publishing-engine.js"
+    },
+    "./distribution-commerce": {
+      "types": "./dist/distribution-commerce.d.ts",
+      "default": "./dist/distribution-commerce.js"
     }
   },
   "scripts": {
