@@ -1023,6 +1023,72 @@ function validateTenantBoundaries(data, issues) {
     "publicDistributionRecordId",
     "public_distribution_records"
   );
+  validateReferenceTenant(data, issues, "distribution_records", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "distribution_records", "publicationPackageId", "publishing_publication_packages");
+  validateReferenceTenant(data, issues, "distribution_records", "channelId", "distribution_channels");
+  validateReferenceTenant(data, issues, "distribution_readiness_results", "distributionId", "distribution_records");
+  validateReferenceTenant(data, issues, "distribution_readiness_results", "channelId", "distribution_channels");
+  validateReferenceTenant(data, issues, "public_catalog_projections", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "reader_reading_progress", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "reader_annotations", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "reader_library_entries", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "reader_library_entries", "entitlementId", "commerce_entitlements");
+  validateReferenceTenant(data, issues, "reader_library_entries", "sourceOrderId", "commerce_orders");
+  validateReferenceTenant(data, issues, "commerce_products", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "commerce_offers", "productId", "commerce_products");
+  validateReferenceTenant(data, issues, "commerce_order_items", "orderId", "commerce_orders");
+  validateReferenceTenant(data, issues, "commerce_order_items", "productId", "commerce_products");
+  validateReferenceTenant(data, issues, "commerce_order_items", "offerId", "commerce_offers");
+  validateReferenceTenant(data, issues, "commerce_order_items", "accessEntitlementId", "commerce_entitlements");
+  validateReferenceTenant(data, issues, "commerce_payments", "orderId", "commerce_orders");
+  validateReferenceTenant(data, issues, "commerce_payment_webhook_events", "paymentId", "commerce_payments");
+  validateReferenceTenant(data, issues, "commerce_entitlements", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "commerce_entitlements", "sourceOrderId", "commerce_orders");
+  validateReferenceTenant(data, issues, "commerce_download_authorizations", "entitlementId", "commerce_entitlements");
+  validateReferenceTenant(data, issues, "commerce_download_authorizations", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "commerce_promotions", "productId", "commerce_products");
+  validateReferenceTenant(data, issues, "commerce_promotions", "offerId", "commerce_offers");
+  validateReferenceTenant(data, issues, "commerce_refunds", "paymentId", "commerce_payments");
+  validateReferenceTenant(data, issues, "commerce_refunds", "orderId", "commerce_orders");
+  validateReferenceTenant(data, issues, "distribution_external_mappings", "distributionId", "distribution_records");
+  validateReferenceTenant(data, issues, "distribution_external_mappings", "channelId", "distribution_channels");
+  validateReferenceTenant(data, issues, "distribution_sync_records", "distributionId", "distribution_records");
+  validateReferenceTenant(
+    data,
+    issues,
+    "distribution_sync_records",
+    "externalMappingId",
+    "distribution_external_mappings"
+  );
+  validateReferenceTenant(data, issues, "distribution_reconciliation_jobs", "distributionId", "distribution_records");
+  validateReferenceTenant(data, issues, "distribution_reconciliation_jobs", "channelId", "distribution_channels");
+  validateReferenceTenant(data, issues, "publication_withdrawal_requests", "publicationId", "publishing_publications");
+  validateReferenceTenant(
+    data,
+    issues,
+    "publication_superseding_records",
+    "previousPublicationId",
+    "publishing_publications"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "publication_superseding_records",
+    "replacementPublicationId",
+    "publishing_publications"
+  );
+  validateReferenceTenant(data, issues, "public_app_analytics_events", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "distribution_audit_events", "distributionId", "distribution_records");
+  validateReferenceTenant(data, issues, "distribution_audit_events", "orderId", "commerce_orders");
+  validateReferenceTenant(data, issues, "distribution_audit_events", "paymentId", "commerce_payments");
+  validateReferenceTenant(data, issues, "distribution_audit_events", "entitlementId", "commerce_entitlements");
+  validateReferenceTenant(
+    data,
+    issues,
+    "distribution_audit_events",
+    "withdrawalRequestId",
+    "publication_withdrawal_requests"
+  );
   validateReferenceTenant(data, issues, "scheduling_reminders", "schedulingTaskId", "scheduling_tasks");
   validateReferenceTenant(data, issues, "scheduling_reminders", "schedulingEventId", "scheduling_events");
   validateReferenceTenant(
