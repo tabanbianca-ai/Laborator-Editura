@@ -48,6 +48,35 @@ import type {
   StructuralStyleMapping,
   TypographyProfile
 } from "../publishing-engine";
+import type {
+  CanonicalDistribution,
+  DigitalReaderCapabilities,
+  DistributionAuditEvent,
+  DistributionChannelRegistryEntry,
+  DistributionReadinessResult,
+  DistributionSyncRecord,
+  DownloadAuthorization,
+  Entitlement,
+  ExternalProductMapping,
+  Offer,
+  Order,
+  OrderItem,
+  Payment,
+  PaymentWebhookEvent,
+  Product,
+  Promotion,
+  PublicAnalyticsEvent,
+  PublicCatalogProjection,
+  PublicSlug,
+  ReaderAnnotation,
+  ReaderLibraryEntry,
+  ReadingProgress,
+  ReconciliationJob,
+  Refund,
+  TaxProfile,
+  PublicationSupersedingRecord,
+  PublicationWithdrawalRequest
+} from "../distribution-commerce";
 
 export const JSON_MASTER_FORMAT_VERSION = "1.0" as const;
 
@@ -171,6 +200,33 @@ export interface JsonMasterFormatV1 {
   publicationBuildJobs?: JsonMasterPublicationBuildJob[];
   publishingObservabilityMetrics?: JsonMasterPublishingObservabilityMetric[];
   legacyPublicationOutputs?: JsonMasterLegacyPublicationOutput[];
+  distributionRecords?: JsonMasterDistributionRecord[];
+  channelRegistry?: JsonMasterChannelRegistryEntry[];
+  distributionReadinessResults?: JsonMasterDistributionReadinessResult[];
+  publicCatalogProjections?: JsonMasterPublicCatalogProjection[];
+  publicSlugs?: JsonMasterPublicSlug[];
+  digitalReaderCapabilities?: JsonMasterDigitalReaderCapabilities[];
+  readerProgress?: JsonMasterReadingProgress[];
+  readerAnnotations?: JsonMasterReaderAnnotation[];
+  readerLibraryEntries?: JsonMasterReaderLibraryEntry[];
+  commerceProducts?: JsonMasterProduct[];
+  commerceOffers?: JsonMasterOffer[];
+  commerceTaxProfiles?: JsonMasterTaxProfile[];
+  commerceOrders?: JsonMasterOrder[];
+  commerceOrderItems?: JsonMasterOrderItem[];
+  commercePayments?: JsonMasterPayment[];
+  commercePaymentWebhookEvents?: JsonMasterPaymentWebhookEvent[];
+  commerceEntitlements?: JsonMasterEntitlement[];
+  commerceDownloadAuthorizations?: JsonMasterDownloadAuthorization[];
+  commercePromotions?: JsonMasterPromotion[];
+  commerceRefunds?: JsonMasterRefund[];
+  distributionExternalMappings?: JsonMasterExternalProductMapping[];
+  distributionSyncRecords?: JsonMasterDistributionSyncRecord[];
+  distributionReconciliationJobs?: JsonMasterReconciliationJob[];
+  publicationWithdrawalRequests?: JsonMasterPublicationWithdrawalRequest[];
+  publicationSupersedingRecords?: JsonMasterPublicationSupersedingRecord[];
+  publicAnalyticsEvents?: JsonMasterPublicAnalyticsEvent[];
+  distributionAuditEvents?: JsonMasterDistributionAuditEvent[];
 }
 
 export type JsonMasterStructuredMasterDocument = StructuredMasterDocument;
@@ -217,6 +273,33 @@ export type JsonMasterPublicationPreview = PublicationPreview;
 export type JsonMasterPublicationApproval = PublicationApproval;
 export type JsonMasterPublicationBuildJob = PublicationBuildJob;
 export type JsonMasterPublishingObservabilityMetric = PublishingObservabilityMetric;
+export type JsonMasterDistributionRecord = CanonicalDistribution;
+export type JsonMasterChannelRegistryEntry = DistributionChannelRegistryEntry;
+export type JsonMasterDistributionReadinessResult = DistributionReadinessResult;
+export type JsonMasterPublicCatalogProjection = PublicCatalogProjection;
+export type JsonMasterPublicSlug = PublicSlug;
+export type JsonMasterDigitalReaderCapabilities = DigitalReaderCapabilities;
+export type JsonMasterReadingProgress = ReadingProgress;
+export type JsonMasterReaderAnnotation = ReaderAnnotation;
+export type JsonMasterReaderLibraryEntry = ReaderLibraryEntry;
+export type JsonMasterProduct = Product;
+export type JsonMasterOffer = Offer;
+export type JsonMasterTaxProfile = TaxProfile;
+export type JsonMasterOrder = Order;
+export type JsonMasterOrderItem = OrderItem;
+export type JsonMasterPayment = Payment;
+export type JsonMasterPaymentWebhookEvent = PaymentWebhookEvent;
+export type JsonMasterEntitlement = Entitlement;
+export type JsonMasterDownloadAuthorization = DownloadAuthorization;
+export type JsonMasterPromotion = Promotion;
+export type JsonMasterRefund = Refund;
+export type JsonMasterExternalProductMapping = ExternalProductMapping;
+export type JsonMasterDistributionSyncRecord = DistributionSyncRecord;
+export type JsonMasterReconciliationJob = ReconciliationJob;
+export type JsonMasterPublicationWithdrawalRequest = PublicationWithdrawalRequest;
+export type JsonMasterPublicationSupersedingRecord = PublicationSupersedingRecord;
+export type JsonMasterPublicAnalyticsEvent = PublicAnalyticsEvent;
+export type JsonMasterDistributionAuditEvent = DistributionAuditEvent;
 
 export interface JsonMasterLegacyPublicationOutput {
   id: string;
