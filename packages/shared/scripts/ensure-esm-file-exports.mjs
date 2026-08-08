@@ -21,13 +21,15 @@ const rewrites = [
       ['"./editorial-core"', '"./editorial-core.js"'],
       ['"./unified-library"', '"./unified-library.js"'],
       ['"./publishing-engine"', '"./publishing-engine.js"'],
+      ['"./distribution-commerce"', '"./distribution-commerce.js"'],
       ["'./language-policy'", "'./language-policy.js'"],
       ["'./localization'", "'./localization.js'"],
       ["'./structured-logging'", "'./structured-logging.js'"],
       ["'./canonical-data'", "'./canonical-data.js'"],
       ["'./editorial-core'", "'./editorial-core.js'"],
       ["'./unified-library'", "'./unified-library.js'"],
-      ["'./publishing-engine'", "'./publishing-engine.js'"]
+      ["'./publishing-engine'", "'./publishing-engine.js'"],
+      ["'./distribution-commerce'", "'./distribution-commerce.js'"]
     ]
   },
   {
