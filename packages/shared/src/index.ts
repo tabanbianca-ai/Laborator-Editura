@@ -28,3 +28,4 @@ export * from "./configuration";
 export * from "./errors";
 export * from "./localization";
 export * from "./structured-logging";
+export * from "./canonical-data";
