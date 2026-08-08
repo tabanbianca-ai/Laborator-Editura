@@ -26,3 +26,4 @@
 ## Documentation
 
 - `docs/implementation/execution-batches/batch-05/*`
+- `docs/implementation/execution-batches/batch-03/data-store-inventory.md`
