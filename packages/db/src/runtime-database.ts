@@ -54,6 +54,35 @@ const TABLE_NAMES = [
   "ai_cost_policies",
   "ai_budget_override_requests",
   "ai_cost_audit_events",
+  "ai_agent_registry",
+  "ai_model_registry",
+  "ai_provider_registry",
+  "ai_prompt_registry",
+  "ai_execution_records",
+  "ai_knowledge_sources",
+  "rag_collections",
+  "rag_chunking_profiles",
+  "rag_vector_records",
+  "ai_tool_registry",
+  "ai_tool_calls",
+  "ai_evaluation_profiles",
+  "ai_evaluation_datasets",
+  "ai_regression_runs",
+  "ai_shadow_evaluations",
+  "ai_operational_cost_records",
+  "ai_operational_budgets",
+  "ai_usage_quotas",
+  "ai_semantic_cache_entries",
+  "ai_data_policies",
+  "ai_provider_data_policies",
+  "ai_operational_audit_events",
+  "ai_quality_dashboard_snapshots",
+  "ai_incidents",
+  "ai_kill_switches",
+  "ai_agent_messages",
+  "ai_workflow_traces",
+  "ai_change_records",
+  "legacy_ai_assets",
   "policy_definitions",
   "policy_evaluations",
   "policy_exception_requests",
@@ -340,6 +369,35 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "ai_cost_policies",
   "ai_budget_override_requests",
   "ai_cost_audit_events",
+  "ai_agent_registry",
+  "ai_model_registry",
+  "ai_provider_registry",
+  "ai_prompt_registry",
+  "ai_execution_records",
+  "ai_knowledge_sources",
+  "rag_collections",
+  "rag_chunking_profiles",
+  "rag_vector_records",
+  "ai_tool_registry",
+  "ai_tool_calls",
+  "ai_evaluation_profiles",
+  "ai_evaluation_datasets",
+  "ai_regression_runs",
+  "ai_shadow_evaluations",
+  "ai_operational_cost_records",
+  "ai_operational_budgets",
+  "ai_usage_quotas",
+  "ai_semantic_cache_entries",
+  "ai_data_policies",
+  "ai_provider_data_policies",
+  "ai_operational_audit_events",
+  "ai_quality_dashboard_snapshots",
+  "ai_incidents",
+  "ai_kill_switches",
+  "ai_agent_messages",
+  "ai_workflow_traces",
+  "ai_change_records",
+  "legacy_ai_assets",
   "policy_definitions",
   "policy_evaluations",
   "policy_exception_requests",
@@ -871,6 +929,39 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
     "overrideRequestId",
     "ai_budget_override_requests"
   );
+  validateReferenceTenant(data, issues, "ai_model_registry", "providerId", "ai_provider_registry");
+  validateReferenceTenant(data, issues, "ai_prompt_registry", "agentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_execution_records", "agentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_execution_records", "modelId", "ai_model_registry");
+  validateReferenceTenant(data, issues, "ai_execution_records", "promptId", "ai_prompt_registry");
+  validateReferenceTenant(data, issues, "rag_collections", "embeddingModelId", "ai_model_registry");
+  validateReferenceTenant(data, issues, "rag_collections", "chunkingProfileId", "rag_chunking_profiles");
+  validateReferenceTenant(data, issues, "rag_vector_records", "collectionId", "rag_collections");
+  validateReferenceTenant(data, issues, "rag_vector_records", "embeddingModelId", "ai_model_registry");
+  validateReferenceTenant(data, issues, "ai_tool_calls", "agentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_tool_calls", "toolId", "ai_tool_registry");
+  validateReferenceTenant(data, issues, "ai_evaluation_profiles", "agentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_shadow_evaluations", "productionModelId", "ai_model_registry");
+  validateReferenceTenant(data, issues, "ai_shadow_evaluations", "candidateModelId", "ai_model_registry");
+  validateReferenceTenant(data, issues, "ai_operational_cost_records", "providerId", "ai_provider_registry");
+  validateReferenceTenant(data, issues, "ai_operational_cost_records", "modelId", "ai_model_registry");
+  validateReferenceTenant(data, issues, "ai_operational_cost_records", "agentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_operational_cost_records", "executionId", "ai_execution_records");
+  validateReferenceTenant(data, issues, "ai_provider_data_policies", "providerId", "ai_provider_registry");
+  validateReferenceTenant(data, issues, "ai_operational_audit_events", "executionId", "ai_execution_records");
+  validateReferenceTenant(data, issues, "ai_operational_audit_events", "agentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_operational_audit_events", "modelId", "ai_model_registry");
+  validateReferenceTenant(data, issues, "ai_operational_audit_events", "promptId", "ai_prompt_registry");
+  validateReferenceTenant(data, issues, "ai_operational_audit_events", "toolId", "ai_tool_registry");
+  validateReferenceTenant(data, issues, "ai_quality_dashboard_snapshots", "agentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_quality_dashboard_snapshots", "modelId", "ai_model_registry");
+  validateReferenceTenant(data, issues, "ai_incidents", "agentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_incidents", "modelId", "ai_model_registry");
+  validateReferenceTenant(data, issues, "ai_agent_messages", "senderAgentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_agent_messages", "receiverAgentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_workflow_traces", "agentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_workflow_traces", "modelId", "ai_model_registry");
+  validateReferenceTenant(data, issues, "ai_change_records", "regressionRunId", "ai_regression_runs");
   validateReferenceTenant(data, issues, "policy_evaluations", "policyId", "policy_definitions");
   validateReferenceTenant(data, issues, "policy_exception_requests", "policyId", "policy_definitions");
   validateReferenceTenant(data, issues, "policy_exception_requests", "evaluationId", "policy_evaluations");
