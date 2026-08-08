@@ -17,9 +17,11 @@ const rewrites = [
       ['"./language-policy"', '"./language-policy.js"'],
       ['"./localization"', '"./localization.js"'],
       ['"./structured-logging"', '"./structured-logging.js"'],
+      ['"./canonical-data"', '"./canonical-data.js"'],
       ["'./language-policy'", "'./language-policy.js'"],
       ["'./localization'", "'./localization.js'"],
-      ["'./structured-logging'", "'./structured-logging.js'"]
+      ["'./structured-logging'", "'./structured-logging.js'"],
+      ["'./canonical-data'", "'./canonical-data.js'"]
     ]
   },
   {
