@@ -45,6 +45,10 @@
     "./unified-library": {
       "types": "./dist/unified-library.d.ts",
       "default": "./dist/unified-library.js"
+    },
+    "./publishing-engine": {
+      "types": "./dist/publishing-engine.d.ts",
+      "default": "./dist/publishing-engine.js"
     }
   },
   "scripts": {
