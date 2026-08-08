@@ -2,6 +2,7 @@ import { Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/commo
 import { AuthService } from "./auth.service";
 import { type AuthActor } from "./auth.types";
 import {
+  canonicalPermissionsForRoles,
   permissionsForRoles,
   type RequestWithAuthContext
 } from "./request-context.types";
@@ -30,7 +31,8 @@ export class RequestContextMiddleware implements NestMiddleware {
 
     request.authContext = {
       ...actor,
-      permissions: permissionsForRoles(actor.roles)
+      permissions: permissionsForRoles(actor.roles),
+      canonicalPermissions: canonicalPermissionsForRoles(actor.roles)
     };
 
     next();
