@@ -229,6 +229,40 @@ const TABLE_NAMES = [
   "publication_superseding_records",
   "public_app_analytics_events",
   "distribution_audit_events",
+  "audio_productions",
+  "audio_profiles",
+  "narrator_profiles",
+  "ssml_documents",
+  "pronunciation_entries",
+  "audio_segments",
+  "audio_assemblies",
+  "audio_outputs",
+  "audio_transcripts",
+  "video_productions",
+  "video_profiles",
+  "video_scenes",
+  "multimedia_subtitle_tracks",
+  "audio_descriptions",
+  "video_builds",
+  "multimedia_manifests",
+  "children_profiles",
+  "children_age_classifications",
+  "illustration_assets",
+  "ai_illustration_generations",
+  "visual_identity_profiles",
+  "character_registry",
+  "localized_text_layers",
+  "localized_image_derivatives",
+  "text_audio_sync_segments",
+  "multimedia_accessibility_reports",
+  "multimedia_rights_validations",
+  "music_sound_assets",
+  "multimedia_packages",
+  "multimedia_build_jobs",
+  "multimedia_cost_records",
+  "multimedia_observability_metrics",
+  "multimedia_production_audit_events",
+  "legacy_multimedia_resources",
   "scheduling_tasks",
   "scheduling_events",
   "scheduling_reminders",
@@ -479,6 +513,40 @@ const TENANT_SCOPED_TABLES = new Set<RuntimeDatabaseTableName>([
   "publication_superseding_records",
   "public_app_analytics_events",
   "distribution_audit_events",
+  "audio_productions",
+  "audio_profiles",
+  "narrator_profiles",
+  "ssml_documents",
+  "pronunciation_entries",
+  "audio_segments",
+  "audio_assemblies",
+  "audio_outputs",
+  "audio_transcripts",
+  "video_productions",
+  "video_profiles",
+  "video_scenes",
+  "multimedia_subtitle_tracks",
+  "audio_descriptions",
+  "video_builds",
+  "multimedia_manifests",
+  "children_profiles",
+  "children_age_classifications",
+  "illustration_assets",
+  "ai_illustration_generations",
+  "visual_identity_profiles",
+  "character_registry",
+  "localized_text_layers",
+  "localized_image_derivatives",
+  "text_audio_sync_segments",
+  "multimedia_accessibility_reports",
+  "multimedia_rights_validations",
+  "music_sound_assets",
+  "multimedia_packages",
+  "multimedia_build_jobs",
+  "multimedia_cost_records",
+  "multimedia_observability_metrics",
+  "multimedia_production_audit_events",
+  "legacy_multimedia_resources",
   "scheduling_tasks",
   "scheduling_events",
   "scheduling_reminders",
@@ -1206,6 +1274,79 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
     "distribution_audit_events",
     "withdrawalRequestId",
     "publication_withdrawal_requests"
+  );
+  validateReferenceTenant(data, issues, "audio_productions", "workId", "library_works");
+  validateReferenceTenant(data, issues, "audio_productions", "editionId", "library_canonical_editions");
+  validateReferenceTenant(data, issues, "audio_productions", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "audio_productions", "narratorProfileId", "narrator_profiles");
+  validateReferenceTenant(data, issues, "audio_productions", "audioProfileId", "audio_profiles");
+  validateReferenceTenant(data, issues, "audio_segments", "audioProductionId", "audio_productions");
+  validateReferenceTenant(data, issues, "audio_segments", "audioAssetId", "library_digital_assets");
+  validateReferenceTenant(data, issues, "audio_assemblies", "audioProductionId", "audio_productions");
+  validateReferenceTenant(data, issues, "audio_outputs", "audioProductionId", "audio_productions");
+  validateReferenceTenant(data, issues, "audio_outputs", "assetId", "library_digital_assets");
+  validateReferenceTenant(data, issues, "audio_transcripts", "audioProductionId", "audio_productions");
+  validateReferenceTenant(data, issues, "video_productions", "workId", "library_works");
+  validateReferenceTenant(data, issues, "video_productions", "editionId", "library_canonical_editions");
+  validateReferenceTenant(data, issues, "video_productions", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "video_productions", "videoProfileId", "video_profiles");
+  validateReferenceTenant(data, issues, "video_scenes", "videoProductionId", "video_productions");
+  validateReferenceTenant(data, issues, "multimedia_subtitle_tracks", "videoProductionId", "video_productions");
+  validateReferenceTenant(data, issues, "audio_descriptions", "sceneId", "video_scenes");
+  validateReferenceTenant(data, issues, "video_builds", "videoProductionId", "video_productions");
+  validateReferenceTenant(data, issues, "multimedia_manifests", "editionId", "library_canonical_editions");
+  validateReferenceTenant(data, issues, "children_profiles", "editionId", "library_canonical_editions");
+  validateReferenceTenant(data, issues, "illustration_assets", "editionId", "library_canonical_editions");
+  validateReferenceTenant(data, issues, "illustration_assets", "rightsRecordId", "library_rights_records");
+  validateReferenceTenant(data, issues, "ai_illustration_generations", "illustrationId", "illustration_assets");
+  validateReferenceTenant(data, issues, "visual_identity_profiles", "workId", "library_works");
+  validateReferenceTenant(data, issues, "character_registry", "workId", "library_works");
+  validateReferenceTenant(data, issues, "localized_text_layers", "illustrationId", "illustration_assets");
+  validateReferenceTenant(data, issues, "localized_image_derivatives", "illustrationId", "illustration_assets");
+  validateReferenceTenant(
+    data,
+    issues,
+    "localized_image_derivatives",
+    "localizedTextLayerId",
+    "localized_text_layers"
+  );
+  validateReferenceTenant(data, issues, "text_audio_sync_segments", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "text_audio_sync_segments", "audioSegmentId", "audio_segments");
+  validateReferenceTenant(data, issues, "multimedia_accessibility_reports", "assetId", "library_digital_assets");
+  validateReferenceTenant(data, issues, "multimedia_rights_validations", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "music_sound_assets", "digitalAssetId", "library_digital_assets");
+  validateReferenceTenant(data, issues, "multimedia_packages", "publicationId", "publishing_publications");
+  validateReferenceTenant(data, issues, "multimedia_packages", "manifestId", "multimedia_manifests");
+  validateReferenceTenant(data, issues, "multimedia_build_jobs", "audioProductionId", "audio_productions");
+  validateReferenceTenant(data, issues, "multimedia_build_jobs", "videoProductionId", "video_productions");
+  validateReferenceTenant(data, issues, "multimedia_cost_records", "publicationId", "publishing_publications");
+  validateReferenceTenant(
+    data,
+    issues,
+    "multimedia_production_audit_events",
+    "audioProductionId",
+    "audio_productions"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "multimedia_production_audit_events",
+    "videoProductionId",
+    "video_productions"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "multimedia_production_audit_events",
+    "illustrationId",
+    "illustration_assets"
+  );
+  validateReferenceTenant(
+    data,
+    issues,
+    "multimedia_production_audit_events",
+    "packageId",
+    "multimedia_packages"
   );
   validateReferenceTenant(data, issues, "scheduling_reminders", "schedulingTaskId", "scheduling_tasks");
   validateReferenceTenant(data, issues, "scheduling_reminders", "schedulingEventId", "scheduling_events");
