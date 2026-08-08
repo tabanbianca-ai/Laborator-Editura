@@ -18,10 +18,14 @@ const rewrites = [
       ['"./localization"', '"./localization.js"'],
       ['"./structured-logging"', '"./structured-logging.js"'],
       ['"./canonical-data"', '"./canonical-data.js"'],
+      ['"./editorial-core"', '"./editorial-core.js"'],
+      ['"./unified-library"', '"./unified-library.js"'],
       ["'./language-policy'", "'./language-policy.js'"],
       ["'./localization'", "'./localization.js'"],
       ["'./structured-logging'", "'./structured-logging.js'"],
-      ["'./canonical-data'", "'./canonical-data.js'"]
+      ["'./canonical-data'", "'./canonical-data.js'"],
+      ["'./editorial-core'", "'./editorial-core.js'"],
+      ["'./unified-library'", "'./unified-library.js'"]
     ]
   },
   {
