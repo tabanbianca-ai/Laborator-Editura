@@ -189,6 +189,138 @@ export const jsonMasterFormatV1Schema = {
         $ref: "#/$defs/libraryRecord"
       }
     },
+    canonicalPublications: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationBuilds: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    canonicalPublicationProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    layoutProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    typographyProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    fontRegistry: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    styleMappings: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationGeneratedAssets: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationImageAssets: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationImageDerivatives: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationCovers: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationManifests: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    rightsManifests: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    accessibilityManifests: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    integrityManifests: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationPackages: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationValidationReports: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationPreviews: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationApprovals: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publicationBuildJobs: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    publishingObservabilityMetrics: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
+    legacyPublicationOutputs: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/publishingRecord"
+      }
+    },
     mediaLocalization: {
       $ref: "#/$defs/mediaLocalization"
     },
@@ -312,6 +444,10 @@ export const jsonMasterFormatV1Schema = {
       additionalProperties: true
     },
     libraryRecord: {
+      type: "object",
+      additionalProperties: true
+    },
+    publishingRecord: {
       type: "object",
       additionalProperties: true
     },
