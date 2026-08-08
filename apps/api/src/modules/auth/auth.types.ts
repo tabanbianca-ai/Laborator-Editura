@@ -14,6 +14,73 @@ export type MvpRole =
   | "GUEST"
   | "VIEWER";
 
+export type AuthIdentityType =
+  | "HUMAN_USER"
+  | "EXTERNAL_COLLABORATOR"
+  | "SERVICE_ACCOUNT"
+  | "API_CLIENT"
+  | "AI_AGENT"
+  | "SYSTEM_PROCESS";
+
+export const CANONICAL_IDENTITY_TYPES = [
+  "HUMAN_USER",
+  "EXTERNAL_COLLABORATOR",
+  "SERVICE_ACCOUNT",
+  "API_CLIENT",
+  "AI_AGENT",
+  "SYSTEM_PROCESS"
+] as const satisfies readonly AuthIdentityType[];
+
+export type CanonicalIdentityStatus =
+  | "INVITED"
+  | "PENDING_VERIFICATION"
+  | "ACTIVE"
+  | "SUSPENDED"
+  | "LOCKED"
+  | "DISABLED"
+  | "ARCHIVED";
+
+export const CANONICAL_IDENTITY_STATUSES = [
+  "INVITED",
+  "PENDING_VERIFICATION",
+  "ACTIVE",
+  "SUSPENDED",
+  "LOCKED",
+  "DISABLED",
+  "ARCHIVED"
+] as const satisfies readonly CanonicalIdentityStatus[];
+
+export type AuthenticationMethod =
+  | "PASSWORD"
+  | "RECOVERY_TOKEN"
+  | "EMAIL_VERIFICATION_TOKEN"
+  | "BOOTSTRAP_SECRET"
+  | "SERVICE_ACCOUNT_TOKEN"
+  | "API_KEY"
+  | "SYSTEM_TOKEN";
+
+export type AuthenticationLevel =
+  | "PASSWORD"
+  | "BOOTSTRAP"
+  | "RECOVERY"
+  | "SERVICE"
+  | "SYSTEM";
+
+export type RoleAssignmentScopeType =
+  | "PLATFORM"
+  | "ORGANIZATION"
+  | "PROJECT"
+  | "PUBLICATION"
+  | "RESOURCE";
+
+export type RoleAssignmentStatus = "ACTIVE" | "EXPIRED" | "REVOKED";
+
+export type ServiceAccountStatus = "ACTIVE" | "SUSPENDED" | "REVOKED" | "ARCHIVED";
+
+export type DelegationStatus = "ACTIVE" | "EXPIRED" | "REVOKED";
+
+export type PrivilegedOperationStatus = "ACTIVE" | "SUSPENDED" | "ARCHIVED";
+
 export const OFFICIAL_AUTH_ROLES = [
   "ADMIN",
   "EDITOR",
@@ -27,7 +94,7 @@ export const OFFICIAL_AUTH_ROLES = [
   "GUEST"
 ] as const satisfies readonly MvpRole[];
 
-export type AuthUserStatus = "ACTIVE" | "INACTIVE";
+export type AuthUserStatus = CanonicalIdentityStatus | "INACTIVE";
 
 export type OrganizationType =
   | "PERSOANA_FIZICA"
@@ -42,6 +109,8 @@ export type AuthAuditAction =
   | "DELETE"
   | "APPROVE"
   | "EXPORT"
+  | "ASSIGN_ROLE"
+  | "REVOKE_ROLE"
   | "LOGIN"
   | "LOGOUT"
   | "REFRESH_SESSION"
@@ -49,15 +118,27 @@ export type AuthAuditAction =
   | "CHANGE_PASSWORD"
   | "VERIFY_EMAIL"
   | "REVOKE_SESSION"
+  | "CREATE_SERVICE_ACCOUNT"
+  | "REVOKE_SERVICE_ACCOUNT"
+  | "START_DELEGATION"
+  | "END_DELEGATION"
+  | "PRIVILEGED_OPERATION_CHECK"
   | "UPDATE_PROFILE"
   | "CREATOR_ROLE_ACCESS";
 
 export type AuthAuditEntityType =
+  | "AUTH_IDENTITY"
   | "AUTH_ORGANIZATION"
   | "AUTH_USER"
   | "AUTH_USER_PROFILE"
   | "AUTH_CREDENTIAL"
   | "AUTH_SESSION"
+  | "AUTH_ROLE_ASSIGNMENT"
+  | "AUTH_PERMISSION"
+  | "AUTH_SERVICE_ACCOUNT"
+  | "AUTH_DELEGATION_SESSION"
+  | "AUTH_PRIVILEGED_OPERATION_POLICY"
+  | "AUTH_SECURITY_AUDIT_EVENT"
   | "AUTH_PASSWORD_RESET_REQUEST"
   | "AUTH_EMAIL_VERIFICATION"
   | "AUTH_ACTIVITY_EVENT"
@@ -73,6 +154,10 @@ export type FounderProtectionStatus = "ACTIVE" | "TRANSFER_PENDING";
 export type FounderOwnershipTransferStatus = "PENDING" | "ACCEPTED" | "CANCELLED";
 
 export type AuthSecurityEventType =
+  | "IDENTITY_CREATED"
+  | "IDENTITY_UPDATED"
+  | "IDENTITY_STATUS_REJECTED"
+  | "AUTHORIZATION_DENIED"
   | "LOGIN_FAILED"
   | "LOGIN_SUCCEEDED"
   | "ACCOUNT_LOCKED"
@@ -90,6 +175,10 @@ export interface AuthActor {
   userId: string;
   organizationId: string;
   roles: MvpRole[];
+  identityId?: string;
+  identityType?: AuthIdentityType;
+  authenticationLevel?: AuthenticationLevel;
+  securityVersion?: number;
 }
 
 export interface AuthOrganization {
@@ -102,13 +191,21 @@ export interface AuthOrganization {
 
 export interface AuthUser {
   id: string;
+  identityId?: string;
+  identityType?: AuthIdentityType;
+  canonicalUsername?: string;
+  preferredLocale?: string;
+  authenticationMethods?: AuthenticationMethod[];
+  securityVersion?: number;
   email: string;
   displayName: string;
   status: AuthUserStatus;
   createdAt: string;
+  updatedAt?: string;
   lastLoginAt?: string;
   profile?: AuthUserProfile;
   emailVerifiedAt?: string;
+  metadata?: object;
 }
 
 export interface AuthUserProfile {
@@ -135,10 +232,18 @@ export interface AuthSession {
   organizationId: string;
   userId: string;
   roles: MvpRole[];
+  identityId?: string;
+  identityType?: AuthIdentityType;
+  authenticationLevel?: AuthenticationLevel;
+  issuedAt?: string;
+  securityVersion?: number;
   createdAt: string;
   expiresAt?: string;
   lastSeenAt?: string;
   revokedAt?: string;
+  revocationReason?: string;
+  deviceInformation?: object;
+  ipRiskInformation?: object;
 }
 
 export interface AuthSessionSummary {
@@ -150,8 +255,117 @@ export interface AuthSessionSummary {
   expiresAt?: string;
   lastSeenAt?: string;
   revokedAt?: string;
+  revocationReason?: string;
   active: boolean;
   current?: boolean;
+}
+
+export interface CanonicalIdentity {
+  id: string;
+  organizationId: string;
+  userId?: string;
+  serviceAccountId?: string;
+  apiClientId?: string;
+  identityType: AuthIdentityType;
+  status: CanonicalIdentityStatus;
+  canonicalUsername: string;
+  displayName: string;
+  preferredLocale?: string;
+  authenticationMethods: AuthenticationMethod[];
+  securityVersion: number;
+  createdAt: string;
+  updatedAt: string;
+  archivedAt?: string;
+  metadata?: object;
+}
+
+export interface ScopedRoleAssignment {
+  id: string;
+  organizationId: string;
+  identityId: string;
+  userId?: string;
+  role: MvpRole;
+  scopeType: RoleAssignmentScopeType;
+  scopeId: string;
+  status: RoleAssignmentStatus;
+  assignedBy?: string;
+  reason?: string;
+  expiresAt?: string;
+  revokedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CanonicalPermission {
+  id: string;
+  key: string;
+  moduleName: string;
+  description: string;
+  riskLevel: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  status: "ACTIVE" | "DEPRECATED";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ServiceAccount {
+  id: string;
+  organizationId: string;
+  identityId: string;
+  name: string;
+  description?: string;
+  status: ServiceAccountStatus;
+  scopes: string[];
+  tokenHash?: string;
+  tokenFingerprint?: string;
+  lastRotatedAt?: string;
+  expiresAt?: string;
+  revokedAt?: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DelegationSession {
+  id: string;
+  organizationId: string;
+  delegatingUserId: string;
+  delegatedIdentityId: string;
+  reason: string;
+  scopeType: RoleAssignmentScopeType;
+  scopeId: string;
+  status: DelegationStatus;
+  startsAt: string;
+  expiresAt: string;
+  revokedAt?: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PrivilegedOperationPolicy {
+  id: string;
+  organizationId: string;
+  operationKey: string;
+  requiredRoles: MvpRole[];
+  requiresRecentAuthentication: boolean;
+  requiresAudit: boolean;
+  status: PrivilegedOperationStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IdentitySecurityAuditEvent {
+  id: string;
+  organizationId: string;
+  actorId: string;
+  identityId?: string;
+  action: AuthAuditAction | AuthSecurityEventType;
+  resourceType: string;
+  resourceId: string;
+  decision: "ALLOW" | "DENY" | "RECORD";
+  reason: string;
+  createdAt: string;
+  metadata?: object;
 }
 
 export interface AuthLoginAttempt {
