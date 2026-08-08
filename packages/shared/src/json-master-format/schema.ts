@@ -687,6 +687,186 @@ export const jsonMasterFormatV1Schema = {
         $ref: "#/$defs/multimediaProductionRecord"
       }
     },
+    aiAgents: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiProviders: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiModels: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiPrompts: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiExecutions: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiKnowledgeSources: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    ragCollections: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    ragChunkingProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    ragVectors: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiTools: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiToolCalls: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiEvaluationProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiEvaluationDatasets: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiRegressionRuns: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiShadowEvaluations: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiOperationalCostRecords: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiOperationalBudgets: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiUsageQuotas: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiSemanticCacheEntries: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiDataPolicies: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiProviderDataPolicies: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiOperationalAuditEvents: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiObservabilityMetrics: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiQualityDashboardSnapshots: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiIncidents: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiKillSwitches: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiAgentMessages: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiWorkflowTraces: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    aiChangeRecords: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
+    legacyAiAssets: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/aiOrchestrationRecord"
+      }
+    },
     mediaLocalization: {
       $ref: "#/$defs/mediaLocalization"
     },
@@ -822,6 +1002,10 @@ export const jsonMasterFormatV1Schema = {
       additionalProperties: true
     },
     multimediaProductionRecord: {
+      type: "object",
+      additionalProperties: true
+    },
+    aiOrchestrationRecord: {
       type: "object",
       additionalProperties: true
     },
