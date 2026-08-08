@@ -57,6 +57,10 @@
     "./multimedia-production": {
       "types": "./dist/multimedia-production.d.ts",
       "default": "./dist/multimedia-production.js"
+    },
+    "./ai-orchestration": {
+      "types": "./dist/ai-orchestration.d.ts",
+      "default": "./dist/ai-orchestration.js"
     }
   },
   "scripts": {
