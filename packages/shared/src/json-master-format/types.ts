@@ -77,6 +77,42 @@ import type {
   PublicationSupersedingRecord,
   PublicationWithdrawalRequest
 } from "../distribution-commerce";
+import type {
+  AgeClassification,
+  AiIllustrationGeneration,
+  AudioAssembly,
+  AudioDescription,
+  AudioOutput,
+  AudioProduction,
+  AudioProfile,
+  AudioSegment,
+  CharacterRegistryEntry,
+  ChildrenProfile,
+  IllustrationAsset,
+  LegacyMultimediaResource,
+  LocalizedImageDerivative,
+  LocalizedTextLayer,
+  MultimediaAccessibilityReport,
+  MultimediaAuditEvent,
+  MultimediaBuildJob,
+  MultimediaCostRecord,
+  MultimediaManifest,
+  MultimediaObservabilityMetric,
+  MultimediaPackage,
+  MultimediaRightsValidation,
+  MusicSoundAsset,
+  NarratorProfile,
+  PronunciationEntry,
+  SsmlDocument,
+  SubtitleTrack as MultimediaSubtitleTrack,
+  TextAudioSyncSegment,
+  Transcript,
+  VideoBuild,
+  VideoProduction,
+  VideoProfile,
+  VideoScene,
+  VisualIdentityProfile
+} from "../multimedia-production";
 
 export const JSON_MASTER_FORMAT_VERSION = "1.0" as const;
 
@@ -227,6 +263,40 @@ export interface JsonMasterFormatV1 {
   publicationSupersedingRecords?: JsonMasterPublicationSupersedingRecord[];
   publicAnalyticsEvents?: JsonMasterPublicAnalyticsEvent[];
   distributionAuditEvents?: JsonMasterDistributionAuditEvent[];
+  audioProductions?: JsonMasterAudioProduction[];
+  audioProfiles?: JsonMasterAudioProfile[];
+  narratorProfiles?: JsonMasterNarratorProfile[];
+  ssmlDocuments?: JsonMasterSsmlDocument[];
+  pronunciationEntries?: JsonMasterPronunciationEntry[];
+  audioSegments?: JsonMasterAudioSegment[];
+  audioAssemblies?: JsonMasterAudioAssembly[];
+  audioOutputs?: JsonMasterAudioOutput[];
+  transcripts?: JsonMasterTranscript[];
+  videoProductions?: JsonMasterVideoProduction[];
+  videoProfiles?: JsonMasterVideoProfile[];
+  videoScenes?: JsonMasterVideoScene[];
+  multimediaSubtitleTracks?: JsonMasterMultimediaSubtitleTrack[];
+  audioDescriptions?: JsonMasterAudioDescription[];
+  videoBuilds?: JsonMasterVideoBuild[];
+  multimediaManifests?: JsonMasterMultimediaManifest[];
+  childrenProfiles?: JsonMasterChildrenProfile[];
+  childrenAgeClassifications?: JsonMasterAgeClassification[];
+  illustrationAssets?: JsonMasterIllustrationAsset[];
+  aiIllustrationGenerations?: JsonMasterAiIllustrationGeneration[];
+  visualIdentityProfiles?: JsonMasterVisualIdentityProfile[];
+  characterRegistry?: JsonMasterCharacterRegistryEntry[];
+  localizedTextLayers?: JsonMasterLocalizedTextLayer[];
+  localizedImageDerivatives?: JsonMasterLocalizedImageDerivative[];
+  textAudioSyncSegments?: JsonMasterTextAudioSyncSegment[];
+  multimediaAccessibilityReports?: JsonMasterMultimediaAccessibilityReport[];
+  multimediaRightsValidations?: JsonMasterMultimediaRightsValidation[];
+  musicSoundAssets?: JsonMasterMusicSoundAsset[];
+  multimediaPackages?: JsonMasterMultimediaPackage[];
+  multimediaBuildJobs?: JsonMasterMultimediaBuildJob[];
+  multimediaCostRecords?: JsonMasterMultimediaCostRecord[];
+  multimediaObservabilityMetrics?: JsonMasterMultimediaObservabilityMetric[];
+  multimediaAuditEvents?: JsonMasterMultimediaAuditEvent[];
+  legacyMultimediaResources?: JsonMasterLegacyMultimediaResource[];
 }
 
 export type JsonMasterStructuredMasterDocument = StructuredMasterDocument;
@@ -300,6 +370,40 @@ export type JsonMasterPublicationWithdrawalRequest = PublicationWithdrawalReques
 export type JsonMasterPublicationSupersedingRecord = PublicationSupersedingRecord;
 export type JsonMasterPublicAnalyticsEvent = PublicAnalyticsEvent;
 export type JsonMasterDistributionAuditEvent = DistributionAuditEvent;
+export type JsonMasterAudioProduction = AudioProduction;
+export type JsonMasterAudioProfile = AudioProfile;
+export type JsonMasterNarratorProfile = NarratorProfile;
+export type JsonMasterSsmlDocument = SsmlDocument;
+export type JsonMasterPronunciationEntry = PronunciationEntry;
+export type JsonMasterAudioSegment = AudioSegment;
+export type JsonMasterAudioAssembly = AudioAssembly;
+export type JsonMasterAudioOutput = AudioOutput;
+export type JsonMasterTranscript = Transcript;
+export type JsonMasterVideoProduction = VideoProduction;
+export type JsonMasterVideoProfile = VideoProfile;
+export type JsonMasterVideoScene = VideoScene;
+export type JsonMasterMultimediaSubtitleTrack = MultimediaSubtitleTrack;
+export type JsonMasterAudioDescription = AudioDescription;
+export type JsonMasterVideoBuild = VideoBuild;
+export type JsonMasterMultimediaManifest = MultimediaManifest;
+export type JsonMasterChildrenProfile = ChildrenProfile;
+export type JsonMasterAgeClassification = AgeClassification;
+export type JsonMasterIllustrationAsset = IllustrationAsset;
+export type JsonMasterAiIllustrationGeneration = AiIllustrationGeneration;
+export type JsonMasterVisualIdentityProfile = VisualIdentityProfile;
+export type JsonMasterCharacterRegistryEntry = CharacterRegistryEntry;
+export type JsonMasterLocalizedTextLayer = LocalizedTextLayer;
+export type JsonMasterLocalizedImageDerivative = LocalizedImageDerivative;
+export type JsonMasterTextAudioSyncSegment = TextAudioSyncSegment;
+export type JsonMasterMultimediaAccessibilityReport = MultimediaAccessibilityReport;
+export type JsonMasterMultimediaRightsValidation = MultimediaRightsValidation;
+export type JsonMasterMusicSoundAsset = MusicSoundAsset;
+export type JsonMasterMultimediaPackage = MultimediaPackage;
+export type JsonMasterMultimediaBuildJob = MultimediaBuildJob;
+export type JsonMasterMultimediaCostRecord = MultimediaCostRecord;
+export type JsonMasterMultimediaObservabilityMetric = MultimediaObservabilityMetric;
+export type JsonMasterMultimediaAuditEvent = MultimediaAuditEvent;
+export type JsonMasterLegacyMultimediaResource = LegacyMultimediaResource;
 
 export interface JsonMasterLegacyPublicationOutput {
   id: string;
