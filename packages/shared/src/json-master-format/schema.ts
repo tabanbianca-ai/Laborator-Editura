@@ -93,6 +93,102 @@ export const jsonMasterFormatV1Schema = {
         $ref: "#/$defs/editorialRecord"
       }
     },
+    works: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    originalEditions: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    editions: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    resourceRelationships: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    contributors: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    editionContributors: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    editorialMetadata: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    metadataHistory: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    rightsRecords: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    provenanceRecords: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    digitalAssets: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    libraryRecords: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    libraryReservations: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    searchIndexRecords: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    publicationReadiness: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
+    duplicateCandidates: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/libraryRecord"
+      }
+    },
     mediaLocalization: {
       $ref: "#/$defs/mediaLocalization"
     },
@@ -212,6 +308,10 @@ export const jsonMasterFormatV1Schema = {
       format: "date-time"
     },
     editorialRecord: {
+      type: "object",
+      additionalProperties: true
+    },
+    libraryRecord: {
       type: "object",
       additionalProperties: true
     },
