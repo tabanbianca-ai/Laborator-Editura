@@ -33,3 +33,4 @@ export * from "./editorial-core";
 export * from "./unified-library";
 export * from "./publishing-engine";
 export * from "./distribution-commerce";
+export * from "./multimedia-production";
