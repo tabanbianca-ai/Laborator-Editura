@@ -37,6 +37,14 @@
     "./canonical-data": {
       "types": "./dist/canonical-data.d.ts",
       "default": "./dist/canonical-data.js"
+    },
+    "./editorial-core": {
+      "types": "./dist/editorial-core.d.ts",
+      "default": "./dist/editorial-core.js"
+    },
+    "./unified-library": {
+      "types": "./dist/unified-library.d.ts",
+      "default": "./dist/unified-library.js"
     }
   },
   "scripts": {
