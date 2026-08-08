@@ -321,6 +321,168 @@ export const jsonMasterFormatV1Schema = {
         $ref: "#/$defs/publishingRecord"
       }
     },
+    distributionRecords: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    channelRegistry: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    distributionReadinessResults: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    publicCatalogProjections: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    publicSlugs: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    digitalReaderCapabilities: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    readerProgress: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    readerAnnotations: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    readerLibraryEntries: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commerceProducts: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commerceOffers: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commerceTaxProfiles: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commerceOrders: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commerceOrderItems: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commercePayments: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commercePaymentWebhookEvents: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commerceEntitlements: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commerceDownloadAuthorizations: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commercePromotions: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    commerceRefunds: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    distributionExternalMappings: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    distributionSyncRecords: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    distributionReconciliationJobs: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    publicationWithdrawalRequests: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    publicationSupersedingRecords: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    publicAnalyticsEvents: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
+    distributionAuditEvents: {
+      type: "array",
+      items: {
+        $ref: "#/$defs/distributionCommerceRecord"
+      }
+    },
     mediaLocalization: {
       $ref: "#/$defs/mediaLocalization"
     },
@@ -448,6 +610,10 @@ export const jsonMasterFormatV1Schema = {
       additionalProperties: true
     },
     publishingRecord: {
+      type: "object",
+      additionalProperties: true
+    },
+    distributionCommerceRecord: {
       type: "object",
       additionalProperties: true
     },
