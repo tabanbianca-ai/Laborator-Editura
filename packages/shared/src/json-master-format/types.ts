@@ -25,6 +25,29 @@ import type {
   SearchIndexRecord,
   UnifiedLibraryRecord
 } from "../unified-library";
+import type {
+  AccessibilityManifest,
+  CanonicalPublication,
+  CoverModel,
+  FontRegistryEntry,
+  GeneratedPublicationAsset,
+  ImageDerivative,
+  ImagePublicationAsset,
+  IntegrityManifest,
+  LayoutProfile,
+  PublicationApproval,
+  PublicationBuild,
+  PublicationBuildJob,
+  PublicationManifest,
+  PublicationPackage,
+  PublicationPreview,
+  PublicationProfile,
+  PublicationValidationReport,
+  PublishingObservabilityMetric,
+  RightsManifest,
+  StructuralStyleMapping,
+  TypographyProfile
+} from "../publishing-engine";
 
 export const JSON_MASTER_FORMAT_VERSION = "1.0" as const;
 
@@ -126,6 +149,28 @@ export interface JsonMasterFormatV1 {
   localizedAudio?: JsonMasterLocalizedAudio[];
   voiceOverTracks?: JsonMasterLocalizedAudio[];
   dubbingProjects?: JsonMasterDubbingProject[];
+  canonicalPublications?: JsonMasterCanonicalPublication[];
+  publicationBuilds?: JsonMasterPublicationBuild[];
+  canonicalPublicationProfiles?: JsonMasterCanonicalPublicationProfile[];
+  layoutProfiles?: JsonMasterLayoutProfile[];
+  typographyProfiles?: JsonMasterTypographyProfile[];
+  fontRegistry?: JsonMasterFontRegistryEntry[];
+  styleMappings?: JsonMasterStructuralStyleMapping[];
+  publicationGeneratedAssets?: JsonMasterGeneratedPublicationAsset[];
+  publicationImageAssets?: JsonMasterImagePublicationAsset[];
+  publicationImageDerivatives?: JsonMasterImageDerivative[];
+  publicationCovers?: JsonMasterCoverModel[];
+  publicationManifests?: JsonMasterPublicationManifest[];
+  rightsManifests?: JsonMasterRightsManifest[];
+  accessibilityManifests?: JsonMasterAccessibilityManifest[];
+  integrityManifests?: JsonMasterIntegrityManifest[];
+  publicationPackages?: JsonMasterPublicationPackage[];
+  publicationValidationReports?: JsonMasterPublicationValidationReport[];
+  publicationPreviews?: JsonMasterPublicationPreview[];
+  publicationApprovals?: JsonMasterPublicationApproval[];
+  publicationBuildJobs?: JsonMasterPublicationBuildJob[];
+  publishingObservabilityMetrics?: JsonMasterPublishingObservabilityMetric[];
+  legacyPublicationOutputs?: JsonMasterLegacyPublicationOutput[];
 }
 
 export type JsonMasterStructuredMasterDocument = StructuredMasterDocument;
@@ -151,6 +196,42 @@ export type JsonMasterLibraryReservation = LibraryReservation;
 export type JsonMasterSearchIndexRecord = SearchIndexRecord;
 export type JsonMasterPublicationReadiness = PublicationReadinessResult;
 export type JsonMasterDuplicateCandidate = DuplicateCandidate;
+export type JsonMasterCanonicalPublication = CanonicalPublication;
+export type JsonMasterPublicationBuild = PublicationBuild;
+export type JsonMasterCanonicalPublicationProfile = PublicationProfile;
+export type JsonMasterLayoutProfile = LayoutProfile;
+export type JsonMasterTypographyProfile = TypographyProfile;
+export type JsonMasterFontRegistryEntry = FontRegistryEntry;
+export type JsonMasterStructuralStyleMapping = StructuralStyleMapping;
+export type JsonMasterGeneratedPublicationAsset = GeneratedPublicationAsset;
+export type JsonMasterImagePublicationAsset = ImagePublicationAsset;
+export type JsonMasterImageDerivative = ImageDerivative;
+export type JsonMasterCoverModel = CoverModel;
+export type JsonMasterPublicationManifest = PublicationManifest;
+export type JsonMasterRightsManifest = RightsManifest;
+export type JsonMasterAccessibilityManifest = AccessibilityManifest;
+export type JsonMasterIntegrityManifest = IntegrityManifest;
+export type JsonMasterPublicationPackage = PublicationPackage;
+export type JsonMasterPublicationValidationReport = PublicationValidationReport;
+export type JsonMasterPublicationPreview = PublicationPreview;
+export type JsonMasterPublicationApproval = PublicationApproval;
+export type JsonMasterPublicationBuildJob = PublicationBuildJob;
+export type JsonMasterPublishingObservabilityMetric = PublishingObservabilityMetric;
+
+export interface JsonMasterLegacyPublicationOutput {
+  id: string;
+  classification:
+    | "CANONICAL_BUILD"
+    | "LEGACY_OUTPUT"
+    | "MASTER_VERSION_UNKNOWN"
+    | "RIGHTS_UNKNOWN"
+    | "SOURCE_UNKNOWN"
+    | "SUPERSEDED"
+    | "VALIDATION_UNKNOWN";
+  originalUri?: string;
+  migrationNotes?: string;
+  replacementPublicationBuildId?: string;
+}
 
 export interface JsonMasterProject {
   id: string;
