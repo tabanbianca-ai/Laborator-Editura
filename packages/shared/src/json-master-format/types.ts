@@ -113,6 +113,38 @@ import type {
   VideoScene,
   VisualIdentityProfile
 } from "../multimedia-production";
+import type {
+  AIAgentDefinition,
+  AIAuditEvent,
+  AIBudget,
+  AIChangeRecord,
+  AICostRecord,
+  AIDataPolicy,
+  AIExecutionRecord,
+  AIModelDefinition,
+  AIObservabilityMetric,
+  AIProviderDefinition,
+  AIQualityDashboardSnapshot,
+  AIUsageQuota,
+  AgentCommunicationContract,
+  ChunkingProfile,
+  KillSwitch,
+  KnowledgeSourceDefinition,
+  LegacyAiAsset,
+  PromptDefinition,
+  ProviderDataPolicy,
+  RagCollection,
+  RegressionRun,
+  SemanticCacheEntry,
+  ShadowEvaluationRun,
+  ToolCallRequest,
+  ToolDefinition,
+  VectorRecord,
+  AIIncident,
+  AIWorkflowTrace,
+  EvaluationDataset,
+  EvaluationProfile
+} from "../ai-orchestration";
 
 export const JSON_MASTER_FORMAT_VERSION = "1.0" as const;
 
@@ -297,6 +329,36 @@ export interface JsonMasterFormatV1 {
   multimediaObservabilityMetrics?: JsonMasterMultimediaObservabilityMetric[];
   multimediaAuditEvents?: JsonMasterMultimediaAuditEvent[];
   legacyMultimediaResources?: JsonMasterLegacyMultimediaResource[];
+  aiAgents?: JsonMasterAiAgent[];
+  aiProviders?: JsonMasterAiProvider[];
+  aiModels?: JsonMasterAiModel[];
+  aiPrompts?: JsonMasterAiPrompt[];
+  aiExecutions?: JsonMasterAiExecutionRecord[];
+  aiKnowledgeSources?: JsonMasterAiKnowledgeSource[];
+  ragCollections?: JsonMasterRagCollection[];
+  ragChunkingProfiles?: JsonMasterRagChunkingProfile[];
+  ragVectors?: JsonMasterRagVector[];
+  aiTools?: JsonMasterAiTool[];
+  aiToolCalls?: JsonMasterAiToolCall[];
+  aiEvaluationProfiles?: JsonMasterAiEvaluationProfile[];
+  aiEvaluationDatasets?: JsonMasterAiEvaluationDataset[];
+  aiRegressionRuns?: JsonMasterAiRegressionRun[];
+  aiShadowEvaluations?: JsonMasterAiShadowEvaluation[];
+  aiOperationalCostRecords?: JsonMasterAiOperationalCostRecord[];
+  aiOperationalBudgets?: JsonMasterAiOperationalBudget[];
+  aiUsageQuotas?: JsonMasterAiUsageQuota[];
+  aiSemanticCacheEntries?: JsonMasterAiSemanticCacheEntry[];
+  aiDataPolicies?: JsonMasterAiDataPolicy[];
+  aiProviderDataPolicies?: JsonMasterAiProviderDataPolicy[];
+  aiOperationalAuditEvents?: JsonMasterAiOperationalAuditEvent[];
+  aiObservabilityMetrics?: JsonMasterAiObservabilityMetric[];
+  aiQualityDashboardSnapshots?: JsonMasterAiQualityDashboardSnapshot[];
+  aiIncidents?: JsonMasterAiIncident[];
+  aiKillSwitches?: JsonMasterAiKillSwitch[];
+  aiAgentMessages?: JsonMasterAiAgentMessage[];
+  aiWorkflowTraces?: JsonMasterAiWorkflowTrace[];
+  aiChangeRecords?: JsonMasterAiChangeRecord[];
+  legacyAiAssets?: JsonMasterLegacyAiAsset[];
 }
 
 export type JsonMasterStructuredMasterDocument = StructuredMasterDocument;
@@ -404,6 +466,36 @@ export type JsonMasterMultimediaCostRecord = MultimediaCostRecord;
 export type JsonMasterMultimediaObservabilityMetric = MultimediaObservabilityMetric;
 export type JsonMasterMultimediaAuditEvent = MultimediaAuditEvent;
 export type JsonMasterLegacyMultimediaResource = LegacyMultimediaResource;
+export type JsonMasterAiAgent = AIAgentDefinition;
+export type JsonMasterAiProvider = AIProviderDefinition;
+export type JsonMasterAiModel = AIModelDefinition;
+export type JsonMasterAiPrompt = PromptDefinition;
+export type JsonMasterAiExecutionRecord = AIExecutionRecord;
+export type JsonMasterAiKnowledgeSource = KnowledgeSourceDefinition;
+export type JsonMasterRagCollection = RagCollection;
+export type JsonMasterRagChunkingProfile = ChunkingProfile;
+export type JsonMasterRagVector = VectorRecord;
+export type JsonMasterAiTool = ToolDefinition;
+export type JsonMasterAiToolCall = ToolCallRequest;
+export type JsonMasterAiEvaluationProfile = EvaluationProfile;
+export type JsonMasterAiEvaluationDataset = EvaluationDataset;
+export type JsonMasterAiRegressionRun = RegressionRun;
+export type JsonMasterAiShadowEvaluation = ShadowEvaluationRun;
+export type JsonMasterAiOperationalCostRecord = AICostRecord;
+export type JsonMasterAiOperationalBudget = AIBudget;
+export type JsonMasterAiUsageQuota = AIUsageQuota;
+export type JsonMasterAiSemanticCacheEntry = SemanticCacheEntry;
+export type JsonMasterAiDataPolicy = AIDataPolicy;
+export type JsonMasterAiProviderDataPolicy = ProviderDataPolicy;
+export type JsonMasterAiOperationalAuditEvent = AIAuditEvent;
+export type JsonMasterAiObservabilityMetric = AIObservabilityMetric;
+export type JsonMasterAiQualityDashboardSnapshot = AIQualityDashboardSnapshot;
+export type JsonMasterAiIncident = AIIncident;
+export type JsonMasterAiKillSwitch = KillSwitch;
+export type JsonMasterAiAgentMessage = AgentCommunicationContract;
+export type JsonMasterAiWorkflowTrace = AIWorkflowTrace;
+export type JsonMasterAiChangeRecord = AIChangeRecord;
+export type JsonMasterLegacyAiAsset = LegacyAiAsset;
 
 export interface JsonMasterLegacyPublicationOutput {
   id: string;
