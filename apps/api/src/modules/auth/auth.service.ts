@@ -16,6 +16,8 @@ import {
   type AuthAuditEntityType,
   type AuthAuditEvent,
   type AuthActivityEvent,
+  type AuthenticationMethod,
+  type CanonicalIdentity,
   type AuthCredential,
   type AuthEmailVerificationRequest,
   type AuthOrganization,
@@ -107,20 +109,38 @@ export class AuthService {
     if (!user) {
       user = await this.repository.createUser({
         id: randomUUID(),
+        identityType: "HUMAN_USER",
+        canonicalUsername: email,
+        preferredLocale: "ro-RO",
+        authenticationMethods: [],
+        securityVersion: 1,
         email,
         displayName: input.displayName ?? email,
         status: "ACTIVE",
-        createdAt: now
+        createdAt: now,
+        updatedAt: now
       });
     }
 
     const userBeforeLogin = user;
     const normalizedUserStatus = user.status ?? "ACTIVE";
+    const identityId = user.identityId ?? user.id;
+    const authenticationMethods = this.mergeAuthenticationMethods(
+      user.authenticationMethods,
+      this.authenticationMethodForLogin(input, bootstrapSecretValid)
+    );
     user = await this.repository.updateUser({
       ...user,
+      identityId,
+      identityType: user.identityType ?? "HUMAN_USER",
+      canonicalUsername: user.canonicalUsername ?? email,
+      preferredLocale: user.preferredLocale ?? "ro-RO",
+      authenticationMethods,
+      securityVersion: user.securityVersion ?? 1,
       status: normalizedUserStatus,
       displayName: input.displayName ?? user.displayName,
       lastLoginAt: now,
+      updatedAt: now,
       profile: {
         displayName: input.displayName ?? user.displayName,
         email: user.email,
@@ -130,6 +150,13 @@ export class AuthService {
         emailVerifiedAt: user.emailVerifiedAt
       }
     });
+    const canonicalIdentityBefore = await this.repository.findCanonicalIdentityByIdForTenant(
+      identityId,
+      organization.id
+    );
+    const canonicalIdentity = await this.repository.upsertCanonicalIdentity(
+      this.buildCanonicalIdentity(user, organization.id, canonicalIdentityBefore, now)
+    );
 
     let createdCredential: AuthCredential | undefined;
 
@@ -179,6 +206,11 @@ export class AuthService {
       organizationId: organization.id,
       userId: user.id,
       roles,
+      identityId: user.identityId ?? user.id,
+      identityType: user.identityType ?? "HUMAN_USER",
+      authenticationLevel: bootstrapSecretValid && !input.password ? "BOOTSTRAP" : "PASSWORD",
+      issuedAt: now,
+      securityVersion: user.securityVersion ?? 1,
       createdAt: now,
       expiresAt: this.createSessionExpiration(now),
       lastSeenAt: now
@@ -192,7 +224,11 @@ export class AuthService {
       actor: {
         userId: user.id,
         organizationId: organization.id,
-        roles
+        roles,
+        identityId: user.identityId ?? user.id,
+        identityType: user.identityType ?? "HUMAN_USER",
+        authenticationLevel: session.authenticationLevel,
+        securityVersion: user.securityVersion ?? 1
       }
     };
 
@@ -205,6 +241,15 @@ export class AuthService {
     if (userCreated) {
       await this.audit("CREATE", actor, "AUTH_USER", user.id, undefined, user);
     }
+
+    await this.audit(
+      canonicalIdentityBefore ? "UPDATE" : "CREATE",
+      actor,
+      "AUTH_IDENTITY",
+      canonicalIdentity.id,
+      canonicalIdentityBefore ?? undefined,
+      canonicalIdentity
+    );
 
     if (createdCredential) {
       await this.audit(
@@ -290,6 +335,31 @@ export class AuthService {
       throw new UnauthorizedException("session is not valid.");
     }
 
+    const user = await this.repository.findUserById(session.userId);
+
+    if (!user || !this.isAuthenticatableUserStatus(user.status)) {
+      await this.auditSecurityEvent("IDENTITY_STATUS_REJECTED", "Session rejected by identity status.", {
+        organizationId: session.organizationId,
+        userId: session.userId
+      });
+      throw new UnauthorizedException("session is not valid.");
+    }
+
+    const userSecurityVersion = user.securityVersion ?? 1;
+
+    if ((session.securityVersion ?? userSecurityVersion) !== userSecurityVersion) {
+      await this.repository.updateSession({
+        ...session,
+        revokedAt: new Date().toISOString(),
+        revocationReason: "SECURITY_VERSION_CHANGED"
+      });
+      await this.auditSecurityEvent("SESSION_REVOKED", "Session revoked after critical identity change.", {
+        organizationId: session.organizationId,
+        userId: session.userId
+      });
+      throw new UnauthorizedException("session is not valid.");
+    }
+
     if (this.isSessionExpired(session)) {
       await this.auditSecurityEvent("SESSION_EXPIRED", "Session token expired.", {
         organizationId: session.organizationId,
@@ -314,7 +384,11 @@ export class AuthService {
     return {
       userId: session.userId,
       organizationId: session.organizationId,
-      roles: session.roles
+      roles: session.roles,
+      identityId: session.identityId ?? user.identityId ?? session.userId,
+      identityType: session.identityType ?? user.identityType ?? "HUMAN_USER",
+      authenticationLevel: session.authenticationLevel,
+      securityVersion: userSecurityVersion
     };
   }
 
@@ -344,12 +418,17 @@ export class AuthService {
       ...existing,
       token: randomUUID(),
       expiresAt: this.createSessionExpiration(now),
-      lastSeenAt: now
+      lastSeenAt: now,
+      issuedAt: now
     });
     const refreshedActor: AuthActor = {
       userId: refreshed.userId,
       organizationId: refreshed.organizationId,
-      roles: refreshed.roles
+      roles: refreshed.roles,
+      identityId: refreshed.identityId,
+      identityType: refreshed.identityType,
+      authenticationLevel: refreshed.authenticationLevel,
+      securityVersion: refreshed.securityVersion
     };
 
     await this.audit("REFRESH_SESSION", actor, "AUTH_SESSION", refreshed.id, existing, refreshed);
@@ -568,6 +647,12 @@ export class AuthService {
 
     const credential = await this.createCredential(actor.userId, input.newPassword, existing?.id, existing?.createdAt);
     await this.repository.upsertCredential(credential);
+    await this.bumpUserSecurityVersion(actor.userId);
+    await this.revokeSessionsAfterCriticalChange(
+      [actor.organizationId],
+      actor.userId,
+      "PASSWORD_CHANGED"
+    );
     await this.audit(
       existing ? "CHANGE_PASSWORD" : "CREATE",
       actor,
@@ -621,6 +706,15 @@ export class AuthService {
       usedAt: new Date().toISOString()
     });
     await this.repository.upsertCredential(credential);
+    await this.bumpUserSecurityVersion(user.id);
+    const organizationIds = request.organizationId
+      ? [request.organizationId]
+      : await this.repository.findOrganizationIdsForUser(user.id);
+    await this.revokeSessionsAfterCriticalChange(
+      organizationIds,
+      user.id,
+      "PASSWORD_RESET"
+    );
 
     if (request.organizationId) {
       const actor = {
@@ -975,7 +1069,7 @@ export class AuthService {
     input: LoginInput,
     bootstrapSecretValid: boolean
   ): Promise<void> {
-    if (user.status === "INACTIVE") {
+    if (!this.isAuthenticatableUserStatus(user.status)) {
       await this.recordFailedLogin(user.email, "Invalid login credentials.");
       throw new UnauthorizedException("Invalid login credentials.");
     }
@@ -992,6 +1086,109 @@ export class AuthService {
 
     await this.recordFailedLogin(user.email, "Invalid login credentials.");
     throw new UnauthorizedException("Invalid login credentials.");
+  }
+
+  private buildCanonicalIdentity(
+    user: AuthUser,
+    organizationId: string,
+    existing: CanonicalIdentity | null,
+    now: string
+  ): CanonicalIdentity {
+    return {
+      id: user.identityId ?? user.id,
+      organizationId,
+      userId: user.id,
+      identityType: user.identityType ?? "HUMAN_USER",
+      status: this.toCanonicalIdentityStatus(user.status),
+      canonicalUsername: user.canonicalUsername ?? user.email,
+      displayName: user.displayName,
+      preferredLocale: user.preferredLocale,
+      authenticationMethods: user.authenticationMethods ?? ["PASSWORD"],
+      securityVersion: user.securityVersion ?? 1,
+      createdAt: existing?.createdAt ?? user.createdAt,
+      updatedAt: now,
+      archivedAt: existing?.archivedAt,
+      metadata: {
+        ...(existing?.metadata ?? {}),
+        source: "auth.users",
+        canonicalModel: "Batch 02 identity foundation"
+      }
+    };
+  }
+
+  private toCanonicalIdentityStatus(status: AuthUser["status"]): CanonicalIdentity["status"] {
+    if (status === "INACTIVE") {
+      return "DISABLED";
+    }
+
+    return status;
+  }
+
+  private isAuthenticatableUserStatus(status: AuthUser["status"]): boolean {
+    return status === "ACTIVE";
+  }
+
+  private authenticationMethodForLogin(
+    input: LoginInput,
+    bootstrapSecretValid: boolean
+  ): AuthenticationMethod {
+    if (input.password) {
+      return "PASSWORD";
+    }
+
+    if (bootstrapSecretValid) {
+      return "BOOTSTRAP_SECRET";
+    }
+
+    return "PASSWORD";
+  }
+
+  private mergeAuthenticationMethods(
+    existing: AuthenticationMethod[] | undefined,
+    method: AuthenticationMethod
+  ): AuthenticationMethod[] {
+    return [...new Set([...(existing ?? []), method])];
+  }
+
+  private async bumpUserSecurityVersion(userId: string): Promise<AuthUser> {
+    const user = await this.loadUser(userId);
+    const now = new Date().toISOString();
+
+    return this.repository.updateUser({
+      ...user,
+      securityVersion: (user.securityVersion ?? 1) + 1,
+      updatedAt: now,
+      profile: user.profile
+        ? {
+            ...user.profile,
+            status: user.status
+          }
+        : undefined
+    });
+  }
+
+  private async revokeSessionsAfterCriticalChange(
+    organizationIds: string[],
+    userId: string,
+    reason: string
+  ): Promise<void> {
+    const revokedAt = new Date().toISOString();
+
+    for (const organizationId of organizationIds) {
+      const revokedSessions = await this.repository.revokeUserSessions(
+        organizationId,
+        userId,
+        revokedAt,
+        reason
+      );
+
+      if (revokedSessions.length > 0) {
+        await this.auditSecurityEvent("SESSION_REVOKED", "Sessions revoked after critical identity change.", {
+          organizationId,
+          userId
+        });
+      }
+    }
   }
 
   private async loadSessionForActor(actor: AuthActor, token: string): Promise<AuthSession> {
