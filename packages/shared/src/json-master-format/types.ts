@@ -7,6 +7,24 @@ import type {
   EditorialSuggestion,
   StructuredMasterDocument
 } from "../editorial-core";
+import type {
+  CanonicalEdition,
+  CanonicalRightsRecord,
+  CanonicalWork,
+  Contributor,
+  DigitalAssetRecord,
+  DuplicateCandidate,
+  EditionContributor,
+  EditorialMetadata,
+  LibraryReservation,
+  MetadataVersionRecord,
+  OriginalEditionIdentity,
+  ProvenanceRecord,
+  PublicationReadinessResult,
+  ResourceRelationship,
+  SearchIndexRecord,
+  UnifiedLibraryRecord
+} from "../unified-library";
 
 export const JSON_MASTER_FORMAT_VERSION = "1.0" as const;
 
@@ -73,6 +91,22 @@ export interface JsonMasterFormatV1 {
   correctionFindings?: JsonMasterCorrectionFinding[];
   editorialApprovals?: JsonMasterEditorialApproval[];
   editorialAiExecutions?: JsonMasterEditorialAiExecution[];
+  works?: JsonMasterWork[];
+  originalEditions?: JsonMasterOriginalEdition[];
+  editions?: JsonMasterEdition[];
+  resourceRelationships?: JsonMasterResourceRelationship[];
+  contributors?: JsonMasterContributor[];
+  editionContributors?: JsonMasterEditionContributor[];
+  editorialMetadata?: JsonMasterEditorialMetadata[];
+  metadataHistory?: JsonMasterMetadataVersion[];
+  rightsRecords?: JsonMasterRightsRecord[];
+  provenanceRecords?: JsonMasterProvenanceRecord[];
+  digitalAssets?: JsonMasterDigitalAsset[];
+  libraryRecords?: JsonMasterLibraryRecord[];
+  libraryReservations?: JsonMasterLibraryReservation[];
+  searchIndexRecords?: JsonMasterSearchIndexRecord[];
+  publicationReadiness?: JsonMasterPublicationReadiness[];
+  duplicateCandidates?: JsonMasterDuplicateCandidate[];
   mediaLocalization?: JsonMasterMediaLocalization;
   layout?: JsonMasterLayout;
   pageTemplates?: JsonMasterPageTemplate[];
@@ -101,6 +135,22 @@ export type JsonMasterEditorialSuggestion = EditorialSuggestion;
 export type JsonMasterCorrectionFinding = CorrectionFinding;
 export type JsonMasterEditorialApproval = EditorialApproval;
 export type JsonMasterEditorialAiExecution = EditorialAiExecutionRecord;
+export type JsonMasterWork = CanonicalWork;
+export type JsonMasterOriginalEdition = OriginalEditionIdentity;
+export type JsonMasterEdition = CanonicalEdition;
+export type JsonMasterResourceRelationship = ResourceRelationship;
+export type JsonMasterContributor = Contributor;
+export type JsonMasterEditionContributor = EditionContributor;
+export type JsonMasterEditorialMetadata = EditorialMetadata;
+export type JsonMasterMetadataVersion = MetadataVersionRecord;
+export type JsonMasterRightsRecord = CanonicalRightsRecord;
+export type JsonMasterProvenanceRecord = ProvenanceRecord;
+export type JsonMasterDigitalAsset = DigitalAssetRecord;
+export type JsonMasterLibraryRecord = UnifiedLibraryRecord;
+export type JsonMasterLibraryReservation = LibraryReservation;
+export type JsonMasterSearchIndexRecord = SearchIndexRecord;
+export type JsonMasterPublicationReadiness = PublicationReadinessResult;
+export type JsonMasterDuplicateCandidate = DuplicateCandidate;
 
 export interface JsonMasterProject {
   id: string;
