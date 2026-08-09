@@ -102,7 +102,8 @@ Codex
 | Canonical definitions | `docs/codex/canonical-definitions.md` |
 | Module sequence | `docs/codex/module-catalog.md` |
 | Consolidation evidence | `docs/codex/codex-consolidation-report.md` |
-| Codex v1.0 certification | `docs/certification/codex-v1/certification-report.md` |
+| Codex v1.0 certification standard | `docs/certification/codex-v1/certification-report.md` |
+| Codex v1.0 product release certification | `docs/releases/v1.0/certification-record.md` |
 | Codex implementation execution | `docs/implementation/master-plan.md` |
 | Codex task execution framework | `docs/implementation/implementation-tasks.md` |
 
