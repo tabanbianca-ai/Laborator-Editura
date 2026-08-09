@@ -92,10 +92,6 @@ function validateSbom() {
     issues.push("SBOM has no components");
   }
 
-  if (properties.get("laborator:sourceCommit") !== fullCommit) {
-    issues.push("SBOM source commit does not match current commit");
-  }
-
   if (properties.get("laborator:artifact.path") !== metadata.artifact.path) {
     issues.push("SBOM artifact path does not match artifact metadata");
   }
@@ -113,6 +109,14 @@ function validateSbom() {
     : "superseded-for-certification";
   if (properties.get("laborator:artifact.certificationStatus") !== expectedArtifactStatus) {
     issues.push(`SBOM artifact certification status should be ${expectedArtifactStatus}`);
+  }
+
+  if (expectedArtifactStatus === "verified-current-source" && properties.get("laborator:sourceCommit") !== fullCommit) {
+    issues.push("SBOM source commit does not match current commit");
+  }
+
+  if (expectedArtifactStatus === "superseded-for-certification" && !properties.get("laborator:sourceCommit")) {
+    issues.push("SBOM does not record the remediated source commit");
   }
 
   if (!existsSync(lockfilePath)) {
