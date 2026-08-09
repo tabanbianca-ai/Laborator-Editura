@@ -101,7 +101,7 @@ jobs:
           set +e
           corepack enable
           corepack prepare pnpm@10.12.1 --activate
-          pnpm install --no-frozen-lockfile
+          pnpm install --frozen-lockfile
           status=$?
           set -e
 
@@ -110,7 +110,7 @@ jobs:
             echo "Dependencies installed; typecheck will run."
           else
             echo "available=false" >> "$GITHUB_OUTPUT"
-            echo "::notice title=Typecheck skipped::Dependency installation failed or package access is unavailable. Contract validation remains required; run pnpm install && pnpm typecheck when dependencies are available."
+            echo "::notice title=Typecheck skipped::Dependency installation failed or package access is unavailable. Contract validation remains required; run pnpm install --frozen-lockfile && pnpm typecheck when dependencies are available."
           fi
 
           exit 0
@@ -137,14 +137,13 @@ jobs:
 
       - name: Vulnerability scan
         if: steps.dependencies.outputs.available == 'true'
-        continue-on-error: true
         run: pnpm audit --audit-level high
 
       - name: Document skipped typecheck
         if: steps.dependencies.outputs.available != 'true'
         run: |
           echo "Typecheck skipped because dependencies were unavailable in this CI run."
-          echo "Required follow-up when package access is available: pnpm install && pnpm typecheck"
+          echo "Required follow-up when package access is available: pnpm install --frozen-lockfile && pnpm typecheck"
 
   vulnerability-scan:
     name: Filesystem vulnerability scan
