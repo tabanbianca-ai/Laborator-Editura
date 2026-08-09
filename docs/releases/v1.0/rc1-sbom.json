@@ -1,10 +1,10 @@
 {
   "bomFormat": "CycloneDX",
   "specVersion": "1.5",
-  "serialNumber": "urn:uuid:d81aaa6d-0c1e-a28b-4a95-691999b0f9c6",
+  "serialNumber": "urn:uuid:1e3420ba-965c-5e76-46b0-7688cad68444",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-08-09T09:04:24.718Z",
+    "timestamp": "2026-08-09T09:04:48.178Z",
     "tools": {
       "components": [
         {
@@ -27,7 +27,7 @@
       },
       {
         "name": "laborator:sourceCommit",
-        "value": "3d97043c0f578ec861ea7df9314e054176697d0b"
+        "value": "27d2fb51e582e3023248321e4ba6f28bb372fb5d"
       },
       {
         "name": "laborator:sourceBranch",
