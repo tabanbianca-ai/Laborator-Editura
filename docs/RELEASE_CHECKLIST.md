@@ -47,7 +47,7 @@ Run and record the result of each validation item:
 - Hosted GitHub Actions CI:
   `.github/workflows/ci.yml` must pass on the release branch or tag.
 - Dependency installation:
-  `pnpm install --no-frozen-lockfile`
+  `pnpm install --frozen-lockfile`
 - TypeScript check:
   `pnpm typecheck`
 
