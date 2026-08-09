@@ -22,7 +22,7 @@ Candidate commit: `c1b6958c0c8c92e3946addfcab48bc695962ca98`
 | RC1-P0-002 | P0 BLOCKER | Deployment | Missing evidence | Clean staging deployment was not validated during this RC1 run. | `pnpm staging:health` failed because API and web were not listening. `pnpm staging:validate` failed at environment validation. | Deploy the exact RC1 artifact to staging and rerun health, smoke, monitoring, and validation scripts. | OPEN |
 | RC1-P0-003 | P0 BLOCKER | Restore | Missing evidence | Live isolated restore from an RC1 staging backup was not executed. | `pnpm staging:restore:dry-run` failed because `STAGING_BACKUP_FILE` was not provided. Infrastructure backup dry-run skipped Docker volume access because Docker is unavailable locally. | Generate a staging backup and execute restore dry-run into isolated volumes. | OPEN |
 | RC1-P0-004 | P0 BLOCKER | Rollback | Missing evidence | Rollback and redeploy rehearsal was not executed for the candidate. | No rollback execution evidence was found in this RC1 run. | Execute rollback and redeploy rehearsal against staging with the exact candidate. | OPEN |
-| RC1-P1-001 | P1 CRITICAL | Supply Chain | Confirmed failure | Dependency vulnerability audit cannot run without a lockfile. | `pnpm audit --audit-level high` failed with `ERR_PNPM_AUDIT_NO_LOCKFILE`. | Commit a root lockfile or approve and document a formal dependency audit exception with replacement evidence. | OPEN |
+| RC1-P1-001 | P1 CRITICAL | Supply Chain | Confirmed resolved | Dependency lockfile and supply-chain audit evidence now exist. | `pnpm-lock.yaml` generated; frozen install passes; full and production audits report 0 Critical, 0 High, 0 Moderate, 0 Low; SBOM records lockfile SHA-256 `569b71350933f1f2e6028bbc6480b9b385dfe267929b136ca3bdc353f3d1b075`. | Preserve the lockfile and use frozen installs for CI, staging, and Docker builds. Produce a new final RC1 artifact from the remediated source state before pilot/certification. | RESOLVED |
 | RC1-P1-002 | P1 CRITICAL | Security | Missing evidence | Live cross-organization and adversarial authorization suite was not executed against staging. | Contract tests passed, but no live staging adversarial run was available. | Run staging security suite covering cross-org isolation, RBAC, privilege escalation, IDOR, sessions, and unauthorized AI/tool/document access. | OPEN |
 | RC1-P1-003 | P1 CRITICAL | Accessibility | Missing evidence | Browser-level accessibility review is missing. | Web contract tests passed; no axe, keyboard, focus, screen-reader, or contrast run was executed. | Execute accessibility pass on critical workflows and record results. | OPEN |
 | RC1-P1-004 | P1 CRITICAL | Localization | Missing evidence | Browser-level localization review for all seven platform languages is missing. | Shared and web localization tests passed; no full UI crawl confirmed no mixed-language screens. | Execute UI localization crawl for ro, en, es, fr, pt, it, and de. | OPEN |
@@ -44,5 +44,5 @@ Candidate commit: `c1b6958c0c8c92e3946addfcab48bc695962ca98`
 
 ## Blocker Summary
 
-RC1-P0-001 is resolved. RC1 still cannot proceed to pilot with the remaining
-open P0 blockers.
+RC1-P0-001 and RC1-P1-001 are resolved. RC1 still cannot proceed to pilot with
+the remaining open P0 blockers.
