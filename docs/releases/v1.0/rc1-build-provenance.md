@@ -1,6 +1,6 @@
 # RC1 Build Provenance
 
-Status: VERIFIED  
+Status: VERIFIED_NOT_DEPLOYED
 Generated: 2026-08-09  
 Release candidate: `1.0.0-rc.1`
 
@@ -10,9 +10,11 @@ BUILD_PROVENANCE = VERIFIED
 
 | Field | Value |
 | --- | --- |
-| Source commit | `c1b6958c0c8c92e3946addfcab48bc695962ca98` |
+| Source commit | `30b39ec0034f335bdbda210f09c8ad66a26a25a2` |
 | Branch | `main` |
-| Repository state at packaging | Release evidence tooling untracked; no application source changes |
+| Repository state at packaging | Release evidence script updates pending; no application source changes recorded in the artifact metadata |
+| Previous artifact source | `c1b6958c0c8c92e3946addfcab48bc695962ca98` |
+| Previous artifact status | Historical and superseded for certification |
 
 ## Build Environment
 
@@ -24,17 +26,17 @@ BUILD_PROVENANCE = VERIFIED
 | Declared package manager | `pnpm@10.12.1` |
 | Platform | `darwin arm64` |
 | Builder | Local Codex validation environment |
-| Build timestamp | `2026-08-09T08:38:11.021Z` |
+| Build timestamp | `2026-08-09T09:25:28.947Z` |
 
 ## Artifact
 
 | Field | Value |
 | --- | --- |
-| Artifact reference | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-c1b6958.tar.gz` |
-| Artifact metadata | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-c1b6958.artifact.json` |
-| Artifact checksum file | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-c1b6958.tar.gz.sha256` |
-| Size | `1716081` bytes |
-| SHA-256 | `41a15a58b747dfcf48881d3d9557ef6b9fab7ef8065305867c96b2922a1ac285` |
+| Artifact reference | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-30b39ec.tar.gz` |
+| Artifact metadata | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-30b39ec.artifact.json` |
+| Artifact checksum file | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-30b39ec.tar.gz.sha256` |
+| Size | `1897172` bytes |
+| SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` |
 
 ## SBOM
 
@@ -43,10 +45,11 @@ BUILD_PROVENANCE = VERIFIED
 | SBOM reference | `docs/releases/v1.0/rc1-sbom.json` |
 | SBOM format | CycloneDX JSON |
 | SBOM spec version | `1.5` |
-| SBOM SHA-256 | `5c35c3d2d4961a8e4de6df801f1aa86e460b7ad192e42dbf004cd4ddca51ba04` |
+| SBOM SHA-256 | `bdf24e911f70c4609e5ac1beb210e57dcbda8d44d9f19f5aef67c1d8095bd82a` |
 | Component count | `25` |
 | Dependency graph entries | `6` |
-| Lockfile status | Missing; remains covered by RC1 Blocker 02 / supply-chain remediation |
+| Lockfile status | Present |
+| Lockfile SHA-256 | `569b71350933f1f2e6028bbc6480b9b385dfe267929b136ca3bdc353f3d1b075` |
 
 ## Database Version
 
@@ -60,11 +63,13 @@ BUILD_PROVENANCE = VERIFIED
 
 | Evidence | Result |
 | --- | --- |
-| `git diff --check` | PASS |
+| `pnpm install --frozen-lockfile` | PASS |
 | `pnpm typecheck` | PASS |
+| `pnpm lint` | PASS |
 | `pnpm test` | PASS |
 | `pnpm build` | PASS |
-| `node scripts/validate-rc1-release-evidence.mjs` | PASS |
+| `git diff --check` | PASS |
+| `node scripts/validate-rc1-release-evidence.mjs` | PASS after release evidence update |
 
 ## Integrity Verification
 
@@ -73,9 +78,9 @@ The release evidence validator verifies:
 - artifact file exists;
 - artifact SHA-256 matches artifact metadata;
 - checksum file matches artifact SHA-256;
-- SBOM references the same artifact path, source commit, and SHA-256;
+- SBOM references the same artifact path, source commit, lockfile, and SHA-256;
 - provenance references the same source commit, artifact, SBOM, and SHA-256;
-- artifact documentation contains the required Blocker 01 completion signals.
+- artifact documentation contains the required completion signals.
 
 Validation command:
 
@@ -83,3 +88,17 @@ Validation command:
 node scripts/validate-rc1-release-evidence.mjs
 ```
 
+## Staging Deployment Status
+
+The artifact-based staging deployment mechanism is present and validated
+locally. No live staging deployment ID or deployed digest is recorded yet.
+
+Artifact deployment validation:
+
+```bash
+bash infrastructure/validation/validate-artifact-deploy.sh
+```
+
+Validation confirms the selected artifact checksum, the runtime image dry-run
+path, absence of source rebuild directives in the RC compose file, and failure
+on checksum mismatch.
