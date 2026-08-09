@@ -21,7 +21,7 @@ test("GitHub Actions CI runs required MVP validation checks", () => {
 
 test("GitHub Actions CI includes conditional typecheck when dependencies are available", () => {
   assert.match(workflow, /corepack prepare pnpm@10\.12\.1 --activate/);
-  assert.match(workflow, /pnpm install --no-frozen-lockfile/);
+  assert.match(workflow, /pnpm install --frozen-lockfile/);
   assert.match(workflow, /if: steps\.dependencies\.outputs\.available == 'true'/);
   assert.match(workflow, /pnpm typecheck/);
   assert.match(workflow, /Typecheck skipped/);
