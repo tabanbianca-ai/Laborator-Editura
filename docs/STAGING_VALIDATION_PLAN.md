@@ -93,7 +93,7 @@ CI must also attempt dependency installation and typecheck:
 ```bash
 corepack enable
 corepack prepare pnpm@10.12.1 --activate
-pnpm install --no-frozen-lockfile
+pnpm install --frozen-lockfile
 pnpm typecheck
 ```
 
@@ -108,7 +108,7 @@ node --version
 corepack enable
 corepack prepare pnpm@10.12.1 --activate
 pnpm --version
-pnpm install --no-frozen-lockfile
+pnpm install --frozen-lockfile
 pnpm typecheck
 ```
 
@@ -381,7 +381,7 @@ node --version
 corepack enable
 corepack prepare pnpm@10.12.1 --activate
 pnpm --version
-pnpm install --no-frozen-lockfile
+pnpm install --frozen-lockfile
 ```
 
 Expected result:
