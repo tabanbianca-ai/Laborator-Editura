@@ -4,7 +4,7 @@
 
 - Title: Codex Redundancy Consolidation Report.
 - Identifier: CODEX-REDUNDANCY-CONSOLIDATION-REPORT.
-- Version: 2.15.0.
+- Version: 2.16.0.
 - Status: Active consolidation report.
 - Owner: Enterprise Meta-Architecture.
 - Reviewers: Documentation Governance, Quality Governance, Data Governance,
@@ -51,6 +51,9 @@
   - 2.15.0: Added CIEF execution framework ownership for backlog, task model,
     Definition of Ready, Definition of Done, execution dashboards, module
     status, release readiness, and implementation metrics.
+  - 2.16.0: Added the 2026-08-09 full Codex documentation consolidation
+    audit, canonical reference family map, certification wording correction,
+    and backlog/release documentation overlap cleanup guidance.
 
 ## Purpose
 
@@ -152,6 +155,60 @@ The consolidation decision is documentation-only:
   interpretation.
 - Do not change application code, APIs, database schema, Docker, staging,
   frontend behavior, tests, or infrastructure scripts.
+
+## 2026-08-09 Consolidation Pass
+
+This pass reviewed the full Codex documentation corpus under `docs/` and the
+existing canonical navigation layer. It confirms that consolidation must happen
+through the existing canonical registry instead of creating a parallel
+documentation system.
+
+### Scope Inspected
+
+- 1062 documentation files under `docs/`.
+- CEMI master documents under `docs/master`.
+- Canonical definition and standards catalogs under `docs/codex`.
+- Standards under `docs/standards`.
+- Frameworks under `docs/frameworks`.
+- Module documentation under `docs/modules`.
+- Release evidence under `docs/releases`.
+- Implementation planning and execution evidence under `docs/implementation`.
+
+### High-Frequency Repetition Findings
+
+| Concept | Files found | Consolidation result |
+| --- | ---: | --- |
+| Audit and auditability | 707 | Canonical owner remains Observability, Compliance, and Canonical Definitions. Local docs keep event lists only. |
+| Need-to-Know | 233 | Canonical owner remains Security Identity, Security Engineering, and Need-to-Know governance. Local docs keep scope-specific visibility rules only. |
+| Human Final Authority | 178 | Canonical owner remains Codex Governance and AI Engineering. Local reminders remain allowed because this is safety-critical. |
+| JSON Master | 129 | Canonical owner remains JSON Master Format and Data Model standard. Local docs keep owned JSON sections only. |
+| Tenant or organization isolation | 114 | Canonical owner remains Security Identity and Security Engineering. Local docs keep tests and scope-specific controls only. |
+| Platform Language | 62 | Canonical owner remains Development Conventions and Localization standard. Local docs keep UI-surface implications only. |
+| Single Source of Truth | 25 | Canonical owner remains Data Governance and Documentation Governance. Local docs keep ownership notes only. |
+
+### Consolidation Decisions
+
+| Duplicate or overlapping area | Canonical definition | Documents that remain as local context | Action |
+| --- | --- | --- | --- |
+| Standard status vs release certification | `docs/codex/canonical-definitions.md` Certification Wording Rule | `docs/codex/catalog.md`, `docs/codex/standards-index.md`, `docs/master/standards-catalog.md`, `docs/releases/v1.0/certification-record.md` | Clarify that standard/document baselines do not certify the v1.0 product release. |
+| v1.1 backlog lists | `docs/releases/v1.1/backlog-inventory.md` | `docs/roadmap/v1.1-backlog.md`, `docs/releases/v1.0/v1.1-backlog.md`, `docs/implementation/execution-batches/batch-11/roadmap-v1.1.md` | Keep one canonical v1.1 backlog inventory and treat older lists as source references. |
+| v1.1 readiness and execution waves | `docs/releases/v1.1/v1.1-readiness.md`, `docs/releases/v1.1/execution-waves.md` | CIMP/CIEF docs and release readiness docs | v1.1 implementation remains gated by certified v1.0 baseline and Definition of Ready. |
+| Cross-cutting module rules | `docs/codex/canonical-definitions.md` Canonical Reference Families | Module overviews, API contracts, event docs, migration plans | Convert future duplicate explanations to canonical references while keeping module-specific rules. |
+| Quality, defects, and release evidence | `docs/standards/testing-validation/overview.md`, `docs/frameworks/quality-governance/overview.md` | Release docs, staging validation, implementation batch reports | Local documents record evidence; canonical standards own quality semantics. |
+| Public website integration | `docs/releases/v1.1/public-website-integration.md` for v1.1 planning; Public Portal and API Governance for runtime contracts | Public Portal, Commerce, Library, Rights, Gateway docs | Keep the public website independent and prevent duplicate editorial source of truth. |
+
+### Normalization Policy
+
+No broad mechanical deletion was performed. Many repeated statements are
+intentional controls. Future document owners should normalize repeated
+paragraphs with this pattern:
+
+```text
+Canonical rule: <canonical owner path>.
+Local implication: <module-specific effect, dependency, test, or evidence>.
+```
+
+This preserves safety and context while preventing competing definitions.
 
 ### Redundancy Patterns Consolidated
 
