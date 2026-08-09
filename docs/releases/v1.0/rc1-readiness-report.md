@@ -31,7 +31,7 @@ The release is blocked by missing mandatory release evidence:
 | Automated tests | PASS | DB 49, shared 62, web 128, API 505 passed |
 | Typecheck | PASS | Workspace, API, and web typecheck passed |
 | Build | PASS | Workspace, DB, API, and web production build passed |
-| Immutable artifact, digest, SBOM, provenance | PASS | `laborator-editura-1.0.0-rc.1-c1b6958.tar.gz`, SHA-256 `41a15a58b747dfcf48881d3d9557ef6b9fab7ef8065305867c96b2922a1ac285` |
+| Immutable artifact, digest, SBOM, provenance | PASS | Remediated artifact `laborator-editura-1.0.0-rc.1-30b39ec.tar.gz`, SHA-256 `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e`; previous `c1b6958` artifact preserved as historical |
 | Lint and format | PASS | Lint and Prettier checks passed |
 | Configuration validation | PASS | Configuration examples validated |
 | Critical E2E | PARTIAL | Contract E2E passed; live staging smoke missing |
@@ -42,7 +42,7 @@ The release is blocked by missing mandatory release evidence:
 | Localization | BLOCKED | Browser-level seven-language and mixed-language evidence missing |
 | Migration | PARTIAL_BLOCKED | SQL contract tests passed; real clean/existing/upgrade run missing |
 | Backup/restore | PARTIAL_BLOCKED | Local runtime restore passed; live staging restore missing |
-| Deployment/rollback | BLOCKED | No clean staging deployment or rollback rehearsal evidence |
+| Deployment/rollback | BLOCKED | Artifact-based staging mechanism exists and validates locally; live staging deployment and deployed digest evidence are still missing |
 | Performance | PARTIAL_BLOCKED | Local build/test baseline only; staging runtime baseline missing |
 | Dependency vulnerability | PASS | `pnpm-lock.yaml` is present; frozen install passed; full and production `pnpm audit` report 0 findings |
 
@@ -58,8 +58,8 @@ The release is blocked by missing mandatory release evidence:
 
 ## Blocking Fix Order
 
-1. Produce a new final RC1 artifact from the remediated lockfile source state.
-2. Deploy the exact final RC1 artifact to staging.
+1. Run the artifact-based staging deploy path on the VPS with approved runtime image references and the exact RC1 artifact.
+2. Verify deployed artifact digest, source commit, deployment ID, timestamp, services, configuration profile, and rollback reference.
 3. Run staging health, smoke, monitoring, and complete Editorial Production
    Pipeline validation.
 4. Generate a staging backup and run isolated restore into separate volumes.
@@ -98,6 +98,25 @@ BLOCKER 02 STATUS: RESOLVED.
 | Low | 0 |
 | SBOM | `docs/releases/v1.0/rc1-sbom.json` updated with lockfile evidence |
 | Previous artifact status | SUPERSEDED_FOR_CERTIFICATION |
+
+## Blocker 03 Attempt
+
+BLOCKER 03 STATUS: NOT RESOLVED.
+
+| Evidence | Value |
+| --- | --- |
+| New RC1 artifact | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-30b39ec.tar.gz` |
+| Source commit | `30b39ec0034f335bdbda210f09c8ad66a26a25a2` |
+| SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` |
+| SBOM | `docs/releases/v1.0/rc1-sbom.json` |
+| Build provenance | `docs/releases/v1.0/rc1-build-provenance.md` |
+| Staging deployment evidence | `docs/releases/v1.0/rc1-staging-deployment.md` |
+| Artifact deployment mechanism | `deploy/staging/docker-compose.artifact.yml`, `infrastructure/deploy/deploy-staging-artifact.sh` |
+| Artifact deployment validation | PASS: `bash infrastructure/validation/validate-artifact-deploy.sh` |
+| Deployment status | MECHANISM_READY_NOT_DEPLOYED |
+| Deployed digest verification | NOT_VERIFIED |
+| Migration version | `0008_security_hardening_phase_1.sql` |
+| Rollback reference | `infrastructure/docs/DEPLOYMENT_RUNBOOK.md`, `infrastructure/deploy/rollback-staging-artifact.sh` |
 
 ## Pilot Decision
 
