@@ -31,7 +31,7 @@ This report records the Canonical Standards Governance Audit for Codex v1.0.
 | Documentation files under `docs` before Standard 21 deliverables | 735 |
 | Phase IV standard directories before Standard 21 | 19 |
 | Codex v1.0 certification documents from Standard 20 | 10 |
-| Standards in certified baseline after Standard 21 | 21 |
+| Standards in approved documentation baseline after Standard 21 | 21 |
 | Specialized frameworks | 8 |
 | Fundamental documented modules | 25 |
 | Root governance documents | 9 |
@@ -78,9 +78,11 @@ must point back to the catalog and the canonical owner standard.
 
 The dependency matrix confirms that Standard 21 depends on all prior
 standards and governs future standard changes. Standard 20 remains the
-certification baseline for Codex v1.0. Standard 16 remains the governance,
-compliance and risk owner. Standard 18 remains the documentation governance
-owner.
+documentation standard for Codex v1.0 certification work. The product release
+certification decision remains separate and is recorded in
+`docs/releases/v1.0/certification-record.md`. Standard 16 remains the
+governance, compliance and risk owner. Standard 18 remains the documentation
+governance owner.
 
 ## Compliance Finding
 
@@ -95,7 +97,7 @@ All 21 standards are compliant at documentation baseline level:
 
 ## Governance Decision
 
-The Codex v1.0 standards governance baseline is complete.
+The Codex v1.0 standards governance documentation baseline is complete.
 
 No additional fundamental Codex v1.0 standards are recommended. Future work
 should focus on:
