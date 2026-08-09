@@ -38,7 +38,7 @@ jobs:
           corepack prepare pnpm@10.12.1 --activate
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Validate repository and infrastructure
         run: |
@@ -99,4 +99,3 @@ jobs:
             echo "- Deploy includes pre-deploy backup and health checks."
             echo "- Rollback command is documented in infrastructure/docs/DEPLOYMENT_RUNBOOK.md."
           } >> "$GITHUB_STEP_SUMMARY"
-
