@@ -4,7 +4,7 @@
 
 - Title: Codex Canonical Definitions.
 - Identifier: CODEX-CANONICAL-DEFINITIONS.
-- Version: 1.15.0.
+- Version: 1.16.0.
 - Status: Active specification.
 - Owner: Enterprise Meta-Architecture.
 - Reviewers: Platform Architecture, Documentation Governance, Quality
@@ -56,6 +56,9 @@
   - 1.15.0: Added CIEF execution framework ownership for backlog, tasks,
     Definition of Ready, Definition of Done, execution dashboards, module
     status, release readiness, and implementation metrics.
+  - 1.16.0: Added the 2026-08-09 Codex-wide consolidation baseline,
+    certification wording rule, and canonical reference families for repeated
+    documentation areas.
 
 ## Purpose
 
@@ -78,6 +81,45 @@ When a conflict exists:
 2. Follow the canonical owner document listed for the concept.
 3. Preserve module-specific dependencies as local implementation notes.
 4. Record any exception through Codex Governance.
+
+## 2026-08-09 Consolidation Baseline
+
+The current Codex documentation corpus contains 1062 files under `docs/`.
+Repository-wide inspection found repeated cross-cutting concepts in many local
+documents:
+
+| Repeated concept | Documentation files containing the concept | Canonical treatment |
+| --- | ---: | --- |
+| Audit and auditability | 707 | Keep local audit event lists; canonical audit model remains in Observability and Compliance. |
+| Need-to-Know | 233 | Keep local scope implications; canonical access model remains in Security Identity and Need-to-Know governance. |
+| Human Final Authority | 178 | Keep local safety reminders; canonical authority model remains in Codex Governance and AI Engineering. |
+| JSON Master | 129 | Keep local JSON section references; canonical format remains in JSON Master and Data Model standards. |
+| Tenant or organization isolation | 114 | Keep local isolation checks; canonical trust model remains in Security Identity and Security Engineering. |
+| Platform Language | 62 | Keep local UI implications; canonical language model remains in Localization and Development Conventions. |
+| Single Source of Truth | 25 | Keep local ownership notes; canonical ownership remains in Data and Documentation Governance. |
+
+These repetitions are consolidated by reference, not by deleting local safety
+context. Local documents may keep module-specific examples, tests, event names,
+risks, and acceptance criteria, but the canonical meaning must come from the
+owner listed here.
+
+## Certification Wording Rule
+
+Codex standards and documentation artifacts may have an approved or certified
+documentation baseline. That status is not the same as product release
+certification.
+
+When a document refers to:
+
+- `standard certified baseline`, it means the standard document is approved as
+  part of the Codex documentation corpus.
+- `Codex v1.0 certified baseline`, it means the product release has passed the
+  release certification process and has a certification record.
+
+The current release evidence in `docs/releases/v1.0/certification-record.md`
+states `decision: NOT_CERTIFIED`. Therefore, any v1.1 document must treat the
+product baseline as pending until the v1.0 release certification record is
+updated through the approved release process.
 
 ## Canonical Deduplication Rules
 
@@ -103,6 +145,33 @@ Rules:
 - Consolidation must preserve references, dependencies, and local ownership.
   It should remove competing definitions and duplicated explanations, not
   module context.
+
+## Canonical Reference Families
+
+The following families consolidate repeated information into one canonical
+definition while preserving local module references and dependencies.
+
+| Family | Single canonical owner | Local documents may keep |
+| --- | --- | --- |
+| Product vision and unified ecosystem | `docs/MANIFEST.md`, `docs/ARCHITECTURE_CHAPTER_1.md` | Module purpose statements and local business examples. |
+| Development language, i18n, and UI language purity | `docs/DEVELOPMENT_CONVENTIONS.md`, `docs/standards/localization/overview.md` | Surface-specific localization keys, labels, and validation notes. |
+| Architecture layers and module boundaries | `docs/ARCHITECTURE_CHAPTER_1.md`, `docs/ARCHITECTURE_CHAPTER_2.md`, `docs/ARCHITECTURE_CHAPTER_3.md`, `docs/standards/enterprise-architecture/overview.md` | Local dependency lists and integration notes. |
+| Data ownership, metadata, JSON Master, and schema evolution | `docs/standards/data-model/overview.md`, `docs/frameworks/data-engineering/overview.md`, `docs/JSON_MASTER_FORMAT.md` | Module-owned entities, local persistence notes, and JSON section references. |
+| APIs, events, webhooks, and connectors | `docs/standards/api-governance/overview.md`, `docs/frameworks/enterprise-integration/overview.md` | Endpoint lists, event names, and connector-specific constraints. |
+| AI assets, agents, prompts, RAG, and model routing | `docs/standards/ai-assets/overview.md`, `docs/frameworks/ai-engineering/overview.md` | Agent responsibilities, local evidence, and provider-specific metadata. |
+| Security, IAM, RBAC, Need-to-Know, secrets, and tenant isolation | `docs/standards/security-identity/overview.md`, `docs/frameworks/security-engineering/overview.md`, `docs/modules/iam/iam-overview.md` | Module-specific permission matrices, sensitive scopes, and access tests. |
+| Documents, manuscripts, media assets, derivatives, and preservation | `docs/standards/digital-assets/overview.md` | Asset types, lifecycle examples, and module-specific storage notes. |
+| Workflow, business rules, approvals, and exceptions | `docs/standards/workflow-governance/overview.md`, `docs/modules/workflow/workflow-overview.md` | Local step definitions, state transitions, and gate checks. |
+| Configuration, environments, deployment, feature flags, and rollback | `docs/standards/configuration-governance/overview.md` | Environment-specific values, scripts, and runbook commands. |
+| Logging, audit, metrics, traces, health, alerts, and dashboards | `docs/standards/observability/overview.md`, `docs/modules/observability/observability-overview.md` | Local event catalogs, metric names, and dashboard panels. |
+| Testing, validation, defects, evidence, and quality gates | `docs/standards/testing-validation/overview.md`, `docs/modules/quality-assurance/qa-overview.md`, `docs/frameworks/quality-governance/overview.md` | Test cases, fixtures, validation evidence, and defect records. |
+| Accessibility and inclusive experience | `docs/standards/accessibility/overview.md`, `docs/modules/accessibility/accessibility-overview.md` | Surface-specific remediation and evidence records. |
+| Rights, licensing, provenance, and attribution | `docs/standards/rights-provenance/overview.md`, `docs/modules/rights/rights-overview.md` | Project-specific rights records, warnings, and provenance examples. |
+| Publishing, preflight, distribution, updates, and withdrawal | `docs/standards/publishing-distribution/overview.md`, `docs/modules/publishing/publishing-overview.md` | Channel-specific metadata, export results, and release gates. |
+| Backup, restore, disaster recovery, retention, and continuity | `docs/standards/backup-continuity/overview.md`, `docs/modules/backup/backup-overview.md` | Environment runbooks, dry-run evidence, and recovery logs. |
+| Governance, compliance, risk, policy, and exceptions | `docs/standards/governance/overview.md`, `docs/codex/governance-framework.md`, `docs/modules/compliance/compliance-overview.md` | Local control mappings, risk entries, and exception records. |
+| Documentation, knowledge management, specifications, and ADRs | `docs/standards/documentation/overview.md`, `docs/frameworks/documentation-governance/overview.md` | Document-specific history, examples, and references. |
+| Lifecycle, compatibility, deprecation, release readiness, and v1.1 planning | `docs/standards/platform-lifecycle/overview.md`, `docs/implementation/master-plan.md`, `docs/releases/v1.1/v1.1-readiness.md` | Release-specific blockers, readiness evidence, and implementation wave notes. |
 
 ## Canonical Definitions
 
