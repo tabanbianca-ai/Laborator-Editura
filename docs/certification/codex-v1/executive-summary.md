@@ -2,7 +2,8 @@
 
 ## Summary
 
-Codex v1.0 for Laborator Editura has reached the final certification baseline.
+Codex v1.0 for Laborator Editura has reached the architecture and
+documentation final certification baseline.
 
 The platform now has:
 
@@ -27,6 +28,11 @@ The platform now has:
 ```text
 CERTIFIED_WITH_RECOMMENDATIONS
 ```
+
+This result applies to the architecture, standards, frameworks, module
+documentation, governance, and implementation planning corpus. Product release
+certification is separate and is recorded in
+`docs/releases/v1.0/certification-record.md`.
 
 ## What This Means
 
@@ -54,6 +60,7 @@ This certification does not:
 - Change database schema.
 - Change frontend behavior.
 - Change Docker or staging configuration.
+- Certify the v1.0 product release artifact.
 - Certify every future feature as production-ready.
 
 ## Executive Recommendation
