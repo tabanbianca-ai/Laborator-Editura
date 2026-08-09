@@ -8,7 +8,7 @@ policies, and specifications.
 ## Dependency Rules
 
 - Every standard must declare dependencies.
-- A new standard must not invalidate certified standards.
+- A new standard must not invalidate approved baseline standards.
 - Cross-standard dependencies must be explicit.
 - Local documents may describe local impact but must not redefine upstream
   canonical rules.
@@ -44,9 +44,11 @@ policies, and specifications.
 ## Dependency Graph Summary
 
 Standard 21 governs the creation, modification, consolidation, deprecation,
-and archival of standards. Standard 20 governs the final Codex v1.0
-certification process. Standards 01 through 19 govern the operational,
-architectural, documentation, lifecycle, and quality domains being certified.
+and archival of standards. Standard 20 governs the Codex v1.0 architecture and
+documentation certification process. Product release certification is governed
+by `docs/releases/v1.0/certification-record.md`. Standards 01 through 19 govern
+the operational, architectural, documentation, lifecycle, and quality domains
+being certified at standards level.
 
 ## Conflict Rule
 
@@ -54,8 +56,7 @@ When standards conflict, use this order:
 
 1. Project owner decision.
 2. Standard 21 standards governance.
-3. Standard 20 certification baseline for Codex v1.0.
+3. Standard 20 architecture and documentation certification baseline.
 4. Standard 16 governance and exceptions.
 5. The specific domain standard.
 6. Local module, framework, or implementation guidance.
-
