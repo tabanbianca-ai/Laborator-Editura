@@ -18,6 +18,10 @@ for Codex v1.0 certification, while implementation maturity, automated
 evidence, structured metadata, and continuous validation remain v1.1
 improvement items.
 
+This is a documentation and governance compliance result. Product release
+certification is recorded separately in
+`docs/releases/v1.0/certification-record.md`.
+
 ## Compliance Scorecard
 
 | Domain | Status | Notes |
