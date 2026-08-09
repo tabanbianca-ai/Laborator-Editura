@@ -1,20 +1,22 @@
 #!/usr/bin/env node
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const releaseCandidate = "1.0.0-rc.1";
 const root = process.cwd();
 const shortCommit = runGit(["rev-parse", "--short", "HEAD"]);
 const fullCommit = runGit(["rev-parse", "HEAD"]);
-const artifactBaseName = `laborator-editura-${releaseCandidate}-${shortCommit}`;
-const artifactPath = join(root, "artifacts", "releases", "v1.0", "rc1", `${artifactBaseName}.tar.gz`);
+const artifactMetadataPath = findArtifactMetadata();
+const artifactMetadata = JSON.parse(readFileSync(artifactMetadataPath, "utf8"));
+const artifactPath = join(root, artifactMetadata.artifact.path);
+const artifactBaseName = artifactMetadata.artifact.fileName.replace(/\.tar\.gz$/, "");
 const checksumPath = `${artifactPath}.sha256`;
-const artifactMetadataPath = join(root, "artifacts", "releases", "v1.0", "rc1", `${artifactBaseName}.artifact.json`);
 const sbomPath = join(root, "docs", "releases", "v1.0", "rc1-sbom.json");
 const artifactDocPath = join(root, "docs", "releases", "v1.0", "rc1-artifact.md");
 const provenancePath = join(root, "docs", "releases", "v1.0", "rc1-build-provenance.md");
+const lockfilePath = join(root, "pnpm-lock.yaml");
 const issues = [];
 
 main();
@@ -47,6 +49,7 @@ function main() {
     releaseCandidate,
     artifact: relativePath(artifactPath),
     sha256: sha256File(artifactPath),
+    artifactCertificationStatus: artifactMetadata.source?.commit === fullCommit ? "verified-current-source" : "superseded-for-certification",
     sbom: relativePath(sbomPath),
     provenance: relativePath(provenancePath),
     sourceCommit: fullCommit
@@ -54,7 +57,7 @@ function main() {
 }
 
 function validateArtifactDigest() {
-  const metadata = JSON.parse(readFileSync(artifactMetadataPath, "utf8"));
+  const metadata = artifactMetadata;
   const expectedDigest = metadata.artifact?.sha256;
   const actualDigest = sha256File(artifactPath);
   const checksum = readFileSync(checksumPath, "utf8");
@@ -67,8 +70,8 @@ function validateArtifactDigest() {
     issues.push("artifact checksum file does not match artifact digest and filename");
   }
 
-  if (metadata.source?.commit !== fullCommit) {
-    issues.push(`artifact metadata source commit mismatch: expected ${fullCommit}`);
+  if (metadata.source?.commit !== fullCommit && !isPreviousArtifactMarkedSuperseded()) {
+    issues.push("artifact metadata belongs to a previous source commit and the SBOM does not mark it superseded for certification");
   }
 
   if (metadata.artifact?.path !== relativePath(artifactPath)) {
@@ -77,7 +80,7 @@ function validateArtifactDigest() {
 }
 
 function validateSbom() {
-  const metadata = JSON.parse(readFileSync(artifactMetadataPath, "utf8"));
+  const metadata = artifactMetadata;
   const sbom = JSON.parse(readFileSync(sbomPath, "utf8"));
   const properties = new Map((sbom.metadata?.properties ?? []).map((property) => [property.name, property.value]));
 
@@ -99,6 +102,35 @@ function validateSbom() {
 
   if (properties.get("laborator:artifact.sha256") !== metadata.artifact.sha256) {
     issues.push("SBOM artifact SHA-256 does not match artifact metadata");
+  }
+
+  if (properties.get("laborator:artifact.sourceCommit") !== metadata.source.commit) {
+    issues.push("SBOM artifact source commit does not match artifact metadata");
+  }
+
+  const expectedArtifactStatus = metadata.source.commit === fullCommit
+    ? "verified-current-source"
+    : "superseded-for-certification";
+  if (properties.get("laborator:artifact.certificationStatus") !== expectedArtifactStatus) {
+    issues.push(`SBOM artifact certification status should be ${expectedArtifactStatus}`);
+  }
+
+  if (!existsSync(lockfilePath)) {
+    issues.push("pnpm-lock.yaml is missing");
+    return;
+  }
+
+  if (properties.get("laborator:lockfile.status") !== "present") {
+    issues.push("SBOM does not record lockfile presence");
+  }
+
+  if (properties.get("laborator:lockfile.path") !== "pnpm-lock.yaml") {
+    issues.push("SBOM does not record the canonical lockfile path");
+  }
+
+  const lockfileDigest = sha256File(lockfilePath);
+  if (properties.get("laborator:lockfile.sha256") !== lockfileDigest) {
+    issues.push("SBOM lockfile SHA-256 does not match pnpm-lock.yaml");
   }
 }
 
@@ -145,6 +177,34 @@ function requireFile(path, label) {
   if (!existsSync(path)) {
     issues.push(`missing ${label}: ${relativePath(path)}`);
   }
+}
+
+function findArtifactMetadata() {
+  const releaseDir = join(root, "artifacts", "releases", "v1.0", "rc1");
+  const currentPath = join(releaseDir, `laborator-editura-${releaseCandidate}-${shortCommit}.artifact.json`);
+  if (existsSync(currentPath)) {
+    return currentPath;
+  }
+
+  const metadataFiles = readdirSync(releaseDir)
+    .filter((file) => file.startsWith(`laborator-editura-${releaseCandidate}-`) && file.endsWith(".artifact.json"))
+    .sort();
+
+  if (metadataFiles.length !== 1) {
+    throw new Error(`Artifact metadata not found for current commit and no unique historical artifact metadata is available in ${relativePath(releaseDir)}`);
+  }
+
+  return join(releaseDir, metadataFiles[0]);
+}
+
+function isPreviousArtifactMarkedSuperseded() {
+  if (!existsSync(sbomPath)) {
+    return false;
+  }
+
+  const sbom = JSON.parse(readFileSync(sbomPath, "utf8"));
+  const properties = new Map((sbom.metadata?.properties ?? []).map((property) => [property.name, property.value]));
+  return properties.get("laborator:artifact.certificationStatus") === "superseded-for-certification";
 }
 
 function sha256File(path) {
