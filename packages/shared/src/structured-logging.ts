@@ -9,7 +9,9 @@ export interface StructuredLogEvent {
   readonly event_name: string;
   readonly correlation_id: string;
   readonly trace_id?: string;
+  readonly span_id?: string;
   readonly actor_id?: string;
+  readonly organization_id?: string;
   readonly resource_id?: string;
   readonly message: string;
   readonly metadata?: unknown;
@@ -23,7 +25,9 @@ export interface StructuredLogInput {
   readonly eventName: string;
   readonly correlationId: string;
   readonly traceId?: string;
+  readonly spanId?: string;
   readonly actorId?: string;
+  readonly organizationId?: string;
   readonly resourceId?: string;
   readonly message: string;
   readonly metadata?: unknown;
@@ -36,6 +40,17 @@ const sensitiveKeyFragments = [
   "password",
   "privatekey",
   "private_key",
+  "prompt",
+  "raw_document",
+  "rawdocument",
+  "document_text",
+  "documenttext",
+  "payment",
+  "card",
+  "media_payload",
+  "mediapayload",
+  "voice_sample",
+  "voicesample",
   "secret",
   "session",
   "token",
@@ -53,7 +68,9 @@ export function createStructuredLogEvent(input: StructuredLogInput): StructuredL
     event_name: input.eventName,
     correlation_id: input.correlationId,
     trace_id: input.traceId,
+    span_id: input.spanId,
     actor_id: input.actorId,
+    organization_id: input.organizationId,
     resource_id: input.resourceId,
     message: input.message,
     metadata:
