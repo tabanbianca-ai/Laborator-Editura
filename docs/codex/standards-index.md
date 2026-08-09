@@ -33,13 +33,18 @@ governance domains.
 
 ## Standards Lifecycle State
 
-All standards listed in this index are part of the Codex v1.0 certified
-baseline. Future changes must follow Standard 21 governance and must preserve
-backward compatibility with the certified baseline unless a versioned change
+All standards listed in this index are part of the approved Codex standards
+baseline. This is a documentation and standards lifecycle statement, not a
+product release certification statement.
+
+Product release certification is recorded separately in
+`docs/releases/v1.0/certification-record.md`.
+
+Future changes must follow Standard 21 governance and must preserve backward
+compatibility with the approved standards baseline unless a versioned change
 and migration plan is approved.
 
 ## Index Rule
 
 The index is navigational. Canonical definitions remain in
 `docs/codex/canonical-definitions.md` and the relevant owner documents.
-
