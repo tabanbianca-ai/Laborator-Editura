@@ -1,0 +1,84 @@
+services:
+  api:
+    image: ${STAGING_API_IMAGE:?Set STAGING_API_IMAGE to the approved API runtime image reference}
+    command: ["node", "apps/api/dist/apps/api/src/main.js"]
+    env_file:
+      - .env.staging
+    environment:
+      NODE_ENV: production
+      APP_ENV: staging
+      PORT: ${API_PORT:-3001}
+      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:3000}
+      LABORATOR_RUNTIME_DB_PATH: /var/lib/laborator/runtime-db.json
+      STAGING_BACKUP_DIR: /var/backups/laborator/staging
+      LABORATOR_RELEASE_VERSION: ${STAGING_RELEASE_VERSION}
+      LABORATOR_SOURCE_COMMIT: ${STAGING_SOURCE_COMMIT}
+      LABORATOR_ARTIFACT_SHA256: ${STAGING_ARTIFACT_SHA256}
+      LABORATOR_DEPLOYMENT_ID: ${STAGING_DEPLOYMENT_ID}
+    labels:
+      org.laborator.release.version: ${STAGING_RELEASE_VERSION}
+      org.laborator.source.commit: ${STAGING_SOURCE_COMMIT}
+      org.laborator.artifact.sha256: ${STAGING_ARTIFACT_SHA256}
+      org.laborator.migration.version: ${STAGING_MIGRATION_VERSION}
+      org.laborator.deployment.id: ${STAGING_DEPLOYMENT_ID}
+    ports:
+      - "${STAGING_API_BIND_ADDRESS:-127.0.0.1}:${STAGING_API_PORT:-3001}:${API_PORT:-3001}"
+    volumes:
+      - runtime-db:/var/lib/laborator
+      - runtime-backups:/var/backups/laborator/staging
+      - "${STAGING_RELEASE_IDENTITY_FILE:?Set STAGING_RELEASE_IDENTITY_FILE}:/app/RELEASE_IDENTITY.json:ro"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "const port=process.env.PORT||3001; fetch('http://127.0.0.1:'+port+'/health').then((res)=>process.exit(res.ok?0:1)).catch(()=>process.exit(1));"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+
+  web:
+    image: ${STAGING_WEB_IMAGE:?Set STAGING_WEB_IMAGE to the approved web runtime image reference}
+    command: ["sh", "-c", "pnpm --filter @laborator/web exec next start --hostname 0.0.0.0 --port ${PORT:-3000}"]
+    env_file:
+      - .env.staging
+    environment:
+      NODE_ENV: production
+      APP_ENV: staging
+      PORT: ${WEB_PORT:-3000}
+      API_BASE_URL: http://api:${API_PORT:-3001}
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:3001}
+      LABORATOR_RELEASE_VERSION: ${STAGING_RELEASE_VERSION}
+      LABORATOR_SOURCE_COMMIT: ${STAGING_SOURCE_COMMIT}
+      LABORATOR_ARTIFACT_SHA256: ${STAGING_ARTIFACT_SHA256}
+      LABORATOR_DEPLOYMENT_ID: ${STAGING_DEPLOYMENT_ID}
+    labels:
+      org.laborator.release.version: ${STAGING_RELEASE_VERSION}
+      org.laborator.source.commit: ${STAGING_SOURCE_COMMIT}
+      org.laborator.artifact.sha256: ${STAGING_ARTIFACT_SHA256}
+      org.laborator.migration.version: ${STAGING_MIGRATION_VERSION}
+      org.laborator.deployment.id: ${STAGING_DEPLOYMENT_ID}
+    ports:
+      - "${STAGING_WEB_BIND_ADDRESS:-127.0.0.1}:${STAGING_WEB_PORT:-3000}:${WEB_PORT:-3000}"
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - "${STAGING_RELEASE_IDENTITY_FILE:?Set STAGING_RELEASE_IDENTITY_FILE}:/app/RELEASE_IDENTITY.json:ro"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "const port=process.env.PORT||3000; fetch('http://127.0.0.1:'+port+'/').then((res)=>process.exit(res.ok?0:1)).catch(()=>process.exit(1));"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  runtime-db:
+  runtime-backups:
