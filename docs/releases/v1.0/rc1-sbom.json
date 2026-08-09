@@ -1,10 +1,10 @@
 {
   "bomFormat": "CycloneDX",
   "specVersion": "1.5",
-  "serialNumber": "urn:uuid:15b18113-cc25-36c5-cce3-844ff128ba85",
+  "serialNumber": "urn:uuid:d81aaa6d-0c1e-a28b-4a95-691999b0f9c6",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-08-09T08:38:19.174Z",
+    "timestamp": "2026-08-09T09:04:24.718Z",
     "tools": {
       "components": [
         {
@@ -27,11 +27,19 @@
       },
       {
         "name": "laborator:sourceCommit",
-        "value": "c1b6958c0c8c92e3946addfcab48bc695962ca98"
+        "value": "3d97043c0f578ec861ea7df9314e054176697d0b"
       },
       {
         "name": "laborator:sourceBranch",
         "value": "main"
+      },
+      {
+        "name": "laborator:artifact.sourceCommit",
+        "value": "c1b6958c0c8c92e3946addfcab48bc695962ca98"
+      },
+      {
+        "name": "laborator:artifact.certificationStatus",
+        "value": "superseded-for-certification"
       },
       {
         "name": "laborator:artifact.path",
@@ -51,7 +59,15 @@
       },
       {
         "name": "laborator:lockfile.status",
-        "value": "missing"
+        "value": "present"
+      },
+      {
+        "name": "laborator:lockfile.path",
+        "value": "pnpm-lock.yaml"
+      },
+      {
+        "name": "laborator:lockfile.sha256",
+        "value": "569b71350933f1f2e6028bbc6480b9b385dfe267929b136ca3bdc353f3d1b075"
       }
     ]
   },
@@ -169,7 +185,7 @@
       "properties": [
         {
           "name": "laborator:sourcePath",
-          "value": "node_modules/.pnpm/@nestjs+cli@11.0.23_@types+node@22.20.0_prettier@3.8.4/node_modules/@nestjs/cli/package.json"
+          "value": "node_modules/.pnpm/@nestjs+cli@11.0.23_@types+node@22.20.0_postcss@8.5.23_prettier@3.8.4/node_modules/@nestjs/cli/package.json"
         },
         {
           "name": "laborator:requestedVersion",
@@ -194,7 +210,7 @@
       "properties": [
         {
           "name": "laborator:sourcePath",
-          "value": "node_modules/.pnpm/@nestjs+common@11.1.27_reflect-metadata@0.2.2_rxjs@7.8.2/node_modules/@nestjs/common/package.json"
+          "value": "node_modules/.pnpm/@nestjs+common@11.1.27_reflect-metadata@0.2.2_rxjs@7.8.2_supports-color@8.1.1/node_modules/@nestjs/common/package.json"
         },
         {
           "name": "laborator:requestedVersion",
@@ -219,7 +235,7 @@
       "properties": [
         {
           "name": "laborator:sourcePath",
-          "value": "node_modules/.pnpm/@nestjs+core@11.1.27_@nestjs+common@11.1.27_reflect-metadata@0.2.2_rxjs@7.8.2__@nestjs+_678d8367b6ebdd1429d0393fb65d07e5/node_modules/@nestjs/core/package.json"
+          "value": "node_modules/.pnpm/@nestjs+core@11.1.27_@nestjs+common@11.1.27_reflect-metadata@0.2.2_rxjs@7.8.2_supports-_32ec6882986dcf16fdf4b101748513ba/node_modules/@nestjs/core/package.json"
         },
         {
           "name": "laborator:requestedVersion",
@@ -244,7 +260,7 @@
       "properties": [
         {
           "name": "laborator:sourcePath",
-          "value": "node_modules/.pnpm/@nestjs+platform-express@11.1.27_@nestjs+common@11.1.27_reflect-metadata@0.2.2_rxjs@7.8.2__@nestjs+core@11.1.27/node_modules/@nestjs/platform-express/package.json"
+          "value": "node_modules/.pnpm/@nestjs+platform-express@11.1.27_@nestjs+common@11.1.27_reflect-metadata@0.2.2_rxjs@7.8_906730671d5e68cb9ed033a0f1259ee9/node_modules/@nestjs/platform-express/package.json"
         },
         {
           "name": "laborator:requestedVersion",
@@ -344,7 +360,7 @@
       "properties": [
         {
           "name": "laborator:sourcePath",
-          "value": "node_modules/.pnpm/eslint-config-prettier@10.1.8_eslint@9.39.4/node_modules/eslint-config-prettier/package.json"
+          "value": "node_modules/.pnpm/eslint-config-prettier@10.1.8_eslint@9.39.4_supports-color@8.1.1_/node_modules/eslint-config-prettier/package.json"
         },
         {
           "name": "laborator:requestedVersion",
@@ -369,7 +385,7 @@
       "properties": [
         {
           "name": "laborator:sourcePath",
-          "value": "node_modules/.pnpm/eslint@9.39.4/node_modules/eslint/package.json"
+          "value": "node_modules/.pnpm/eslint@9.39.4_supports-color@8.1.1/node_modules/eslint/package.json"
         },
         {
           "name": "laborator:requestedVersion",
@@ -401,18 +417,18 @@
     {
       "type": "library",
       "name": "next",
-      "version": "15.5.19",
+      "version": "15.5.23",
       "scope": "required",
-      "bom-ref": "pkg:npm/next@15.5.19",
-      "purl": "pkg:npm/next@15.5.19",
+      "bom-ref": "pkg:npm/next@15.5.23",
+      "purl": "pkg:npm/next@15.5.23",
       "properties": [
         {
           "name": "laborator:sourcePath",
-          "value": "node_modules/.pnpm/next@15.5.19_react-dom@19.2.7_react@19.2.7__react@19.2.7/node_modules/next/package.json"
+          "value": "node_modules/.pnpm/next@15.5.23_react-dom@19.2.7_react@19.2.7__react@19.2.7/node_modules/next/package.json"
         },
         {
           "name": "laborator:requestedVersion",
-          "value": "^15.3.3"
+          "value": "^15.5.21"
         }
       ],
       "licenses": [
@@ -575,7 +591,7 @@
       "properties": [
         {
           "name": "laborator:sourcePath",
-          "value": "node_modules/.pnpm/typescript-eslint@8.62.0_eslint@9.39.4_typescript@5.9.3/node_modules/typescript-eslint/package.json"
+          "value": "node_modules/.pnpm/typescript-eslint@8.62.0_eslint@9.39.4_supports-color@8.1.1__supports-color@8.1.1_typescript@5.9.3/node_modules/typescript-eslint/package.json"
         },
         {
           "name": "laborator:requestedVersion",
@@ -656,7 +672,7 @@
         "pkg:npm/@types/node@22.20.0",
         "pkg:npm/@types/react-dom@19.2.3",
         "pkg:npm/@types/react@19.2.17",
-        "pkg:npm/next@15.5.19",
+        "pkg:npm/next@15.5.23",
         "pkg:npm/react-dom@19.2.7",
         "pkg:npm/react@19.2.7",
         "pkg:npm/typescript@5.9.3"
