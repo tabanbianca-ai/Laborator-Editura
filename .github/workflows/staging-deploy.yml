@@ -3,12 +3,46 @@ name: Staging Deploy
 on:
   workflow_dispatch:
     inputs:
-      ref:
-        description: Git ref or commit SHA to deploy
+      source_commit:
+        description: Approved source commit to deploy
         required: true
-        default: main
+        default: 30b39ec0034f335bdbda210f09c8ad66a26a25a2
+      release_artifact_name:
+        description: GitHub Actions artifact name containing the approved RC tarball
+        required: true
+        default: laborator-editura-1.0.0-rc.1-30b39ec
+      release_artifact_sha256:
+        description: Expected SHA-256 for the approved RC tarball
+        required: true
+        default: 9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e
+      artifact_run_id:
+        description: Workflow run ID that uploaded the approved RC artifact
+        required: true
+      migration_version:
+        description: Expected database migration version
+        required: true
+        default: 0008_security_hardening_phase_1.sql
+      api_image:
+        description: Approved API runtime image reference
+        required: true
+      web_image:
+        description: Approved web runtime image reference
+        required: true
+      api_image_id:
+        description: Optional API runtime image ID when using a loaded image tar
+        required: false
+        default: ""
+      web_image_id:
+        description: Optional web runtime image ID when using a loaded image tar
+        required: false
+        default: ""
+      runtime_image_bundle_name:
+        description: Optional GitHub Actions artifact name containing docker save output
+        required: false
+        default: ""
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -17,15 +51,15 @@ concurrency:
 
 jobs:
   validate-before-deploy:
-    name: Validate before deploy
+    name: Validate before artifact deploy
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
-      - name: Checkout requested ref
+      - name: Checkout approved source commit
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.source_commit }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -40,16 +74,32 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Validate repository and infrastructure
+      - name: Validate repository and artifact deployment scripts
         run: |
           pnpm infra:scan-secrets
-          bash -n infrastructure/deploy/deploy-staging.sh
-          bash -n infrastructure/deploy/rollback-staging.sh
+          bash -n infrastructure/deploy/build-runtime-images-from-artifact.sh
+          bash -n infrastructure/deploy/deploy-staging-artifact.sh
+          bash -n infrastructure/deploy/rollback-staging-artifact.sh
+          bash -n infrastructure/validation/validate-artifact-deploy.sh
           cp deploy/staging/.env.staging.example /tmp/laborator-ci.env
-          docker compose --env-file /tmp/laborator-ci.env -f deploy/staging/docker-compose.staging.yml config
+          cp deploy/staging/.env.staging.example deploy/staging/.env.staging
+          {
+            echo "STAGING_RELEASE_VERSION=1.0.0-rc.1"
+            echo "STAGING_SOURCE_COMMIT=${{ inputs.source_commit }}"
+            echo "STAGING_ARTIFACT_SHA256=${{ inputs.release_artifact_sha256 }}"
+            echo "STAGING_MIGRATION_VERSION=${{ inputs.migration_version }}"
+            echo "STAGING_DEPLOYMENT_ID=ci-config-validation"
+            echo "STAGING_RELEASE_IDENTITY_FILE=/tmp/laborator-release-identity.json"
+            echo "STAGING_API_IMAGE=${{ inputs.api_image }}"
+            echo "STAGING_WEB_IMAGE=${{ inputs.web_image }}"
+          } >/tmp/laborator-release.env
+          docker compose --env-file /tmp/laborator-ci.env --env-file /tmp/laborator-release.env -f deploy/staging/docker-compose.artifact.yml config >/tmp/laborator-compose-artifact.yml
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
 
       - name: Tests
         run: pnpm test
@@ -58,7 +108,7 @@ jobs:
         run: pnpm build
 
   deploy:
-    name: Deploy to staging VPS
+    name: Deploy approved artifact to staging VPS
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs:
@@ -66,6 +116,23 @@ jobs:
     environment: staging
 
     steps:
+      - name: Download approved RC artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.release_artifact_name }}
+          run-id: ${{ inputs.artifact_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/laborator-rc1-artifact
+
+      - name: Download runtime image bundle
+        if: inputs.runtime_image_bundle_name != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.runtime_image_bundle_name }}
+          run-id: ${{ inputs.artifact_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/laborator-rc1-images
+
       - name: Prepare SSH
         shell: bash
         run: |
@@ -76,26 +143,72 @@ jobs:
           printf '%s\n' "${{ secrets.VPS_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Deploy remotely with backup and rollback
+      - name: Copy approved artifact to staging
         shell: bash
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
           VPS_USER: ${{ secrets.VPS_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          TARGET_REF: ${{ github.sha }}
+          RELEASE_ARTIFACT_SHA256: ${{ inputs.release_artifact_sha256 }}
+        run: |
+          set -Eeuo pipefail
+          artifact_file="$(find /tmp/laborator-rc1-artifact -type f -name '*.tar.gz' | head -n 1)"
+          test -n "$artifact_file"
+          actual_sha="$(sha256sum "$artifact_file" | awk '{print $1}')"
+          test "$actual_sha" = "$RELEASE_ARTIFACT_SHA256"
+          ssh -i ~/.ssh/id_laborator_deploy -p "${VPS_PORT:-22}" "${VPS_USER}@${VPS_HOST}" \
+            "mkdir -p '${DEPLOY_PATH}/.releases/incoming'"
+          scp -i ~/.ssh/id_laborator_deploy -P "${VPS_PORT:-22}" "$artifact_file" \
+            "${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/.releases/incoming/"
+          if [ -d /tmp/laborator-rc1-images ]; then
+            image_bundle="$(find /tmp/laborator-rc1-images -type f -name '*.tar' | head -n 1 || true)"
+            if [ -n "$image_bundle" ]; then
+              scp -i ~/.ssh/id_laborator_deploy -P "${VPS_PORT:-22}" "$image_bundle" \
+                "${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/.releases/incoming/"
+            fi
+          fi
+
+      - name: Deploy remotely without rebuilding
+        shell: bash
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          RELEASE_ARTIFACT_NAME: ${{ inputs.release_artifact_name }}
+          RELEASE_ARTIFACT_SHA256: ${{ inputs.release_artifact_sha256 }}
+          SOURCE_COMMIT: ${{ inputs.source_commit }}
+          MIGRATION_VERSION: ${{ inputs.migration_version }}
+          API_IMAGE: ${{ inputs.api_image }}
+          WEB_IMAGE: ${{ inputs.web_image }}
+          API_IMAGE_ID: ${{ inputs.api_image_id }}
+          WEB_IMAGE_ID: ${{ inputs.web_image_id }}
         run: |
           set -Eeuo pipefail
           ssh -i ~/.ssh/id_laborator_deploy -p "${VPS_PORT:-22}" "${VPS_USER}@${VPS_HOST}" \
-            "cd '${DEPLOY_PATH}' && infrastructure/deploy/deploy-staging.sh --ref '${TARGET_REF}'"
+            "set -Eeuo pipefail
+             cd '${DEPLOY_PATH}'
+             image_bundle=\$(find .releases/incoming -maxdepth 1 -type f -name '*.tar' | head -n 1 || true)
+             if [ -n \"\$image_bundle\" ]; then docker load -i \"\$image_bundle\"; fi
+             artifact_file=\$(find .releases/incoming -maxdepth 1 -type f -name '*.tar.gz' | head -n 1)
+             infrastructure/deploy/deploy-staging-artifact.sh \
+               --artifact \"\$artifact_file\" \
+               --sha256 '${RELEASE_ARTIFACT_SHA256}' \
+               --source-commit '${SOURCE_COMMIT}' \
+               --migration-version '${MIGRATION_VERSION}' \
+               --api-image '${API_IMAGE}' \
+               --web-image '${WEB_IMAGE}' \
+               ${API_IMAGE_ID:+--api-image-id '${API_IMAGE_ID}'} \
+               ${WEB_IMAGE_ID:+--web-image-id '${WEB_IMAGE_ID}'}"
 
       - name: Summary
         run: |
           {
-            echo "## Staging deploy"
+            echo "## Staging artifact deploy"
             echo ""
-            echo "- Requested ref: ${{ inputs.ref }}"
-            echo "- Deployed commit: ${{ github.sha }}"
-            echo "- Deploy includes pre-deploy backup and health checks."
-            echo "- Rollback command is documented in infrastructure/docs/DEPLOYMENT_RUNBOOK.md."
+            echo "- Source commit: ${{ inputs.source_commit }}"
+            echo "- Artifact: ${{ inputs.release_artifact_name }}"
+            echo "- Artifact SHA-256: ${{ inputs.release_artifact_sha256 }}"
+            echo "- Deploy command uses artifact verification and docker compose --no-build."
           } >> "$GITHUB_STEP_SUMMARY"
