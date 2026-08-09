@@ -61,6 +61,10 @@
     "./ai-orchestration": {
       "types": "./dist/ai-orchestration.d.ts",
       "default": "./dist/ai-orchestration.js"
+    },
+    "./operational-readiness": {
+      "types": "./dist/operational-readiness.d.ts",
+      "default": "./dist/operational-readiness.js"
     }
   },
   "scripts": {
