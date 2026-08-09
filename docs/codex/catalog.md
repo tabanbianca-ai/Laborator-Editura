@@ -35,6 +35,15 @@ The enterprise navigation entry point above this standards catalog is
 - Controlled Evolution.
 - Continuous Improvement.
 
+## Certification Wording
+
+`Certified baseline` in this catalog refers to the standard/document lifecycle
+state. It does not certify the Codex v1.0 product release.
+
+Product release certification is governed by
+`docs/releases/v1.0/certification-record.md` and the current release evidence
+there is authoritative for whether v1.0 is product-certified.
+
 ## Standard Record Model
 
 Every standard must preserve:
