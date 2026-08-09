@@ -18,6 +18,15 @@ Laborator Editura, with Standard 21 defining the ongoing governance of the
 standards catalog, lifecycle, dependencies, versions, compliance, and review
 calendar.
 
+## Scope Clarification
+
+This report certifies the Codex v1.0 architecture, standards, framework,
+module documentation, governance, and implementation planning corpus.
+
+It does not certify the Codex v1.0 product release artifact. Product release
+certification is recorded separately in
+`docs/releases/v1.0/certification-record.md`.
+
 ## Certification Process
 
 The certification process follows:
@@ -97,7 +106,8 @@ Recommendations remain for v1.1:
 
 ## Final Statement
 
-The repository is ready for Codex v1.0 certification baseline. The next phase
-is not the creation of additional fundamental standards, but controlled
-consolidation, implementation hardening, evidence automation, and Codex v1.1
-planning.
+The repository is ready for the Codex v1.0 architecture and documentation
+certification baseline. The product release certification remains governed by
+the release evidence under `docs/releases/v1.0`. The next phase is not the
+creation of additional fundamental standards, but controlled consolidation,
+implementation hardening, evidence automation, and Codex v1.1 planning.
