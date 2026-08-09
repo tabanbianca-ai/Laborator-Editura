@@ -118,7 +118,7 @@ corepack enable
 corepack prepare pnpm@10.12.1 --activate
 pnpm --version
 
-pnpm install --no-frozen-lockfile
+pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm test
 pnpm build
