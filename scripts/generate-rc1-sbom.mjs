@@ -6,15 +6,16 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 const releaseCandidate = "1.0.0-rc.1";
+const historicalBlocker01Commit = "c1b6958c0c8c92e3946addfcab48bc695962ca98";
 const releaseDir = join(process.cwd(), "artifacts", "releases", "v1.0", "rc1");
 const docsDir = join(process.cwd(), "docs", "releases", "v1.0");
-const currentSourceCommit = runGit(["rev-parse", "HEAD"]);
-const currentSourceBranch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
+const evidenceCommit = runGit(["rev-parse", "HEAD"]);
+const evidenceBranch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
 const artifactMetadataPath = findArtifactMetadata();
 const artifactMetadata = JSON.parse(readFileSync(artifactMetadataPath, "utf8"));
-const artifactCertificationStatus = artifactMetadata.source?.commit === currentSourceCommit
-  ? "verified-current-source"
-  : "superseded-for-certification";
+const artifactCertificationStatus = artifactMetadata.source?.commit === historicalBlocker01Commit
+  ? "historical-superseded"
+  : "verified-current-rc1-artifact";
 const sbomPath = join(docsDir, "rc1-sbom.json");
 const lockfilePath = join(process.cwd(), "pnpm-lock.yaml");
 const lockfilePresent = existsSync(lockfilePath);
@@ -95,8 +96,10 @@ function main() {
       },
       properties: [
         property("laborator:releaseCandidate", releaseCandidate),
-        property("laborator:sourceCommit", currentSourceCommit),
-        property("laborator:sourceBranch", currentSourceBranch),
+        property("laborator:sourceCommit", artifactMetadata.source.commit),
+        property("laborator:sourceBranch", artifactMetadata.source.branch),
+        property("laborator:evidenceCommit", evidenceCommit),
+        property("laborator:evidenceBranch", evidenceBranch),
         property("laborator:artifact.sourceCommit", artifactMetadata.source.commit),
         property("laborator:artifact.certificationStatus", artifactCertificationStatus),
         property("laborator:artifact.path", artifactMetadata.artifact.path),
@@ -126,15 +129,28 @@ function findArtifactMetadata() {
     return currentPath;
   }
 
-  const metadataFiles = readdirSync(releaseDir)
-    .filter((file) => file.startsWith(`laborator-editura-${releaseCandidate}-`) && file.endsWith(".artifact.json"))
-    .sort();
+  const metadataFiles = readArtifactMetadataFiles();
 
-  if (metadataFiles.length !== 1) {
-    throw new Error(`Artifact metadata not found for current commit and no unique historical artifact metadata is available in ${relativePath(releaseDir)}`);
+  if (metadataFiles.length === 0) {
+    throw new Error(`Artifact metadata not found in ${relativePath(releaseDir)}`);
   }
 
-  return join(releaseDir, metadataFiles[0]);
+  return metadataFiles[0].path;
+}
+
+function readArtifactMetadataFiles() {
+  return readdirSync(releaseDir)
+    .filter((file) => file.startsWith(`laborator-editura-${releaseCandidate}-`) && file.endsWith(".artifact.json"))
+    .map((file) => {
+      const path = join(releaseDir, file);
+      const metadata = JSON.parse(readFileSync(path, "utf8"));
+      return {
+        path,
+        createdAt: metadata.artifact?.createdAt ?? "",
+        sourceCommit: metadata.source?.commit ?? ""
+      };
+    })
+    .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 }
 
 function artifactShortCommit() {
@@ -217,7 +233,7 @@ function property(name, value) {
 
 function deterministicSerialNumber() {
   const lockfileDigest = lockfilePresent ? sha256File(lockfilePath) : "missing-lockfile";
-  const input = `${releaseCandidate}:${currentSourceCommit}:${artifactMetadata.artifact.sha256}:${lockfileDigest}`;
+  const input = `${releaseCandidate}:${artifactMetadata.source.commit}:${artifactMetadata.artifact.sha256}:${lockfileDigest}`;
   const digest = createHash("sha256").update(input).digest("hex");
   return `urn:uuid:${digest.slice(0, 8)}-${digest.slice(8, 12)}-${digest.slice(12, 16)}-${digest.slice(16, 20)}-${digest.slice(20, 32)}`;
 }
