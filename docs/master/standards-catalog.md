@@ -16,6 +16,15 @@ This document summarizes the official standards, frameworks, policies, and
 specifications used by Codex v1.0. It does not replace the canonical owner
 documents. It points to them.
 
+## Certification Wording
+
+The `Certified` status in this master catalog refers to approved standards and
+documentation baselines. It does not mean the Codex v1.0 product release is
+certified.
+
+Product release certification is governed only by
+`docs/releases/v1.0/certification-record.md`.
+
 ## Standards Catalog
 
 | ID | Title | Version | Status | Owner | Dependencies | Affected modules | Associated frameworks |
