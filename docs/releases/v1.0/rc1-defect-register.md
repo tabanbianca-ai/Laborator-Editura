@@ -2,7 +2,7 @@
 
 Status: OPEN_BLOCKERS  
 Generated: 2026-08-09  
-Candidate commit: `1611b86daad18637c0ed9692846e06af23a67031`
+Candidate commit: `c1b6958c0c8c92e3946addfcab48bc695962ca98`
 
 ## Severity Scale
 
@@ -18,7 +18,7 @@ Candidate commit: `1611b86daad18637c0ed9692846e06af23a67031`
 
 | ID | Severity | Category | Type | Finding | Evidence | Required Action | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| RC1-P0-001 | P0 BLOCKER | Release Engineering | Missing evidence | No immutable RC1 artifact digest, artifact-bound SBOM, or final build provenance exists. | `docs/releases/v1.0/build-provenance.md` and `docs/releases/v1.0/sbom.md` record missing final artifact evidence. Root package version remains `0.1.0`. | Build the RC1 artifact once, record digest, SBOM, provenance, source commit, and environment. | OPEN |
+| RC1-P0-001 | P0 BLOCKER | Release Engineering | Confirmed resolved | Immutable RC1 artifact digest, artifact-bound SBOM, and build provenance now exist for the current RC1 candidate. | Artifact: `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-c1b6958.tar.gz`; SHA-256: `41a15a58b747dfcf48881d3d9557ef6b9fab7ef8065305867c96b2922a1ac285`; SBOM: `docs/releases/v1.0/rc1-sbom.json`; provenance: `docs/releases/v1.0/rc1-build-provenance.md`. | Keep artifact immutable and promote by digest only. | RESOLVED |
 | RC1-P0-002 | P0 BLOCKER | Deployment | Missing evidence | Clean staging deployment was not validated during this RC1 run. | `pnpm staging:health` failed because API and web were not listening. `pnpm staging:validate` failed at environment validation. | Deploy the exact RC1 artifact to staging and rerun health, smoke, monitoring, and validation scripts. | OPEN |
 | RC1-P0-003 | P0 BLOCKER | Restore | Missing evidence | Live isolated restore from an RC1 staging backup was not executed. | `pnpm staging:restore:dry-run` failed because `STAGING_BACKUP_FILE` was not provided. Infrastructure backup dry-run skipped Docker volume access because Docker is unavailable locally. | Generate a staging backup and execute restore dry-run into isolated volumes. | OPEN |
 | RC1-P0-004 | P0 BLOCKER | Rollback | Missing evidence | Rollback and redeploy rehearsal was not executed for the candidate. | No rollback execution evidence was found in this RC1 run. | Execute rollback and redeploy rehearsal against staging with the exact candidate. | OPEN |
@@ -39,10 +39,10 @@ Candidate commit: `1611b86daad18637c0ed9692846e06af23a67031`
 | Confirmed failures | `RC1-P1-001`, staging health/validate/restore command failures |
 | Configuration issues | `RC1-P2-001`, staging environment not loaded locally |
 | Missing coverage | `RC1-P1-002`, `RC1-P1-003`, `RC1-P1-004`, `RC1-P1-005`, `RC1-P1-006` |
-| Missing evidence | `RC1-P0-001`, `RC1-P0-002`, `RC1-P0-003`, `RC1-P0-004` |
+| Missing evidence | `RC1-P0-002`, `RC1-P0-003`, `RC1-P0-004` |
 | Incomplete/deferred | Browser E2E accessibility/localization/performance, live staging adversarial suite |
 
 ## Blocker Summary
 
-RC1 cannot proceed to pilot with any open P0 blocker.
-
+RC1-P0-001 is resolved. RC1 still cannot proceed to pilot with the remaining
+open P0 blockers.
