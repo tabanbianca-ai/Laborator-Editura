@@ -19,7 +19,7 @@ Candidate commit: `c1b6958c0c8c92e3946addfcab48bc695962ca98`
 | ID | Severity | Category | Type | Finding | Evidence | Required Action | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | RC1-P0-001 | P0 BLOCKER | Release Engineering | Confirmed resolved | Immutable RC1 artifact digest, artifact-bound SBOM, and build provenance now exist for the current RC1 candidate. | Artifact: `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-c1b6958.tar.gz`; SHA-256: `41a15a58b747dfcf48881d3d9557ef6b9fab7ef8065305867c96b2922a1ac285`; SBOM: `docs/releases/v1.0/rc1-sbom.json`; provenance: `docs/releases/v1.0/rc1-build-provenance.md`. | Keep artifact immutable and promote by digest only. | RESOLVED |
-| RC1-P0-002 | P0 BLOCKER | Deployment | Missing evidence | Clean staging deployment was not validated during this RC1 run. | `pnpm staging:health` failed because API and web were not listening. `pnpm staging:validate` failed at environment validation. | Deploy the exact RC1 artifact to staging and rerun health, smoke, monitoring, and validation scripts. | OPEN |
+| RC1-P0-002 | P0 BLOCKER | Deployment | Confirmed blocker | A remediated RC1 artifact exists and an artifact-based staging deployment mechanism now validates locally, but the artifact has not been deployed to live staging and no deployed digest match is available. | Artifact: `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-30b39ec.tar.gz`; SHA-256: `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e`; artifact deploy validator passes; local environment has no `deploy/staging/.env.staging` and no staging host/path variables. | Run `infrastructure/deploy/deploy-staging-artifact.sh` on the VPS with approved runtime image references, record deployment ID, and verify the staging artifact SHA-256 matches the release digest. | OPEN |
 | RC1-P0-003 | P0 BLOCKER | Restore | Missing evidence | Live isolated restore from an RC1 staging backup was not executed. | `pnpm staging:restore:dry-run` failed because `STAGING_BACKUP_FILE` was not provided. Infrastructure backup dry-run skipped Docker volume access because Docker is unavailable locally. | Generate a staging backup and execute restore dry-run into isolated volumes. | OPEN |
 | RC1-P0-004 | P0 BLOCKER | Rollback | Missing evidence | Rollback and redeploy rehearsal was not executed for the candidate. | No rollback execution evidence was found in this RC1 run. | Execute rollback and redeploy rehearsal against staging with the exact candidate. | OPEN |
 | RC1-P1-001 | P1 CRITICAL | Supply Chain | Confirmed resolved | Dependency lockfile and supply-chain audit evidence now exist. | `pnpm-lock.yaml` generated; frozen install passes; full and production audits report 0 Critical, 0 High, 0 Moderate, 0 Low; SBOM records lockfile SHA-256 `569b71350933f1f2e6028bbc6480b9b385dfe267929b136ca3bdc353f3d1b075`. | Preserve the lockfile and use frozen installs for CI, staging, and Docker builds. Produce a new final RC1 artifact from the remediated source state before pilot/certification. | RESOLVED |
@@ -44,5 +44,7 @@ Candidate commit: `c1b6958c0c8c92e3946addfcab48bc695962ca98`
 
 ## Blocker Summary
 
-RC1-P0-001 and RC1-P1-001 are resolved. RC1 still cannot proceed to pilot with
-the remaining open P0 blockers.
+RC1-P0-001 and RC1-P1-001 are resolved. RC1-P0-002 remains open because the
+artifact-based deployment mechanism has not yet been executed on live staging
+with deployed digest evidence. RC1 still cannot proceed to pilot with the
+remaining open P0 blockers.
