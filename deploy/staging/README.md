@@ -47,6 +47,9 @@ pnpm staging:validate-env
 
 ## Deploy With Docker Compose
 
+This path rebuilds from repository source and is for ordinary staging refreshes.
+Do not use it as RC artifact certification evidence.
+
 ```bash
 pnpm staging:deploy
 ```
@@ -55,6 +58,28 @@ Or run only Docker Compose:
 
 ```bash
 pnpm staging:docker:up
+```
+
+## Deploy an Approved RC Artifact
+
+RC releases must use the artifact-based path. It verifies the approved tarball
+SHA-256, records a release identity file, and starts the artifact compose file
+with `--no-build`.
+
+```bash
+pnpm staging:deploy:artifact -- \
+  --artifact .releases/incoming/laborator-editura-1.0.0-rc.1-30b39ec.tar.gz \
+  --sha256 9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e \
+  --source-commit 30b39ec0034f335bdbda210f09c8ad66a26a25a2 \
+  --migration-version 0008_security_hardening_phase_1.sql \
+  --api-image <approved-api-runtime-image> \
+  --web-image <approved-web-runtime-image>
+```
+
+Validate the artifact deployment tooling:
+
+```bash
+pnpm staging:validate:artifact
 ```
 
 ## Public Exposure
