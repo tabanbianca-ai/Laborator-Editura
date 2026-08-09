@@ -2,15 +2,31 @@
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 const releaseCandidate = "1.0.0-rc.1";
 const releaseDir = join(process.cwd(), "artifacts", "releases", "v1.0", "rc1");
 const docsDir = join(process.cwd(), "docs", "releases", "v1.0");
+const currentSourceCommit = runGit(["rev-parse", "HEAD"]);
+const currentSourceBranch = runGit(["rev-parse", "--abbrev-ref", "HEAD"]);
 const artifactMetadataPath = findArtifactMetadata();
 const artifactMetadata = JSON.parse(readFileSync(artifactMetadataPath, "utf8"));
+const artifactCertificationStatus = artifactMetadata.source?.commit === currentSourceCommit
+  ? "verified-current-source"
+  : "superseded-for-certification";
 const sbomPath = join(docsDir, "rc1-sbom.json");
+const lockfilePath = join(process.cwd(), "pnpm-lock.yaml");
+const lockfilePresent = existsSync(lockfilePath);
+const lockfileProperties = lockfilePresent
+  ? [
+      property("laborator:lockfile.status", "present"),
+      property("laborator:lockfile.path", "pnpm-lock.yaml"),
+      property("laborator:lockfile.sha256", sha256File(lockfilePath))
+    ]
+  : [
+      property("laborator:lockfile.status", "missing")
+    ];
 
 const workspacePackagePaths = [
   "package.json",
@@ -79,13 +95,15 @@ function main() {
       },
       properties: [
         property("laborator:releaseCandidate", releaseCandidate),
-        property("laborator:sourceCommit", artifactMetadata.source.commit),
-        property("laborator:sourceBranch", artifactMetadata.source.branch),
+        property("laborator:sourceCommit", currentSourceCommit),
+        property("laborator:sourceBranch", currentSourceBranch),
+        property("laborator:artifact.sourceCommit", artifactMetadata.source.commit),
+        property("laborator:artifact.certificationStatus", artifactCertificationStatus),
         property("laborator:artifact.path", artifactMetadata.artifact.path),
         property("laborator:artifact.sha256", artifactMetadata.artifact.sha256),
         property("laborator:artifact.sizeBytes", String(artifactMetadata.artifact.sizeBytes)),
         property("laborator:database.latestMigration", artifactMetadata.database.latestMigration),
-        property("laborator:lockfile.status", existsSync(join(process.cwd(), "pnpm-lock.yaml")) ? "present" : "missing")
+        ...lockfileProperties
       ]
     },
     components: [...components.values()].sort((left, right) => left["bom-ref"].localeCompare(right["bom-ref"])),
@@ -103,11 +121,20 @@ function main() {
 
 function findArtifactMetadata() {
   const shortCommit = artifactShortCommit();
-  const path = join(releaseDir, `laborator-editura-${releaseCandidate}-${shortCommit}.artifact.json`);
-  if (!existsSync(path)) {
-    throw new Error(`Artifact metadata not found: ${relativePath(path)}`);
+  const currentPath = join(releaseDir, `laborator-editura-${releaseCandidate}-${shortCommit}.artifact.json`);
+  if (existsSync(currentPath)) {
+    return currentPath;
   }
-  return path;
+
+  const metadataFiles = readdirSync(releaseDir)
+    .filter((file) => file.startsWith(`laborator-editura-${releaseCandidate}-`) && file.endsWith(".artifact.json"))
+    .sort();
+
+  if (metadataFiles.length !== 1) {
+    throw new Error(`Artifact metadata not found for current commit and no unique historical artifact metadata is available in ${relativePath(releaseDir)}`);
+  }
+
+  return join(releaseDir, metadataFiles[0]);
 }
 
 function artifactShortCommit() {
@@ -189,9 +216,14 @@ function property(name, value) {
 }
 
 function deterministicSerialNumber() {
-  const input = `${releaseCandidate}:${artifactMetadata.source.commit}:${artifactMetadata.artifact.sha256}`;
+  const lockfileDigest = lockfilePresent ? sha256File(lockfilePath) : "missing-lockfile";
+  const input = `${releaseCandidate}:${currentSourceCommit}:${artifactMetadata.artifact.sha256}:${lockfileDigest}`;
   const digest = createHash("sha256").update(input).digest("hex");
   return `urn:uuid:${digest.slice(0, 8)}-${digest.slice(8, 12)}-${digest.slice(12, 16)}-${digest.slice(16, 20)}-${digest.slice(20, 32)}`;
+}
+
+function sha256File(path) {
+  return createHash("sha256").update(readFileSync(path)).digest("hex");
 }
 
 function normalizeSourcePath(path) {
