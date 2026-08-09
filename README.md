@@ -46,10 +46,10 @@ access is available, run:
 ```bash
 corepack enable
 corepack prepare pnpm@10.12.1 --activate
-pnpm install --no-frozen-lockfile
+pnpm install --frozen-lockfile
 pnpm typecheck
 ```
 
 CI always runs the contract, DB, shared, and fixture checks above. CI attempts
-dependency installation and runs `pnpm typecheck` only when dependencies are
+frozen dependency installation and runs `pnpm typecheck` only when dependencies are
 available; otherwise it records a clear typecheck-skipped notice.
