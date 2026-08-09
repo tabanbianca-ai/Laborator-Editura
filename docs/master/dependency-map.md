@@ -21,7 +21,7 @@ maintained as the repository evolves.
 ```text
 Manifest and Development Conventions
 -> Standards 01-19
--> Standard 20 Certification
+-> Standard 20 Architecture and Documentation Certification
 -> Standard 21 Standards Governance
 -> CEMI
 -> CIMP
@@ -153,7 +153,8 @@ CEMI
 -> Specifications
 -> Implementation plan
 -> Runtime implementation evidence
--> Certification evidence
+-> Architecture/documentation certification evidence
+-> Product release certification evidence
 ```
 
 Canonical sources:
@@ -162,6 +163,7 @@ Canonical sources:
 - `docs/codex/canonical-definitions.md`.
 - `docs/codex/codex-consolidation-report.md`.
 - `docs/certification/codex-v1`.
+- `docs/releases/v1.0/certification-record.md`.
 
 ## Dependency Control Rule
 
