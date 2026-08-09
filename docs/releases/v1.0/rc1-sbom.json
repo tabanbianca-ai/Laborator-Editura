@@ -1,0 +1,678 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:15b18113-cc25-36c5-cce3-844ff128ba85",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-08-09T08:38:19.174Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "laborator-rc1-sbom-generator",
+          "version": "1.0.0"
+        }
+      ]
+    },
+    "component": {
+      "type": "application",
+      "name": "laboratorul-editurii",
+      "version": "1.0.0-rc.1",
+      "bom-ref": "pkg:npm/laboratorul-editurii@1.0.0-rc.1"
+    },
+    "properties": [
+      {
+        "name": "laborator:releaseCandidate",
+        "value": "1.0.0-rc.1"
+      },
+      {
+        "name": "laborator:sourceCommit",
+        "value": "c1b6958c0c8c92e3946addfcab48bc695962ca98"
+      },
+      {
+        "name": "laborator:sourceBranch",
+        "value": "main"
+      },
+      {
+        "name": "laborator:artifact.path",
+        "value": "artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-c1b6958.tar.gz"
+      },
+      {
+        "name": "laborator:artifact.sha256",
+        "value": "41a15a58b747dfcf48881d3d9557ef6b9fab7ef8065305867c96b2922a1ac285"
+      },
+      {
+        "name": "laborator:artifact.sizeBytes",
+        "value": "1716081"
+      },
+      {
+        "name": "laborator:database.latestMigration",
+        "value": "0008_security_hardening_phase_1.sql"
+      },
+      {
+        "name": "laborator:lockfile.status",
+        "value": "missing"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "@eslint/js",
+      "version": "9.39.4",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@eslint/js@9.39.4",
+      "purl": "pkg:npm/@eslint/js@9.39.4",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/@eslint+js@9.39.4/node_modules/@eslint/js/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^9.28.0"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@laborator/ai",
+      "version": "0.1.0",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@laborator/ai@0.1.0",
+      "purl": "pkg:npm/@laborator/ai@0.1.0",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "apps/ai/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@laborator/api",
+      "version": "0.1.0",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@laborator/api@0.1.0",
+      "purl": "pkg:npm/@laborator/api@0.1.0",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "apps/api/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@laborator/db",
+      "version": "0.1.0",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@laborator/db@0.1.0",
+      "purl": "pkg:npm/@laborator/db@0.1.0",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "packages/db/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "workspace:*"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@laborator/shared",
+      "version": "0.1.0",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@laborator/shared@0.1.0",
+      "purl": "pkg:npm/@laborator/shared@0.1.0",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "packages/shared/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "workspace:*"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@laborator/web",
+      "version": "0.1.0",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@laborator/web@0.1.0",
+      "purl": "pkg:npm/@laborator/web@0.1.0",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "apps/web/package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@nestjs/cli",
+      "version": "11.0.23",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@nestjs/cli@11.0.23",
+      "purl": "pkg:npm/@nestjs/cli@11.0.23",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/@nestjs+cli@11.0.23_@types+node@22.20.0_prettier@3.8.4/node_modules/@nestjs/cli/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^11.0.7"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@nestjs/common",
+      "version": "11.1.27",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@nestjs/common@11.1.27",
+      "purl": "pkg:npm/@nestjs/common@11.1.27",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/@nestjs+common@11.1.27_reflect-metadata@0.2.2_rxjs@7.8.2/node_modules/@nestjs/common/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^11.1.2"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@nestjs/core",
+      "version": "11.1.27",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@nestjs/core@11.1.27",
+      "purl": "pkg:npm/@nestjs/core@11.1.27",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/@nestjs+core@11.1.27_@nestjs+common@11.1.27_reflect-metadata@0.2.2_rxjs@7.8.2__@nestjs+_678d8367b6ebdd1429d0393fb65d07e5/node_modules/@nestjs/core/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^11.1.2"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@nestjs/platform-express",
+      "version": "11.1.27",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@nestjs/platform-express@11.1.27",
+      "purl": "pkg:npm/@nestjs/platform-express@11.1.27",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/@nestjs+platform-express@11.1.27_@nestjs+common@11.1.27_reflect-metadata@0.2.2_rxjs@7.8.2__@nestjs+core@11.1.27/node_modules/@nestjs/platform-express/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^11.1.2"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@types/node",
+      "version": "22.20.0",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@types/node@22.20.0",
+      "purl": "pkg:npm/@types/node@22.20.0",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/@types+node@22.20.0/node_modules/@types/node/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^22.15.30"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@types/react-dom",
+      "version": "19.2.3",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@types/react-dom@19.2.3",
+      "purl": "pkg:npm/@types/react-dom@19.2.3",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/@types+react-dom@19.2.3_@types+react@19.2.17/node_modules/@types/react-dom/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^19.1.5"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@types/react",
+      "version": "19.2.17",
+      "scope": "required",
+      "bom-ref": "pkg:npm/@types/react@19.2.17",
+      "purl": "pkg:npm/@types/react@19.2.17",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/@types+react@19.2.17/node_modules/@types/react/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^19.1.6"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "eslint-config-prettier",
+      "version": "10.1.8",
+      "scope": "required",
+      "bom-ref": "pkg:npm/eslint-config-prettier@10.1.8",
+      "purl": "pkg:npm/eslint-config-prettier@10.1.8",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/eslint-config-prettier@10.1.8_eslint@9.39.4/node_modules/eslint-config-prettier/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^10.1.5"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "eslint",
+      "version": "9.39.4",
+      "scope": "required",
+      "bom-ref": "pkg:npm/eslint@9.39.4",
+      "purl": "pkg:npm/eslint@9.39.4",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/eslint@9.39.4/node_modules/eslint/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^9.28.0"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "laboratorul-editurii",
+      "version": "0.1.0",
+      "scope": "required",
+      "bom-ref": "pkg:npm/laboratorul-editurii@0.1.0",
+      "purl": "pkg:npm/laboratorul-editurii@0.1.0",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "package.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "next",
+      "version": "15.5.19",
+      "scope": "required",
+      "bom-ref": "pkg:npm/next@15.5.19",
+      "purl": "pkg:npm/next@15.5.19",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/next@15.5.19_react-dom@19.2.7_react@19.2.7__react@19.2.7/node_modules/next/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^15.3.3"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "prettier",
+      "version": "3.8.4",
+      "scope": "required",
+      "bom-ref": "pkg:npm/prettier@3.8.4",
+      "purl": "pkg:npm/prettier@3.8.4",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/prettier@3.8.4/node_modules/prettier/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^3.5.3"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "react-dom",
+      "version": "19.2.7",
+      "scope": "required",
+      "bom-ref": "pkg:npm/react-dom@19.2.7",
+      "purl": "pkg:npm/react-dom@19.2.7",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/react-dom@19.2.7_react@19.2.7/node_modules/react-dom/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^19.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "react",
+      "version": "19.2.7",
+      "scope": "required",
+      "bom-ref": "pkg:npm/react@19.2.7",
+      "purl": "pkg:npm/react@19.2.7",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/react@19.2.7/node_modules/react/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^19.1.0"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "reflect-metadata",
+      "version": "^0.2.2",
+      "scope": "required",
+      "bom-ref": "pkg:npm/reflect-metadata@^0.2.2",
+      "properties": [
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^0.2.2"
+        },
+        {
+          "name": "laborator:resolution",
+          "value": "unresolved-from-installed-node-modules"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "rxjs",
+      "version": "7.8.2",
+      "scope": "required",
+      "bom-ref": "pkg:npm/rxjs@7.8.2",
+      "purl": "pkg:npm/rxjs@7.8.2",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/rxjs@7.8.2/node_modules/rxjs/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^7.8.2"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "turbo",
+      "version": "2.10.0",
+      "scope": "required",
+      "bom-ref": "pkg:npm/turbo@2.10.0",
+      "purl": "pkg:npm/turbo@2.10.0",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/turbo@2.10.0/node_modules/turbo/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^2.5.4"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "typescript-eslint",
+      "version": "8.62.0",
+      "scope": "required",
+      "bom-ref": "pkg:npm/typescript-eslint@8.62.0",
+      "purl": "pkg:npm/typescript-eslint@8.62.0",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/typescript-eslint@8.62.0_eslint@9.39.4_typescript@5.9.3/node_modules/typescript-eslint/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^8.33.1"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "typescript",
+      "version": "5.9.3",
+      "scope": "required",
+      "bom-ref": "pkg:npm/typescript@5.9.3",
+      "purl": "pkg:npm/typescript@5.9.3",
+      "properties": [
+        {
+          "name": "laborator:sourcePath",
+          "value": "node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/package.json"
+        },
+        {
+          "name": "laborator:requestedVersion",
+          "value": "^5.8.3"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:npm/@laborator/ai@0.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:npm/@laborator/api@0.1.0",
+      "dependsOn": [
+        "pkg:npm/@laborator/db@0.1.0",
+        "pkg:npm/@laborator/shared@0.1.0",
+        "pkg:npm/@nestjs/cli@11.0.23",
+        "pkg:npm/@nestjs/common@11.1.27",
+        "pkg:npm/@nestjs/core@11.1.27",
+        "pkg:npm/@nestjs/platform-express@11.1.27",
+        "pkg:npm/@types/node@22.20.0",
+        "pkg:npm/reflect-metadata@^0.2.2",
+        "pkg:npm/rxjs@7.8.2",
+        "pkg:npm/typescript@5.9.3"
+      ]
+    },
+    {
+      "ref": "pkg:npm/@laborator/db@0.1.0",
+      "dependsOn": [
+        "pkg:npm/@types/node@22.20.0",
+        "pkg:npm/typescript@5.9.3"
+      ]
+    },
+    {
+      "ref": "pkg:npm/@laborator/shared@0.1.0",
+      "dependsOn": [
+        "pkg:npm/typescript@5.9.3"
+      ]
+    },
+    {
+      "ref": "pkg:npm/@laborator/web@0.1.0",
+      "dependsOn": [
+        "pkg:npm/@laborator/shared@0.1.0",
+        "pkg:npm/@types/node@22.20.0",
+        "pkg:npm/@types/react-dom@19.2.3",
+        "pkg:npm/@types/react@19.2.17",
+        "pkg:npm/next@15.5.19",
+        "pkg:npm/react-dom@19.2.7",
+        "pkg:npm/react@19.2.7",
+        "pkg:npm/typescript@5.9.3"
+      ]
+    },
+    {
+      "ref": "pkg:npm/laboratorul-editurii@0.1.0",
+      "dependsOn": [
+        "pkg:npm/@eslint/js@9.39.4",
+        "pkg:npm/eslint-config-prettier@10.1.8",
+        "pkg:npm/eslint@9.39.4",
+        "pkg:npm/prettier@3.8.4",
+        "pkg:npm/turbo@2.10.0",
+        "pkg:npm/typescript-eslint@8.62.0",
+        "pkg:npm/typescript@5.9.3"
+      ]
+    }
+  ]
+}
