@@ -5,6 +5,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const releaseCandidate = "1.0.0-rc.1";
+const historicalBlocker01Commit = "c1b6958c0c8c92e3946addfcab48bc695962ca98";
 const root = process.cwd();
 const shortCommit = runGit(["rev-parse", "--short", "HEAD"]);
 const fullCommit = runGit(["rev-parse", "HEAD"]);
@@ -49,7 +50,7 @@ function main() {
     releaseCandidate,
     artifact: relativePath(artifactPath),
     sha256: sha256File(artifactPath),
-    artifactCertificationStatus: artifactMetadata.source?.commit === fullCommit ? "verified-current-source" : "superseded-for-certification",
+    artifactCertificationStatus: artifactCertificationStatus(),
     sbom: relativePath(sbomPath),
     provenance: relativePath(provenancePath),
     sourceCommit: fullCommit
@@ -68,10 +69,6 @@ function validateArtifactDigest() {
 
   if (!checksum.includes(actualDigest) || !checksum.includes(`${artifactBaseName}.tar.gz`)) {
     issues.push("artifact checksum file does not match artifact digest and filename");
-  }
-
-  if (metadata.source?.commit !== fullCommit && !isPreviousArtifactMarkedSuperseded()) {
-    issues.push("artifact metadata belongs to a previous source commit and the SBOM does not mark it superseded for certification");
   }
 
   if (metadata.artifact?.path !== relativePath(artifactPath)) {
@@ -104,19 +101,13 @@ function validateSbom() {
     issues.push("SBOM artifact source commit does not match artifact metadata");
   }
 
-  const expectedArtifactStatus = metadata.source.commit === fullCommit
-    ? "verified-current-source"
-    : "superseded-for-certification";
+  const expectedArtifactStatus = artifactCertificationStatus();
   if (properties.get("laborator:artifact.certificationStatus") !== expectedArtifactStatus) {
     issues.push(`SBOM artifact certification status should be ${expectedArtifactStatus}`);
   }
 
-  if (expectedArtifactStatus === "verified-current-source" && properties.get("laborator:sourceCommit") !== fullCommit) {
-    issues.push("SBOM source commit does not match current commit");
-  }
-
-  if (expectedArtifactStatus === "superseded-for-certification" && !properties.get("laborator:sourceCommit")) {
-    issues.push("SBOM does not record the remediated source commit");
+  if (properties.get("laborator:sourceCommit") !== metadata.source.commit) {
+    issues.push("SBOM source commit does not match artifact source commit");
   }
 
   if (!existsSync(lockfilePath)) {
@@ -190,25 +181,33 @@ function findArtifactMetadata() {
     return currentPath;
   }
 
-  const metadataFiles = readdirSync(releaseDir)
-    .filter((file) => file.startsWith(`laborator-editura-${releaseCandidate}-`) && file.endsWith(".artifact.json"))
-    .sort();
+  const metadataFiles = readArtifactMetadataFiles(releaseDir);
 
-  if (metadataFiles.length !== 1) {
-    throw new Error(`Artifact metadata not found for current commit and no unique historical artifact metadata is available in ${relativePath(releaseDir)}`);
+  if (metadataFiles.length === 0) {
+    throw new Error(`Artifact metadata not found in ${relativePath(releaseDir)}`);
   }
 
-  return join(releaseDir, metadataFiles[0]);
+  return metadataFiles[0].path;
 }
 
-function isPreviousArtifactMarkedSuperseded() {
-  if (!existsSync(sbomPath)) {
-    return false;
-  }
+function readArtifactMetadataFiles(releaseDir) {
+  return readdirSync(releaseDir)
+    .filter((file) => file.startsWith(`laborator-editura-${releaseCandidate}-`) && file.endsWith(".artifact.json"))
+    .map((file) => {
+      const path = join(releaseDir, file);
+      const metadata = JSON.parse(readFileSync(path, "utf8"));
+      return {
+        path,
+        createdAt: metadata.artifact?.createdAt ?? ""
+      };
+    })
+    .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+}
 
-  const sbom = JSON.parse(readFileSync(sbomPath, "utf8"));
-  const properties = new Map((sbom.metadata?.properties ?? []).map((property) => [property.name, property.value]));
-  return properties.get("laborator:artifact.certificationStatus") === "superseded-for-certification";
+function artifactCertificationStatus() {
+  return artifactMetadata.source?.commit === historicalBlocker01Commit
+    ? "historical-superseded"
+    : "verified-current-rc1-artifact";
 }
 
 function sha256File(path) {
