@@ -2,7 +2,7 @@
 
 Status: RC1_BLOCKED  
 Generated: 2026-08-09  
-Candidate commit: `1611b86daad18637c0ed9692846e06af23a67031`  
+Candidate commit: `c1b6958c0c8c92e3946addfcab48bc695962ca98`
 Branch: `main`
 
 ## Executive Decision
@@ -15,7 +15,6 @@ and local runtime backup/restore validation passed.
 
 The release is blocked by missing mandatory release evidence:
 
-- Immutable RC1 artifact digest, SBOM, and build provenance.
 - Live staging deployment and health.
 - Live staging smoke test.
 - Live isolated restore from a staging backup.
@@ -33,6 +32,7 @@ The release is blocked by missing mandatory release evidence:
 | Automated tests | PASS | DB 49, shared 62, web 128, API 505 passed |
 | Typecheck | PASS | Workspace, API, and web typecheck passed |
 | Build | PASS | Workspace, DB, API, and web production build passed |
+| Immutable artifact, digest, SBOM, provenance | PASS | `laborator-editura-1.0.0-rc.1-c1b6958.tar.gz`, SHA-256 `41a15a58b747dfcf48881d3d9557ef6b9fab7ef8065305867c96b2922a1ac285` |
 | Lint and format | PASS | Lint and Prettier checks passed |
 | Configuration validation | PASS | Configuration examples validated |
 | Critical E2E | PARTIAL | Contract E2E passed; live staging smoke missing |
@@ -51,7 +51,7 @@ The release is blocked by missing mandatory release evidence:
 
 | Severity | Count |
 | --- | --- |
-| P0 BLOCKER | 4 |
+| P0 BLOCKER | 3 open, 1 resolved |
 | P1 CRITICAL | 6 |
 | P2 MAJOR | 2 |
 | P3 MINOR | 1 |
@@ -59,19 +59,30 @@ The release is blocked by missing mandatory release evidence:
 
 ## Blocking Fix Order
 
-1. Produce the exact immutable RC1 artifact and record digest, SBOM, source
-   commit, build environment, and provenance.
-2. Commit a root `pnpm-lock.yaml` or approve a formal replacement dependency
+1. Commit a root `pnpm-lock.yaml` or approve a formal replacement dependency
    audit process, then rerun vulnerability checks.
-3. Deploy the exact RC1 artifact to staging.
-4. Run staging health, smoke, monitoring, and complete Editorial Production
+2. Deploy the exact RC1 artifact to staging.
+3. Run staging health, smoke, monitoring, and complete Editorial Production
    Pipeline validation.
-5. Generate a staging backup and run isolated restore into separate volumes.
-6. Execute rollback and redeploy rehearsal.
-7. Run live security adversarial tests.
-8. Run browser-level localization and accessibility reviews.
-9. Run clean/existing/upgrade migration execution against real database targets.
-10. Capture staging performance baseline.
+4. Generate a staging backup and run isolated restore into separate volumes.
+5. Execute rollback and redeploy rehearsal.
+6. Run live security adversarial tests.
+7. Run browser-level localization and accessibility reviews.
+8. Run clean/existing/upgrade migration execution against real database targets.
+9. Capture staging performance baseline.
+
+## Blocker 01 Resolution
+
+BLOCKER 01 STATUS: RESOLVED.
+
+| Evidence | Value |
+| --- | --- |
+| RC1 artifact | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-c1b6958.tar.gz` |
+| Source commit | `c1b6958c0c8c92e3946addfcab48bc695962ca98` |
+| SHA-256 | `41a15a58b747dfcf48881d3d9557ef6b9fab7ef8065305867c96b2922a1ac285` |
+| SBOM | `docs/releases/v1.0/rc1-sbom.json` |
+| Build provenance | `docs/releases/v1.0/rc1-build-provenance.md` |
+| Release validation | `node scripts/validate-rc1-release-evidence.mjs` |
 
 ## Pilot Decision
 
@@ -80,4 +91,3 @@ RC1 READY FOR PILOT: NO.
 RC1 may be reconsidered only after all P0 blockers are closed and all P1
 critical issues are either closed or formally accepted with documented owner
 approval.
-
