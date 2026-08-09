@@ -16,6 +16,7 @@ const commitTimestamp = new Date(git("show", "-s", "--format=%cI", "HEAD"));
 
 const entries = [
   ["package.json", "package.json"],
+  ["pnpm-lock.yaml", "pnpm-lock.yaml"],
   ["pnpm-workspace.yaml", "pnpm-workspace.yaml"],
   ["turbo.json", "turbo.json"],
   ["tsconfig.base.json", "tsconfig.base.json"],
@@ -254,4 +255,3 @@ function gitStatus() {
   const status = git("status", "--short");
   return status.length === 0 ? "clean" : status;
 }
-
