@@ -47,7 +47,9 @@ test("structured logging foundation defines canonical fields and redacts sensiti
     "event_name",
     "correlation_id",
     "trace_id",
+    "span_id",
     "actor_id",
+    "organization_id",
     "resource_id",
     "message",
     "metadata"
