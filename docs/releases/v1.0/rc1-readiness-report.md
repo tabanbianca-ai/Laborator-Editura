@@ -19,7 +19,6 @@ The release is blocked by missing mandatory release evidence:
 - Live staging smoke test.
 - Live isolated restore from a staging backup.
 - Rollback rehearsal.
-- Dependency vulnerability audit.
 - Browser-level accessibility review.
 - Browser-level localization review.
 - Staging performance baseline.
@@ -36,7 +35,7 @@ The release is blocked by missing mandatory release evidence:
 | Lint and format | PASS | Lint and Prettier checks passed |
 | Configuration validation | PASS | Configuration examples validated |
 | Critical E2E | PARTIAL | Contract E2E passed; live staging smoke missing |
-| Security | PARTIAL_BLOCKED | Contract security passed; dependency audit and live adversarial evidence missing |
+| Security | PARTIAL_BLOCKED | Contract security and dependency audit passed; live adversarial evidence missing |
 | Cross-org isolation | PARTIAL | Contract tests passed; live staging adversarial run missing |
 | Data integrity | PARTIAL | Contract and local runtime restore passed; live staging traceability missing |
 | Accessibility | BLOCKED | Browser-level accessibility evidence missing |
@@ -45,23 +44,22 @@ The release is blocked by missing mandatory release evidence:
 | Backup/restore | PARTIAL_BLOCKED | Local runtime restore passed; live staging restore missing |
 | Deployment/rollback | BLOCKED | No clean staging deployment or rollback rehearsal evidence |
 | Performance | PARTIAL_BLOCKED | Local build/test baseline only; staging runtime baseline missing |
-| Dependency vulnerability | BLOCKED | `pnpm audit` cannot run without `pnpm-lock.yaml` |
+| Dependency vulnerability | PASS | `pnpm-lock.yaml` is present; frozen install passed; full and production `pnpm audit` report 0 findings |
 
 ## Counts
 
 | Severity | Count |
 | --- | --- |
 | P0 BLOCKER | 3 open, 1 resolved |
-| P1 CRITICAL | 6 |
+| P1 CRITICAL | 5 open, 1 resolved |
 | P2 MAJOR | 2 |
 | P3 MINOR | 1 |
 | P4 TRIVIAL | 0 |
 
 ## Blocking Fix Order
 
-1. Commit a root `pnpm-lock.yaml` or approve a formal replacement dependency
-   audit process, then rerun vulnerability checks.
-2. Deploy the exact RC1 artifact to staging.
+1. Produce a new final RC1 artifact from the remediated lockfile source state.
+2. Deploy the exact final RC1 artifact to staging.
 3. Run staging health, smoke, monitoring, and complete Editorial Production
    Pipeline validation.
 4. Generate a staging backup and run isolated restore into separate volumes.
@@ -83,6 +81,23 @@ BLOCKER 01 STATUS: RESOLVED.
 | SBOM | `docs/releases/v1.0/rc1-sbom.json` |
 | Build provenance | `docs/releases/v1.0/rc1-build-provenance.md` |
 | Release validation | `node scripts/validate-rc1-release-evidence.mjs` |
+
+## Blocker 02 Resolution
+
+BLOCKER 02 STATUS: RESOLVED.
+
+| Evidence | Value |
+| --- | --- |
+| Lockfile | `pnpm-lock.yaml` |
+| Lockfile SHA-256 | `569b71350933f1f2e6028bbc6480b9b385dfe267929b136ca3bdc353f3d1b075` |
+| Frozen install | PASS |
+| Dependency audit | PASS |
+| Critical | 0 |
+| High | 0 |
+| Moderate | 0 |
+| Low | 0 |
+| SBOM | `docs/releases/v1.0/rc1-sbom.json` updated with lockfile evidence |
+| Previous artifact status | SUPERSEDED_FOR_CERTIFICATION |
 
 ## Pilot Decision
 
