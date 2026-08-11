@@ -1,7 +1,7 @@
 # RC1 Data Integrity Results
 
-Status: PARTIAL_BLOCKED  
-Generated: 2026-08-09
+Status: PARTIAL_BLOCKED
+Generated: 2026-08-11
 
 ## Automated Evidence Passed
 
@@ -58,9 +58,20 @@ preserved `organizationId: org-rc1`.
 | Real production-like data migration | MISSING | No representative existing database was migrated |
 | Live restore of staging backup | MISSING | No Docker-volume restore dry-run was executed |
 
+## Blocker 05 Data Integrity Gate
+
+| Requirement | Status | Evidence |
+| --- | --- | --- |
+| Backup corresponds to RC1 deployment identity | MECHANISM_READY | `verify-backup.sh` can enforce deployment ID, source commit, artifact SHA, and migration |
+| Restored database parses correctly | NOT_VERIFIED_LIVE | Requires isolated VPS restore output |
+| Expected structures exist after restore | NOT_VERIFIED_LIVE | Requires restored runtime DB inspection |
+| Smoke-test project/document data preserved | NOT_VERIFIED_LIVE | Requires live staging backup artifact |
+| Organization/user/project/document integrity preserved | NOT_VERIFIED_LIVE | Requires isolated restore validation |
+| Restored data independent from live runtime DB | NOT_VERIFIED_LIVE | Requires temporary Docker volume evidence |
+| Live database unchanged by isolated restore | NOT_VERIFIED_LIVE | Requires before/after live staging evidence |
+
 ## Data Integrity Decision
 
 Contract-level and local runtime integrity evidence passed. RC1 data integrity
 cannot be certified until the same traceability and restore gates pass against
 the deployed staging candidate.
-
