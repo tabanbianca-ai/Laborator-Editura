@@ -46,6 +46,8 @@ normalize_path_aliases
 : "${BACKUP_LOCK_DIR:=/tmp/laborator-backup.lock}"
 : "${RUNTIME_DB_VOLUME:=laborator-staging_runtime-db}"
 : "${RUNTIME_BACKUPS_VOLUME:=laborator-staging_runtime-backups}"
+: "${STAGING_RELEASES_DIR:=$APP_ROOT/.releases/staging}"
+: "${STAGING_RELEASE_IDENTITY_FILE:=$STAGING_RELEASES_DIR/current/release-identity.json}"
 : "${NGINX_DIR:=$NGINX_CONFIG_DIR}"
 : "${NGINX_CONFIG_DIR:=$NGINX_DIR}"
 : "${SYSTEMD_DIR:=$SYSTEMD_CONFIG_DIR}"
@@ -87,6 +89,11 @@ tmp_dir="$(mktemp -d)"
 archive_path="$BACKUP_ROOT/$backup_name.tar.gz"
 manifest_path="$tmp_dir/manifest.json"
 sha_cmd="$(sha256_command)"
+release_identity_included=false
+
+if [[ -f "$STAGING_RELEASE_IDENTITY_FILE" ]]; then
+  release_identity_included=true
+fi
 
 cleanup() {
   rm -rf "$tmp_dir"
@@ -116,12 +123,14 @@ cat > "$manifest_path" <<JSON
   "composeFile": "$COMPOSE_FILE",
   "runtimeDbVolume": "$RUNTIME_DB_VOLUME",
   "runtimeBackupsVolume": "$RUNTIME_BACKUPS_VOLUME",
+  "releaseIdentityFile": "$STAGING_RELEASE_IDENTITY_FILE",
+  "releaseIdentityIncluded": $release_identity_included,
   "envIncluded": $BACKUP_INCLUDE_ENV,
   "encryption": "$BACKUP_ENCRYPTION"
 }
 JSON
 
-mkdir -p "$tmp_dir/docker-volumes" "$tmp_dir/config/docker" "$tmp_dir/config/nginx" "$tmp_dir/config/systemd"
+mkdir -p "$tmp_dir/docker-volumes" "$tmp_dir/config/docker" "$tmp_dir/config/nginx" "$tmp_dir/config/systemd" "$tmp_dir/metadata"
 
 if [[ -f "$COMPOSE_FILE" ]]; then
   cp "$COMPOSE_FILE" "$tmp_dir/config/docker/docker-compose.staging.yml"
@@ -133,6 +142,13 @@ if [[ "$BACKUP_INCLUDE_ENV" == "true" ]]; then
   chmod 600 "$tmp_dir/config/docker/.env.staging"
 else
   log "Skipping real staging env file. Set BACKUP_INCLUDE_ENV=true only for encrypted/restricted backups."
+fi
+
+if [[ "$release_identity_included" == "true" ]]; then
+  cp "$STAGING_RELEASE_IDENTITY_FILE" "$tmp_dir/metadata/release-identity.json"
+  chmod 600 "$tmp_dir/metadata/release-identity.json"
+else
+  warn "Staging release identity file not found; backup will not include RC release identity: $STAGING_RELEASE_IDENTITY_FILE"
 fi
 
 if [[ -d "$NGINX_CONFIG_DIR" ]]; then
