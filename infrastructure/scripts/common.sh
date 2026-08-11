@@ -100,7 +100,7 @@ load_or_bootstrap_config_file() {
 }
 
 normalize_path_aliases() {
-  PROJECT_ROOT="${PROJECT_ROOT:-${APP_ROOT:-/opt/Laborator-Editura}}"
+  PROJECT_ROOT="${PROJECT_ROOT:-${APP_ROOT:-/opt/laborator-editura}}"
   APP_ROOT="${APP_ROOT:-$PROJECT_ROOT}"
   DOCKER_COMPOSE_PATH="${DOCKER_COMPOSE_PATH:-${COMPOSE_FILE:-$APP_ROOT/deploy/staging/docker-compose.staging.yml}}"
   COMPOSE_FILE="${COMPOSE_FILE:-$DOCKER_COMPOSE_PATH}"
