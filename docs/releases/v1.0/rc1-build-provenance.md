@@ -102,3 +102,19 @@ bash infrastructure/validation/validate-artifact-deploy.sh
 Validation confirms the selected artifact checksum, the runtime image dry-run
 path, absence of source rebuild directives in the RC compose file, and failure
 on checksum mismatch.
+
+## Blocker 04 Staging Runtime Identity
+
+The following live staging identity was provided for Blocker 04 validation and
+must be verified on the VPS before RC1 can proceed:
+
+| Field | Value |
+| --- | --- |
+| Deployment ID | `rc1-30b39ec-20260809` |
+| Release | `1.0.0-rc.1` |
+| Source commit | `30b39ec0034f335bdbda210f09c8ad66a26a25a2` |
+| Artifact SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` |
+| API image ID | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` |
+| Web image ID | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` |
+| Migration version | `0008_security_hardening_phase_1.sql` |
+| Independent live verification | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
