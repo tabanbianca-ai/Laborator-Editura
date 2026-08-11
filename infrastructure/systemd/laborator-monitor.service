@@ -6,6 +6,6 @@ After=docker.service nginx.service
 [Service]
 Type=oneshot
 EnvironmentFile=-/etc/laborator/monitoring.env
-ExecStart=/usr/bin/env bash -lc 'CONFIG_DIR="${CONFIG_DIR:-/etc/laborator}"; PROJECT_ROOT="${PROJECT_ROOT:-${APP_ROOT:-/opt/Laborator-Editura}}"; "$PROJECT_ROOT/infrastructure/monitoring/monitor-laborator.sh" --config "${LABORATOR_MONITORING_CONFIG:-$CONFIG_DIR/monitoring.env}"'
+ExecStart=/usr/bin/env bash -lc 'CONFIG_DIR="${CONFIG_DIR:-/etc/laborator}"; PROJECT_ROOT="${PROJECT_ROOT:-${APP_ROOT:-/opt/laborator-editura}}"; "$PROJECT_ROOT/infrastructure/monitoring/monitor-laborator.sh" --config "${LABORATOR_MONITORING_CONFIG:-$CONFIG_DIR/monitoring.env}"'
 User=root
 Group=root
