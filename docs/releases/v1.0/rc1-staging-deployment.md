@@ -1,15 +1,14 @@
 # RC1 Staging Deployment
 
-Status: MECHANISM_READY_NOT_DEPLOYED  
+Status: OPERATOR_REPORTED_DEPLOYED_PENDING_VERIFICATION
 Generated: 2026-08-09  
-Scope: RC1 Blocker 03B
+Scope: RC1 Blocker 03B / 04
 
 ## Deployment Decision
 
-Blocker 03B implemented an artifact-based staging deployment mechanism. Blocker
-03 is still not resolved because the exact remediated RC1 artifact has not been
-deployed to the live staging environment and no deployed digest evidence is
-available.
+Blocker 03B implemented an artifact-based staging deployment mechanism. For
+Blocker 04, the staging deployment identity below was provided and must be
+validated on the VPS before RC1 can proceed.
 
 ## Artifact Selected for Staging
 
@@ -41,27 +40,41 @@ available.
 
 | Field | Value |
 | --- | --- |
-| Staging deployment ID | Not assigned on live staging |
-| Deployment timestamp | Not recorded |
-| Deployed services | Not recorded |
-| Staging deployed artifact SHA-256 | Not recorded |
-| Digest match | NOT_VERIFIED |
+| Staging deployment ID | `rc1-30b39ec-20260809` operator-provided |
+| Deployment timestamp | Not independently recorded here |
+| Deployed services | Not independently recorded here |
+| Staging deployed artifact SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` operator-provided |
+| Digest match | NOT_INDEPENDENTLY_VERIFIED |
+| API image ID | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` operator-provided |
+| Web image ID | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` operator-provided |
+
+## Operator-Provided Live Deployment Identity
+
+| Field | Value |
+| --- | --- |
+| Deployment ID | `rc1-30b39ec-20260809` |
+| Release | `1.0.0-rc.1` |
+| Source commit | `30b39ec0034f335bdbda210f09c8ad66a26a25a2` |
+| Artifact SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` |
+| Migration version | `0008_security_hardening_phase_1.sql` |
 
 ## Blocker
 
 This local execution environment does not expose staging host, user, deployment
 path, or environment configuration. `deploy/staging/.env.staging` is not present
-locally. Therefore the artifact could not be copied to staging, extracted,
-started, or independently verified.
+locally. Therefore the operator-provided live deployment identity could not be
+independently verified here.
 
 The legacy staging Docker Compose configuration still builds API and web images
 from source and remains available only for ordinary non-RC staging refreshes.
 That path is not sufficient for Blocker 03 because it would rebuild in staging
 instead of proving:
 
-BUILD ONCE  
-VERIFY  
+```text
+BUILD ONCE
+VERIFY
 DEPLOY SAME ARTIFACT
+```
 
 ## Minimum External Deployment Procedure Required
 
@@ -107,8 +120,8 @@ NEW_RC1_ARTIFACT = VERIFIED
 SOURCE_COMMIT = VERIFIED  
 SBOM = VERIFIED  
 BUILD_PROVENANCE = VERIFIED  
-STAGING_DEPLOYMENT = NOT_EXECUTED  
-DEPLOYED_DIGEST_MATCH = NOT_VERIFIED  
+STAGING_DEPLOYMENT = OPERATOR_REPORTED
+DEPLOYED_DIGEST_MATCH = NOT_INDEPENDENTLY_VERIFIED
 DATABASE_MIGRATION_STATE = RECORDED  
 ROLLBACK_REFERENCE = RECORDED  
 SOURCE_REBUILD_IN_STAGING = DISABLED_FOR_RC_RELEASE_PATH
