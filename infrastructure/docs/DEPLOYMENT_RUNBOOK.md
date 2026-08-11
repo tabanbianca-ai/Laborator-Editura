@@ -97,6 +97,25 @@ creates runtime images from the built outputs already inside the artifact.
 
 ## Artifact Rollback
 
+Before any RC rollback, validate that the rollback target is an eligible
+artifact baseline. A valid baseline must include `pnpm-lock.yaml`, match the
+expected source commit and migration, and have independently recorded immutable
+API and web image IDs:
+
+```bash
+infrastructure/validation/validate-rollback-baseline.sh \
+  --artifact <approved-rollback-artifact.tar.gz> \
+  --sha256 <rollback-artifact-sha256> \
+  --source-commit <rollback-source-commit> \
+  --migration-version <migration-file> \
+  --api-image-id <sha256:api-image-id> \
+  --web-image-id <sha256:web-image-id>
+```
+
+Do not use `--no-frozen-lockfile` to make historical artifacts deployable. If
+the artifact lacks a lockfile, preserve it as historical evidence and establish
+a new verified rollback baseline from a lockfile-backed artifact instead.
+
 ```bash
 infrastructure/deploy/rollback-staging-artifact.sh \
   --confirm ROLLBACK \

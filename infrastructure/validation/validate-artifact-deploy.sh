@@ -43,6 +43,16 @@ log "Checking artifact deploy shell syntax."
 bash -n infrastructure/deploy/build-runtime-images-from-artifact.sh
 bash -n infrastructure/deploy/deploy-staging-artifact.sh
 bash -n infrastructure/deploy/rollback-staging-artifact.sh
+bash -n infrastructure/validation/validate-rollback-baseline.sh
+
+log "Checking rollback baseline eligibility."
+infrastructure/validation/validate-rollback-baseline.sh \
+  --artifact "$ARTIFACT_PATH" \
+  --sha256 "$EXPECTED_SHA256" \
+  --source-commit "$EXPECTED_SOURCE_COMMIT" \
+  --migration-version "$EXPECTED_MIGRATION_VERSION" \
+  --api-image-id "sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451" \
+  --web-image-id "sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e"
 
 log "Checking runtime image build dry-run from verified artifact."
 infrastructure/deploy/build-runtime-images-from-artifact.sh \

@@ -5,14 +5,19 @@ import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statS
 import { dirname, join, relative } from "node:path";
 import { tmpdir } from "node:os";
 
-const releaseCandidate = "1.0.0-rc.1";
+const releaseCandidate = process.env.RELEASE_CANDIDATE ?? "1.0.0-rc.1";
+const sourceCommit = git("rev-parse", "HEAD");
+const sourceShortCommit = git("rev-parse", "--short", "HEAD");
+const sourceBranch = git("branch", "--show-current");
+const sourceCommitTimestamp = git("show", "-s", "--format=%cI", "HEAD");
+const sourceRepositoryState = gitStatus();
 const releaseDir = join(process.cwd(), "artifacts", "releases", "v1.0", "rc1");
-const artifactName = `laborator-editura-${releaseCandidate}-${git("rev-parse", "--short", "HEAD")}.tar.gz`;
+const artifactName = `laborator-editura-${releaseCandidate}-${sourceShortCommit}.tar.gz`;
 const artifactPath = join(releaseDir, artifactName);
 const artifactMetadataPath = join(releaseDir, artifactName.replace(/\.tar\.gz$/, ".artifact.json"));
 const checksumPath = `${artifactPath}.sha256`;
 const stagingDir = join(tmpdir(), `laborator-rc1-artifact-${Date.now()}`);
-const commitTimestamp = new Date(git("show", "-s", "--format=%cI", "HEAD"));
+const commitTimestamp = new Date(sourceCommitTimestamp);
 
 const entries = [
   ["package.json", "package.json"],
@@ -35,6 +40,10 @@ const entries = [
   ["packages/db/migrations", "packages/db/migrations"],
   ["packages/db/scripts", "packages/db/scripts"],
   ["deploy/staging", "deploy/staging"],
+  ["infrastructure/backup", "infrastructure/backup"],
+  ["infrastructure/deploy", "infrastructure/deploy"],
+  ["infrastructure/scripts", "infrastructure/scripts"],
+  ["infrastructure/validation", "infrastructure/validation"],
   [".github/workflows", ".github/workflows"]
 ];
 
@@ -77,9 +86,9 @@ function main() {
       createdAt
     },
     source: {
-      commit: git("rev-parse", "HEAD"),
-      branch: git("branch", "--show-current"),
-      repositoryState: gitStatus()
+      commit: sourceCommit,
+      branch: sourceBranch,
+      repositoryState: sourceRepositoryState
     },
     build: manifest.build,
     database: manifest.database
@@ -111,10 +120,10 @@ function createManifest() {
     releaseCandidate,
     generatedAt: new Date().toISOString(),
     source: {
-      commit: git("rev-parse", "HEAD"),
-      commitTimestamp: git("show", "-s", "--format=%cI", "HEAD"),
-      branch: git("branch", "--show-current"),
-      repositoryState: gitStatus()
+      commit: sourceCommit,
+      commitTimestamp: sourceCommitTimestamp,
+      branch: sourceBranch,
+      repositoryState: sourceRepositoryState
     },
     build: {
       command: "pnpm build",

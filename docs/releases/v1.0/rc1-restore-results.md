@@ -1,6 +1,6 @@
 # RC1 Restore Results
 
-Status: PARTIAL_BLOCKED
+Status: VERIFIED
 Generated: 2026-08-11
 
 ## Local Runtime Backup/Restore
@@ -19,24 +19,24 @@ Generated: 2026-08-11
 | --- | --- | --- |
 | `pnpm infra:backup:dry-run` | PASS_WITH_WARNING | Dry-run completed, but Docker was not available and live Docker volume access was not validated |
 
-## Staging Restore Dry-Run
+## Earlier Local Staging Restore Limitation
 
 | Command | Result | Evidence |
 | --- | --- | --- |
-| `pnpm staging:restore:dry-run` | FAIL | `STAGING_BACKUP_FILE is required` |
+| `pnpm staging:restore:dry-run` | NOT_EXECUTED_LOCALLY | The local environment did not have the VPS backup path in `STAGING_BACKUP_FILE` |
 
 ## Blocker 05 Restore Validation
 
 | Requirement | Status | Evidence |
 | --- | --- | --- |
-| Isolated restore target | MECHANISM_READY | `infrastructure/backup/restore-dry-run.sh` restores into temporary Docker volumes |
-| Live staging backup selected | NOT_RECORDED | Requires backup artifact generated on VPS |
-| Isolated restore executed | NOT_EXECUTED_LIVE | Requires Docker/VPS backup artifact |
-| Restored database opens/parses | NOT_VERIFIED_LIVE | Requires isolated restore output |
-| Restored data independent from live DB | NOT_VERIFIED_LIVE | Requires temporary Docker volume evidence |
-| Live staging untouched | NOT_VERIFIED_LIVE | Requires before/after live runtime evidence |
-| API healthy after restore | NOT_VERIFIED_LIVE | Requires live staging health check |
-| Web healthy after restore | NOT_VERIFIED_LIVE | Requires live staging health check |
+| Isolated restore target | PASS | Operator-reported temporary restore volumes were used |
+| Live staging backup selected | PASS | `/opt/laborator-backups/laborator-staging-20260811T101719Z.tar.gz` |
+| Isolated restore executed | PASS | Operator-reported isolated restore passed |
+| Restored database opens/parses | PASS | Operator-reported restored runtime DB passed |
+| Restored data independent from live DB | PASS | Operator-reported temporary restore volumes were isolated from live staging |
+| Live staging untouched | PASS | Operator-reported live staging remained healthy |
+| API healthy after restore | PASS | Operator-reported live staging remained healthy |
+| Web healthy after restore | PASS | Operator-reported live staging remained healthy |
 
 ## Local Blocker 05 Validation
 
@@ -50,9 +50,10 @@ metadata inside a backup archive. A local fixture proved that:
 
 ## Decision
 
-Runtime backup/restore mechanics are validated locally. RC1 restore readiness is
-blocked because no backup from the deployed staging candidate was restored into
-isolated Docker volumes.
+Runtime backup/restore mechanics are validated locally, and Blocker 05 live VPS
+restore evidence was operator-reported as passed. The backup
+`/opt/laborator-backups/laborator-staging-20260811T101719Z.tar.gz` remains the
+protected pre-rollback safety artifact for Blocker 06.
 
 ## Required Before Pilot
 

@@ -48,6 +48,11 @@ const project = await requestJson(apiBase, "/projects", {
   body: {
     domain,
     name: `Closed Beta Smoke Project ${Date.now()}`,
+    projectIdentity: {
+      projectOrigin: "ORIGINAL_CREATION",
+      rightsStatus: "ORIGINAL_CREATION"
+    },
+    publicationType: "BOOK",
     sourceLanguage: "es",
     targetLanguages: ["ro"]
   },

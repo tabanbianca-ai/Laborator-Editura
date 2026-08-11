@@ -54,24 +54,35 @@ preserved `organizationId: org-rc1`.
 
 | Area | Result | Evidence Gap |
 | --- | --- | --- |
-| Live staging traceability smoke | MISSING | No live staging workflow was executed end to end |
+| Live staging traceability smoke | PASS | Operator-reported Blocker 04 smoke and staging validation passed |
 | Real production-like data migration | MISSING | No representative existing database was migrated |
-| Live restore of staging backup | MISSING | No Docker-volume restore dry-run was executed |
+| Live restore of staging backup | PASS | Operator-reported Blocker 05 isolated restore passed from `/opt/laborator-backups/laborator-staging-20260811T101719Z.tar.gz` |
 
 ## Blocker 05 Data Integrity Gate
 
 | Requirement | Status | Evidence |
 | --- | --- | --- |
-| Backup corresponds to RC1 deployment identity | MECHANISM_READY | `verify-backup.sh` can enforce deployment ID, source commit, artifact SHA, and migration |
-| Restored database parses correctly | NOT_VERIFIED_LIVE | Requires isolated VPS restore output |
-| Expected structures exist after restore | NOT_VERIFIED_LIVE | Requires restored runtime DB inspection |
-| Smoke-test project/document data preserved | NOT_VERIFIED_LIVE | Requires live staging backup artifact |
-| Organization/user/project/document integrity preserved | NOT_VERIFIED_LIVE | Requires isolated restore validation |
-| Restored data independent from live runtime DB | NOT_VERIFIED_LIVE | Requires temporary Docker volume evidence |
-| Live database unchanged by isolated restore | NOT_VERIFIED_LIVE | Requires before/after live staging evidence |
+| Backup corresponds to RC1 deployment identity | PASS | Operator-reported release identity metadata verification passed |
+| Restored database parses correctly | PASS | Operator-reported restored runtime DB passed |
+| Expected structures exist after restore | PASS | Operator-reported reviewer, organization, project, and document data present |
+| Smoke-test project/document data preserved | PASS | Operator-reported staging smoke data remained available |
+| Organization/user/project/document integrity preserved | PASS | Operator-reported organization, project, and document data present |
+| Restored data independent from live runtime DB | PASS | Operator-reported temporary restore volumes were isolated from live staging |
+| Live database unchanged by isolated restore | PASS | Operator-reported live staging remained healthy after isolated restore |
+
+## Blocker 06 Data Integrity Gate
+
+| Requirement | Status | Evidence |
+| --- | --- | --- |
+| Pre-rollback database structural counts | NOT_CAPTURED_FROM_THIS_ENVIRONMENT | Requires live VPS pre-rollback evidence |
+| Rollback data integrity | NOT_VERIFIED_LIVE | Rollback was not executed on live staging from this environment |
+| Post-rollback database integrity | NOT_VERIFIED_LIVE | Requires restored rollback state inspection |
+| Post-redeploy database integrity | NOT_VERIFIED_LIVE | Requires live RC1 redeploy inspection |
+| Organization/user/project/document data after redeploy | NOT_VERIFIED_LIVE | Requires live post-redeploy validation |
+| Data loss attributable to rollback/redeploy | NOT_VERIFIED_LIVE | Requires before/after live database evidence |
 
 ## Data Integrity Decision
 
-Contract-level and local runtime integrity evidence passed. RC1 data integrity
-cannot be certified until the same traceability and restore gates pass against
-the deployed staging candidate.
+Contract-level and Blocker 05 restore integrity evidence passed. RC1 data
+integrity cannot be certified for Blocker 06 until rollback and redeploy are
+executed on live staging and before/after data evidence confirms no data loss.

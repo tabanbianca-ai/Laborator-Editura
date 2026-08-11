@@ -15,7 +15,6 @@ and local runtime backup/restore validation passed.
 
 The release is blocked by missing mandatory release evidence:
 
-- Live isolated restore from a staging backup.
 - Rollback rehearsal.
 - Browser-level accessibility review.
 - Browser-level localization review.
@@ -35,12 +34,12 @@ The release is blocked by missing mandatory release evidence:
 | Critical E2E | PASS | Contract E2E passed and operator-provided live staging smoke passed |
 | Security | PARTIAL_BLOCKED | Contract security and dependency audit passed; live adversarial evidence missing |
 | Cross-org isolation | PARTIAL | Contract tests passed; live staging adversarial run missing |
-| Data integrity | PARTIAL_BLOCKED | Contract and local runtime restore passed; live staging backup/isolated restore evidence missing |
+| Data integrity | PARTIAL_BLOCKED | Contract and Blocker 05 restore evidence passed; rollback/redeploy before-after data evidence missing |
 | Accessibility | BLOCKED | Browser-level accessibility evidence missing |
 | Localization | BLOCKED | Browser-level seven-language and mixed-language evidence missing |
 | Migration | PARTIAL_BLOCKED | SQL contract tests passed; real clean/existing/upgrade run missing |
-| Backup/restore | PARTIAL_BLOCKED | Local runtime restore passed; live staging backup and isolated restore not executed from this environment |
-| Deployment/rollback | PARTIAL_BLOCKED | Artifact-based staging deployment is resolved; rollback rehearsal remains missing |
+| Backup/restore | PASS | Blocker 05 live backup, checksum, archive verification, release identity, isolated restore, and restored data evidence operator-reported PASS |
+| Deployment/rollback | BLOCKED | Artifact-based staging deployment is resolved; historical rollback target rejected; new `30b39ec` rollback baseline documented but live rehearsal remains missing |
 | Staging health/smoke/monitoring | PASS | Operator-provided live staging validation passed: environment, health, bootstrap-admin-reviewer, smoke-test, monitoring-hook, validate-staging |
 | Performance | PARTIAL_BLOCKED | Local build/test baseline only; staging runtime baseline missing |
 | Dependency vulnerability | PASS | `pnpm-lock.yaml` is present; frozen install passed; full and production `pnpm audit` report 0 findings |
@@ -49,7 +48,7 @@ The release is blocked by missing mandatory release evidence:
 
 | Severity | Count |
 | --- | --- |
-| P0 BLOCKER | 2 open, 3 resolved |
+| P0 BLOCKER | 1 open, 4 resolved |
 | P1 CRITICAL | 5 open, 1 resolved |
 | P2 MAJOR | 2 |
 | P3 MINOR | 1 |
@@ -57,17 +56,11 @@ The release is blocked by missing mandatory release evidence:
 
 ## Blocking Fix Order
 
-1. Generate a live staging backup from deployment `rc1-30b39ec-20260809`.
-2. Verify backup checksum, archive structure, runtime database payload, and RC1
-   release identity metadata.
-3. Run isolated restore into separate volumes and validate restored data without
-   changing live staging.
-4. Verify live API and WEB remain healthy after the isolated restore.
-5. Execute rollback and redeploy rehearsal.
-6. Run live security adversarial tests.
-7. Run browser-level localization and accessibility reviews.
-8. Run clean/existing/upgrade migration execution against real database targets.
-9. Capture staging performance baseline.
+1. Execute rollback and redeploy rehearsal.
+2. Run live security adversarial tests.
+3. Run browser-level localization and accessibility reviews.
+4. Run clean/existing/upgrade migration execution against real database targets.
+5. Capture staging performance baseline.
 
 ## Blocker 01 Resolution
 
@@ -138,9 +131,9 @@ BLOCKER 04 STATUS: RESOLVED.
 | Canonical deployment path | PASS: deprecated mixed-case deployment path references removed |
 | Live command status | PASS: environment, health, bootstrap-admin-reviewer, smoke-test, monitoring-hook, validate-staging |
 
-## Blocker 05 Attempt
+## Blocker 05 Resolution
 
-BLOCKER 05 STATUS: NOT RESOLVED.
+BLOCKER 05 STATUS: RESOLVED.
 
 | Evidence | Value |
 | --- | --- |
@@ -151,11 +144,39 @@ BLOCKER 05 STATUS: NOT RESOLVED.
 | Restore evidence | `docs/releases/v1.0/rc1-restore-results.md` |
 | Data integrity evidence | `docs/releases/v1.0/rc1-data-integrity-results.md` |
 | Canonical backup scripts | `infrastructure/backup/backup-laborator.sh`, `infrastructure/backup/verify-backup.sh`, `infrastructure/backup/restore-dry-run.sh`, `infrastructure/backup/restore-laborator.sh` |
-| Local backup dry-run | PASS_WITH_WARNING: Docker unavailable locally, live Docker volume access skipped |
-| Local release identity verifier | PASS: matching identity accepted; mismatched artifact SHA-256 rejected |
-| Live staging backup | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
-| Isolated restore | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
-| API/WEB after restore | NOT_VERIFIED_FROM_THIS_ENVIRONMENT |
+| Live backup | `/opt/laborator-backups/laborator-staging-20260811T101719Z.tar.gz` |
+| Backup checksum | PASS |
+| Backup archive verification | PASS |
+| Release identity metadata | PASS |
+| Isolated restore | PASS |
+| Restored runtime DB | PASS |
+| Reviewer/organization/project/document data | PASS |
+| Live staging after restore | HEALTHY |
+
+## Blocker 06 Attempt
+
+BLOCKER 06 STATUS: NOT RESOLVED.
+
+| Evidence | Value |
+| --- | --- |
+| Rollback evidence | `docs/releases/v1.0/rc1-rollback-rehearsal.md` |
+| Redeploy evidence | `docs/releases/v1.0/rc1-redeploy-validation.md` |
+| Rollback baseline evidence | `docs/releases/v1.0/rc1-rollback-baseline.md` |
+| Historical rollback artifact | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-c1b6958.tar.gz` |
+| Historical rollback artifact SHA-256 | `41a15a58b747dfcf48881d3d9557ef6b9fab7ef8065305867c96b2922a1ac285` |
+| Historical rollback source commit | `c1b6958c0c8c92e3946addfcab48bc695962ca98` |
+| Historical runtime build | FAIL: `ERR_PNPM_NO_LOCKFILE` |
+| Legacy rollback images | REJECTED: missing artifact/source/release/deployment/provenance labels |
+| Recommended rollback baseline | `30b39ec0034f335bdbda210f09c8ad66a26a25a2` |
+| Baseline artifact SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` |
+| Baseline API image ID | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` |
+| Baseline WEB image ID | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` |
+| Rollback baseline validator | PASS_LOCAL |
+| Current RC1 redeploy dry-run | PASS: canonical deploy script validated current artifact metadata locally |
+| Artifact deployment validator | PASS |
+| Live rollback execution | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
+| Live redeploy execution | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
+| Post-redeploy staging validation | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
 
 ## Pilot Decision
 

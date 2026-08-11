@@ -129,6 +129,7 @@ source_commit="$(json_field "source.commit")"
 migration_version="$(json_field "database.latestMigration")"
 
 [[ "$source_commit" == "$EXPECTED_SOURCE_COMMIT" ]] || die "Artifact source commit mismatch. expected=$EXPECTED_SOURCE_COMMIT actual=$source_commit"
+[[ -f "$work_dir/pnpm-lock.yaml" ]] || die "Artifact is not eligible for reproducible runtime image construction: pnpm-lock.yaml is missing. Do not use --no-frozen-lockfile; establish a lockfile-backed rollback baseline instead."
 [[ -f "$work_dir/apps/api/dist/apps/api/src/main.js" ]] || die "API build output missing from artifact."
 [[ -f "$work_dir/apps/web/.next/BUILD_ID" ]] || die "Web build output missing from artifact."
 

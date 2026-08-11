@@ -1,6 +1,6 @@
 # RC1 Backup Results
 
-Status: NOT_EXECUTED_LIVE
+Status: VERIFIED
 Generated: 2026-08-11
 Scope: RC1 Blocker 05
 
@@ -56,17 +56,25 @@ Scope: RC1 Blocker 05
 | `pnpm test` | PASS | Workspace tests passed: shared 62, db 49, web 128, API 505 |
 | `pnpm build` | PASS_WITH_WARNING | Workspace build passed; existing Next.js ESLint plugin warning remains |
 
-## Live Staging Backup
+## Earlier Local Environment Limitations
 
 | Requirement | Status |
 | --- | --- |
-| Backup created from live RC1 staging | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
-| Backup artifact path | NOT_RECORDED |
-| Backup checksum | NOT_RECORDED |
-| Backup non-empty | NOT_VERIFIED_LIVE |
-| Backup metadata | NOT_VERIFIED_LIVE |
-| Runtime database payload | NOT_VERIFIED_LIVE |
-| Backup integrity script | NOT_EXECUTED_LIVE |
+| Live VPS access from Codex environment | UNAVAILABLE |
+| Local Docker volume access | UNAVAILABLE |
+| Local live backup execution | NOT_ATTEMPTED_BY_DESIGN |
+
+## Live Staging Backup Evidence
+
+| Requirement | Status | Evidence |
+| --- | --- | --- |
+| Backup created from live RC1 staging | PASS | Operator-reported backup created on VPS |
+| Backup artifact path | PASS | `/opt/laborator-backups/laborator-staging-20260811T101719Z.tar.gz` |
+| Backup checksum | PASS | Operator-reported checksum verification passed |
+| Backup archive verification | PASS | Operator-reported archive verification passed |
+| Release identity metadata | PASS | Operator-reported release identity metadata verification passed |
+| Runtime database payload | PASS | Operator-reported restored runtime DB passed isolated restore |
+| Backup isolation | PASS | Operator-reported temporary restore volumes were isolated from live staging |
 
 ## Required VPS Command
 
@@ -89,7 +97,7 @@ sudo infrastructure/backup/verify-backup.sh \
 
 ## Completion Signals
 
-STAGING_BACKUP = NOT_VERIFIED_LIVE
-BACKUP_CHECKSUM = NOT_VERIFIED_LIVE
-BACKUP_INTEGRITY = NOT_VERIFIED_LIVE
-BACKUP_METADATA = MECHANISM_READY
+STAGING_BACKUP = PASS
+BACKUP_CHECKSUM = PASS
+BACKUP_INTEGRITY = PASS
+BACKUP_METADATA = PASS
