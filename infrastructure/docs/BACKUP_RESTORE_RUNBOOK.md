@@ -39,14 +39,14 @@ sudo systemctl enable --now laborator-backup.timer
 ## Manual Backup
 
 ```bash
-sudo /opt/Laborator-Editura/infrastructure/backup/backup-laborator.sh \
+sudo /opt/laborator-editura/infrastructure/backup/backup-laborator.sh \
   --config /etc/laborator/infrastructure.env
 ```
 
 Dry-run:
 
 ```bash
-sudo /opt/Laborator-Editura/infrastructure/backup/backup-laborator.sh --dry-run
+sudo /opt/laborator-editura/infrastructure/backup/backup-laborator.sh --dry-run
 ```
 
 Use `--verbose` when diagnosing path or Docker volume configuration.
@@ -71,7 +71,7 @@ The old names remain supported for compatibility.
 ## Verify Backup
 
 ```bash
-sudo /opt/Laborator-Editura/infrastructure/backup/verify-backup.sh \
+sudo /opt/laborator-editura/infrastructure/backup/verify-backup.sh \
   /opt/laborator-backups/laborator-staging-YYYYMMDDTHHMMSSZ.tar.gz
 ```
 
@@ -81,7 +81,7 @@ The dry-run restores into temporary Docker volumes and never touches active
 runtime volumes:
 
 ```bash
-sudo /opt/Laborator-Editura/infrastructure/backup/restore-dry-run.sh \
+sudo /opt/laborator-editura/infrastructure/backup/restore-dry-run.sh \
   --backup /opt/laborator-backups/laborator-staging-YYYYMMDDTHHMMSSZ.tar.gz
 ```
 
@@ -90,7 +90,7 @@ sudo /opt/Laborator-Editura/infrastructure/backup/restore-dry-run.sh \
 Live restore requires all safeguards:
 
 ```bash
-sudo /opt/Laborator-Editura/infrastructure/backup/restore-laborator.sh \
+sudo /opt/laborator-editura/infrastructure/backup/restore-laborator.sh \
   --config /etc/laborator/infrastructure.env \
   --backup /opt/laborator-backups/laborator-staging-YYYYMMDDTHHMMSSZ.tar.gz \
   --force \
