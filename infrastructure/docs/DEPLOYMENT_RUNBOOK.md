@@ -34,7 +34,7 @@ This path is allowed for ordinary staging refreshes only. It builds from the
 repository source and is not acceptable for RC artifact certification.
 
 ```bash
-cd /opt/Laborator-Editura
+cd /opt/laborator-editura
 git status --short
 infrastructure/deploy/deploy-staging.sh --ref <commit-sha>
 ```
@@ -53,7 +53,7 @@ the verified artifact. Provide either immutable `@sha256` image references or
 expected Docker image IDs for images loaded from a saved bundle.
 
 ```bash
-cd /opt/Laborator-Editura
+cd /opt/laborator-editura
 
 infrastructure/deploy/deploy-staging-artifact.sh \
   --artifact .releases/incoming/laborator-editura-1.0.0-rc.1-30b39ec.tar.gz \
