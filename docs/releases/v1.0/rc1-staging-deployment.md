@@ -1,14 +1,14 @@
 # RC1 Staging Deployment
 
-Status: OPERATOR_REPORTED_DEPLOYED_PENDING_VERIFICATION
+Status: VERIFIED_LIVE
 Generated: 2026-08-09  
 Scope: RC1 Blocker 03B / 04
 
 ## Deployment Decision
 
-Blocker 03B implemented an artifact-based staging deployment mechanism. For
-Blocker 04, the staging deployment identity below was provided and must be
-validated on the VPS before RC1 can proceed.
+Blocker 03B implemented an artifact-based staging deployment mechanism. The
+baseline deployment identity below was validated on the VPS, and the same
+artifact path was later used for Blocker 06 rollback/redeploy rehearsal.
 
 ## Artifact Selected for Staging
 
@@ -44,7 +44,7 @@ validated on the VPS before RC1 can proceed.
 | Deployment timestamp | Not independently recorded here |
 | Deployed services | Not independently recorded here |
 | Staging deployed artifact SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` operator-provided |
-| Digest match | NOT_INDEPENDENTLY_VERIFIED |
+| Digest match | PASS |
 | API image ID | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` operator-provided |
 | Web image ID | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` operator-provided |
 
@@ -58,12 +58,12 @@ validated on the VPS before RC1 can proceed.
 | Artifact SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` |
 | Migration version | `0008_security_hardening_phase_1.sql` |
 
-## Blocker
+## Local Environment Note
 
 This local execution environment does not expose staging host, user, deployment
 path, or environment configuration. `deploy/staging/.env.staging` is not present
-locally. Therefore the operator-provided live deployment identity could not be
-independently verified here.
+locally. Live deployment identity was verified on the VPS and is recorded as
+operator-provided live evidence.
 
 The legacy staging Docker Compose configuration still builds API and web images
 from source and remains available only for ordinary non-RC staging refreshes.
@@ -76,31 +76,19 @@ VERIFY
 DEPLOY SAME ARTIFACT
 ```
 
-## Minimum External Deployment Procedure Required
+## Blocker 06 Forward Rehearsal Link
 
-To close this blocker, deploy the selected artifact by digest using the new RC
-artifact path:
+The verified forward rehearsal candidate was also deployed through the
+artifact-based path:
 
-1. Produce runtime API and web image references or a saved image bundle from the
-   verified artifact in the approved build pipeline.
-2. Copy `laborator-editura-1.0.0-rc.1-30b39ec.tar.gz` and runtime image
-   evidence to the staging host.
-3. Verify and deploy:
-
-```bash
-infrastructure/deploy/deploy-staging-artifact.sh \
-  --artifact .releases/incoming/laborator-editura-1.0.0-rc.1-30b39ec.tar.gz \
-  --sha256 9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e \
-  --source-commit 30b39ec0034f335bdbda210f09c8ad66a26a25a2 \
-  --migration-version 0008_security_hardening_phase_1.sql \
-  --api-image <approved-api-runtime-image> \
-  --web-image <approved-web-runtime-image>
-```
-
-4. Record the deployment ID, deployment timestamp, runtime image identity,
-   deployed services, and release identity file.
-5. Confirm the deployed SHA-256 equals
-   `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e`.
+| Field | Value |
+| --- | --- |
+| Release | `1.0.0-rc.1-rehearsal.1` |
+| Source commit | `add6e73221d70fbc07d0f724a8322d5aa3b503d9` |
+| Artifact SHA-256 | `05ec1fb248aceb8b88efd66b6309a6ba928e24152ad83997fd549c5da26d66a4` |
+| API image ID | `sha256:fb41892734fde36fe635add135eedafc24efefd93536a00c0ee20faad2cc0f7f` |
+| WEB image ID | `sha256:c5cbbfcdad5247eb3dd29576f5a350d96274b670a4fca62bead502c6ea70ba17` |
+| Rehearsal sequence | `30b39ec -> add6e73 -> 30b39ec -> add6e73` |
 
 ## Rollback Reference
 
@@ -120,8 +108,8 @@ NEW_RC1_ARTIFACT = VERIFIED
 SOURCE_COMMIT = VERIFIED  
 SBOM = VERIFIED  
 BUILD_PROVENANCE = VERIFIED  
-STAGING_DEPLOYMENT = OPERATOR_REPORTED
-DEPLOYED_DIGEST_MATCH = NOT_INDEPENDENTLY_VERIFIED
+STAGING_DEPLOYMENT = SUCCESS
+DEPLOYED_DIGEST_MATCH = PASS
 DATABASE_MIGRATION_STATE = RECORDED  
 ROLLBACK_REFERENCE = RECORDED  
 SOURCE_REBUILD_IN_STAGING = DISABLED_FOR_RC_RELEASE_PATH
