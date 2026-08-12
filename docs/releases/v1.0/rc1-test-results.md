@@ -29,14 +29,14 @@ Branch: `main`
 
 | Command | Result | Evidence |
 | --- | --- | --- |
-| `git diff --check` | PASS | Whitespace check passed during Blocker 07 |
+| `git diff --check` | PASS | Whitespace check passed during Blocker 08 |
 | `pnpm install --frozen-lockfile` | PASS | Frozen install passed with lockfile present |
 | `pnpm typecheck` | PASS | 5 workspace packages succeeded |
 | `pnpm lint` | PASS | 5 workspace packages succeeded |
 | `pnpm test` | PASS | Shared 62, DB 49, Web 128, API 505 tests passed |
 | `pnpm build` | PASS_WITH_WARNING | Workspace build passed; existing Next.js ESLint plugin warning remains |
 | `pnpm audit --audit-level high` | PASS | 0 Critical/High findings |
-| `node scripts/validate-rc1-release-evidence.mjs` | PASS | Release identity, SBOM, provenance, Blocker 05/06 evidence, and final readiness consistency validated |
+| `node scripts/validate-rc1-release-evidence.mjs` | PASS | Release identity, SBOM, provenance, Blocker 05/06 evidence, Blocker 08 status, and final readiness consistency validated |
 
 ## Live Staging Validation Results
 
@@ -76,11 +76,21 @@ lacks `pnpm-lock.yaml` and cannot be used as a reproducible rollback baseline.
 
 | Gate | Result |
 | --- | --- |
-| Live adversarial security testing | OPEN |
-| Browser-level accessibility review | OPEN |
-| Browser-level localization crawl | OPEN |
-| Staging performance baseline | OPEN |
-| Clean/existing PostgreSQL migration execution | OPEN |
+| Live adversarial security testing | LIVE_ACTION_REQUIRED |
+| Browser-level accessibility review | LIVE_ACTION_REQUIRED |
+| Browser-level localization crawl | LIVE_ACTION_REQUIRED |
+| Staging performance baseline | LIVE_ACTION_REQUIRED |
+| Clean/existing PostgreSQL migration execution | LIVE_ACTION_REQUIRED |
+
+## Blocker 08 Result
+
+BLOCKER 08 STATUS: NOT RESOLVED.
+
+The repository was inspected for existing security, accessibility,
+localization, performance, and PostgreSQL migration validation tooling. Local
+automated checks are available and remain passing, but the five P1 closure
+criteria require live VPS, browser-level, or isolated PostgreSQL evidence that
+was not available to Codex in this environment.
 
 ## Final Result
 
