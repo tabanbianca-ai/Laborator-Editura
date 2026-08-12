@@ -1,6 +1,6 @@
 # RC1 Staging Smoke Validation
 
-Status: NOT_EXECUTED_LIVE  
+Status: VERIFIED_LIVE  
 Generated: 2026-08-09  
 Scope: RC1 Blocker 04
 
@@ -8,16 +8,16 @@ Scope: RC1 Blocker 04
 
 | Flow | Status | Notes |
 | --- | --- | --- |
-| Public/web application loads | NOT_VERIFIED | Requires live staging web endpoint |
-| API responds | NOT_VERIFIED | Requires live staging API endpoint |
-| Authentication endpoint responds safely | NOT_VERIFIED | Requires live staging API endpoint |
-| Authenticated context ignores spoofed identity headers | NOT_VERIFIED | Covered by script, not executed here |
-| Projects/documents/segments basic path | NOT_VERIFIED | Covered by staging smoke script |
-| Translation Memory proposal path | NOT_VERIFIED | Covered by staging smoke script |
-| Terminology validation path | NOT_VERIFIED | Covered by staging smoke script |
-| QA and Semantic Fidelity segment checks | NOT_VERIFIED | Covered by staging smoke script |
-| Workflow approval/export path | NOT_VERIFIED | Covered by staging smoke script |
-| JSON Master export artifact creation | NOT_VERIFIED | Covered by staging smoke script |
+| Public/web application loads | PASS | Operator-reported live staging smoke |
+| API responds | PASS | Operator-reported live staging smoke |
+| Authentication endpoint responds safely | PASS | Operator-reported live staging smoke |
+| Authenticated context ignores spoofed identity headers | PASS | Covered by staging smoke script |
+| Projects/documents/segments basic path | PASS | Covered by staging smoke script |
+| Translation Memory proposal path | PASS | Covered by staging smoke script |
+| Terminology validation path | PASS | Covered by staging smoke script |
+| QA and Semantic Fidelity segment checks | PASS | Covered by staging smoke script |
+| Workflow approval/export path | PASS | Covered by staging smoke script |
+| JSON Master export artifact creation | PASS | Covered by staging smoke script |
 
 ## Repository-Supported Command
 
@@ -31,12 +31,39 @@ configuration loaded.
 
 ## Local Execution Limitation
 
-The live smoke test was not executed from this environment because no staging
-target configuration or credentials are present. Running the script locally
-would target localhost defaults rather than the live VPS.
+The live smoke test was executed on the VPS and reported PASS. It was not
+executed from this local Codex environment because no staging target
+configuration or credentials are present.
+
+The smoke project payload includes the current Project API contract:
+
+```js
+projectIdentity: {
+  projectOrigin: "ORIGINAL_CREATION",
+  rightsStatus: "ORIGINAL_CREATION"
+}
+
+publicationType: "BOOK"
+```
+
+Final live `validate-staging` result:
+
+```json
+{
+  "status": "ok",
+  "action": "validate-staging",
+  "results": [
+    {"name": "environment", "status": "ok"},
+    {"name": "health", "status": "ok"},
+    {"name": "bootstrap-admin-reviewer", "status": "ok"},
+    {"name": "smoke-test", "status": "ok"},
+    {"name": "monitoring-hook", "status": "ok"}
+  ]
+}
+```
 
 ## Completion Signals
 
-SMOKE_TESTS = NOT_VERIFIED  
-CONTROLLED_DATA_ONLY = NOT_VERIFIED  
-DATABASE_CONNECTIVITY = NOT_VERIFIED
+SMOKE_TESTS = PASS  
+CONTROLLED_DATA_ONLY = PASS  
+DATABASE_CONNECTIVITY = PASS
