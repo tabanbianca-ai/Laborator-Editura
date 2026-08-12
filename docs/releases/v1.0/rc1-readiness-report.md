@@ -1,7 +1,7 @@
 # RC1 Readiness Report
 
 Status: RC1_CONDITIONAL_GO
-Generated: 2026-08-11
+Generated: 2026-08-12
 Candidate commit: `30b39ec0034f335bdbda210f09c8ad66a26a25a2`
 Branch: `main`
 
@@ -25,6 +25,11 @@ Remaining critical evidence gaps:
 - Browser-level localization review.
 - Staging performance baseline.
 - Real clean/existing PostgreSQL migration execution.
+
+Blocker 08 attempted to close these five P1 critical evidence gaps on
+2026-08-12. It did not mark them PASS because live VPS access, browser-level
+accessibility/localization tooling, staging metrics capture, and isolated
+PostgreSQL execution were not available in the local Codex environment.
 
 ## Final Status Matrix
 
@@ -65,6 +70,22 @@ Remaining critical evidence gaps:
 2. Run browser-level localization and accessibility reviews.
 3. Run clean/existing/upgrade migration execution against real database targets.
 4. Capture staging performance baseline.
+
+## Blocker 08 Attempt
+
+BLOCKER 08 STATUS: NOT RESOLVED.
+
+| P1 Gate | Blocker 08 result | Reason |
+| --- | --- | --- |
+| Live adversarial security suite | LIVE_ACTION_REQUIRED | Local contracts and smoke tests exist, but no live staging adversarial run was executed |
+| Browser accessibility review | LIVE_ACTION_REQUIRED | No repository-supported Playwright, axe, Lighthouse, or browser accessibility runner is available locally |
+| Seven-language localization crawl | LIVE_ACTION_REQUIRED | Static localization coverage passed, but no browser crawl across all repository-defined locales was executed |
+| Staging performance baseline | LIVE_ACTION_REQUIRED | Local build/test timings exist; no live VPS latency/resource baseline was captured |
+| PostgreSQL clean migration | LIVE_ACTION_REQUIRED | Local environment has no `psql` or Docker for real PostgreSQL execution |
+| PostgreSQL existing DB migration | LIVE_ACTION_REQUIRED | No isolated representative existing PostgreSQL target was available |
+
+RC1 remains CONDITIONAL_GO. Full GO requires these gates to become PASS, with
+0 Critical and 0 High open defects.
 
 ## Blocker 01 Resolution
 
