@@ -13,6 +13,13 @@ Owner: Release Management
 | KI-V1-004 | P1 | Performance | Staging performance baseline is still missing. | Capture API/web/workflow latency and VPS metrics. | Performance readiness incomplete. | 1.0.0-rc.1 | SRE |
 | KI-V1-005 | P1 | Migration | Clean/existing PostgreSQL migration execution is still missing. | Run clean and representative existing database migration validation. | Migration certification incomplete. | 1.0.0-rc.1 | Data/Platform |
 
+## Blocker 08 Update
+
+Blocker 08 attempted to close all five P1 critical evidence gaps on 2026-08-12.
+The gaps remain open because live VPS, browser-level, staging performance, and
+isolated PostgreSQL evidence could not be produced from the local Codex
+environment without fabricating PASS results.
+
 ## Rule
 
 Blocking known issues cannot ship in final v1.0. RC1 P0 release-engineering,
