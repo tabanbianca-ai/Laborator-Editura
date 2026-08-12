@@ -1,6 +1,6 @@
 # RC1 Staging Pipeline Validation
 
-Status: REPOSITORY_READY_LIVE_NOT_EXECUTED  
+Status: VERIFIED_LIVE  
 Generated: 2026-08-09  
 Scope: RC1 Blocker 04
 
@@ -8,9 +8,9 @@ Scope: RC1 Blocker 04
 
 | Command | Status | Notes |
 | --- | --- | --- |
-| `pnpm staging:health` | NOT_EXECUTED_LIVE | Requires real VPS staging configuration |
-| `pnpm staging:validate` | NOT_EXECUTED_LIVE | Requires real VPS staging configuration |
-| `pnpm staging:monitor` | NOT_EXECUTED_LIVE | Requires real VPS staging configuration |
+| `pnpm staging:health` | PASS | Operator-reported live VPS validation |
+| `pnpm staging:validate` | PASS | Operator-reported live VPS validation |
+| `pnpm staging:monitor` | PASS | `monitoring-hook` returned `ok` in live `validate-staging` |
 
 ## Repository Pipeline Scripts
 
@@ -40,7 +40,7 @@ Result: PASS, no deprecated uppercase deployment path references remain.
 
 ## Completion Signals
 
-STAGING_HEALTH_COMMAND = NOT_VERIFIED_LIVE  
-STAGING_VALIDATE_COMMAND = NOT_VERIFIED_LIVE  
+STAGING_HEALTH_COMMAND = PASS  
+STAGING_VALIDATE_COMMAND = PASS  
 CANONICAL_DEPLOYMENT_PATH = PASS  
-NO_SOURCE_REBUILD_OCCURRED = NOT_VERIFIED_LIVE
+NO_SOURCE_REBUILD_OCCURRED = PASS
