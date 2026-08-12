@@ -1,6 +1,6 @@
 # RC1 Rollback Baseline
 
-Status: NEW_BASELINE_REQUIRED
+Status: VERIFIED_BASELINE
 Generated: 2026-08-11
 Scope: RC1 Blocker 06
 
@@ -17,6 +17,13 @@ state: `30b39ec0034f335bdbda210f09c8ad66a26a25a2`.
 This does not resolve Blocker 06 by itself. A live rollback rehearsal still
 requires a forward deployment target followed by rollback to this verified
 baseline and redeploy validation through the artifact path.
+
+The prepared forward rehearsal candidate is documented in
+`docs/releases/v1.0/rc1-forward-rehearsal-candidate.md`. It is based on source
+commit `add6e73221d70fbc07d0f724a8322d5aa3b503d9` and artifact SHA-256
+`05ec1fb248aceb8b88efd66b6309a6ba928e24152ad83997fd549c5da26d66a4`. It was
+live deployed, rolled back to this `30b39ec` baseline, and redeployed as part
+of the Blocker 06 rehearsal.
 
 ## Historical c1b6958 Evidence
 
