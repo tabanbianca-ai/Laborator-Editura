@@ -82,7 +82,7 @@ and `nanoid`.
 - `laborator:lockfile.status = present`
 - `laborator:lockfile.path = pnpm-lock.yaml`
 - `laborator:lockfile.sha256 = 569b71350933f1f2e6028bbc6480b9b385dfe267929b136ca3bdc353f3d1b075`
-- `laborator:artifact.certificationStatus = superseded-for-certification`
+- `laborator:artifact.certificationStatus = verified-current-rc1-artifact`
 
 The previous Blocker 01 artifact remains preserved as historical evidence, but
 it no longer represents the remediated dependency source state.
@@ -95,7 +95,7 @@ it no longer represents the remediated dependency source state.
 | `pnpm audit --prod --json` | PASS, 0 findings |
 | `pnpm audit --json` | PASS, 0 findings |
 | `pnpm audit --audit-level high` | PASS |
-| `node scripts/validate-rc1-release-evidence.mjs` | PASS, previous artifact marked superseded |
+| `node scripts/validate-rc1-release-evidence.mjs` | PASS, active lockfile-backed artifact verified and previous artifact preserved as historical evidence |
 
 Full typecheck, lint, test, build, and diff validation are recorded in the final
 Blocker 02 completion report.
