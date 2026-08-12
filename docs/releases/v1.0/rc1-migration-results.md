@@ -1,7 +1,7 @@
 # RC1 Migration Results
 
-Status: PARTIAL_BLOCKED  
-Generated: 2026-08-09
+Status: LIVE_ACTION_REQUIRED
+Generated: 2026-08-12
 
 ## Migration Inventory
 
@@ -39,6 +39,59 @@ Generated: 2026-08-09
 | --- | --- | --- |
 | Clean database execution | MISSING | SQL contract tests passed, but no real PostgreSQL clean migration run was executed |
 | Existing database upgrade | MISSING | No representative existing database was upgraded in this RC1 run |
+
+## Blocker 08 Closure Attempt
+
+Blocker 08 was evaluated locally. The local environment does not provide
+`psql` or Docker, so Codex could not run a disposable PostgreSQL database or
+execute real SQL migrations here. Runtime database backup/restore tests and SQL
+contract tests remain valid, but they are not a replacement for PostgreSQL
+execution evidence.
+
+## Required Clean PostgreSQL Run
+
+Run in an isolated database, not against live staging data:
+
+```bash
+cd /opt/laborator-editura
+export CLEAN_DATABASE_URL="postgresql://<user>:<password>@<host>:<port>/laborator_rc1_clean"
+for migration in packages/db/migrations/*.sql; do
+  psql "$CLEAN_DATABASE_URL" -v ON_ERROR_STOP=1 -f "$migration"
+done
+psql "$CLEAN_DATABASE_URL" -v ON_ERROR_STOP=1 -c "\\dt"
+psql "$CLEAN_DATABASE_URL" -v ON_ERROR_STOP=1 -c "select '0008_security_hardening_phase_1.sql' as expected_final_migration;"
+```
+
+Record PostgreSQL version, migration logs, final schema, constraints/index
+inspection, and application startup compatibility against this clean schema.
+
+## Required Existing Database Upgrade Run
+
+Run in a separate isolated database created from a representative pre-0008
+state:
+
+```bash
+cd /opt/laborator-editura
+export EXISTING_DATABASE_URL="postgresql://<user>:<password>@<host>:<port>/laborator_rc1_existing"
+for migration in packages/db/migrations/0000_*.sql \
+  packages/db/migrations/0001_*.sql \
+  packages/db/migrations/0002_*.sql \
+  packages/db/migrations/0003_*.sql \
+  packages/db/migrations/0004_*.sql \
+  packages/db/migrations/0005_*.sql \
+  packages/db/migrations/0006_*.sql \
+  packages/db/migrations/0007_*.sql; do
+  psql "$EXISTING_DATABASE_URL" -v ON_ERROR_STOP=1 -f "$migration"
+done
+psql "$EXISTING_DATABASE_URL" -v ON_ERROR_STOP=1 -c "select count(*) as pre_upgrade_tables from information_schema.tables where table_schema = 'public';"
+psql "$EXISTING_DATABASE_URL" -v ON_ERROR_STOP=1 -f packages/db/migrations/0008_security_hardening_phase_1.sql
+psql "$EXISTING_DATABASE_URL" -v ON_ERROR_STOP=1 -c "\\dt"
+```
+
+Record pre-upgrade state, upgrade logs, post-upgrade schema, data preservation
+checks for representative organization/user/project/document rows, final
+migration version, and repeatability behavior. Do not run destructive migration
+tests against the live staging database.
 
 ## Migration Decision
 
