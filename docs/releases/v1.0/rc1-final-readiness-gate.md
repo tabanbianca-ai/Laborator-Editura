@@ -2,11 +2,13 @@
 
 Status: VERIFIED_CONDITIONAL_GO
 Generated: 2026-08-12
-Scope: RC1 Blocker 07
+Scope: RC1 Blocker 07 and Blocker 08
 
 ## Decision
 
 BLOCKER 07 STATUS: RESOLVED
+
+BLOCKER 08 STATUS: NOT RESOLVED
 
 RC1 READINESS DECISION: CONDITIONAL_GO
 
@@ -83,15 +85,32 @@ Final live validation:
 
 | Gate | Status |
 | --- | --- |
-| Live adversarial security testing | OPEN |
-| Browser accessibility review | OPEN |
-| Browser localization crawl | OPEN |
-| Staging performance baseline | OPEN |
-| Clean/existing PostgreSQL migration execution | OPEN |
+| Live adversarial security testing | LIVE_ACTION_REQUIRED |
+| Browser accessibility review | LIVE_ACTION_REQUIRED |
+| Browser localization crawl | LIVE_ACTION_REQUIRED |
+| Staging performance baseline | LIVE_ACTION_REQUIRED |
+| Clean/existing PostgreSQL migration execution | LIVE_ACTION_REQUIRED |
 
 Critical open defects: 5
 
 High open defects: 0
+
+## Blocker 08 Evidence Closure Attempt
+
+| P1 Closure Criterion | Result |
+| --- | --- |
+| ADVERSARIAL_SECURITY | LIVE_ACTION_REQUIRED |
+| ACCESSIBILITY_BROWSER_REVIEW | LIVE_ACTION_REQUIRED |
+| SEVEN_LANGUAGE_LOCALIZATION | LIVE_ACTION_REQUIRED |
+| STAGING_PERFORMANCE_BASELINE | LIVE_ACTION_REQUIRED |
+| POSTGRES_CLEAN_MIGRATION | LIVE_ACTION_REQUIRED |
+| POSTGRES_EXISTING_DB_MIGRATION | LIVE_ACTION_REQUIRED |
+| CRITICAL_OPEN_DEFECTS | 5 |
+| HIGH_OPEN_DEFECTS | 0 |
+
+Blocker 08 did not fabricate PASS results. The repository has contract and
+static evidence for these areas, but the required final evidence needs live VPS,
+browser-level, or isolated PostgreSQL execution.
 
 ## Operator Context Warning
 
@@ -110,6 +129,9 @@ checks passed.
 ## Final Gate
 
 Blocker 07 is resolved as an evidence/readiness reconciliation gate.
+
+Blocker 08 is not resolved because the five P1 critical evidence gates remain
+LIVE_ACTION_REQUIRED.
 
 RC1 remains CONDITIONAL_GO, not GO, until the five P1 critical evidence gaps
 are closed or formally accepted by the project owner.
