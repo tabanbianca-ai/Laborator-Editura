@@ -1,7 +1,7 @@
 # RC1 Accessibility Results
 
-Status: PARTIAL_BLOCKED  
-Generated: 2026-08-09
+Status: LIVE_ACTION_REQUIRED
+Generated: 2026-08-12
 
 ## Automated Evidence Passed
 
@@ -40,8 +40,73 @@ Generated: 2026-08-09
 - Library.
 - Administration.
 
+## Blocker 08 Closure Attempt
+
+Blocker 08 was evaluated against the current frontend tooling. The repository
+contains contract tests for route availability, loading/error/empty states,
+shell consistency, and localization metadata. It does not currently include
+Playwright, axe, Lighthouse, or another repository-supported browser
+accessibility runner.
+
+Local repository validation can prove that routes compile and shared components
+exist. It cannot prove keyboard navigation, focus behavior, browser contrast,
+screen-reader semantics, or no keyboard traps without a browser run.
+
+## Required Browser Review Matrix
+
+| Route | Required result |
+| --- | --- |
+| `/login` | LIVE_ACTION_REQUIRED |
+| `/reset-password` | LIVE_ACTION_REQUIRED |
+| `/change-password` | LIVE_ACTION_REQUIRED |
+| `/dashboard` | LIVE_ACTION_REQUIRED |
+| `/pipeline` | LIVE_ACTION_REQUIRED |
+| `/projects/new` | LIVE_ACTION_REQUIRED |
+| `/author-studio` | LIVE_ACTION_REQUIRED |
+| `/translation` | LIVE_ACTION_REQUIRED |
+| `/review` | LIVE_ACTION_REQUIRED |
+| `/publishing` | LIVE_ACTION_REQUIRED |
+| `/distribution` | LIVE_ACTION_REQUIRED |
+| `/rights` | LIVE_ACTION_REQUIRED |
+| `/research` | LIVE_ACTION_REQUIRED |
+| `/library` | LIVE_ACTION_REQUIRED |
+| `/administration` | LIVE_ACTION_REQUIRED |
+
+## Required Live Actions
+
+Run against the deployed staging web application:
+
+```bash
+cd /opt/laborator-editura
+set -a
+. deploy/staging/.env.staging
+set +a
+export STAGING_ENV_FILE=/opt/laborator-editura/deploy/staging/.env.staging
+export STAGING_COMPOSE_FILE=/opt/laborator-editura/deploy/staging/docker-compose.artifact.yml
+pnpm install --frozen-lockfile
+pnpm staging:health
+pnpm staging:validate
+```
+
+Then execute a browser-level accessibility pass for every route in the matrix
+and record:
+
+- keyboard-only navigation;
+- visible focus;
+- heading hierarchy;
+- input labels;
+- accessible names for buttons and links;
+- contrast;
+- form error announcement;
+- ARIA usage;
+- modal/dialog behavior;
+- landmarks;
+- skip/navigation behavior where implemented;
+- absence of keyboard traps;
+- desktop and mobile responsive behavior;
+- critical/high WCAG-relevant issues.
+
 ## Accessibility Decision
 
 Repository tests passed, but RC1 accessibility is not certified. Browser-level
-accessibility evidence is mandatory before pilot.
-
+accessibility evidence is mandatory before RC1 full GO.
