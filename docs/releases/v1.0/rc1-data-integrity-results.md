@@ -80,6 +80,8 @@ preserved `organizationId: org-rc1`.
 | Post-redeploy database integrity | NOT_VERIFIED_LIVE | Requires live RC1 redeploy inspection |
 | Organization/user/project/document data after redeploy | NOT_VERIFIED_LIVE | Requires live post-redeploy validation |
 | Data loss attributable to rollback/redeploy | NOT_VERIFIED_LIVE | Requires before/after live database evidence |
+| Forward candidate migration compatibility | PASS_LOCAL | Forward artifact `1.0.0-rc.1-rehearsal.1-add6e73` requires no migration newer than `0008_security_hardening_phase_1.sql` |
+| Forward candidate smoke contract | PASS_LOCAL | Project creation payload includes `projectIdentity` and `publicationType` |
 
 ## Data Integrity Decision
 
