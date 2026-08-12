@@ -45,8 +45,8 @@ artifact path was later used for Blocker 06 rollback/redeploy rehearsal.
 | Deployed services | Not independently recorded here |
 | Staging deployed artifact SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` operator-provided |
 | Digest match | PASS |
-| API image ID | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` operator-provided |
-| Web image ID | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` operator-provided |
+| API image ID | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` |
+| Web image ID | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` |
 
 ## Operator-Provided Live Deployment Identity
 
