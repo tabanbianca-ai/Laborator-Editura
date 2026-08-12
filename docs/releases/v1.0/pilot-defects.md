@@ -1,6 +1,6 @@
 # Pilot Defects
 
-Status: OPEN_BLOCKERS_FROM_RC1_PRECONDITION  
+Status: RC1_P0_CLEARED_CRITICAL_EVIDENCE_GAPS_REMAIN  
 Owner: Release Management
 
 ## Defect Model
@@ -24,10 +24,11 @@ Every defect must record:
 
 | defect_id | module | severity | description | affected_version | owner | status | fix_version | evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| DEF-V1-001 | Release Engineering | P0 BLOCKER | `1.0.0-rc.1` artifact has not been approved or deployed to pilot. | pre-RC1 | DevSecOps | OPEN | 1.0.0-rc.1 | Batch 11 `BLOCKED` status |
-| DEF-V1-002 | Backup/Restore | P0 BLOCKER | Final restore from a real RC1 staging/pilot backup has not been verified. | pre-RC1 | Platform Operations | OPEN | 1.0.0-rc.1 | Batch 11 restore gate |
-| DEF-V1-003 | Release Engineering | P0 BLOCKER | Artifact-bound SBOM and build provenance are missing. | pre-RC1 | DevSecOps | OPEN | 1.0.0-rc.1 | Batch 11 SBOM/provenance gates |
-| DEF-V1-004 | Deployment | P0 BLOCKER | Rollback and redeploy rehearsal has not been executed for the candidate. | pre-RC1 | Platform Operations | OPEN | 1.0.0-rc.1 | Batch 11 deployment rehearsal |
+| DEF-V1-001 | Security | P1 CRITICAL | Live adversarial staging security suite has not been executed or formally accepted. | 1.0.0-rc.1 | Security | OPEN | 1.0.0-rc.1 | `docs/releases/v1.0/rc1-security-results.md` |
+| DEF-V1-002 | Accessibility | P1 CRITICAL | Browser-level accessibility review has not been executed. | 1.0.0-rc.1 | Web/QA | OPEN | 1.0.0-rc.1 | `docs/releases/v1.0/rc1-accessibility-results.md` |
+| DEF-V1-003 | Localization | P1 CRITICAL | Seven-language browser localization crawl and mixed-language scan have not been executed. | 1.0.0-rc.1 | Web/QA | OPEN | 1.0.0-rc.1 | `docs/releases/v1.0/rc1-localization-results.md` |
+| DEF-V1-004 | Performance | P1 CRITICAL | Staging performance baseline has not been captured. | 1.0.0-rc.1 | SRE | OPEN | 1.0.0-rc.1 | `docs/releases/v1.0/rc1-performance-baseline.md` |
+| DEF-V1-005 | Migration | P1 CRITICAL | Clean and representative existing PostgreSQL migration execution has not been proven. | 1.0.0-rc.1 | Data/Platform | OPEN | 1.0.0-rc.1 | `docs/releases/v1.0/rc1-migration-results.md` |
 
 ## Remediation Rule
 
@@ -37,4 +38,5 @@ No defect may be used as justification for broad refactoring before v1.0.
 
 ## Zero P0 Rule
 
-Final certification requires `OPEN P0 = 0`.
+Final certification requires `OPEN P0 = 0` and all P1 critical defects either
+closed or formally accepted by the project owner.
