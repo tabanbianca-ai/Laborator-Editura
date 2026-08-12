@@ -40,6 +40,11 @@ const stagingSmokePath = join(root, "docs", "releases", "v1.0", "rc1-staging-smo
 const monitoringPath = join(root, "docs", "releases", "v1.0", "rc1-monitoring-validation.md");
 const pipelinePath = join(root, "docs", "releases", "v1.0", "rc1-pipeline-validation.md");
 const finalReadinessPath = join(root, "docs", "releases", "v1.0", "rc1-final-readiness-gate.md");
+const securityResultsPath = join(root, "docs", "releases", "v1.0", "rc1-security-results.md");
+const accessibilityResultsPath = join(root, "docs", "releases", "v1.0", "rc1-accessibility-results.md");
+const localizationResultsPath = join(root, "docs", "releases", "v1.0", "rc1-localization-results.md");
+const performanceBaselinePath = join(root, "docs", "releases", "v1.0", "rc1-performance-baseline.md");
+const migrationResultsPath = join(root, "docs", "releases", "v1.0", "rc1-migration-results.md");
 const lockfilePath = join(root, "pnpm-lock.yaml");
 const issues = [];
 
@@ -66,6 +71,11 @@ function main() {
   requireFile(monitoringPath, "monitoring evidence");
   requireFile(pipelinePath, "pipeline validation evidence");
   requireFile(finalReadinessPath, "final readiness gate");
+  requireFile(securityResultsPath, "RC1 security results");
+  requireFile(accessibilityResultsPath, "RC1 accessibility results");
+  requireFile(localizationResultsPath, "RC1 localization results");
+  requireFile(performanceBaselinePath, "RC1 performance baseline");
+  requireFile(migrationResultsPath, "RC1 migration results");
 
   if (issues.length === 0) {
     validateArtifactDigest();
@@ -233,6 +243,11 @@ function validateReleaseEvidence() {
   const monitoring = readFileSync(monitoringPath, "utf8");
   const pipeline = readFileSync(pipelinePath, "utf8");
   const finalReadiness = readFileSync(finalReadinessPath, "utf8");
+  const securityResults = readFileSync(securityResultsPath, "utf8");
+  const accessibilityResults = readFileSync(accessibilityResultsPath, "utf8");
+  const localizationResults = readFileSync(localizationResultsPath, "utf8");
+  const performanceBaseline = readFileSync(performanceBaselinePath, "utf8");
+  const migrationResults = readFileSync(migrationResultsPath, "utf8");
 
   requireTokens("readiness report", readiness, [
     "Status: RC1_CONDITIONAL_GO",
@@ -360,9 +375,49 @@ function validateReleaseEvidence() {
 
   requireTokens("final readiness gate", finalReadiness, [
     "BLOCKER 07 STATUS: RESOLVED",
+    "BLOCKER 08 STATUS: NOT RESOLVED",
     "RC1 READINESS DECISION: CONDITIONAL_GO",
+    "LIVE_ACTION_REQUIRED",
     "Critical open defects: 5",
     "High open defects: 0"
+  ]);
+
+  requireTokens("security results", securityResults, [
+    "Status: LIVE_ACTION_REQUIRED",
+    "Blocker 08 Closure Attempt",
+    "Live adversarial execution | LIVE_ACTION_REQUIRED"
+  ]);
+
+  requireTokens("accessibility results", accessibilityResults, [
+    "Status: LIVE_ACTION_REQUIRED",
+    "Required Browser Review Matrix",
+    "LIVE_ACTION_REQUIRED"
+  ]);
+
+  requireTokens("localization results", localizationResults, [
+    "Status: LIVE_ACTION_REQUIRED",
+    "`ro-RO`",
+    "`en-US`",
+    "`en-GB`",
+    "`es-ES`",
+    "`fr-FR`",
+    "`pt-PT`",
+    "`pt-BR`",
+    "`it-IT`",
+    "`de-DE`"
+  ]);
+
+  requireTokens("performance baseline", performanceBaseline, [
+    "Status: LIVE_ACTION_REQUIRED",
+    "Required Baseline Capture",
+    "No synthetic threshold was created for RC1"
+  ]);
+
+  requireTokens("migration results", migrationResults, [
+    "Status: LIVE_ACTION_REQUIRED",
+    "Required Clean PostgreSQL Run",
+    "Required Existing Database Upgrade Run",
+    "`psql` or Docker"
   ]);
 }
 
