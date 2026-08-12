@@ -30,6 +30,13 @@ Every defect must record:
 | DEF-V1-004 | Performance | P1 CRITICAL | Staging performance baseline has not been captured. | 1.0.0-rc.1 | SRE | OPEN | 1.0.0-rc.1 | `docs/releases/v1.0/rc1-performance-baseline.md` |
 | DEF-V1-005 | Migration | P1 CRITICAL | Clean and representative existing PostgreSQL migration execution has not been proven. | 1.0.0-rc.1 | Data/Platform | OPEN | 1.0.0-rc.1 | `docs/releases/v1.0/rc1-migration-results.md` |
 
+## Blocker 08 Update
+
+Blocker 08 reviewed the five open P1 critical defects on 2026-08-12. No defect
+was closed because the required live VPS, browser-level, staging performance,
+and isolated PostgreSQL evidence was not available in the local Codex
+environment.
+
 ## Remediation Rule
 
 Defect -> Root Cause -> Minimal Fix -> Automated Test -> Regression -> Review.
