@@ -162,6 +162,7 @@ BLOCKER 06 STATUS: NOT RESOLVED.
 | Rollback evidence | `docs/releases/v1.0/rc1-rollback-rehearsal.md` |
 | Redeploy evidence | `docs/releases/v1.0/rc1-redeploy-validation.md` |
 | Rollback baseline evidence | `docs/releases/v1.0/rc1-rollback-baseline.md` |
+| Forward rehearsal candidate evidence | `docs/releases/v1.0/rc1-forward-rehearsal-candidate.md` |
 | Historical rollback artifact | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-c1b6958.tar.gz` |
 | Historical rollback artifact SHA-256 | `41a15a58b747dfcf48881d3d9557ef6b9fab7ef8065305867c96b2922a1ac285` |
 | Historical rollback source commit | `c1b6958c0c8c92e3946addfcab48bc695962ca98` |
@@ -171,6 +172,12 @@ BLOCKER 06 STATUS: NOT RESOLVED.
 | Baseline artifact SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` |
 | Baseline API image ID | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` |
 | Baseline WEB image ID | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` |
+| Forward release version | `1.0.0-rc.1-rehearsal.1` |
+| Forward source commit | `add6e73221d70fbc07d0f724a8322d5aa3b503d9` |
+| Forward artifact | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-rehearsal.1-add6e73.tar.gz` |
+| Forward artifact SHA-256 | `05ec1fb248aceb8b88efd66b6309a6ba928e24152ad83997fd549c5da26d66a4` |
+| Forward artifact validation | PASS_LOCAL |
+| Forward runtime images | NOT_BUILT_LOCAL_DOCKER_UNAVAILABLE |
 | Rollback baseline validator | PASS_LOCAL |
 | Current RC1 redeploy dry-run | PASS: canonical deploy script validated current artifact metadata locally |
 | Artifact deployment validator | PASS |
