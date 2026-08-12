@@ -1,6 +1,6 @@
 # RC1 Build Provenance
 
-Status: VERIFIED_NOT_DEPLOYED
+Status: VERIFIED_DEPLOYED_AND_ROLLBACK_BASELINE
 Generated: 2026-08-09  
 Release candidate: `1.0.0-rc.1`
 
@@ -91,7 +91,9 @@ node scripts/validate-rc1-release-evidence.mjs
 ## Staging Deployment Status
 
 The artifact-based staging deployment mechanism is present and validated
-locally. No live staging deployment ID or deployed digest is recorded yet.
+locally. The active RC1 baseline artifact was deployed to live staging as
+deployment `rc1-30b39ec-20260809` and was later used as the verified rollback
+target during Blocker 06.
 
 Artifact deployment validation:
 
@@ -117,4 +119,17 @@ must be verified on the VPS before RC1 can proceed:
 | API image ID | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` |
 | Web image ID | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` |
 | Migration version | `0008_security_hardening_phase_1.sql` |
-| Independent live verification | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
+| Independent live verification | PASS_OPERATOR_REPORTED |
+
+## Blocker 06 Forward Rehearsal Link
+
+The forward rehearsal candidate is recorded separately:
+
+| Field | Value |
+| --- | --- |
+| Release | `1.0.0-rc.1-rehearsal.1` |
+| Source commit | `add6e73221d70fbc07d0f724a8322d5aa3b503d9` |
+| Artifact SHA-256 | `05ec1fb248aceb8b88efd66b6309a6ba928e24152ad83997fd549c5da26d66a4` |
+| API image ID | `sha256:fb41892734fde36fe635add135eedafc24efefd93536a00c0ee20faad2cc0f7f` |
+| WEB image ID | `sha256:c5cbbfcdad5247eb3dd29576f5a350d96274b670a4fca62bead502c6ea70ba17` |
+| Evidence | `docs/releases/v1.0/rc1-forward-rehearsal-candidate.md` |
