@@ -1,8 +1,27 @@
 # RC1 Redeploy Validation
 
-Status: NOT_EXECUTED_LIVE
+Status: VERIFIED_LIVE
 Generated: 2026-08-11
 Scope: RC1 Blocker 06
+
+## Forward Rehearsal Candidate
+
+| Field | Value |
+| --- | --- |
+| Evidence | `docs/releases/v1.0/rc1-forward-rehearsal-candidate.md` |
+| Release version | `1.0.0-rc.1-rehearsal.1` |
+| Source commit | `add6e73221d70fbc07d0f724a8322d5aa3b503d9` |
+| Artifact | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-rehearsal.1-add6e73.tar.gz` |
+| Artifact SHA-256 | `05ec1fb248aceb8b88efd66b6309a6ba928e24152ad83997fd549c5da26d66a4` |
+| Migration | `0008_security_hardening_phase_1.sql` |
+| API image | `laborator-rehearsal-api:add6e73` |
+| API image ID | `sha256:fb41892734fde36fe635add135eedafc24efefd93536a00c0ee20faad2cc0f7f` |
+| WEB image | `laborator-rehearsal-web:add6e73` |
+| WEB image ID | `sha256:c5cbbfcdad5247eb3dd29576f5a350d96274b670a4fca62bead502c6ea70ba17` |
+| Live forward deployment | PASS |
+
+The forward candidate was deployed, rolled back to the verified `30b39ec`
+baseline, and redeployed live on staging to complete Blocker 06.
 
 ## Expected Final RC1 State
 
@@ -37,16 +56,16 @@ health, staging validation, or data integrity.
 
 | Gate | Status |
 | --- | --- |
-| RC1_REDEPLOY | NOT_EXECUTED_LIVE |
-| RC1_ARTIFACT_DIGEST_MATCH | NOT_VERIFIED_LIVE |
-| RC1_SOURCE_COMMIT_MATCH | NOT_VERIFIED_LIVE |
-| RC1_API_IMAGE_ID_MATCH | NOT_VERIFIED_LIVE |
-| RC1_WEB_IMAGE_ID_MATCH | NOT_VERIFIED_LIVE |
-| POST_REDEPLOY_HEALTH | NOT_VERIFIED_LIVE |
-| POST_REDEPLOY_DATA_INTEGRITY | NOT_VERIFIED_LIVE |
-| STAGING_VALIDATION | NOT_EXECUTED_LIVE |
-| DATA_LOSS | NOT_VERIFIED_LIVE |
-| BLOCKING_ERRORS | NOT_VERIFIED_LIVE |
+| RC1_REDEPLOY | PASS |
+| RC1_ARTIFACT_DIGEST_MATCH | PASS |
+| RC1_SOURCE_COMMIT_MATCH | PASS |
+| RC1_API_IMAGE_ID_MATCH | PASS |
+| RC1_WEB_IMAGE_ID_MATCH | PASS |
+| POST_REDEPLOY_HEALTH | PASS |
+| POST_REDEPLOY_DATA_INTEGRITY | PASS |
+| STAGING_VALIDATION | PASS |
+| DATA_LOSS | 0 |
+| BLOCKING_ERRORS | 0 |
 
 ## Required Live VPS Redeploy Command
 
