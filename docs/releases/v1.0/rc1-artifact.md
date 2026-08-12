@@ -1,6 +1,6 @@
 # RC1 Artifact Identity
 
-Status: VERIFIED_NOT_DEPLOYED
+Status: VERIFIED_DEPLOYED_AND_ROLLBACK_BASELINE
 Generated: 2026-08-09  
 Release candidate: `1.0.0-rc.1`
 
@@ -91,10 +91,10 @@ shasum -a 256 artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-30b39ec.t
 
 The artifact-based staging deployment mechanism now exists, verifies this
 artifact before deployment, and refuses the RC release path if staging would
-rebuild from source. The artifact has not been proven deployed to live staging.
-Blocker 03 remains open until staging runs this exact artifact and the deployed
-SHA-256 matches
-`9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e`.
+rebuild from source. This artifact was deployed to live staging as deployment
+`rc1-30b39ec-20260809` and later verified as the executable rollback baseline
+for Blocker 06. The Blocker 06 forward rehearsal candidate is documented
+separately and must not overwrite this artifact identity.
 
 Artifact deployment tooling:
 
