@@ -1,25 +1,30 @@
 # RC1 Readiness Report
 
-Status: RC1_BLOCKED
+Status: RC1_CONDITIONAL_GO
 Generated: 2026-08-11
 Candidate commit: `30b39ec0034f335bdbda210f09c8ad66a26a25a2`
 Branch: `main`
 
 ## Executive Decision
 
-RC1 is not ready for pilot or certification.
+RC1 READINESS DECISION: CONDITIONAL_GO.
+
+RC1 has no open P0 blockers after live Blocker 05 backup/restore validation
+and live Blocker 06 rollback/redeploy rehearsal. It is not a full GO because
+five P1 critical evidence gates remain open and must be closed or formally
+accepted before production certification.
 
 The repository-level implementation is in strong shape: typecheck, build, lint,
 format, configuration validation, DB tests, shared tests, web tests, API tests,
 and local runtime backup/restore validation passed.
 
-The release is blocked by missing mandatory release evidence:
+Remaining critical evidence gaps:
 
-- Rollback rehearsal.
+- Live adversarial security testing.
 - Browser-level accessibility review.
 - Browser-level localization review.
 - Staging performance baseline.
-- Real clean/existing/upgrade migration execution.
+- Real clean/existing PostgreSQL migration execution.
 
 ## Final Status Matrix
 
@@ -34,12 +39,12 @@ The release is blocked by missing mandatory release evidence:
 | Critical E2E | PASS | Contract E2E passed and operator-provided live staging smoke passed |
 | Security | PARTIAL_BLOCKED | Contract security and dependency audit passed; live adversarial evidence missing |
 | Cross-org isolation | PARTIAL | Contract tests passed; live staging adversarial run missing |
-| Data integrity | PARTIAL_BLOCKED | Contract and Blocker 05 restore evidence passed; rollback/redeploy before-after data evidence missing |
+| Data integrity | PASS | Contract, Blocker 05 restore, and Blocker 06 rollback/redeploy data integrity evidence passed |
 | Accessibility | BLOCKED | Browser-level accessibility evidence missing |
 | Localization | BLOCKED | Browser-level seven-language and mixed-language evidence missing |
 | Migration | PARTIAL_BLOCKED | SQL contract tests passed; real clean/existing/upgrade run missing |
 | Backup/restore | PASS | Blocker 05 live backup, checksum, archive verification, release identity, isolated restore, and restored data evidence operator-reported PASS |
-| Deployment/rollback | BLOCKED | Artifact-based staging deployment is resolved; historical rollback target rejected; new `30b39ec` rollback baseline documented but live rehearsal remains missing |
+| Deployment/rollback | PASS | Artifact-based staging deployment, verified rollback baseline, forward rehearsal, rollback, redeploy, health, smoke, and final staging validation passed |
 | Staging health/smoke/monitoring | PASS | Operator-provided live staging validation passed: environment, health, bootstrap-admin-reviewer, smoke-test, monitoring-hook, validate-staging |
 | Performance | PARTIAL_BLOCKED | Local build/test baseline only; staging runtime baseline missing |
 | Dependency vulnerability | PASS | `pnpm-lock.yaml` is present; frozen install passed; full and production `pnpm audit` report 0 findings |
@@ -48,7 +53,7 @@ The release is blocked by missing mandatory release evidence:
 
 | Severity | Count |
 | --- | --- |
-| P0 BLOCKER | 1 open, 4 resolved |
+| P0 BLOCKER | 0 open, 5 resolved |
 | P1 CRITICAL | 5 open, 1 resolved |
 | P2 MAJOR | 2 |
 | P3 MINOR | 1 |
@@ -56,11 +61,10 @@ The release is blocked by missing mandatory release evidence:
 
 ## Blocking Fix Order
 
-1. Execute rollback and redeploy rehearsal.
-2. Run live security adversarial tests.
-3. Run browser-level localization and accessibility reviews.
-4. Run clean/existing/upgrade migration execution against real database targets.
-5. Capture staging performance baseline.
+1. Run live security adversarial tests.
+2. Run browser-level localization and accessibility reviews.
+3. Run clean/existing/upgrade migration execution against real database targets.
+4. Capture staging performance baseline.
 
 ## Blocker 01 Resolution
 
@@ -153,9 +157,9 @@ BLOCKER 05 STATUS: RESOLVED.
 | Reviewer/organization/project/document data | PASS |
 | Live staging after restore | HEALTHY |
 
-## Blocker 06 Attempt
+## Blocker 06 Resolution
 
-BLOCKER 06 STATUS: NOT RESOLVED.
+BLOCKER 06 STATUS: RESOLVED.
 
 | Evidence | Value |
 | --- | --- |
@@ -177,18 +181,27 @@ BLOCKER 06 STATUS: NOT RESOLVED.
 | Forward artifact | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-rehearsal.1-add6e73.tar.gz` |
 | Forward artifact SHA-256 | `05ec1fb248aceb8b88efd66b6309a6ba928e24152ad83997fd549c5da26d66a4` |
 | Forward artifact validation | PASS_LOCAL |
-| Forward runtime images | NOT_BUILT_LOCAL_DOCKER_UNAVAILABLE |
+| Forward API image ID | `sha256:fb41892734fde36fe635add135eedafc24efefd93536a00c0ee20faad2cc0f7f` |
+| Forward WEB image ID | `sha256:c5cbbfcdad5247eb3dd29576f5a350d96274b670a4fca62bead502c6ea70ba17` |
+| Forward runtime images | PASS_OPERATOR_REPORTED |
 | Rollback baseline validator | PASS_LOCAL |
 | Current RC1 redeploy dry-run | PASS: canonical deploy script validated current artifact metadata locally |
 | Artifact deployment validator | PASS |
-| Live rollback execution | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
-| Live redeploy execution | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
-| Post-redeploy staging validation | NOT_EXECUTED_FROM_THIS_ENVIRONMENT |
+| Live rehearsal sequence | `30b39ec -> add6e73 -> 30b39ec -> add6e73` |
+| Live forward deployment | PASS |
+| Live rollback execution | PASS |
+| Live rollback health | PASS |
+| Live rollback data integrity | PASS |
+| Live rollback smoke | PASS |
+| Live redeploy execution | PASS |
+| Final data integrity | PASS |
+| Post-redeploy staging validation | PASS |
+| Migration version | `0008_security_hardening_phase_1.sql` |
 
 ## Pilot Decision
 
-RC1 READY FOR PILOT: NO.
+RC1 READY FOR PILOT: CONDITIONAL_GO.
 
-RC1 may be reconsidered only after all P0 blockers are closed and all P1
-critical issues are either closed or formally accepted with documented owner
-approval.
+RC1 may proceed only to the next controlled validation stage. Production
+certification requires closure or formal owner acceptance of all five open P1
+critical evidence gaps.
