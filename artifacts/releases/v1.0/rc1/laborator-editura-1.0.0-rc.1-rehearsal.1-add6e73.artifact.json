@@ -1,0 +1,37 @@
+{
+  "releaseCandidate": "1.0.0-rc.1-rehearsal.1",
+  "artifact": {
+    "fileName": "laborator-editura-1.0.0-rc.1-rehearsal.1-add6e73.tar.gz",
+    "path": "artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-rehearsal.1-add6e73.tar.gz",
+    "sizeBytes": 1914579,
+    "sha256": "05ec1fb248aceb8b88efd66b6309a6ba928e24152ad83997fd549c5da26d66a4",
+    "createdAt": "2026-08-11T20:02:04.420Z"
+  },
+  "source": {
+    "commit": "add6e73221d70fbc07d0f724a8322d5aa3b503d9",
+    "branch": "main",
+    "repositoryState": "clean"
+  },
+  "build": {
+    "command": "pnpm build",
+    "nodeVersion": "v24.14.0",
+    "pnpmVersion": "11.16.0",
+    "platform": "darwin arm64",
+    "packageManager": "pnpm@10.12.1"
+  },
+  "database": {
+    "runtimeSchemaVersion": "1.0",
+    "latestMigration": "0008_security_hardening_phase_1.sql",
+    "migrations": [
+      "0000_mvp_foundation_v1.sql",
+      "0001_translation_memory_v1.sql",
+      "0002_terminology_glossary_v1.sql",
+      "0003_qa_engine_v1.sql",
+      "0004_semantic_fidelity_v1.sql",
+      "0005_workflow_engine_v1.sql",
+      "0006_terminology_governance_v2.sql",
+      "0007_founder_protection_v1.sql",
+      "0008_security_hardening_phase_1.sql"
+    ]
+  }
+}
