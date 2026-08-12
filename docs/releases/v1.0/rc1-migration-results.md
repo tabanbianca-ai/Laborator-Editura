@@ -30,6 +30,8 @@ Generated: 2026-08-09
 | Terminology Governance v2 migration | PASS | DB tests verify quality, validation fields, statuses, actions, and blockers |
 | Founder Protection migration | PASS | DB tests verify protected ownership tables, backfill, transfer paths, and RLS |
 | Security Hardening migration | PASS | DB tests verify login attempts, security events, expiration, and idle tracking |
+| Rollback compatibility | PASS | Blocker 06 live rehearsal used `0008_security_hardening_phase_1.sql` for `30b39ec` and `add6e73` |
+| Runtime-to-staging parity | PASS | Blocker 05 isolated restore and Blocker 06 data-integrity checks passed on staging |
 
 ## Evidence Missing
 
@@ -37,12 +39,10 @@ Generated: 2026-08-09
 | --- | --- | --- |
 | Clean database execution | MISSING | SQL contract tests passed, but no real PostgreSQL clean migration run was executed |
 | Existing database upgrade | MISSING | No representative existing database was upgraded in this RC1 run |
-| Rollback compatibility | MISSING | No live rollback rehearsal was executed |
-| Runtime-to-staging parity | MISSING | Runtime DB tests passed, but staging database state was not validated |
 
 ## Migration Decision
 
-Migration contract coverage passed. RC1 migration certification remains blocked
-until migrations are executed on clean and representative existing databases in
-the staging or release validation environment.
-
+Migration contract coverage, runtime-to-staging parity, and rollback
+compatibility passed. RC1 migration certification remains blocked until
+migrations are executed on clean and representative existing PostgreSQL
+databases in the staging or release validation environment.
