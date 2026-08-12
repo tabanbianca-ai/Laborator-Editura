@@ -1,6 +1,6 @@
 # RC1 Data Integrity Results
 
-Status: PARTIAL_BLOCKED
+Status: VERIFIED_RC1_STAGING
 Generated: 2026-08-11
 
 ## Automated Evidence Passed
@@ -74,17 +74,17 @@ preserved `organizationId: org-rc1`.
 
 | Requirement | Status | Evidence |
 | --- | --- | --- |
-| Pre-rollback database structural counts | NOT_CAPTURED_FROM_THIS_ENVIRONMENT | Requires live VPS pre-rollback evidence |
-| Rollback data integrity | NOT_VERIFIED_LIVE | Rollback was not executed on live staging from this environment |
-| Post-rollback database integrity | NOT_VERIFIED_LIVE | Requires restored rollback state inspection |
-| Post-redeploy database integrity | NOT_VERIFIED_LIVE | Requires live RC1 redeploy inspection |
-| Organization/user/project/document data after redeploy | NOT_VERIFIED_LIVE | Requires live post-redeploy validation |
-| Data loss attributable to rollback/redeploy | NOT_VERIFIED_LIVE | Requires before/after live database evidence |
+| Pre-rollback database structural counts | PASS | Operator-reported live VPS evidence |
+| Rollback data integrity | PASS | Operator-reported live rollback data-integrity validation |
+| Post-rollback database integrity | PASS | Operator-reported live VPS evidence |
+| Post-redeploy database integrity | PASS | Operator-reported final data-integrity validation |
+| Organization/user/project/document data after redeploy | PASS | Operator-reported final validation |
+| Data loss attributable to rollback/redeploy | 0 | Operator-reported live rehearsal evidence |
 | Forward candidate migration compatibility | PASS_LOCAL | Forward artifact `1.0.0-rc.1-rehearsal.1-add6e73` requires no migration newer than `0008_security_hardening_phase_1.sql` |
 | Forward candidate smoke contract | PASS_LOCAL | Project creation payload includes `projectIdentity` and `publicationType` |
 
 ## Data Integrity Decision
 
-Contract-level and Blocker 05 restore integrity evidence passed. RC1 data
-integrity cannot be certified for Blocker 06 until rollback and redeploy are
-executed on live staging and before/after data evidence confirms no data loss.
+Contract-level, Blocker 05 restore integrity, and Blocker 06 rollback/redeploy
+integrity evidence passed. This does not replace the separate migration
+certification gap for clean and representative existing PostgreSQL databases.
