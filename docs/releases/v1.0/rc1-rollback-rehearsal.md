@@ -1,6 +1,6 @@
 # RC1 Rollback Rehearsal
 
-Status: BLOCKED_BY_INVALID_HISTORICAL_RUNTIME_TARGET
+Status: VERIFIED_LIVE
 Generated: 2026-08-11
 Scope: RC1 Blocker 06
 
@@ -88,6 +88,31 @@ The current verified RC1 becomes the first valid rollback baseline because it
 is lockfile-backed, artifact-based, source-identified, image-identified, and
 compatible with frozen dependency resolution.
 
+## Forward Rehearsal Candidate
+
+| Field | Value |
+| --- | --- |
+| Evidence | `docs/releases/v1.0/rc1-forward-rehearsal-candidate.md` |
+| Release version | `1.0.0-rc.1-rehearsal.1` |
+| Source commit | `add6e73221d70fbc07d0f724a8322d5aa3b503d9` |
+| Source newer than `30b39ec` | PASS |
+| Artifact | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-rehearsal.1-add6e73.tar.gz` |
+| Artifact SHA-256 | `05ec1fb248aceb8b88efd66b6309a6ba928e24152ad83997fd549c5da26d66a4` |
+| Migration | `0008_security_hardening_phase_1.sql` |
+| Smoke contract | PASS: `projectIdentity` and `publicationType` are present |
+| Forward API image | `laborator-rehearsal-api:add6e73` |
+| Forward API image ID | `sha256:fb41892734fde36fe635add135eedafc24efefd93536a00c0ee20faad2cc0f7f` |
+| Forward WEB image | `laborator-rehearsal-web:add6e73` |
+| Forward WEB image ID | `sha256:c5cbbfcdad5247eb3dd29576f5a350d96274b670a4fca62bead502c6ea70ba17` |
+| Live forward deployment | PASS |
+
+The forward candidate was used only to prove the live rollback path. The
+operator-confirmed live sequence was:
+
+`30b39ec -> add6e73 -> 30b39ec -> add6e73`
+
+No new migration was introduced during the rehearsal.
+
 ## Local Mechanism Validation
 
 | Command / Check | Result | Notes |
@@ -96,6 +121,9 @@ compatible with frozen dependency resolution.
 | `bash infrastructure/validation/validate-artifact-deploy.sh` | PASS | Shell syntax, current artifact dry-run, no source rebuild, and digest mismatch failure gate passed |
 | `bash infrastructure/validation/validate-rollback-baseline.sh` | PASS | Current `30b39ec` artifact is eligible as a rollback baseline |
 | Historical `c1b6958` missing-lockfile validation | PASS | Validator rejects the historical artifact because `pnpm-lock.yaml` is absent |
+| `bash infrastructure/validation/validate-forward-rehearsal-candidate.sh ...` | PASS | Forward artifact SHA, source commit, migration, required contents, and smoke contract validated |
+| `bash infrastructure/deploy/build-runtime-images-from-artifact.sh ... --dry-run` | PASS | Docker build path validated without local Docker |
+| Forward deploy dry-run | PASS_WITH_PLACEHOLDER_IMAGE_IDS | Deploy script prepared release identity and failed closed without immutable image IDs |
 
 Local validation did not start containers and did not touch live staging data.
 
@@ -103,14 +131,37 @@ Local validation did not start containers and did not touch live staging data.
 
 | Gate | Status |
 | --- | --- |
-| PRE_ROLLBACK_STATE | NOT_CAPTURED_FROM_THIS_ENVIRONMENT |
-| ROLLBACK_TARGET | HISTORICAL_TARGET_REJECTED_NEW_BASELINE_REQUIRED |
+| PRE_ROLLBACK_STATE | PASS |
+| ROLLBACK_TARGET | PASS: `30b39ec` verified baseline |
 | BACKUP_BEFORE_ROLLBACK | OPERATOR_REPORTED_VERIFIED_NOT_RECHECKED_FROM_THIS_ENVIRONMENT |
-| ROLLBACK_EXECUTION | NOT_EXECUTED_LIVE |
-| ROLLBACK_HEALTH | NOT_VERIFIED_LIVE |
-| ROLLBACK_DATA_INTEGRITY | NOT_VERIFIED_LIVE |
-| DATA_LOSS | NOT_VERIFIED_LIVE |
-| BLOCKING_ERRORS | NOT_VERIFIED_LIVE |
+| FORWARD_DEPLOYMENT | PASS |
+| FORWARD_DIGEST_MATCH | PASS |
+| FORWARD_IMAGE_ID_MATCH | PASS |
+| ROLLBACK_EXECUTION | PASS |
+| ROLLBACK_HEALTH | PASS |
+| ROLLBACK_DATA_INTEGRITY | PASS |
+| ROLLBACK_SMOKE | PASS |
+| REDEPLOY_EXECUTION | PASS |
+| FINAL_DATA_INTEGRITY | PASS |
+| FINAL_VALIDATE_STAGING | PASS |
+| DATA_LOSS | 0 |
+| BLOCKING_ERRORS | 0 |
+
+## Final Live Validation
+
+```json
+{
+  "status": "ok",
+  "action": "validate-staging",
+  "results": [
+    {"name": "environment", "status": "ok"},
+    {"name": "health", "status": "ok"},
+    {"name": "bootstrap-admin-reviewer", "status": "ok"},
+    {"name": "smoke-test", "status": "ok"},
+    {"name": "monitoring-hook", "status": "ok"}
+  ]
+}
+```
 
 ## Required Live VPS Evidence
 
