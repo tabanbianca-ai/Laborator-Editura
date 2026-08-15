@@ -41,3 +41,12 @@ render_translation_mac
 *.docx
 ~$*
 preview_*.png
+
+# Laborator Editură runtime / deployment artifacts
+.releases/
+rc1-runtime-images.json
+rehearsal-runtime-images.json
+
+# Local operational safety backups
+*.before-*
+*.before-*

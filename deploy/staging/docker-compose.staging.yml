@@ -18,6 +18,7 @@ services:
     volumes:
       - runtime-db:/var/lib/laborator
       - runtime-backups:/var/backups/laborator/staging
+      - /run/laborator-ops-agent:/run/laborator-ops-agent:ro
     healthcheck:
       test:
         - CMD

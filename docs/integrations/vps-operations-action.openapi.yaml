@@ -1,0 +1,58 @@
+openapi: 3.1.0
+info:
+  title: Laborator Editura VPS Operations
+  version: 1.0.0
+  description: Read-only VPS operational checks through the secured Laborator Editura Operations Gateway.
+
+servers:
+  - url: https://api.laboratoreditorial.com
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - bearerAuth: []
+
+paths:
+  /actions/vps-operations/capabilities:
+    get:
+      operationId: getVpsCapabilities
+      summary: List allowed VPS operations
+      responses:
+        "200":
+          description: Allowed read-only VPS operations
+        "401":
+          description: Unauthorized
+
+  /actions/vps-operations/execute:
+    post:
+      operationId: executeVpsOperation
+      summary: Execute one allowlisted read-only VPS operation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - action
+              properties:
+                action:
+                  type: string
+                  enum:
+                    - health
+                    - ports
+                    - nginx-status
+                    - disk
+                    - git-head
+      responses:
+        "200":
+          description: Operation result
+        "400":
+          description: Action not allowed
+        "401":
+          description: Unauthorized

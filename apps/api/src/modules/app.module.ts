@@ -38,6 +38,7 @@ import { TranslationMemoryModule } from "./translation-memory/translation-memory
 import { TranslationsModule } from "./translations/translations.module";
 import { WorkspaceModule } from "./workspace/workspace.module";
 import { WorkflowModule } from "./workflow/workflow.module";
+import { VpsOperationsModule } from "./vps-operations/vps-operations.module";
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { WorkflowModule } from "./workflow/workflow.module";
     SchedulingModule,
     WorkspaceModule,
     WorkflowModule,
+    VpsOperationsModule,
     ExportModule
   ],
   controllers: [HealthController],
