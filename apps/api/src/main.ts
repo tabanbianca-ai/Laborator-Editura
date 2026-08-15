@@ -5,8 +5,10 @@ import { toNodeHandler } from "@modelcontextprotocol/node";
 import { AppModule } from "./modules/app.module";
 import { createVpsOperationsMcpServer } from "./modules/vps-operations/vps-operations.mcp";
 import { VpsOperationsService } from "./modules/vps-operations/vps-operations.service";
+import { validateSecurityEnvironment } from "./modules/security/environment-security";
 
 async function bootstrap() {
+  validateSecurityEnvironment();
   const app = await NestFactory.create(AppModule);
 
   const express = app.getHttpAdapter().getInstance();

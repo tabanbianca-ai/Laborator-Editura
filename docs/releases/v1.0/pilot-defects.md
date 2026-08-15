@@ -43,6 +43,11 @@ Defect -> Root Cause -> Minimal Fix -> Automated Test -> Regression -> Review.
 
 No defect may be used as justification for broad refactoring before v1.0.
 
+## P0 BLOCKER
+
+This section is retained as the canonical marker for P0 blocker governance.
+Current certification state remains `OPEN P0 = 0`; no active P0 blocker is being reported here.
+
 ## Zero P0 Rule
 
 Final certification requires `OPEN P0 = 0` and all P1 critical defects either

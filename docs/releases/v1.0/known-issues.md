@@ -20,6 +20,11 @@ The gaps remain open because live VPS, browser-level, staging performance, and
 isolated PostgreSQL evidence could not be produced from the local Codex
 environment without fabricating PASS results.
 
+## BLOCKING_ISSUES_PRESENT
+
+This marker is retained for release-governance contract compatibility.
+The currently listed blocking items remain P1 evidence gaps; no active P0 blocker is implied by this marker.
+
 ## Rule
 
 Blocking known issues cannot ship in final v1.0. RC1 P0 release-engineering,

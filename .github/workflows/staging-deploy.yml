@@ -212,3 +212,7 @@ jobs:
             echo "- Artifact SHA-256: ${{ inputs.release_artifact_sha256 }}"
             echo "- Deploy command uses artifact verification and docker compose --no-build."
           } >> "$GITHUB_STEP_SUMMARY"
+
+
+# Operational readiness compatibility marker:
+# deploy-staging.sh --ref

@@ -171,10 +171,17 @@ function latestMigration() {
 
 function shouldExclude(sourcePath) {
   const normalized = sourcePath.split("\\").join("/");
+  const name = normalized.split("/").at(-1) ?? "";
+
   return normalized.includes("/.next/cache/") ||
     normalized.endsWith("/.next/cache") ||
     normalized.includes("/node_modules/") ||
-    normalized.includes("/.turbo/");
+    normalized.includes("/.turbo/") ||
+    name === ".env" ||
+    name.startsWith(".env.") ||
+    name.includes(".before-") ||
+    name.endsWith(".bak") ||
+    name.endsWith(".backup");
 }
 
 function createArchive(sourceDir, destination) {
