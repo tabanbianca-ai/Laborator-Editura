@@ -152,6 +152,49 @@ The AI Orchestrator cannot bypass security, tenant isolation, RBAC, workflow
 gates, terminology governance, source authority requirements, or human final
 approval.
 
+## Future Phase - Academy / Training Center
+
+Status: Optional future module. Not implemented.
+
+Priority: `FUTURE` / v1.1+ candidate pending owner decision.
+
+### Purpose
+
+Provide an optional training center for users of the Laborator Editura platform.
+Academy / Training Center helps administrators, editors, translators, authors,
+reviewers, designers, narrators, collaborators, and readers learn how to use the
+platform without becoming part of the core editorial workflow.
+
+Romanian UI label: Centru de formare.
+
+### Planned Capabilities
+
+- Courses for platform onboarding and role-specific training.
+- Guided learning paths for common workflows.
+- Progress tracking per user and learning path.
+- Assessments, quizzes, or practical exercises.
+- Scoring and light gamification.
+- Optional completion records and possible certifications.
+- Training content linked to platform roles, permissions, modules, and release
+  versions.
+
+### Professional Constraints
+
+- Academy is optional and must not block normal editorial production.
+- Academy must reuse existing authentication, roles, permissions,
+  localization, accessibility, audit, and analytics foundations when a future
+  implementation is explicitly approved.
+- Academy content must be localized through the platform i18n system.
+- Progress, assessments, scores, and certifications must remain private to the
+  user and authorized administrators according to Need-to-Know access rules.
+- AI may suggest exercises, summaries, or learning recommendations, but it must
+  not grant certifications or override human approval where certifications
+  require review.
+- No runtime code, UI, API, database schema, migration, or infrastructure work
+  is authorized by this documentation entry.
+- Code or implementation assets from the legacy Lovable repository must not be
+  imported.
+
 ## Future Phase - Media Localization Studio
 
 Status: Proposed future phase. Not implemented.

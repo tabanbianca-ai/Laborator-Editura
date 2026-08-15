@@ -54,9 +54,20 @@ candidate themes into one backlog source.
 | V11-BL-019 | Mobile applications | NEW_REQUIREMENT | Responsive/PWA foundations exist; native mobile apps are not implemented | NEW_REQUIREMENT | P4 | Later | NEEDS_DECISION |
 | V11-BL-020 | External APM provider integration | FUTURE_INTEGRATION | Observability foundation exists; external APM provider is not connected | EXTENSION | P3 | Wave 4 | NEEDS_DECISION |
 | V11-BL-021 | Cloud backup provider integration | FUTURE_INTEGRATION | Backup governance exists; external cloud backup providers are not connected | EXTENSION | P3 | Wave 5 | NEEDS_DECISION |
+| V11-BL-022 | Academy / Training Center | NEW_REQUIREMENT | No Academy runtime module exists; this is a future functional requirement only | NEW_REQUIREMENT | P4 | Later | NEEDS_DECISION |
 
 ## Rule
 
 No backlog item becomes an implementation task until it satisfies the v1.1
 Definition of Ready in `docs/releases/v1.1/v1.1-readiness.md`.
 
+## Academy / Training Center Candidate
+
+Academy / Training Center is an optional future module for training users of
+the Laborator Editura platform. Romanian UI label: Centru de formare. It may
+support courses, guided learning paths, progress tracking, assessments, scoring
+or gamification, and possible certifications.
+
+This backlog entry is documentation-only. It does not authorize runtime
+implementation, UI creation, API changes, database changes, migrations, or
+importing code from the legacy Lovable repository.

@@ -25,10 +25,9 @@ Owner: Product Governance
 | P2 | Commerce and distribution expansion | V11-BL-006, V11-BL-007 | Valuable after public integration is stable | provider decision |
 | P3 | Advanced magazine and collaboration improvements | V11-BL-008, V11-BL-009 | Useful productivity improvements after core integration | UX validation |
 | P3 | Observability/APM and cloud backup providers | V11-BL-020, V11-BL-021 | Operational expansion after local evidence is stable | provider selection |
-| P4 | Marketing automation, social publishing, native mobile, interactive books | V11-BL-013, V11-BL-014, V11-BL-016, V11-BL-019 | Future ideas requiring separate approval | owner decision |
+| P4 | Marketing automation, social publishing, native mobile, interactive books, Academy / Training Center | V11-BL-013, V11-BL-014, V11-BL-016, V11-BL-019, V11-BL-022 | Future ideas requiring separate approval | owner decision |
 
 ## Rule
 
 Incremental improvements are preferred over destabilizing changes. Items may
 move later if they do not meet Definition of Ready.
-

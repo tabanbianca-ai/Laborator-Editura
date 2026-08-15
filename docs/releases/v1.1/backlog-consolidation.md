@@ -53,9 +53,9 @@ Future work must extend these foundations instead of creating duplicate modules.
 - Marketing automation.
 - Additional translation languages beyond the v1.0 policy.
 - Advanced interactive children's books.
+- Academy / Training Center.
 
 ## Blocked Items
 
 No v1.1 execution wave may begin until the v1.0 certification blockers are
 closed or the project owner explicitly authorizes parallel planning.
-
