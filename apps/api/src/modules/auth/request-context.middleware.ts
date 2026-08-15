@@ -47,6 +47,7 @@ export class RequestContextMiddleware implements NestMiddleware {
       (method === "GET" && this.isPublicCatalogRoute(routePath)) ||
       (method === "GET" && this.isPublicStoreRoute(routePath)) ||
       (method === "GET" && this.isPublicCommunityRoute(routePath)) ||
+      this.isVpsOperationsActionRoute(routePath) ||
       (method === "POST" && routePath === "/auth/login") ||
       (method === "POST" && routePath === "/auth/password/reset") ||
       (method === "POST" && routePath === "/auth/email/verify")
@@ -60,6 +61,10 @@ export class RequestContextMiddleware implements NestMiddleware {
     return pathWithoutQuery.length > 1
       ? pathWithoutQuery.replace(/\/+$/u, "")
       : pathWithoutQuery;
+  }
+
+  private isVpsOperationsActionRoute(routePath: string): boolean {
+    return routePath.startsWith("/actions/vps-operations/");
   }
 
   private isHealthRoute(routePath: string): boolean {
