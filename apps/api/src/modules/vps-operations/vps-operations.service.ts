@@ -45,6 +45,44 @@ export class VpsOperationsService {
     };
   }
 
+  async requestGithubPush(
+    ref: string
+  ) {
+    return this.requestAgent(
+      "request-github-push",
+      { ref }
+    );
+  }
+
+  async approveGithubPush(
+    approvalId: string
+  ) {
+    return this.requestAgent(
+      "approve-github-push",
+      { approvalId }
+    );
+  }
+
+  async authorizeGithubPush(
+    ref: string,
+    approvalId: string
+  ) {
+    return this.requestAgent(
+      "authorize-github-push",
+      { ref, approvalId }
+    );
+  }
+
+  async executeApprovedGithubPush(
+    ref: string,
+    approvalId: string
+  ) {
+    return this.requestAgent(
+      "execute-approved-github-push",
+      { ref, approvalId }
+    );
+  }
+
   async requestDeploy(
     actor: AuthenticatedRequestContext,
     ref: string

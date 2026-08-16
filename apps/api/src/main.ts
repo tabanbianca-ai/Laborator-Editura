@@ -265,6 +265,130 @@ async function bootstrap() {
     }
   );
 
+
+  express.post(
+    "/actions/vps-operations/request-github-push",
+    async (req: any, res: any) => {
+      if (!validBearer(req.headers.authorization, actionToken)) {
+        return res.status(401).json({ error: "Unauthorized." });
+      }
+
+      try {
+        const body = await readJsonBody(req);
+        const ref = typeof body.ref === "string" ? body.ref : "";
+
+        const result =
+          await vpsOperationsService.requestGithubPush(ref);
+
+        return res.json(result);
+      } catch (error: any) {
+        const status =
+          typeof error?.getStatus === "function"
+            ? error.getStatus()
+            : 500;
+
+        return res.status(status).json({
+          error: error?.message ?? "Operation failed."
+        });
+      }
+    }
+  );
+
+  express.post(
+    "/actions/vps-operations/approve-github-push",
+    async (req: any, res: any) => {
+      if (!validBearer(req.headers.authorization, actionToken)) {
+        return res.status(401).json({ error: "Unauthorized." });
+      }
+
+      try {
+        const body = await readJsonBody(req);
+        const approvalId =
+          typeof body.approvalId === "string" ? body.approvalId : "";
+
+        const result =
+          await vpsOperationsService.approveGithubPush(approvalId);
+
+        return res.json(result);
+      } catch (error: any) {
+        const status =
+          typeof error?.getStatus === "function"
+            ? error.getStatus()
+            : 500;
+
+        return res.status(status).json({
+          error: error?.message ?? "Operation failed."
+        });
+      }
+    }
+  );
+
+  express.post(
+    "/actions/vps-operations/authorize-github-push",
+    async (req: any, res: any) => {
+      if (!validBearer(req.headers.authorization, actionToken)) {
+        return res.status(401).json({ error: "Unauthorized." });
+      }
+
+      try {
+        const body = await readJsonBody(req);
+        const ref = typeof body.ref === "string" ? body.ref : "";
+        const approvalId =
+          typeof body.approvalId === "string" ? body.approvalId : "";
+
+        const result =
+          await vpsOperationsService.authorizeGithubPush(
+            ref,
+            approvalId
+          );
+
+        return res.json(result);
+      } catch (error: any) {
+        const status =
+          typeof error?.getStatus === "function"
+            ? error.getStatus()
+            : 500;
+
+        return res.status(status).json({
+          error: error?.message ?? "Operation failed."
+        });
+      }
+    }
+  );
+
+  express.post(
+    "/actions/vps-operations/execute-approved-github-push",
+    async (req: any, res: any) => {
+      if (!validBearer(req.headers.authorization, actionToken)) {
+        return res.status(401).json({ error: "Unauthorized." });
+      }
+
+      try {
+        const body = await readJsonBody(req);
+        const ref = typeof body.ref === "string" ? body.ref : "";
+        const approvalId =
+          typeof body.approvalId === "string" ? body.approvalId : "";
+
+        const result =
+          await vpsOperationsService.executeApprovedGithubPush(
+            ref,
+            approvalId
+          );
+
+        return res.json(result);
+      } catch (error: any) {
+        const status =
+          typeof error?.getStatus === "function"
+            ? error.getStatus()
+            : 500;
+
+        return res.status(status).json({
+          error: error?.message ?? "Operation failed."
+        });
+      }
+    }
+  );
+
   const port = Number(process.env.PORT ?? 3001);
   await app.listen(port);
 }
