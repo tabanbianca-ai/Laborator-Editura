@@ -50,3 +50,4 @@ rehearsal-runtime-images.json
 # Local operational safety backups
 *.before-*
 *.before-*
+.swift-module-cache/
