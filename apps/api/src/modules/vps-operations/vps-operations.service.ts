@@ -45,6 +45,39 @@ export class VpsOperationsService {
     };
   }
 
+  async requestStorageCleanup() {
+    return this.requestAgent(
+      "request-storage-cleanup"
+    );
+  }
+
+  async approveStorageCleanup(
+    approvalId: string
+  ) {
+    return this.requestAgent(
+      "approve-storage-cleanup",
+      { approvalId }
+    );
+  }
+
+  async authorizeStorageCleanup(
+    approvalId: string
+  ) {
+    return this.requestAgent(
+      "authorize-storage-cleanup",
+      { approvalId }
+    );
+  }
+
+  async executeApprovedStorageCleanup(
+    approvalId: string
+  ) {
+    return this.requestAgent(
+      "execute-approved-storage-cleanup",
+      { approvalId }
+    );
+  }
+
   async requestGithubPush(
     ref: string
   ) {

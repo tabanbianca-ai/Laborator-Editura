@@ -389,6 +389,125 @@ async function bootstrap() {
     }
   );
 
+
+  express.post(
+    "/actions/vps-operations/request-storage-cleanup",
+    async (req: any, res: any) => {
+      if (!validBearer(req.headers.authorization, actionToken)) {
+        return res.status(401).json({ error: "Unauthorized." });
+      }
+
+      try {
+        const result =
+          await vpsOperationsService.requestStorageCleanup();
+
+        return res.json(result);
+      } catch (error: any) {
+        const status =
+          typeof error?.getStatus === "function"
+            ? error.getStatus()
+            : 500;
+
+        return res.status(status).json({
+          error: error?.message ?? "Operation failed."
+        });
+      }
+    }
+  );
+
+  express.post(
+    "/actions/vps-operations/approve-storage-cleanup",
+    async (req: any, res: any) => {
+      if (!validBearer(req.headers.authorization, actionToken)) {
+        return res.status(401).json({ error: "Unauthorized." });
+      }
+
+      try {
+        const body = await readJsonBody(req);
+        const approvalId =
+          typeof body.approvalId === "string" ? body.approvalId : "";
+
+        const result =
+          await vpsOperationsService.approveStorageCleanup(
+            approvalId
+          );
+
+        return res.json(result);
+      } catch (error: any) {
+        const status =
+          typeof error?.getStatus === "function"
+            ? error.getStatus()
+            : 500;
+
+        return res.status(status).json({
+          error: error?.message ?? "Operation failed."
+        });
+      }
+    }
+  );
+
+  express.post(
+    "/actions/vps-operations/authorize-storage-cleanup",
+    async (req: any, res: any) => {
+      if (!validBearer(req.headers.authorization, actionToken)) {
+        return res.status(401).json({ error: "Unauthorized." });
+      }
+
+      try {
+        const body = await readJsonBody(req);
+        const approvalId =
+          typeof body.approvalId === "string" ? body.approvalId : "";
+
+        const result =
+          await vpsOperationsService.authorizeStorageCleanup(
+            approvalId
+          );
+
+        return res.json(result);
+      } catch (error: any) {
+        const status =
+          typeof error?.getStatus === "function"
+            ? error.getStatus()
+            : 500;
+
+        return res.status(status).json({
+          error: error?.message ?? "Operation failed."
+        });
+      }
+    }
+  );
+
+  express.post(
+    "/actions/vps-operations/execute-approved-storage-cleanup",
+    async (req: any, res: any) => {
+      if (!validBearer(req.headers.authorization, actionToken)) {
+        return res.status(401).json({ error: "Unauthorized." });
+      }
+
+      try {
+        const body = await readJsonBody(req);
+        const approvalId =
+          typeof body.approvalId === "string" ? body.approvalId : "";
+
+        const result =
+          await vpsOperationsService.executeApprovedStorageCleanup(
+            approvalId
+          );
+
+        return res.json(result);
+      } catch (error: any) {
+        const status =
+          typeof error?.getStatus === "function"
+            ? error.getStatus()
+            : 500;
+
+        return res.status(status).json({
+          error: error?.message ?? "Operation failed."
+        });
+      }
+    }
+  );
+
   const port = Number(process.env.PORT ?? 3001);
   await app.listen(port);
 }
