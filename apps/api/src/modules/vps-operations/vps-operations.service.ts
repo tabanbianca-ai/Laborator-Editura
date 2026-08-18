@@ -38,7 +38,15 @@ export class VpsOperationsService {
       approvalRequiredActions: [
         "request-deploy",
         "approve-deploy",
-        "deploy-approved"
+        "deploy-approved",
+        "request-github-push",
+        "approve-github-push",
+        "authorize-github-push",
+        "execute-approved-github-push",
+        "request-storage-cleanup",
+        "approve-storage-cleanup",
+        "authorize-storage-cleanup",
+        "execute-approved-storage-cleanup"
       ],
       arbitraryShell: false,
       projectRoot: "/opt/laborator-editura"
