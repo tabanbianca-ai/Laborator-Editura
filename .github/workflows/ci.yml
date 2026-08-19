@@ -68,6 +68,14 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Setup pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.12.1 --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --filter @laborator/shared
+
       - name: API contract and integration tests
         run: node --test apps/api/tests/*.test.mjs
 
@@ -75,7 +83,7 @@ jobs:
         run: node --test packages/db/tests/*.test.mjs
 
       - name: Shared JSON Master tests
-        run: node --test packages/shared/tests/*.test.mjs
+        run: pnpm --filter @laborator/shared test
 
       - name: Fixture JSON validation
         run: |
