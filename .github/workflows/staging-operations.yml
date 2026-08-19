@@ -9,10 +9,7 @@ on:
         type: choice
         options:
           - health
-          - backup
           - backup-dry-run
-          - restore-dry-run
-          - rollback
       backup_path:
         description: Backup path for restore-dry-run
         required: false
@@ -65,20 +62,8 @@ jobs:
             health)
               remote_cmd="cd '${DEPLOY_PATH}' && infrastructure/monitoring/monitor-laborator.sh"
               ;;
-            backup)
-              remote_cmd="cd '${DEPLOY_PATH}' && infrastructure/backup/backup-laborator.sh --config /etc/laborator/infrastructure.env"
-              ;;
             backup-dry-run)
               remote_cmd="cd '${DEPLOY_PATH}' && infrastructure/backup/backup-laborator.sh --config /etc/laborator/infrastructure.env --dry-run"
-              ;;
-            restore-dry-run)
-              test -n "$BACKUP_PATH"
-              remote_cmd="cd '${DEPLOY_PATH}' && infrastructure/backup/restore-dry-run.sh --backup '${BACKUP_PATH}'"
-              ;;
-            rollback)
-              test -n "$ROLLBACK_REF"
-              test "$CONFIRM" = "ROLLBACK"
-              remote_cmd="cd '${DEPLOY_PATH}' && infrastructure/deploy/rollback-staging.sh --ref '${ROLLBACK_REF}' --confirm ROLLBACK"
               ;;
             *)
               echo "Unsupported operation: $OPERATION" >&2
