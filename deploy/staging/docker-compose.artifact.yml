@@ -26,6 +26,7 @@ services:
     volumes:
       - runtime-db:/var/lib/laborator
       - runtime-backups:/var/backups/laborator/staging
+      - /run/laborator-ops-agent:/run/laborator-ops-agent
       - "${STAGING_RELEASE_IDENTITY_FILE:?Set STAGING_RELEASE_IDENTITY_FILE}:/app/RELEASE_IDENTITY.json:ro"
     healthcheck:
       test:
