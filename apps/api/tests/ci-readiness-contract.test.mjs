@@ -13,7 +13,7 @@ test("GitHub Actions CI runs required MVP validation checks", () => {
   assert.match(workflow, /actions\/setup-node@v4/);
   assert.match(workflow, /node --test apps\/api\/tests\/\*\.test\.mjs/);
   assert.match(workflow, /node --test packages\/db\/tests\/\*\.test\.mjs/);
-  assert.match(workflow, /node --test packages\/shared\/tests\/\*\.test\.mjs/);
+  assert.match(workflow, /pnpm --filter @laborator\/shared test/);
   assert.match(workflow, /Fixture JSON validation/);
   assert.match(workflow, /mvp-e2e-validation\.json/);
   assert.match(workflow, /mvp-operational-workflow\.json/);
