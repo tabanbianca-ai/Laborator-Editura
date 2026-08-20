@@ -26,6 +26,8 @@ test("release artifact workflow is manual and validates the requested main commi
     workflow,
     /git merge-base --is-ancestor "\$resolved_source_commit" origin\/main/
   );
+  assert.match(workflow, /git rev-parse --short "\$resolved_source_commit"/);
+  assert.doesNotMatch(workflow, /git rev-parse --short=7/);
   assert.doesNotMatch(workflow, /^\s+push:/m);
   assert.doesNotMatch(workflow, /^\s+pull_request:/m);
 });
@@ -66,6 +68,22 @@ test("release workflow builds verified release and runtime artifacts without byp
   assert.doesNotMatch(workflow, /continue-on-error/);
   assert.doesNotMatch(workflow, /\|\| true/);
   assert.doesNotMatch(workflow, /@(latest|master)\b/);
+});
+
+test("release metadata resolution reports actionable integrity failures", () => {
+  for (const diagnostic of [
+    "Missing ${description}",
+    "artifact.sha256 as a lowercase 64-character SHA-256",
+    "does not contain database.latestMigration",
+    "Checksum file does not start with a lowercase 64-character SHA-256",
+    "SHA-256 mismatch between metadata",
+    "and checksum file",
+    "and release archive"
+  ]) {
+    assert.match(workflow, new RegExp(diagnostic.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+  assert.match(workflow, /::error title=Release artifact metadata resolution::/);
+  assert.doesNotMatch(workflow, /test -f "\$release_(artifact|metadata|checksum)_path"/);
 });
 
 test("release workflow reports every staging deploy input in its summary", () => {
