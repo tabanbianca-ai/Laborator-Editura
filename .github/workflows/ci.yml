@@ -47,6 +47,7 @@ jobs:
       - name: Validate Docker Compose config
         run: |
           cp deploy/staging/.env.staging.example /tmp/laborator-ci.env
+          cp /tmp/laborator-ci.env deploy/staging/.env.staging
           docker compose --env-file /tmp/laborator-ci.env -f deploy/staging/docker-compose.staging.yml config
 
       - name: Validate systemd unit syntax
