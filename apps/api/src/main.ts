@@ -1,11 +1,46 @@
 import { NestFactory } from "@nestjs/core";
 import { timingSafeEqual } from "node:crypto";
+import { type IncomingMessage, type ServerResponse } from "node:http";
 import { createMcpHandler } from "@modelcontextprotocol/server";
 import { toNodeHandler } from "@modelcontextprotocol/node";
 import { AppModule } from "./modules/app.module";
 import { createVpsOperationsMcpServer } from "./modules/vps-operations/vps-operations.mcp";
 import { VpsOperationsService } from "./modules/vps-operations/vps-operations.service";
 import { validateSecurityEnvironment } from "./modules/security/environment-security";
+
+type VpsOperationsRequest = IncomingMessage & {
+  body?: Record<string, unknown>;
+};
+
+type VpsOperationsResponse = ServerResponse & {
+  status(code: number): VpsOperationsResponse;
+  json(body: unknown): unknown;
+};
+
+type HttpError = {
+  getStatus?: () => number;
+  message?: unknown;
+};
+
+function getErrorStatus(error: unknown): number {
+  if (typeof error !== "object" || error === null) {
+    return 500;
+  }
+
+  const httpError = error as HttpError;
+  return typeof httpError.getStatus === "function"
+    ? httpError.getStatus()
+    : 500;
+}
+
+function getErrorMessage(error: unknown): string {
+  if (typeof error !== "object" || error === null) {
+    return "Operation failed.";
+  }
+
+  const { message } = error as HttpError;
+  return typeof message === "string" ? message : "Operation failed.";
+}
 
 async function bootstrap() {
   validateSecurityEnvironment();
@@ -23,7 +58,7 @@ async function bootstrap() {
 
   express.use(
     "/mcp/vps-operations",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!expectedToken) {
         return res.status(503).json({
           error: "VPS MCP authentication is not configured."
@@ -50,7 +85,9 @@ async function bootstrap() {
 
   const actionToken = process.env.VPS_ACTION_BEARER_TOKEN;
 
-  const readJsonBody = async (req: any): Promise<Record<string, unknown>> => {
+  const readJsonBody = async (
+    req: VpsOperationsRequest
+  ): Promise<Record<string, unknown>> => {
     if (req.body && typeof req.body === "object") {
       return req.body;
     }
@@ -97,7 +134,7 @@ async function bootstrap() {
 
   express.get(
     "/actions/vps-operations/capabilities",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -124,7 +161,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/execute",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -138,14 +175,11 @@ async function bootstrap() {
           await vpsOperationsService.executeTrustedAction(action);
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function"
-            ? error.getStatus()
-            : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -153,7 +187,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/request-deploy",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -165,12 +199,11 @@ async function bootstrap() {
         const result = await vpsOperationsService.requestTrustedDeploy(ref);
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function" ? error.getStatus() : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -178,7 +211,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/approve-deploy",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -191,12 +224,11 @@ async function bootstrap() {
         const result = await vpsOperationsService.approveTrustedDeploy(approvalId);
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function" ? error.getStatus() : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -204,7 +236,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/authorize-deploy",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -221,12 +253,11 @@ async function bootstrap() {
         );
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function" ? error.getStatus() : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -234,7 +265,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/execute-approved-deploy",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -252,14 +283,11 @@ async function bootstrap() {
           );
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function"
-            ? error.getStatus()
-            : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -268,7 +296,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/request-github-push",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -281,14 +309,11 @@ async function bootstrap() {
           await vpsOperationsService.requestGithubPush(ref);
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function"
-            ? error.getStatus()
-            : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -296,7 +321,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/approve-github-push",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -310,14 +335,11 @@ async function bootstrap() {
           await vpsOperationsService.approveGithubPush(approvalId);
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function"
-            ? error.getStatus()
-            : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -325,7 +347,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/authorize-github-push",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -343,14 +365,11 @@ async function bootstrap() {
           );
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function"
-            ? error.getStatus()
-            : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -358,7 +377,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/execute-approved-github-push",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -376,14 +395,11 @@ async function bootstrap() {
           );
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function"
-            ? error.getStatus()
-            : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -392,7 +408,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/request-storage-cleanup",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -402,14 +418,11 @@ async function bootstrap() {
           await vpsOperationsService.requestStorageCleanup();
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function"
-            ? error.getStatus()
-            : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -417,7 +430,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/approve-storage-cleanup",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -433,14 +446,11 @@ async function bootstrap() {
           );
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function"
-            ? error.getStatus()
-            : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -448,7 +458,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/authorize-storage-cleanup",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -464,14 +474,11 @@ async function bootstrap() {
           );
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function"
-            ? error.getStatus()
-            : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
@@ -479,7 +486,7 @@ async function bootstrap() {
 
   express.post(
     "/actions/vps-operations/execute-approved-storage-cleanup",
-    async (req: any, res: any) => {
+    async (req: VpsOperationsRequest, res: VpsOperationsResponse) => {
       if (!validBearer(req.headers.authorization, actionToken)) {
         return res.status(401).json({ error: "Unauthorized." });
       }
@@ -495,14 +502,11 @@ async function bootstrap() {
           );
 
         return res.json(result);
-      } catch (error: any) {
-        const status =
-          typeof error?.getStatus === "function"
-            ? error.getStatus()
-            : 500;
+      } catch (error) {
+        const status = getErrorStatus(error);
 
         return res.status(status).json({
-          error: error?.message ?? "Operation failed."
+          error: getErrorMessage(error)
         });
       }
     }
