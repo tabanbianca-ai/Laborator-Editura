@@ -51,6 +51,12 @@ else
     "$template" > "$tmp_dir/rendered.conf"
 fi
 
+sed \
+  -e 's|access_log /var/log/nginx/laborator-staging.access.log;|access_log /dev/stdout;|' \
+  -e 's|error_log /var/log/nginx/laborator-staging.error.log warn;|error_log /dev/stderr warn;|' \
+  "$tmp_dir/rendered.conf" > "$tmp_dir/validation.conf"
+mv "$tmp_dir/validation.conf" "$tmp_dir/rendered.conf"
+
 {
   printf 'pid %s/nginx.pid;\n' "$tmp_dir"
   printf 'error_log stderr warn;\n'
