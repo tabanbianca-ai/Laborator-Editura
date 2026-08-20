@@ -20,14 +20,31 @@ test("release artifact workflow is manual and validates the requested main commi
   assert.match(workflow, /source_commit:/);
   assert.match(workflow, /required: true/);
   assert.match(workflow, /ref: \$\{\{ inputs\.source_commit \}\}/);
+  assert.match(workflow, /fetch-depth: 1/);
   assert.match(workflow, /\^\[0-9a-fA-F\]\{40\}\$/);
-  assert.match(workflow, /git fetch --no-tags origin main:refs\/remotes\/origin\/main/);
+  assert.match(workflow, /Removed surrounding whitespace from the workflow input/);
+  assert.match(workflow, /git rev-parse --is-shallow-repository/);
+  assert.match(workflow, /git fetch --no-tags --prune --unshallow origin/);
+  assert.match(workflow, /\+refs\/heads\/main:refs\/remotes\/origin\/main/);
   assert.match(
     workflow,
-    /git merge-base --is-ancestor "\$resolved_source_commit" origin\/main/
+    /if ! git merge-base --is-ancestor "\$resolved_source_commit" origin\/main/
   );
+  assert.match(workflow, /::error title=Source commit validation::/);
+  for (const diagnostic of [
+    "source_commit must be exactly one full 40-character hexadecimal Git commit SHA",
+    "does not resolve to a commit after checkout",
+    "Checkout mismatch",
+    "Unable to expand the shallow checkout",
+    "Unable to refresh origin/main",
+    "origin/main is unavailable after fetch",
+    "is not reachable from origin/main"
+  ]) {
+    assert.match(workflow, new RegExp(diagnostic.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
   assert.match(workflow, /git rev-parse --short "\$resolved_source_commit"/);
   assert.doesNotMatch(workflow, /git rev-parse --short=7/);
+  assert.doesNotMatch(workflow, /test "\$\(git rev-parse HEAD\)"/);
   assert.doesNotMatch(workflow, /^\s+push:/m);
   assert.doesNotMatch(workflow, /^\s+pull_request:/m);
 });
