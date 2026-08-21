@@ -163,7 +163,10 @@ test("artifact staging deploy uses portable release labels instead of image ID e
     "org.laborator.migration.version",
     "org.laborator.deployment.id"
   ]) {
-    assert.match(artifactDeployScript, new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    assert.match(
+      artifactDeployScript,
+      new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    );
   }
   assert.doesNotMatch(artifactDeployScript, /Container image ID mismatch/);
   assert.doesNotMatch(artifactDeployScript, /verify_running_container_image_id/);
@@ -181,6 +184,20 @@ test("staging deployment workflow verifies saved runtime image bundle digest fro
       stagingDeployWorkflow,
       new RegExp(requiredToken.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
     );
+  }
+});
+
+test("staging deploy provenance heredoc remains inside the YAML run scalar", () => {
+  const lines = stagingDeployWorkflow.split("\n");
+  const heredocStart = lines.findIndex((line) => line.includes("<<'PY'"));
+  const heredocEnd = lines.findIndex(
+    (line, index) => index > heredocStart && line.trim() === "PY"
+  );
+
+  assert.notEqual(heredocStart, -1, "Python provenance heredoc must exist");
+  assert.notEqual(heredocEnd, -1, "Python provenance heredoc terminator must exist");
+  for (const line of lines.slice(heredocStart + 1, heredocEnd + 1)) {
+    assert.match(line, /^(?: {10}.*|)$/, `heredoc line escaped run scalar: ${line}`);
   }
 });
 

@@ -170,17 +170,17 @@ jobs:
                 exit 1
               fi
               expected_bundle_sha="$(python3 - "$provenance_file" <<'PY'
-import json
-import re
-import sys
+          import json
+          import re
+          import sys
 
-with open(sys.argv[1], "r", encoding="utf-8") as handle:
-    value = json.load(handle).get("runtimeImages", {}).get("bundleSha256")
-if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
-    raise SystemExit("release provenance does not contain runtimeImages.bundleSha256")
-print(value, end="")
-PY
-)"
+          with open(sys.argv[1], "r", encoding="utf-8") as handle:
+              value = json.load(handle).get("runtimeImages", {}).get("bundleSha256")
+          if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+              raise SystemExit("release provenance does not contain runtimeImages.bundleSha256")
+          print(value, end="")
+          PY
+          )"
               actual_bundle_sha="$(sha256sum "$image_bundle" | awk '{print $1}')"
               if [ "$actual_bundle_sha" != "$expected_bundle_sha" ]; then
                 echo "::error title=Runtime bundle validation::Runtime image bundle SHA-256 mismatch. expected=${expected_bundle_sha} actual=${actual_bundle_sha}"
@@ -235,7 +235,6 @@ PY
             echo "- Runtime image bundle digest is verified from provenance when provided."
             echo "- Deploy command uses artifact verification, portable runtime labels, and docker compose --no-build."
           } >> "$GITHUB_STEP_SUMMARY"
-
 
 # Operational readiness compatibility marker:
 # deploy-staging.sh --ref
