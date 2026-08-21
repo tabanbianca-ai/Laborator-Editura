@@ -1,0 +1,38 @@
+name: Staging Network Diagnostic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-connectivity:
+    name: Test staging TCP connectivity
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    environment: staging
+
+    steps:
+      - name: Validate port and test connectivity
+        shell: bash
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+        run: |
+          set -Eeuo pipefail
+
+          if [[ ! "$VPS_PORT" =~ ^[0-9]+$ ]]; then
+            echo "::error title=Staging network diagnostic::Port format is invalid."
+            exit 1
+          fi
+          echo "Port format is valid."
+
+          if {
+            nc -vz -w 10 "$VPS_HOST" "$VPS_PORT"
+          } >/dev/null 2>&1; then
+            echo "TCP connectivity succeeded."
+          else
+            echo "::error title=Staging network diagnostic::TCP connectivity failed."
+            exit 1
+          fi
