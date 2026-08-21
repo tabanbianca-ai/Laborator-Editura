@@ -123,5 +123,23 @@ if infrastructure/deploy/deploy-staging-artifact.sh \
   die "Digest mismatch did not block deployment."
 fi
 
-rm -rf "$tmp_release_dir" /tmp/laborator-artifact-mismatch.log
+log "Checking implicit latest-style runtime image references are rejected."
+if infrastructure/deploy/deploy-staging-artifact.sh \
+  --config infrastructure/backup/laborator-backup.env.example \
+  --artifact "$ARTIFACT_PATH" \
+  --sha256 "$EXPECTED_SHA256" \
+  --source-commit "$EXPECTED_SOURCE_COMMIT" \
+  --migration-version "$EXPECTED_MIGRATION_VERSION" \
+  --api-image "staging-api:latest" \
+  --web-image "$DUMMY_WEB_IMAGE" \
+  --release-dir "$tmp_release_dir" \
+  --compose-file "$REPO_ROOT/deploy/staging/docker-compose.artifact.yml" \
+  --env-file "$REPO_ROOT/deploy/staging/.env.staging.example" \
+  --dry-run \
+  --skip-compose >/tmp/laborator-artifact-latest.log 2>&1; then
+  cat /tmp/laborator-artifact-latest.log >&2
+  die "Latest image reference did not block deployment."
+fi
+
+rm -rf "$tmp_release_dir" /tmp/laborator-artifact-mismatch.log /tmp/laborator-artifact-latest.log
 success "Artifact deployment validation completed."

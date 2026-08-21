@@ -9,6 +9,18 @@ const workflow = readFileSync(
   join(repositoryRoot, ".github", "workflows", "release-artifact-build.yml"),
   "utf8"
 );
+const stagingDeployWorkflow = readFileSync(
+  join(repositoryRoot, ".github", "workflows", "staging-deploy.yml"),
+  "utf8"
+);
+const artifactDeployScript = readFileSync(
+  join(repositoryRoot, "infrastructure", "deploy", "deploy-staging-artifact.sh"),
+  "utf8"
+);
+const deploymentRunbook = readFileSync(
+  join(repositoryRoot, "infrastructure", "docs", "DEPLOYMENT_RUNBOOK.md"),
+  "utf8"
+);
 const provenanceScript = readFileSync(
   join(repositoryRoot, "scripts", "create-release-provenance.mjs"),
   "utf8"
@@ -132,5 +144,58 @@ test("run-specific provenance binds source, release artifact, runtime bundle, an
     "bundleSha256"
   ]) {
     assert.match(provenanceScript, new RegExp(requiredToken));
+  }
+});
+
+test("artifact staging deploy uses portable release labels instead of image ID equality", () => {
+  assert.match(artifactDeployScript, /verify_image_release_identity/);
+  assert.match(artifactDeployScript, /verify_running_service_release_identity/);
+  assert.match(artifactDeployScript, /verify_running_container_image_label/);
+  assert.match(artifactDeployScript, /docker image inspect --format/);
+  assert.match(
+    artifactDeployScript,
+    /build_evidence_only_not_portable_after_docker_save_load/
+  );
+  for (const label of [
+    "org.laborator.release.version",
+    "org.laborator.source.commit",
+    "org.laborator.artifact.sha256",
+    "org.laborator.migration.version",
+    "org.laborator.deployment.id"
+  ]) {
+    assert.match(artifactDeployScript, new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+  assert.doesNotMatch(artifactDeployScript, /Container image ID mismatch/);
+  assert.doesNotMatch(artifactDeployScript, /verify_running_container_image_id/);
+});
+
+test("staging deployment workflow verifies saved runtime image bundle digest from provenance", () => {
+  for (const requiredToken of [
+    "runtimeImages.bundleSha256",
+    "Runtime image bundle SHA-256 mismatch",
+    "Runtime image bundle was provided, but release provenance is missing",
+    "Runtime image bundle digest is verified from provenance when provided",
+    "portable runtime labels"
+  ]) {
+    assert.match(
+      stagingDeployWorkflow,
+      new RegExp(requiredToken.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    );
+  }
+});
+
+test("deployment runbook documents that build image IDs are not the docker save/load gate", () => {
+  for (const requiredToken of [
+    "Docker image IDs recorded during build are retained as",
+    "provenance evidence",
+    "must not be used as the portable acceptance gate",
+    "after `docker save` and `docker load`",
+    "image configuration labels embedded by the approved build pipeline",
+    "running container labels emitted by the artifact compose file"
+  ]) {
+    assert.match(
+      deploymentRunbook,
+      new RegExp(requiredToken.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    );
   }
 });

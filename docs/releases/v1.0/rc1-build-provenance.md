@@ -105,6 +105,12 @@ Validation confirms the selected artifact checksum, the runtime image dry-run
 path, absence of source rebuild directives in the RC compose file, and failure
 on checksum mismatch.
 
+Runtime image IDs recorded by the build pipeline remain provenance evidence for
+the build environment. They are not the portable deployment acceptance gate
+after `docker save` and `docker load`. Artifact staging deployment now verifies
+the runtime bundle through artifact SHA-256, source commit, migration version,
+and release labels on the loaded images and running containers.
+
 ## Blocker 04 Staging Runtime Identity
 
 The following live staging identity was provided for Blocker 04 validation and

@@ -34,6 +34,8 @@ artifact path was later used for Blocker 06 rollback/redeploy rehearsal.
 | Artifact validator | `infrastructure/validation/validate-artifact-deploy.sh` |
 | Source rebuild in RC staging path | Disabled by `docker compose up -d --no-build` and compose scan |
 | Checksum mismatch behavior | Blocks deployment |
+| Portable runtime identity gate | Image configuration labels plus running container labels for release version, source commit, artifact SHA-256, migration version, and deployment ID |
+| Docker image ID policy | Build-time image IDs are provenance evidence only and are not the portable post-`docker save/load` deploy gate |
 | Release identity file | `release-identity.json` in the immutable staging release directory |
 
 ## Staging Deployment Evidence
@@ -47,6 +49,23 @@ artifact path was later used for Blocker 06 rollback/redeploy rehearsal.
 | Digest match | PASS |
 | API image ID | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` |
 | Web image ID | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` |
+
+## Runtime Image Identity Update
+
+Repository-side correction added on 2026-08-21: Docker image IDs observed after
+`docker save` and `docker load` are not used as the deterministic acceptance
+gate for the current saved-bundle deployment workflow. The deployment script now
+fails closed by verifying the approved release identity through:
+
+- the release artifact SHA-256 before extraction;
+- image configuration labels on the loaded API and web images before compose;
+- running container labels after `docker compose up -d --no-build`;
+- running image configuration labels from the actual container image IDs after
+  compose.
+
+The existing API and web image IDs remain historical build/provenance evidence.
+They are not removed, retroactively changed, or fabricated. This repository
+change does not perform a live VPS deployment.
 
 ## Operator-Provided Live Deployment Identity
 

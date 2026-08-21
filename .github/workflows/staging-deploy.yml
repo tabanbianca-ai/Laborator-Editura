@@ -29,11 +29,11 @@ on:
         description: Approved web runtime image reference
         required: true
       api_image_id:
-        description: Optional API runtime image ID when using a loaded image tar
+        description: Optional API runtime image ID recorded at build time; not used as a portable docker save/load gate
         required: false
         default: ""
       web_image_id:
-        description: Optional web runtime image ID when using a loaded image tar
+        description: Optional web runtime image ID recorded at build time; not used as a portable docker save/load gate
         required: false
         default: ""
       runtime_image_bundle_name:
@@ -164,6 +164,28 @@ jobs:
           if [ -d /tmp/laborator-rc1-images ]; then
             image_bundle="$(find /tmp/laborator-rc1-images -type f -name '*.tar' | head -n 1 || true)"
             if [ -n "$image_bundle" ]; then
+              provenance_file="$(find /tmp/laborator-rc1-artifact -type f -name '*.provenance.json' | head -n 1 || true)"
+              if [ -z "$provenance_file" ]; then
+                echo "::error title=Runtime bundle validation::Runtime image bundle was provided, but release provenance is missing."
+                exit 1
+              fi
+              expected_bundle_sha="$(python3 - "$provenance_file" <<'PY'
+import json
+import re
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8") as handle:
+    value = json.load(handle).get("runtimeImages", {}).get("bundleSha256")
+if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+    raise SystemExit("release provenance does not contain runtimeImages.bundleSha256")
+print(value, end="")
+PY
+)"
+              actual_bundle_sha="$(sha256sum "$image_bundle" | awk '{print $1}')"
+              if [ "$actual_bundle_sha" != "$expected_bundle_sha" ]; then
+                echo "::error title=Runtime bundle validation::Runtime image bundle SHA-256 mismatch. expected=${expected_bundle_sha} actual=${actual_bundle_sha}"
+                exit 1
+              fi
               scp -i ~/.ssh/id_laborator_deploy -P "${VPS_PORT:-22}" "$image_bundle" \
                 "${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/.releases/incoming/"
             fi
@@ -210,7 +232,8 @@ jobs:
             echo "- Source commit: ${{ inputs.source_commit }}"
             echo "- Artifact: ${{ inputs.release_artifact_name }}"
             echo "- Artifact SHA-256: ${{ inputs.release_artifact_sha256 }}"
-            echo "- Deploy command uses artifact verification and docker compose --no-build."
+            echo "- Runtime image bundle digest is verified from provenance when provided."
+            echo "- Deploy command uses artifact verification, portable runtime labels, and docker compose --no-build."
           } >> "$GITHUB_STEP_SUMMARY"
 
 

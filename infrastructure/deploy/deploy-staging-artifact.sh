@@ -36,8 +36,8 @@ Usage:
 
 Optional:
   --migration-version <migration-file>
-  --api-image-id <sha256:image-id>
-  --web-image-id <sha256:image-id>
+  --api-image-id <sha256:image-id-recorded-at-build-time>
+  --web-image-id <sha256:image-id-recorded-at-build-time>
   --config <infrastructure.env>
   --release-dir <directory>
   --compose-file <docker-compose.artifact.yml>
@@ -159,35 +159,94 @@ verify_running_container_label() {
 
   container_id="$(docker compose --env-file "$ENV_FILE" --env-file "$release_env_file" -f "$ARTIFACT_COMPOSE_FILE" ps -q "$service")"
   [[ -n "$container_id" ]] || die "No running container found for service: $service"
-  actual="$(docker inspect --format "{{ index .Config.Labels \"$label\" }}" "$container_id")"
+  if ! actual="$(docker inspect --format "{{ index .Config.Labels \"$label\" }}" "$container_id" 2>/dev/null)"; then
+    die "Unable to inspect running container label for $service $label."
+  fi
   [[ "$actual" == "$expected" ]] || die "Container label mismatch for $service $label. expected=$expected actual=$actual"
-  success "Verified $service deployed artifact digest label: $actual"
+  success "Verified $service container label $label: $actual"
 }
 
-verify_running_container_image_id() {
+running_container_id() {
   local service="$1"
-  local expected="$2"
   local container_id
-  local actual
 
-  [[ -n "$expected" ]] || return 0
   container_id="$(docker compose --env-file "$ENV_FILE" --env-file "$release_env_file" -f "$ARTIFACT_COMPOSE_FILE" ps -q "$service")"
   [[ -n "$container_id" ]] || die "No running container found for service: $service"
-  actual="$(docker inspect --format "{{ .Image }}" "$container_id")"
-  [[ "$actual" == "$expected" ]] || die "Container image ID mismatch for $service. expected=$expected actual=$actual"
-  success "Verified $service runtime image ID: $actual"
+  printf '%s\n' "$container_id"
 }
 
-require_immutable_image_reference() {
+running_container_image_id() {
+  local service="$1"
+  local container_id
+
+  container_id="$(running_container_id "$service")"
+  if ! docker inspect --format "{{ .Image }}" "$container_id" 2>/dev/null; then
+    die "Unable to inspect running container image for service: $service"
+  fi
+}
+
+verify_image_config_label() {
   local service="$1"
   local image="$2"
-  local expected_image_id="$3"
+  local label="$3"
+  local expected="$4"
+  local actual
 
-  if [[ "$image" == *"@sha256:"* || -n "$expected_image_id" ]]; then
-    return 0
+  if ! actual="$(docker image inspect --format "{{ index .Config.Labels \"$label\" }}" "$image" 2>/dev/null)"; then
+    die "Unable to inspect $service image reference before deployment: $image"
   fi
+  [[ "$actual" == "$expected" ]] || die "Image label mismatch for $service $label. expected=$expected actual=$actual"
+  success "Verified $service image label $label: $actual"
+}
 
-  die "$service image must use an immutable @sha256 digest or provide an expected image ID."
+verify_running_container_image_label() {
+  local service="$1"
+  local label="$2"
+  local expected="$3"
+  local image_id
+  local actual
+
+  image_id="$(running_container_image_id "$service")"
+  if ! actual="$(docker image inspect --format "{{ index .Config.Labels \"$label\" }}" "$image_id" 2>/dev/null)"; then
+    die "Unable to inspect running $service image identity: $image_id"
+  fi
+  [[ "$actual" == "$expected" ]] || die "Running image label mismatch for $service $label. expected=$expected actual=$actual"
+  success "Verified $service running image label $label: $actual"
+}
+
+verify_image_release_identity() {
+  local service="$1"
+  local image="$2"
+
+  verify_image_config_label "$service" "$image" "org.laborator.release.version" "$release_version"
+  verify_image_config_label "$service" "$image" "org.laborator.source.commit" "$source_commit"
+  verify_image_config_label "$service" "$image" "org.laborator.artifact.sha256" "$actual_sha256"
+  verify_image_config_label "$service" "$image" "org.laborator.migration.version" "$artifact_migration_version"
+}
+
+verify_running_service_release_identity() {
+  local service="$1"
+
+  verify_running_container_label "$service" "org.laborator.release.version" "$release_version"
+  verify_running_container_label "$service" "org.laborator.source.commit" "$source_commit"
+  verify_running_container_label "$service" "org.laborator.artifact.sha256" "$actual_sha256"
+  verify_running_container_label "$service" "org.laborator.migration.version" "$artifact_migration_version"
+  verify_running_container_label "$service" "org.laborator.deployment.id" "$DEPLOYMENT_ID"
+  verify_running_container_image_label "$service" "org.laborator.release.version" "$release_version"
+  verify_running_container_image_label "$service" "org.laborator.source.commit" "$source_commit"
+  verify_running_container_image_label "$service" "org.laborator.artifact.sha256" "$actual_sha256"
+  verify_running_container_image_label "$service" "org.laborator.migration.version" "$artifact_migration_version"
+}
+
+require_runtime_image_reference() {
+  local service="$1"
+  local image="$2"
+  local image_tail
+
+  image_tail="${image##*/}"
+  if [[ "$image" == *":latest" || ( "$image" != *"@sha256:"* && "$image_tail" != *":"* ) ]]; then
+    die "$service image must use an explicit non-latest tag or an immutable @sha256 digest."
+  fi
 }
 
 [[ -n "$ARTIFACT_PATH" ]] || die "Missing required --artifact."
@@ -197,8 +256,8 @@ require_immutable_image_reference() {
 [[ -n "$WEB_IMAGE" ]] || die "Missing required --web-image or STAGING_WEB_IMAGE."
 [[ -f "$ARTIFACT_PATH" ]] || die "Artifact not found: $ARTIFACT_PATH"
 [[ -f "$ARTIFACT_COMPOSE_FILE" ]] || die "Artifact compose file not found: $ARTIFACT_COMPOSE_FILE"
-require_immutable_image_reference "API" "$API_IMAGE" "$API_IMAGE_ID"
-require_immutable_image_reference "Web" "$WEB_IMAGE" "$WEB_IMAGE_ID"
+require_runtime_image_reference "API" "$API_IMAGE"
+require_runtime_image_reference "Web" "$WEB_IMAGE"
 
 require_command tar
 require_command python3
@@ -269,6 +328,10 @@ else
 fi
 
 deployed_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+if [[ -n "$API_IMAGE_ID" || -n "$WEB_IMAGE_ID" ]]; then
+  warn "Build-time Docker image IDs are recorded as provenance evidence only; runtime verification uses portable image labels after docker save/load."
+fi
+
 cat >"$identity_file" <<JSON
 {
   "deploymentId": "$DEPLOYMENT_ID",
@@ -278,12 +341,15 @@ cat >"$identity_file" <<JSON
   "artifactSha256": "$actual_sha256",
   "apiImage": "$API_IMAGE",
   "apiImageId": "$API_IMAGE_ID",
+  "apiImageIdPolicy": "build_evidence_only_not_portable_after_docker_save_load",
   "webImage": "$WEB_IMAGE",
   "webImageId": "$WEB_IMAGE_ID",
+  "webImageIdPolicy": "build_evidence_only_not_portable_after_docker_save_load",
   "migrationVersion": "$artifact_migration_version",
   "deployedAt": "$deployed_at",
   "environment": "staging",
-  "deploymentStatus": "prepared"
+  "deploymentStatus": "prepared",
+  "runtimeIdentityVerification": "pending"
 }
 JSON
 
@@ -305,16 +371,21 @@ else
   ln -sfn "$release_dir" "$current_link"
 fi
 
+api_runtime_image_id=""
+web_runtime_image_id=""
+
 if [[ "$SKIP_COMPOSE" == "true" ]]; then
   warn "Compose execution skipped by request. Release identity prepared but services were not started."
 elif [[ "$DRY_RUN" == "true" ]]; then
   log "DRY-RUN: docker compose --env-file $ENV_FILE --env-file $release_env_file -f $ARTIFACT_COMPOSE_FILE up -d --no-build"
 else
+  verify_image_release_identity "api" "$API_IMAGE"
+  verify_image_release_identity "web" "$WEB_IMAGE"
   docker compose --env-file "$ENV_FILE" --env-file "$release_env_file" -f "$ARTIFACT_COMPOSE_FILE" up -d --no-build
-  verify_running_container_label "api" "org.laborator.artifact.sha256" "$actual_sha256"
-  verify_running_container_label "web" "org.laborator.artifact.sha256" "$actual_sha256"
-  verify_running_container_image_id "api" "$API_IMAGE_ID"
-  verify_running_container_image_id "web" "$WEB_IMAGE_ID"
+  verify_running_service_release_identity "api"
+  verify_running_service_release_identity "web"
+  api_runtime_image_id="$(running_container_image_id "api")"
+  web_runtime_image_id="$(running_container_image_id "web")"
   "$APP_ROOT/infrastructure/validation/wait-for-health.sh" \
     --web "$DEPLOY_HEALTH_URL" \
     --api "$DEPLOY_API_HEALTH_URL" \
@@ -326,15 +397,24 @@ if [[ "$SKIP_COMPOSE" == "true" || "$DRY_RUN" == "true" ]]; then
   deployment_status="prepared_not_started"
 fi
 
-python3 - "$identity_file" "$deployment_status" <<'PY'
+python3 - "$identity_file" "$deployment_status" "$api_runtime_image_id" "$web_runtime_image_id" <<'PY'
 import json
 import sys
 
 path = sys.argv[1]
 status = sys.argv[2]
+api_runtime_image_id = sys.argv[3]
+web_runtime_image_id = sys.argv[4]
 with open(path, "r", encoding="utf-8") as handle:
     identity = json.load(handle)
 identity["deploymentStatus"] = status
+if api_runtime_image_id:
+    identity["apiRuntimeImageIdObservedAfterLoad"] = api_runtime_image_id
+if web_runtime_image_id:
+    identity["webRuntimeImageIdObservedAfterLoad"] = web_runtime_image_id
+identity["runtimeIdentityVerification"] = (
+    "portable_label_identity_verified" if status == "deployed" else "not_started"
+)
 with open(path, "w", encoding="utf-8") as handle:
     json.dump(identity, handle, indent=2)
     handle.write("\n")

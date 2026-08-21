@@ -49,7 +49,7 @@ PostgreSQL execution were not available in the local Codex environment.
 | Localization | BLOCKED | Browser-level seven-language and mixed-language evidence missing |
 | Migration | PARTIAL_BLOCKED | SQL contract tests passed; real clean/existing/upgrade run missing |
 | Backup/restore | PASS | Blocker 05 live backup, checksum, archive verification, release identity, isolated restore, and restored data evidence operator-reported PASS |
-| Deployment/rollback | PASS | Artifact-based staging deployment, verified rollback baseline, forward rehearsal, rollback, redeploy, health, smoke, and final staging validation passed |
+| Deployment/rollback | PASS | Artifact-based staging deployment, verified rollback baseline, forward rehearsal, rollback, redeploy, health, smoke, and final staging validation passed; repository tooling now uses portable artifact/source/migration labels instead of post-`docker save/load` image ID equality as the deploy gate |
 | Staging health/smoke/monitoring | PASS | Operator-provided live staging validation passed: environment, health, bootstrap-admin-reviewer, smoke-test, monitoring-hook, validate-staging |
 | Performance | PARTIAL_BLOCKED | Local build/test baseline only; staging runtime baseline missing |
 | Dependency vulnerability | PASS | `pnpm-lock.yaml` is present; frozen install passed; full and production `pnpm audit` report 0 findings |
@@ -135,6 +135,12 @@ BLOCKER 03 STATUS: RESOLVED.
 | Deployed digest verification | PASS |
 | Migration version | `0008_security_hardening_phase_1.sql` |
 | Rollback reference | `infrastructure/docs/DEPLOYMENT_RUNBOOK.md`, `infrastructure/deploy/rollback-staging-artifact.sh` |
+
+Repository update on 2026-08-21: build-time Docker image IDs remain recorded as
+provenance evidence, but artifact staging deployment no longer treats those IDs
+as the portable post-`docker save/load` acceptance gate. The fail-closed gate is
+now the approved artifact SHA-256 plus release/source/migration labels on loaded
+images and running containers.
 
 ## Blocker 04 Resolution
 

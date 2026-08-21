@@ -31,6 +31,14 @@ Scope: RC1 Blocker 04
 | Web endpoint responds | PASS | Operator-reported live VPS validation |
 | API `/health` responds | PASS | Operator-reported live VPS validation |
 
+## Runtime Identity Portability Note
+
+The image IDs above are preserved as operator-reported live evidence. For
+future artifact-based staging verification, repository tooling verifies the
+approved release identity through the artifact SHA-256 and release labels on
+loaded images and running containers. Build-time image ID equality is no longer
+treated as the portable gate after `docker save` and `docker load`.
+
 ## Repository-Supported Command
 
 ```bash

@@ -49,8 +49,20 @@ starts staging with `docker compose up -d --no-build` using
 `deploy/staging/docker-compose.artifact.yml`.
 
 The runtime images must already be produced by the approved build pipeline from
-the verified artifact. Provide either immutable `@sha256` image references or
-expected Docker image IDs for images loaded from a saved bundle.
+the verified artifact. Docker image IDs recorded during build are retained as
+provenance evidence, but they must not be used as the portable acceptance gate
+after `docker save` and `docker load`. The deterministic runtime gate is:
+
+- release artifact SHA-256 verification before extraction;
+- image configuration labels embedded by the approved build pipeline;
+- running container labels emitted by the artifact compose file;
+- source commit, release version, migration version, deployment ID, and artifact
+  SHA-256 all matching the approved release identity.
+
+Provide immutable `@sha256` image references where a registry is used. For
+saved Docker image bundles, explicit non-`latest` tags are accepted only when
+the loaded images expose the required release labels and the running containers
+verify the same identity after `docker compose up -d --no-build`.
 
 ```bash
 cd /opt/laborator-editura
@@ -66,15 +78,21 @@ infrastructure/deploy/deploy-staging-artifact.sh \
   --web-image-id <optional-sha256:image-id-for-loaded-images>
 ```
 
+`--api-image-id` and `--web-image-id` are retained as optional build-time
+provenance records only. They are not compared with the post-load runtime image
+ID because that assertion is not portable across the current saved-bundle
+deployment path.
+
 The script fails if:
 
 - the artifact SHA-256 differs from the expected digest;
 - the artifact source commit differs from the approved commit;
 - the migration version differs when provided;
 - the artifact compose file contains a source build directive;
-- runtime images are mutable tags without expected image IDs;
-- running containers do not expose the expected artifact digest labels;
-- running container image IDs differ from provided expected image IDs.
+- runtime image references are implicit `latest` or explicit `:latest` tags;
+- loaded image configuration labels do not match the approved release identity;
+- running containers do not expose the expected release identity labels;
+- running container image labels do not match the approved release identity.
 
 ## Runtime Images From Artifact
 
@@ -93,7 +111,9 @@ infrastructure/deploy/build-runtime-images-from-artifact.sh \
 ```
 
 This helper verifies the artifact first and does not run application builds. It
-creates runtime images from the built outputs already inside the artifact.
+creates runtime images from the built outputs already inside the artifact and
+labels them with release version, source commit, artifact SHA-256, and migration
+version so the deploy script can verify portable identity after save/load.
 
 ## Artifact Rollback
 
