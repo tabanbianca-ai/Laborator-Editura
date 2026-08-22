@@ -18,48 +18,48 @@ full GO because five P1 critical evidence gaps remain open.
 
 ## Verified P0 Evidence
 
-| Gate | Result |
-| --- | --- |
-| Blocker 01 immutable artifact, SHA-256, SBOM, provenance | PASS |
-| Blocker 02 lockfile and supply-chain audit | PASS |
-| Blocker 03 artifact-based staging deployment | PASS |
-| Blocker 04 staging health, smoke, monitoring, pipeline validation | PASS |
-| Blocker 05 live backup and isolated restore | PASS |
-| Blocker 06 rollback and redeploy rehearsal | PASS |
+| Gate                                                              | Result |
+| ----------------------------------------------------------------- | ------ |
+| Blocker 01 immutable artifact, SHA-256, SBOM, provenance          | PASS   |
+| Blocker 02 lockfile and supply-chain audit                        | PASS   |
+| Blocker 03 artifact-based staging deployment                      | PASS   |
+| Blocker 04 staging health, smoke, monitoring, pipeline validation | PASS   |
+| Blocker 05 live backup and isolated restore                       | PASS   |
+| Blocker 06 rollback and redeploy rehearsal                        | PASS   |
 
 ## Release Identity
 
-| Field | Value |
-| --- | --- |
-| Baseline release | `1.0.0-rc.1` |
-| Baseline source commit | `30b39ec0034f335bdbda210f09c8ad66a26a25a2` |
-| Baseline artifact | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-30b39ec.tar.gz` |
-| Baseline artifact SHA-256 | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e` |
-| Baseline API image ID | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` |
-| Baseline WEB image ID | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` |
-| Forward rehearsal release | `1.0.0-rc.1-rehearsal.1` |
-| Forward rehearsal source commit | `add6e73221d70fbc07d0f724a8322d5aa3b503d9` |
-| Forward rehearsal artifact SHA-256 | `05ec1fb248aceb8b88efd66b6309a6ba928e24152ad83997fd549c5da26d66a4` |
-| Forward rehearsal API image ID | `sha256:fb41892734fde36fe635add135eedafc24efefd93536a00c0ee20faad2cc0f7f` |
-| Forward rehearsal WEB image ID | `sha256:c5cbbfcdad5247eb3dd29576f5a350d96274b670a4fca62bead502c6ea70ba17` |
-| Migration version | `0008_security_hardening_phase_1.sql` |
-| Backup artifact | `/opt/laborator-backups/laborator-staging-20260811T101719Z.tar.gz` |
+| Field                              | Value                                                                     |
+| ---------------------------------- | ------------------------------------------------------------------------- |
+| Baseline release                   | `1.0.0-rc.1`                                                              |
+| Baseline source commit             | `30b39ec0034f335bdbda210f09c8ad66a26a25a2`                                |
+| Baseline artifact                  | `artifacts/releases/v1.0/rc1/laborator-editura-1.0.0-rc.1-30b39ec.tar.gz` |
+| Baseline artifact SHA-256          | `9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e`        |
+| Baseline API image ID              | `sha256:e89836ad49f4770a60a921423ea910f8654b1f98254a98acb2d0c7c0ddf6b451` |
+| Baseline WEB image ID              | `sha256:d941cfe6bc427f529ac20a9d7b1ff33c140eee1fa80551e2bfab141f0adfa42e` |
+| Forward rehearsal release          | `1.0.0-rc.1-rehearsal.1`                                                  |
+| Forward rehearsal source commit    | `add6e73221d70fbc07d0f724a8322d5aa3b503d9`                                |
+| Forward rehearsal artifact SHA-256 | `05ec1fb248aceb8b88efd66b6309a6ba928e24152ad83997fd549c5da26d66a4`        |
+| Forward rehearsal API image ID     | `sha256:fb41892734fde36fe635add135eedafc24efefd93536a00c0ee20faad2cc0f7f` |
+| Forward rehearsal WEB image ID     | `sha256:c5cbbfcdad5247eb3dd29576f5a350d96274b670a4fca62bead502c6ea70ba17` |
+| Migration version                  | `0008_security_hardening_phase_1.sql`                                     |
+| Backup artifact                    | `/opt/laborator-backups/laborator-staging-20260811T101719Z.tar.gz`        |
 
 ## Live Rehearsal Evidence
 
-| Check | Result |
-| --- | --- |
-| Forward deploy | PASS |
-| Forward artifact digest | PASS |
-| Runtime image IDs | PASS |
-| Health | PASS |
-| Real rollback | PASS |
-| Rollback health | PASS |
-| Rollback data integrity | PASS |
-| Rollback smoke | PASS |
-| Redeploy | PASS |
-| Final data integrity | PASS |
-| Final `validate-staging` | PASS |
+| Check                    | Result |
+| ------------------------ | ------ |
+| Forward deploy           | PASS   |
+| Forward artifact digest  | PASS   |
+| Runtime image IDs        | PASS   |
+| Health                   | PASS   |
+| Real rollback            | PASS   |
+| Rollback health          | PASS   |
+| Rollback data integrity  | PASS   |
+| Rollback smoke           | PASS   |
+| Redeploy                 | PASS   |
+| Final data integrity     | PASS   |
+| Final `validate-staging` | PASS   |
 
 Live sequence:
 
@@ -72,24 +72,24 @@ Final live validation:
   "status": "ok",
   "action": "validate-staging",
   "results": [
-    {"name": "environment", "status": "ok"},
-    {"name": "health", "status": "ok"},
-    {"name": "bootstrap-admin-reviewer", "status": "ok"},
-    {"name": "smoke-test", "status": "ok"},
-    {"name": "monitoring-hook", "status": "ok"}
+    { "name": "environment", "status": "ok" },
+    { "name": "health", "status": "ok" },
+    { "name": "bootstrap-admin-reviewer", "status": "ok" },
+    { "name": "smoke-test", "status": "ok" },
+    { "name": "monitoring-hook", "status": "ok" }
   ]
 }
 ```
 
 ## Remaining Critical Gates
 
-| Gate | Status |
-| --- | --- |
-| Live adversarial security testing | LIVE_ACTION_REQUIRED |
-| Browser accessibility review | LIVE_ACTION_REQUIRED |
-| Browser localization crawl | LIVE_ACTION_REQUIRED |
-| Staging performance baseline | LIVE_ACTION_REQUIRED |
-| Clean/existing PostgreSQL migration execution | LIVE_ACTION_REQUIRED |
+| Gate                                          | Status                                                                            |
+| --------------------------------------------- | --------------------------------------------------------------------------------- |
+| Live adversarial security testing             | LIVE_ACTION_REQUIRED                                                              |
+| Browser accessibility review                  | LIVE_ACTION_REQUIRED                                                              |
+| Browser localization crawl                    | LIVE_ACTION_REQUIRED — runner prepared, post-deployment authenticated run missing |
+| Staging performance baseline                  | LIVE_ACTION_REQUIRED                                                              |
+| Clean/existing PostgreSQL migration execution | LIVE_ACTION_REQUIRED                                                              |
 
 Critical open defects: 5
 
@@ -97,16 +97,16 @@ High open defects: 0
 
 ## Blocker 08 Evidence Closure Attempt
 
-| P1 Closure Criterion | Result |
-| --- | --- |
-| ADVERSARIAL_SECURITY | LIVE_ACTION_REQUIRED |
-| ACCESSIBILITY_BROWSER_REVIEW | LIVE_ACTION_REQUIRED |
-| SEVEN_LANGUAGE_LOCALIZATION | LIVE_ACTION_REQUIRED |
-| STAGING_PERFORMANCE_BASELINE | LIVE_ACTION_REQUIRED |
-| POSTGRES_CLEAN_MIGRATION | LIVE_ACTION_REQUIRED |
-| POSTGRES_EXISTING_DB_MIGRATION | LIVE_ACTION_REQUIRED |
-| CRITICAL_OPEN_DEFECTS | 5 |
-| HIGH_OPEN_DEFECTS | 0 |
+| P1 Closure Criterion           | Result                                                                                        |
+| ------------------------------ | --------------------------------------------------------------------------------------------- |
+| ADVERSARIAL_SECURITY           | LIVE_ACTION_REQUIRED                                                                          |
+| ACCESSIBILITY_BROWSER_REVIEW   | LIVE_ACTION_REQUIRED                                                                          |
+| SEVEN_LANGUAGE_LOCALIZATION    | LIVE_ACTION_REQUIRED — current live baseline is partial and contains English metadata leakage |
+| STAGING_PERFORMANCE_BASELINE   | LIVE_ACTION_REQUIRED                                                                          |
+| POSTGRES_CLEAN_MIGRATION       | LIVE_ACTION_REQUIRED                                                                          |
+| POSTGRES_EXISTING_DB_MIGRATION | LIVE_ACTION_REQUIRED                                                                          |
+| CRITICAL_OPEN_DEFECTS          | 5                                                                                             |
+| HIGH_OPEN_DEFECTS              | 0                                                                                             |
 
 Blocker 08 did not fabricate PASS results. The repository has contract and
 static evidence for these areas, but the required final evidence needs live VPS,
