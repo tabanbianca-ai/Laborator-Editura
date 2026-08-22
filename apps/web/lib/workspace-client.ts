@@ -1,4 +1,5 @@
 import { apiGet, apiPost, type ApiResult } from "./api-client";
+import { getUiLocaleCookie } from "./request-ui-locale";
 import type {
   WorkspaceDashboard,
   WorkspaceLanguageManagement,
@@ -11,15 +12,48 @@ export function getWorkspaceNavigation(): Promise<ApiResult<WorkspaceNavigationI
   return apiGet<WorkspaceNavigationItem[]>("/workspace/navigation");
 }
 
-export function getWorkspaceDashboard(): Promise<ApiResult<WorkspaceDashboard>> {
-  return apiGet<WorkspaceDashboard>("/workspace/dashboard");
+export async function getWorkspaceDashboard(): Promise<ApiResult<WorkspaceDashboard>> {
+  const result = await apiGet<WorkspaceDashboard>("/workspace/dashboard");
+  const locale = await getUiLocaleCookie();
+
+  if (!result.data || !locale) {
+    return result;
+  }
+
+  return {
+    ...result,
+    data: {
+      ...result.data,
+      preferences: {
+        ...result.data.preferences,
+        platformLanguage: locale
+      }
+    }
+  };
 }
 
-export function getWorkspacePreferences(): Promise<ApiResult<WorkspacePreferences>> {
-  return apiGet<WorkspacePreferences>("/workspace/preferences");
+export async function getWorkspacePreferences(): Promise<
+  ApiResult<WorkspacePreferences>
+> {
+  const result = await apiGet<WorkspacePreferences>("/workspace/preferences");
+  const locale = await getUiLocaleCookie();
+
+  if (!result.data || !locale) {
+    return result;
+  }
+
+  return {
+    ...result,
+    data: {
+      ...result.data,
+      platformLanguage: locale
+    }
+  };
 }
 
-export function getWorkspaceLanguageManagement(): Promise<ApiResult<WorkspaceLanguageManagement>> {
+export function getWorkspaceLanguageManagement(): Promise<
+  ApiResult<WorkspaceLanguageManagement>
+> {
   return apiGet<WorkspaceLanguageManagement>("/workspace/language-management");
 }
 
