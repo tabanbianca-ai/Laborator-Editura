@@ -90,6 +90,11 @@ The script fails if:
 - the migration version differs when provided;
 - the artifact compose file contains a source build directive;
 - runtime image references are implicit `latest` or explicit `:latest` tags;
+- tagged runtime image references do not use the deterministic
+  `<source-commit-prefix>-<github-run-id>` identity recorded in release
+  provenance;
+- a tagged API or web image is not an exact match for the corresponding image
+  reference in provenance from the SHA-256-verified runtime bundle;
 - loaded image configuration labels do not match the approved release identity;
 - running containers do not expose the expected release identity labels;
 - running container image labels do not match the approved release identity.
@@ -114,6 +119,17 @@ This helper verifies the artifact first and does not run application builds. It
 creates runtime images from the built outputs already inside the artifact and
 labels them with release version, source commit, artifact SHA-256, and migration
 version so the deploy script can verify portable identity after save/load.
+
+An immutable `@sha256:<digest>` reference remains valid without a saved bundle.
+For the current `docker save`/`docker load` path, a tagged reference is accepted
+only when its tag has the deterministic
+`<source-commit-prefix>-<github-run-id>` form, the API and web references match
+their exact values in release provenance, and the runtime bundle SHA-256 matches
+that same provenance. Before service startup, the deploy script from the
+verified release artifact checks the loaded image labels; after startup it
+checks both container and running-image labels for release version, source
+commit, artifact SHA-256, migration version, and deployment ID where
+applicable. Build-time image IDs remain evidence and are not an equality gate.
 
 ## Artifact Rollback
 

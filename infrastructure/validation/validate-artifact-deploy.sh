@@ -37,6 +37,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+SOURCE_SHORT_COMMIT="${EXPECTED_SOURCE_COMMIT:0:8}"
+DETERMINISTIC_API_IMAGE="laborator-api:${SOURCE_SHORT_COMMIT}-32490201582"
+DETERMINISTIC_WEB_IMAGE="laborator-web:${SOURCE_SHORT_COMMIT}-32490201582"
+
 cd "$REPO_ROOT"
 
 log "Checking artifact deploy shell syntax."
@@ -105,6 +109,21 @@ else
     --skip-compose
 fi
 
+log "Checking provenance-bound deterministic runtime image tags are accepted."
+infrastructure/deploy/deploy-staging-artifact.sh \
+  --config infrastructure/backup/laborator-backup.env.example \
+  --artifact "$ARTIFACT_PATH" \
+  --sha256 "$EXPECTED_SHA256" \
+  --source-commit "$EXPECTED_SOURCE_COMMIT" \
+  --migration-version "$EXPECTED_MIGRATION_VERSION" \
+  --api-image "$DETERMINISTIC_API_IMAGE" \
+  --web-image "$DETERMINISTIC_WEB_IMAGE" \
+  --release-dir "$tmp_release_dir" \
+  --compose-file "$REPO_ROOT/deploy/staging/docker-compose.artifact.yml" \
+  --env-file "$REPO_ROOT/deploy/staging/.env.staging.example" \
+  --dry-run \
+  --skip-compose
+
 log "Checking checksum mismatch blocks deployment."
 if infrastructure/deploy/deploy-staging-artifact.sh \
   --config infrastructure/backup/laborator-backup.env.example \
@@ -121,6 +140,24 @@ if infrastructure/deploy/deploy-staging-artifact.sh \
   --skip-compose >/tmp/laborator-artifact-mismatch.log 2>&1; then
   cat /tmp/laborator-artifact-mismatch.log >&2
   die "Digest mismatch did not block deployment."
+fi
+
+log "Checking arbitrary explicit runtime image tags are rejected."
+if infrastructure/deploy/deploy-staging-artifact.sh \
+  --config infrastructure/backup/laborator-backup.env.example \
+  --artifact "$ARTIFACT_PATH" \
+  --sha256 "$EXPECTED_SHA256" \
+  --source-commit "$EXPECTED_SOURCE_COMMIT" \
+  --migration-version "$EXPECTED_MIGRATION_VERSION" \
+  --api-image "staging-api:approved" \
+  --web-image "$DUMMY_WEB_IMAGE" \
+  --release-dir "$tmp_release_dir" \
+  --compose-file "$REPO_ROOT/deploy/staging/docker-compose.artifact.yml" \
+  --env-file "$REPO_ROOT/deploy/staging/.env.staging.example" \
+  --dry-run \
+  --skip-compose >/tmp/laborator-artifact-mutable-tag.log 2>&1; then
+  cat /tmp/laborator-artifact-mutable-tag.log >&2
+  die "Arbitrary explicit image tag did not block deployment."
 fi
 
 log "Checking implicit latest-style runtime image references are rejected."
@@ -141,5 +178,9 @@ if infrastructure/deploy/deploy-staging-artifact.sh \
   die "Latest image reference did not block deployment."
 fi
 
-rm -rf "$tmp_release_dir" /tmp/laborator-artifact-mismatch.log /tmp/laborator-artifact-latest.log
+rm -rf \
+  "$tmp_release_dir" \
+  /tmp/laborator-artifact-mismatch.log \
+  /tmp/laborator-artifact-latest.log \
+  /tmp/laborator-artifact-mutable-tag.log
 success "Artifact deployment validation completed."

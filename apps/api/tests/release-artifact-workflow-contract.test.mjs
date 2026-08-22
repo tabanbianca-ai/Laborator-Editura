@@ -170,6 +170,19 @@ test("artifact staging deploy uses portable release labels instead of image ID e
   }
   assert.doesNotMatch(artifactDeployScript, /Container image ID mismatch/);
   assert.doesNotMatch(artifactDeployScript, /verify_running_container_image_id/);
+  assert.match(
+    artifactDeployScript,
+    /deterministic <source-commit-prefix>-<github-run-id> format from verified runtime provenance/
+  );
+  assert.match(
+    artifactDeployScript,
+    /source_tag_prefix="\$\{EXPECTED_SOURCE_COMMIT:0:8\}-"/
+  );
+  assert.match(artifactDeployScript, /image_tag" != "latest"/);
+  assert.match(
+    artifactDeployScript,
+    /require_runtime_image_reference "API" "\$API_IMAGE"[\s\S]*require_runtime_image_reference "Web" "\$WEB_IMAGE"/
+  );
 });
 
 test("staging deployment workflow verifies saved runtime image bundle digest from provenance", () => {
@@ -177,6 +190,12 @@ test("staging deployment workflow verifies saved runtime image bundle digest fro
     "runtimeImages.bundleSha256",
     "Runtime image bundle SHA-256 mismatch",
     "Runtime image bundle was provided, but release provenance is missing",
+    "runtimeImages.apiImage",
+    "runtimeImages.webImage",
+    "Tagged runtime images require a SHA-256-verified provenance-bound runtime bundle",
+    "Transferred release artifact SHA-256 mismatch",
+    "deploy-bootstrap",
+    "bootstrap_dir/infrastructure/deploy/deploy-staging-artifact.sh",
     "Runtime image bundle digest is verified from provenance when provided",
     "portable runtime labels"
   ]) {
@@ -208,7 +227,11 @@ test("deployment runbook documents that build image IDs are not the docker save/
     "must not be used as the portable acceptance gate",
     "after `docker save` and `docker load`",
     "image configuration labels embedded by the approved build pipeline",
-    "running container labels emitted by the artifact compose file"
+    "running container labels emitted by the artifact compose file",
+    "<source-commit-prefix>-<github-run-id>",
+    "exact values in release provenance",
+    "deploy script from the",
+    "verified release artifact"
   ]) {
     assert.match(
       deploymentRunbook,

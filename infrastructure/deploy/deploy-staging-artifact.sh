@@ -242,11 +242,21 @@ require_runtime_image_reference() {
   local service="$1"
   local image="$2"
   local image_tail
+  local image_tag
+  local source_tag_prefix
+
+  if [[ "$image" =~ @sha256:[0-9a-f]{64}$ ]]; then
+    return 0
+  fi
 
   image_tail="${image##*/}"
-  if [[ "$image" == *":latest" || ( "$image" != *"@sha256:"* && "$image_tail" != *":"* ) ]]; then
-    die "$service image must use an explicit non-latest tag or an immutable @sha256 digest."
-  fi
+  [[ "$image_tail" == *":"* ]] || die "$service image must use an immutable @sha256 digest or a provenance-bound deterministic tag."
+  image_tag="${image_tail##*:}"
+  [[ "$image_tag" != "latest" ]] || die "$service image must not use the mutable latest tag."
+
+  source_tag_prefix="${EXPECTED_SOURCE_COMMIT:0:8}-"
+  [[ "$image_tag" =~ ^${source_tag_prefix}[1-9][0-9]*$ ]] ||
+    die "$service tagged image must use the deterministic <source-commit-prefix>-<github-run-id> format from verified runtime provenance."
 }
 
 [[ -n "$ARTIFACT_PATH" ]] || die "Missing required --artifact."

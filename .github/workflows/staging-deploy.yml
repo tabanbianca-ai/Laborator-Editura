@@ -151,6 +151,10 @@ jobs:
           VPS_USER: ${{ secrets.VPS_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
           RELEASE_ARTIFACT_SHA256: ${{ inputs.release_artifact_sha256 }}
+          SOURCE_COMMIT: ${{ inputs.source_commit }}
+          MIGRATION_VERSION: ${{ inputs.migration_version }}
+          API_IMAGE: ${{ inputs.api_image }}
+          WEB_IMAGE: ${{ inputs.web_image }}
         run: |
           set -Eeuo pipefail
           artifact_file="$(find /tmp/laborator-rc1-artifact -type f -name '*.tar.gz' | head -n 1)"
@@ -161,34 +165,72 @@ jobs:
             "mkdir -p '${DEPLOY_PATH}/.releases/incoming'"
           scp -i ~/.ssh/id_laborator_deploy -P "${VPS_PORT:-22}" "$artifact_file" \
             "${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/.releases/incoming/"
+          runtime_bundle_verified=false
           if [ -d /tmp/laborator-rc1-images ]; then
             image_bundle="$(find /tmp/laborator-rc1-images -type f -name '*.tar' | head -n 1 || true)"
-            if [ -n "$image_bundle" ]; then
-              provenance_file="$(find /tmp/laborator-rc1-artifact -type f -name '*.provenance.json' | head -n 1 || true)"
-              if [ -z "$provenance_file" ]; then
-                echo "::error title=Runtime bundle validation::Runtime image bundle was provided, but release provenance is missing."
-                exit 1
-              fi
-              expected_bundle_sha="$(python3 - "$provenance_file" <<'PY'
+            if [ -z "$image_bundle" ]; then
+              echo "::error title=Runtime bundle validation::Runtime image bundle artifact does not contain a .tar bundle."
+              exit 1
+            fi
+            provenance_file="$(find /tmp/laborator-rc1-artifact -type f -name '*.provenance.json' | head -n 1 || true)"
+            if [ -z "$provenance_file" ]; then
+              echo "::error title=Runtime bundle validation::Runtime image bundle was provided, but release provenance is missing."
+              exit 1
+            fi
+            expected_bundle_sha="$(python3 - \
+              "$provenance_file" \
+              "$SOURCE_COMMIT" \
+              "$RELEASE_ARTIFACT_SHA256" \
+              "$MIGRATION_VERSION" \
+              "$API_IMAGE" \
+              "$WEB_IMAGE" <<'PY'
           import json
           import re
           import sys
 
           with open(sys.argv[1], "r", encoding="utf-8") as handle:
-              value = json.load(handle).get("runtimeImages", {}).get("bundleSha256")
+              provenance = json.load(handle)
+
+          runtime_images = provenance.get("runtimeImages", {})
+          value = runtime_images.get("bundleSha256")
           if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
               raise SystemExit("release provenance does not contain runtimeImages.bundleSha256")
+          checks = (
+              ("source.commit", provenance.get("source", {}).get("commit"), sys.argv[2]),
+              (
+                  "releaseArtifact.sha256",
+                  provenance.get("releaseArtifact", {}).get("sha256"),
+                  sys.argv[3],
+              ),
+              (
+                  "releaseArtifact.migrationVersion",
+                  provenance.get("releaseArtifact", {}).get("migrationVersion"),
+                  sys.argv[4],
+              ),
+              ("runtimeImages.apiImage", runtime_images.get("apiImage"), sys.argv[5]),
+              ("runtimeImages.webImage", runtime_images.get("webImage"), sys.argv[6]),
+          )
+          for field, actual, expected in checks:
+              if actual != expected:
+                  raise SystemExit(
+                      f"release provenance {field} does not match the approved deploy input"
+                  )
           print(value, end="")
           PY
           )"
-              actual_bundle_sha="$(sha256sum "$image_bundle" | awk '{print $1}')"
-              if [ "$actual_bundle_sha" != "$expected_bundle_sha" ]; then
-                echo "::error title=Runtime bundle validation::Runtime image bundle SHA-256 mismatch. expected=${expected_bundle_sha} actual=${actual_bundle_sha}"
-                exit 1
-              fi
-              scp -i ~/.ssh/id_laborator_deploy -P "${VPS_PORT:-22}" "$image_bundle" \
-                "${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/.releases/incoming/"
+            actual_bundle_sha="$(sha256sum "$image_bundle" | awk '{print $1}')"
+            if [ "$actual_bundle_sha" != "$expected_bundle_sha" ]; then
+              echo "::error title=Runtime bundle validation::Runtime image bundle SHA-256 mismatch. expected=${expected_bundle_sha} actual=${actual_bundle_sha}"
+              exit 1
             fi
+            runtime_bundle_verified=true
+            scp -i ~/.ssh/id_laborator_deploy -P "${VPS_PORT:-22}" "$image_bundle" \
+              "${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/.releases/incoming/"
+          fi
+          if [ "$runtime_bundle_verified" != "true" ] && \
+            { [[ "$API_IMAGE" != *@sha256:* ]] || [[ "$WEB_IMAGE" != *@sha256:* ]]; }; then
+            echo "::error title=Runtime image validation::Tagged runtime images require a SHA-256-verified provenance-bound runtime bundle."
+            exit 1
           fi
 
       - name: Deploy remotely without rebuilding
@@ -206,15 +248,23 @@ jobs:
           WEB_IMAGE: ${{ inputs.web_image }}
           API_IMAGE_ID: ${{ inputs.api_image_id }}
           WEB_IMAGE_ID: ${{ inputs.web_image_id }}
+          RUNTIME_IMAGE_BUNDLE_NAME: ${{ inputs.runtime_image_bundle_name }}
         run: |
           set -Eeuo pipefail
           ssh -i ~/.ssh/id_laborator_deploy -p "${VPS_PORT:-22}" "${VPS_USER}@${VPS_HOST}" \
             "set -Eeuo pipefail
              cd '${DEPLOY_PATH}'
-             image_bundle=\$(find .releases/incoming -maxdepth 1 -type f -name '*.tar' | head -n 1 || true)
+             artifact_file='.releases/incoming/${RELEASE_ARTIFACT_NAME}.tar.gz'
+             [ -f \"\$artifact_file\" ] || { echo 'Approved release artifact is missing on staging.' >&2; exit 1; }
+             remote_artifact_sha=\$(sha256sum \"\$artifact_file\" | awk '{print \$1}')
+             [ \"\$remote_artifact_sha\" = '${RELEASE_ARTIFACT_SHA256}' ] || { echo 'Transferred release artifact SHA-256 mismatch.' >&2; exit 1; }
+             image_bundle=''
+             if [ -n '${RUNTIME_IMAGE_BUNDLE_NAME}' ]; then image_bundle='.releases/incoming/${RUNTIME_IMAGE_BUNDLE_NAME}.tar'; fi
              if [ -n \"\$image_bundle\" ]; then docker load -i \"\$image_bundle\"; fi
-             artifact_file=\$(find .releases/incoming -maxdepth 1 -type f -name '*.tar.gz' | head -n 1)
-             infrastructure/deploy/deploy-staging-artifact.sh \
+             bootstrap_dir=\$(mktemp -d '.releases/deploy-bootstrap.XXXXXX')
+             trap 'rm -rf \"\$bootstrap_dir\"' EXIT
+             tar -xzf \"\$artifact_file\" -C \"\$bootstrap_dir\" infrastructure/deploy infrastructure/scripts
+             \"\$bootstrap_dir/infrastructure/deploy/deploy-staging-artifact.sh\" \
                --artifact \"\$artifact_file\" \
                --sha256 '${RELEASE_ARTIFACT_SHA256}' \
                --source-commit '${SOURCE_COMMIT}' \
