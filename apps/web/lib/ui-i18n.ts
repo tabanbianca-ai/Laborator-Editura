@@ -1,8 +1,23 @@
 import type { WorkspaceModule } from "./workspace-types";
 
-export type UiLocale = "en" | "ro" | "es" | "fr" | "pt" | "it" | "de";
+export const UI_LOCALES = [
+  "ro-RO",
+  "en-US",
+  "en-GB",
+  "es-ES",
+  "fr-FR",
+  "pt-PT",
+  "pt-BR",
+  "it-IT",
+  "de-DE"
+] as const;
+
+export type UiLocale = (typeof UI_LOCALES)[number];
 
 const englishDictionary = {
+  "metadata.description": "Professional editorial production workspace",
+  "language.switcher": "Platform language",
+  "language.apply": "Apply language",
   "action.changePassword": "Change password",
   "action.continue": "Continue",
   "action.generateAudiobook": "Generate Audiobook",
@@ -58,7 +73,8 @@ const englishDictionary = {
   "auth.errorResetPassword": "Password reset could not be requested.",
   "auth.errorSessions": "Sessions could not be loaded.",
   "auth.lastLoginAt": "Last login",
-  "auth.loginDescription": "Use your account credentials to access the editorial dashboard.",
+  "auth.loginDescription":
+    "Use your account credentials to access the editorial dashboard.",
   "auth.loginTitle": "Sign in",
   "auth.manageSessions": "Manage sessions",
   "auth.newPassword": "New password",
@@ -69,8 +85,10 @@ const englishDictionary = {
   "auth.password": "Password",
   "auth.passwordChanged": "Password changed.",
   "auth.permissions": "Permissions",
-  "auth.passwordResetAccepted": "If the account exists, the reset process has been started.",
-  "auth.profileDescription": "Review profile, roles, permissions, and recent account activity.",
+  "auth.passwordResetAccepted":
+    "If the account exists, the reset process has been started.",
+  "auth.profileDescription":
+    "Review profile, roles, permissions, and recent account activity.",
   "auth.profileTitle": "User profile",
   "auth.resetPasswordDescription": "Request a secure password reset for your account.",
   "auth.resetPasswordTitle": "Reset password",
@@ -82,14 +100,16 @@ const englishDictionary = {
   "auth.sessionsTitle": "Session management",
   "auth.status": "Status",
   "auth.verificationToken": "Verification token",
-  "auth.verifyEmailDescription": "Verify the email address when a verification token is available.",
+  "auth.verifyEmailDescription":
+    "Verify the email address when a verification token is available.",
   "auth.welcomeBack": "Welcome back",
   "dashboard.closedBetaChecklist": "Closed beta checklist",
   "dashboard.favoriteModules": "Favorite modules",
   "dashboard.launchReadiness": "Public launch readiness",
   "dashboard.mainRoutes": "Main routes",
   "dashboard.noDashboard": "No dashboard",
-  "dashboard.noDashboardDescription": "No workspace dashboard metadata is available for this session.",
+  "dashboard.noDashboardDescription":
+    "No workspace dashboard metadata is available for this session.",
   "dashboard.noDashboardWidgets": "No dashboard widgets",
   "dashboard.noModules": "No visible modules",
   "dashboard.preferences": "Preferences",
@@ -107,7 +127,8 @@ const englishDictionary = {
   "distribution.channels": "Channels",
   "distribution.document": "Document",
   "distribution.emptyBlockers": "No pre-publication blockers",
-  "distribution.emptyDocumentDescription": "Select a document from the list to run the final production gate.",
+  "distribution.emptyDocumentDescription":
+    "Select a document from the list to run the final production gate.",
   "distribution.emptyDocumentTitle": "No document selected for preflight",
   "distribution.externalProviders": "External providers",
   "distribution.finalGate": "Final production gate",
@@ -123,7 +144,8 @@ const englishDictionary = {
   "distribution.project": "Project",
   "distribution.publicationChannels": "Publication channels",
   "distribution.publicationGate": "Publication gate",
-  "distribution.publishDisabled": "Publication is disabled here until authorized humans confirm all gates. No billing or external distribution provider is connected.",
+  "distribution.publishDisabled":
+    "Publication is disabled here until authorized humans confirm all gates. No billing or external distribution provider is connected.",
   "distribution.publishReadiness": "Publish readiness",
   "distribution.publishingState": "Publishing state",
   "distribution.readyChecks": "Ready checks",
@@ -231,13 +253,15 @@ const englishDictionary = {
   "pipeline.completion": "Completion",
   "pipeline.documentCount": "documents",
   "pipeline.documentsInProject": "Documents in this project",
-  "pipeline.editingSequence": "Import -> Analysis -> Editing -> Translation -> Review -> Validation -> Layout -> Export -> Technical Validation -> Approval -> Publication -> Audiobook -> Video -> Magazine",
+  "pipeline.editingSequence":
+    "Import -> Analysis -> Editing -> Translation -> Review -> Validation -> Layout -> Export -> Technical Validation -> Approval -> Publication -> Audiobook -> Video -> Magazine",
   "pipeline.editorialQueue": "Editorial production queue",
   "pipeline.export": "Export",
   "pipeline.guidedEditorialProduction": "Guided editorial production",
   "pipeline.guidedWorkflow": "Guided workflow",
   "pipeline.humanAuthority": "Human Final Authority",
-  "pipeline.humanAuthorityGuidance": "Human Final Authority remains required. AI may summarize progress, suggest next actions, generate preview narration, suggest pronunciation, suggest video visuals, subtitles, and timing, and detect blockers. It cannot approve workflow, publish, approve audiobook or video, or grant rights.",
+  "pipeline.humanAuthorityGuidance":
+    "Human Final Authority remains required. AI may summarize progress, suggest next actions, generate preview narration, suggest pronunciation, suggest video visuals, subtitles, and timing, and detect blockers. It cannot approve workflow, publish, approve audiobook or video, or grant rights.",
   "pipeline.language": "Language",
   "pipeline.localeAccent": "Locale / accent selection",
   "pipeline.locked": "Locked",
@@ -247,7 +271,8 @@ const englishDictionary = {
   "pipeline.noProjects": "No projects ready for pipeline",
   "pipeline.narrator": "Narrator",
   "pipeline.playbackSpeed": "Playback speed",
-  "pipeline.previewAudioGuidance": "Preview Audio can read selected text, current section, current chapter, or the current manuscript draft. It can be regenerated after edits and is never published.",
+  "pipeline.previewAudioGuidance":
+    "Preview Audio can read selected text, current section, current chapter, or the current manuscript draft. It can be regenerated after edits and is never published.",
   "pipeline.productionMode": "Production mode",
   "pipeline.progress": "Progress",
   "pipeline.projects": "Projects",
@@ -256,7 +281,8 @@ const englishDictionary = {
   "pipeline.status.locked": "Locked",
   "pipeline.status.required": "Required",
   "pipeline.step": "Step",
-  "pipeline.videoGuidance": "Preview Video can be generated from selected text, a section, a chapter, or the current manuscript draft with text, images or slides, voice-over, and subtitles. It is draft-only and never public.",
+  "pipeline.videoGuidance":
+    "Preview Video can be generated from selected text, a section, a chapter, or the current manuscript draft with text, images or slides, voice-over, and subtitles. It is draft-only and never public.",
   "pipeline.videoPreview": "Video Preview",
   "pipeline.videoProduction": "Video production",
   "pipeline.videoStatus": "Video status",
@@ -268,13 +294,16 @@ const englishDictionary = {
   "project.authorName": "Author name",
   "project.childrenBook": "Children's Book",
   "project.classicalWork": "Classical Work",
-  "project.createGuidance": "Project Identity is required before entering the editorial production process.",
+  "project.createGuidance":
+    "Project Identity is required before entering the editorial production process.",
   "project.description": "Description",
   "project.domain": "Domain",
   "project.editorialDomain": "Editorial Domain",
-  "project.editorialDomainHelp": "Choose the editorial domain used for metadata, filtering, search, statistics, Library, Marketplace, and publication surfaces.",
+  "project.editorialDomainHelp":
+    "Choose the editorial domain used for metadata, filtering, search, statistics, Library, Marketplace, and publication surfaces.",
   "project.editorialClassification": "Editorial Classification",
-  "project.editorialClassificationHelp": "Optional series, collection, and volume metadata. It organizes publications without changing Publication Type.",
+  "project.editorialClassificationHelp":
+    "Optional series, collection, and volume metadata. It organizes publications without changing Publication Type.",
   "project.editorialSeries": "Series",
   "project.editorialCollection": "Collection",
   "project.editorialVolume": "Volume",
@@ -282,7 +311,8 @@ const englishDictionary = {
   "project.externalAuthor": "External Author",
   "project.identityRequired": "Project Origin and Rights Status are required.",
   "project.linkedRightsContracts": "Linked Rights & Contracts records",
-  "project.linkedRightsContractsHelp": "Optional comma-separated record IDs. No document upload is required in this phase.",
+  "project.linkedRightsContractsHelp":
+    "Optional comma-separated record IDs. No document upload is required in this phase.",
   "project.magazineArticle": "Magazine / Article",
   "project.name": "Name",
   "project.newProject": "New project",
@@ -295,7 +325,8 @@ const englishDictionary = {
   "project.origin": "Project Origin",
   "project.publicDomain": "Public Domain",
   "project.publicDomainClassicalWork": "Public Domain / Classical Work",
-  "project.publicDomainNotice": "Public domain projects may be edited, translated, and published without original author rights, while new translation, adaptation, illustration, layout, cover, audiobook, video, and other contribution rights remain tracked.",
+  "project.publicDomainNotice":
+    "Public domain projects may be edited, translated, and published without original author rights, while new translation, adaptation, illustration, layout, cover, audiobook, video, and other contribution rights remain tracked.",
   "project.registry": "Project registry",
   "project.rightsObtained": "Rights Obtained",
   "project.rightsPending": "Rights Pending",
@@ -313,9 +344,11 @@ const englishDictionary = {
   "project.language": "Language",
   "project.audioVideoProject": "Audio / Video Project",
   "project.publicationType": "Publication Type",
-  "project.publicationTypeHelp": "Choose the single publication format that defines the default editorial process.",
+  "project.publicationTypeHelp":
+    "Choose the single publication format that defines the default editorial process.",
   "project.projectCapabilities": "Project Capabilities",
-  "project.projectCapabilitiesHelp": "Enable optional production stages inside the existing editorial process.",
+  "project.projectCapabilitiesHelp":
+    "Enable optional production stages inside the existing editorial process.",
   "project.capabilities": "Capabilities",
   "project.editorialProcess": "Editorial Process",
   "project.flipbookMagazineOnly": "Flipbook is available only for Magazine projects.",
@@ -373,12 +406,15 @@ const englishDictionary = {
   "workspaceFinal.currentProjects": "Current projects",
   "workspaceFinal.eyebrow": "Editorial Workspace",
   "workspaceFinal.fastActions": "Fast production actions",
-  "workspaceFinal.humanAuthority": "AI may suggest, summarize, preview, and detect blockers, but authorized humans approve reviews, rights, publication, and workflow transitions.",
+  "workspaceFinal.humanAuthority":
+    "AI may suggest, summarize, preview, and detect blockers, but authorized humans approve reviews, rights, publication, and workflow transitions.",
   "workspaceFinal.livePreview": "Live preview",
-  "workspaceFinal.manuscriptDescription": "The manuscript remains the shared production object for writing, translation, review, illustration, layout, magazine production, publishing preparation, and distribution readiness.",
+  "workspaceFinal.manuscriptDescription":
+    "The manuscript remains the shared production object for writing, translation, review, illustration, layout, magazine production, publishing preparation, and distribution readiness.",
   "workspaceFinal.manuscriptFirst": "Manuscript-centered production surface",
   "workspaceFinal.maxClicks": "max clicks",
-  "workspaceFinal.noProjectsDescription": "Create a project or open an existing pipeline to begin production from the unified workspace.",
+  "workspaceFinal.noProjectsDescription":
+    "Create a project or open an existing pipeline to begin production from the unified workspace.",
   "workspaceFinal.oneWorkspaceAllProduction": "One workspace for every publication type",
   "workspaceFinal.primaryEnvironment": "Primary environment",
   "workspaceFinal.productionQueue": "Production queue",
@@ -388,6 +424,9 @@ const englishDictionary = {
 } as const;
 
 const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
+  "metadata.description": "Spațiu profesional de producție editorială",
+  "language.switcher": "Limba platformei",
+  "language.apply": "Aplică limba",
   "action.changePassword": "Schimbă parola",
   "action.continue": "Continuă",
   "action.generateAudiobook": "Generează audiobook",
@@ -454,8 +493,10 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "auth.password": "Parolă",
   "auth.passwordChanged": "Parola a fost schimbată.",
   "auth.permissions": "Permisiuni",
-  "auth.passwordResetAccepted": "Dacă există contul, procesul de resetare a fost inițiat.",
-  "auth.profileDescription": "Verifică profilul, rolurile, permisiunile și activitatea recentă a contului.",
+  "auth.passwordResetAccepted":
+    "Dacă există contul, procesul de resetare a fost inițiat.",
+  "auth.profileDescription":
+    "Verifică profilul, rolurile, permisiunile și activitatea recentă a contului.",
   "auth.profileTitle": "Profil utilizator",
   "auth.resetPasswordDescription": "Solicită o resetare securizată a parolei contului.",
   "auth.resetPasswordTitle": "Resetare parolă",
@@ -467,14 +508,16 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "auth.sessionsTitle": "Gestionare sesiuni",
   "auth.status": "Stare",
   "auth.verificationToken": "Token de verificare",
-  "auth.verifyEmailDescription": "Verifică adresa de e-mail când este disponibil un token de verificare.",
+  "auth.verifyEmailDescription":
+    "Verifică adresa de e-mail când este disponibil un token de verificare.",
   "auth.welcomeBack": "Bine ai revenit",
   "dashboard.closedBetaChecklist": "Checklist beta închisă",
   "dashboard.favoriteModules": "Module favorite",
   "dashboard.launchReadiness": "Pregătire lansare publică",
   "dashboard.mainRoutes": "Rute principale",
   "dashboard.noDashboard": "Nu există panou de control",
-  "dashboard.noDashboardDescription": "Nu există metadata pentru panoul de control al acestui spațiu de lucru.",
+  "dashboard.noDashboardDescription":
+    "Nu există metadata pentru panoul de control al acestui spațiu de lucru.",
   "dashboard.noDashboardWidgets": "Nu există widgeturi în panou",
   "dashboard.noModules": "Nu există module vizibile",
   "dashboard.preferences": "Preferințe",
@@ -492,7 +535,8 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "distribution.channels": "Canale",
   "distribution.document": "Document",
   "distribution.emptyBlockers": "Nu există blocaje înainte de publicare",
-  "distribution.emptyDocumentDescription": "Selectează un document din listă pentru poarta finală de producție.",
+  "distribution.emptyDocumentDescription":
+    "Selectează un document din listă pentru poarta finală de producție.",
   "distribution.emptyDocumentTitle": "Nu este selectat niciun document pentru preflight",
   "distribution.externalProviders": "Furnizori externi",
   "distribution.finalGate": "Poartă finală de producție",
@@ -508,7 +552,8 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "distribution.project": "Proiect",
   "distribution.publicationChannels": "Canale de publicare",
   "distribution.publicationGate": "Poartă de publicare",
-  "distribution.publishDisabled": "Publicarea este dezactivată aici până când persoanele autorizate confirmă toate porțile. Nu este conectat niciun sistem de facturare sau furnizor extern de distribuție.",
+  "distribution.publishDisabled":
+    "Publicarea este dezactivată aici până când persoanele autorizate confirmă toate porțile. Nu este conectat niciun sistem de facturare sau furnizor extern de distribuție.",
   "distribution.publishReadiness": "Pregătire publicare",
   "distribution.publishingState": "Stare publicare",
   "distribution.readyChecks": "Verificări gata",
@@ -616,13 +661,15 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "pipeline.completion": "Finalizare",
   "pipeline.documentCount": "documente",
   "pipeline.documentsInProject": "Documente în acest proiect",
-  "pipeline.editingSequence": "Import -> Analiză -> Editare -> Traducere -> Revizie -> Validare -> Layout -> Export -> Validare tehnică -> Aprobare -> Publicare -> Audiobook -> Video -> Revistă",
+  "pipeline.editingSequence":
+    "Import -> Analiză -> Editare -> Traducere -> Revizie -> Validare -> Layout -> Export -> Validare tehnică -> Aprobare -> Publicare -> Audiobook -> Video -> Revistă",
   "pipeline.editorialQueue": "Coadă producție editorială",
   "pipeline.export": "Export",
   "pipeline.guidedEditorialProduction": "Producție editorială ghidată",
   "pipeline.guidedWorkflow": "Workflow ghidat",
   "pipeline.humanAuthority": "Autoritate finală umană",
-  "pipeline.humanAuthorityGuidance": "Autoritatea finală umană rămâne obligatorie. AI poate rezuma progresul, sugera acțiuni, genera previzualizări audio, sugera pronunții, imagini video, subtitrări și sincronizări și poate detecta blocaje. Nu poate aproba workflow-ul, publica, aproba audiobook sau video ori acorda drepturi.",
+  "pipeline.humanAuthorityGuidance":
+    "Autoritatea finală umană rămâne obligatorie. AI poate rezuma progresul, sugera acțiuni, genera previzualizări audio, sugera pronunții, imagini video, subtitrări și sincronizări și poate detecta blocaje. Nu poate aproba workflow-ul, publica, aproba audiobook sau video ori acorda drepturi.",
   "pipeline.language": "Limbă",
   "pipeline.localeAccent": "Locale / accent",
   "pipeline.locked": "Blocate",
@@ -632,7 +679,8 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "pipeline.noProjects": "Nu există proiecte pregătite pentru linia de producție",
   "pipeline.narrator": "Narator",
   "pipeline.playbackSpeed": "Viteză redare",
-  "pipeline.previewAudioGuidance": "Previzualizarea audio poate citi textul selectat, secțiunea curentă, capitolul curent sau ciorna manuscrisului. Poate fi regenerată după editări și nu se publică niciodată.",
+  "pipeline.previewAudioGuidance":
+    "Previzualizarea audio poate citi textul selectat, secțiunea curentă, capitolul curent sau ciorna manuscrisului. Poate fi regenerată după editări și nu se publică niciodată.",
   "pipeline.productionMode": "Mod producție",
   "pipeline.progress": "Progres",
   "pipeline.projects": "Proiecte",
@@ -641,7 +689,8 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "pipeline.status.locked": "Blocat",
   "pipeline.status.required": "Necesar",
   "pipeline.step": "Pas",
-  "pipeline.videoGuidance": "Previzualizarea video poate fi generată din text selectat, secțiune, capitol sau ciorna curentă a manuscrisului, cu text, imagini sau slide-uri, voice-over și subtitrări. Este doar ciornă și nu devine publică.",
+  "pipeline.videoGuidance":
+    "Previzualizarea video poate fi generată din text selectat, secțiune, capitol sau ciorna curentă a manuscrisului, cu text, imagini sau slide-uri, voice-over și subtitrări. Este doar ciornă și nu devine publică.",
   "pipeline.videoPreview": "Previzualizare video",
   "pipeline.videoProduction": "Producție video",
   "pipeline.videoStatus": "Status video",
@@ -653,26 +702,32 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "project.authorName": "Numele autorului",
   "project.childrenBook": "Carte pentru copii",
   "project.classicalWork": "Operă clasică",
-  "project.createGuidance": "Identitatea proiectului este obligatorie înainte de intrarea în procesul editorial.",
+  "project.createGuidance":
+    "Identitatea proiectului este obligatorie înainte de intrarea în procesul editorial.",
   "project.description": "Descriere",
   "project.domain": "Domeniu",
   "project.editorialDomain": "Domeniu editorial",
-  "project.editorialDomainHelp": "Alege domeniul editorial folosit pentru metadata, filtrare, căutare, statistici, Bibliotecă, Piață agenți și suprafețe de publicare.",
+  "project.editorialDomainHelp":
+    "Alege domeniul editorial folosit pentru metadata, filtrare, căutare, statistici, Bibliotecă, Piață agenți și suprafețe de publicare.",
   "project.editorialClassification": "Clasificare editorială",
-  "project.editorialClassificationHelp": "Metadata opțională pentru serie, colecție și volum. Organizează publicațiile fără să schimbe Tipul publicației.",
+  "project.editorialClassificationHelp":
+    "Metadata opțională pentru serie, colecție și volum. Organizează publicațiile fără să schimbe Tipul publicației.",
   "project.editorialSeries": "Serie",
   "project.editorialCollection": "Colecție",
   "project.editorialVolume": "Volum",
   "project.editorialCollaboration": "Colaborare editorială",
   "project.externalAuthor": "Autor extern",
-  "project.identityRequired": "Originea proiectului și statusul drepturilor sunt obligatorii.",
+  "project.identityRequired":
+    "Originea proiectului și statusul drepturilor sunt obligatorii.",
   "project.linkedRightsContracts": "Înregistrări Drepturi & Contracte asociate",
-  "project.linkedRightsContractsHelp": "ID-uri opționale separate prin virgulă. În această fază nu se cere încărcare de documente.",
+  "project.linkedRightsContractsHelp":
+    "ID-uri opționale separate prin virgulă. În această fază nu se cere încărcare de documente.",
   "project.magazineArticle": "Revistă / Articol",
   "project.name": "Nume",
   "project.newProject": "Proiect nou",
   "project.originalAuthor": "Autor original",
-  "project.originalAuthorHelp": "Obligatoriu când originea proiectului nu este Creație originală.",
+  "project.originalAuthorHelp":
+    "Obligatoriu când originea proiectului nu este Creație originală.",
   "project.originalCreation": "Creație originală",
   "project.originalLanguage": "Limba originală",
   "project.originalLocale": "Locale original",
@@ -680,7 +735,8 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "project.origin": "Originea proiectului",
   "project.publicDomain": "Domeniu public",
   "project.publicDomainClassicalWork": "Domeniu public / Operă clasică",
-  "project.publicDomainNotice": "Proiectele din domeniul public pot fi editate, traduse și publicate fără drepturi de la autorul original, dar drepturile pentru traducere, adaptare, ilustrații, layout, copertă, audiobook, video și alte contribuții noi rămân urmărite.",
+  "project.publicDomainNotice":
+    "Proiectele din domeniul public pot fi editate, traduse și publicate fără drepturi de la autorul original, dar drepturile pentru traducere, adaptare, ilustrații, layout, copertă, audiobook, video și alte contribuții noi rămân urmărite.",
   "project.registry": "Registru proiecte",
   "project.rightsObtained": "Drepturi obținute",
   "project.rightsPending": "Drepturi în așteptare",
@@ -698,12 +754,15 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "project.language": "Limbă",
   "project.audioVideoProject": "Proiect audio / video",
   "project.publicationType": "Tip publicație",
-  "project.publicationTypeHelp": "Alege formatul unic de publicație care definește procesul editorial implicit.",
+  "project.publicationTypeHelp":
+    "Alege formatul unic de publicație care definește procesul editorial implicit.",
   "project.projectCapabilities": "Capabilități proiect",
-  "project.projectCapabilitiesHelp": "Activează etape opționale de producție în procesul editorial existent.",
+  "project.projectCapabilitiesHelp":
+    "Activează etape opționale de producție în procesul editorial existent.",
   "project.capabilities": "Capabilități",
   "project.editorialProcess": "Proces editorial",
-  "project.flipbookMagazineOnly": "Flipbook este disponibil doar pentru proiecte de tip Revistă.",
+  "project.flipbookMagazineOnly":
+    "Flipbook este disponibil doar pentru proiecte de tip Revistă.",
   "project.publicationBook": "Carte",
   "project.publicationChildrensBook": "Carte pentru copii",
   "project.publicationMagazine": "Revistă",
@@ -758,13 +817,17 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
   "workspaceFinal.currentProjects": "Proiecte curente",
   "workspaceFinal.eyebrow": "Spațiu editorial",
   "workspaceFinal.fastActions": "Acțiuni rapide de producție",
-  "workspaceFinal.humanAuthority": "AI poate sugera, rezuma, previzualiza și detecta blocaje, dar oamenii autorizați aprobă reviziile, drepturile, publicarea și tranzițiile workflow.",
+  "workspaceFinal.humanAuthority":
+    "AI poate sugera, rezuma, previzualiza și detecta blocaje, dar oamenii autorizați aprobă reviziile, drepturile, publicarea și tranzițiile workflow.",
   "workspaceFinal.livePreview": "Previzualizare live",
-  "workspaceFinal.manuscriptDescription": "Manuscrisul rămâne obiectul comun de producție pentru scriere, traducere, revizie, ilustrație, machetare, producție de revistă, pregătire publicare și distribuție.",
+  "workspaceFinal.manuscriptDescription":
+    "Manuscrisul rămâne obiectul comun de producție pentru scriere, traducere, revizie, ilustrație, machetare, producție de revistă, pregătire publicare și distribuție.",
   "workspaceFinal.manuscriptFirst": "Suprafață de producție centrată pe manuscris",
   "workspaceFinal.maxClicks": "maxim clickuri",
-  "workspaceFinal.noProjectsDescription": "Creează un proiect sau deschide o linie de producție existentă pentru a începe din spațiul unificat.",
-  "workspaceFinal.oneWorkspaceAllProduction": "Un singur spațiu pentru toate tipurile de publicații",
+  "workspaceFinal.noProjectsDescription":
+    "Creează un proiect sau deschide o linie de producție existentă pentru a începe din spațiul unificat.",
+  "workspaceFinal.oneWorkspaceAllProduction":
+    "Un singur spațiu pentru toate tipurile de publicații",
   "workspaceFinal.primaryEnvironment": "Mediu principal",
   "workspaceFinal.productionQueue": "Coadă de producție",
   "workspaceFinal.publicationTypes": "Tipuri de publicații",
@@ -775,6 +838,9 @@ const romanianDictionary: Partial<Record<UiTranslationKey, string>> = {
 type EnglishTranslationKey = keyof typeof englishDictionary;
 
 const spanishDictionary: Partial<Record<EnglishTranslationKey, string>> = {
+  "metadata.description": "Espacio profesional de producción editorial",
+  "language.switcher": "Idioma de la plataforma",
+  "language.apply": "Aplicar idioma",
   "action.changePassword": "Cambiar contraseña",
   "action.continue": "Continuar",
   "action.login": "Iniciar sesión",
@@ -803,7 +869,8 @@ const spanishDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.errorResetPassword": "No se pudo solicitar el restablecimiento de contraseña.",
   "auth.errorSessions": "No se pudieron cargar las sesiones.",
   "auth.lastLoginAt": "Último inicio de sesión",
-  "auth.loginDescription": "Usa las credenciales de tu cuenta para acceder al panel editorial.",
+  "auth.loginDescription":
+    "Usa las credenciales de tu cuenta para acceder al panel editorial.",
   "auth.loginTitle": "Iniciar sesión",
   "auth.manageSessions": "Gestionar sesiones",
   "auth.newPassword": "Nueva contraseña",
@@ -814,10 +881,13 @@ const spanishDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.password": "Contraseña",
   "auth.passwordChanged": "Contraseña cambiada.",
   "auth.permissions": "Permisos",
-  "auth.passwordResetAccepted": "Si la cuenta existe, se inició el proceso de restablecimiento.",
-  "auth.profileDescription": "Revisa el perfil, los roles, los permisos y la actividad reciente de la cuenta.",
+  "auth.passwordResetAccepted":
+    "Si la cuenta existe, se inició el proceso de restablecimiento.",
+  "auth.profileDescription":
+    "Revisa el perfil, los roles, los permisos y la actividad reciente de la cuenta.",
   "auth.profileTitle": "Perfil de usuario",
-  "auth.resetPasswordDescription": "Solicita un restablecimiento seguro de la contraseña de tu cuenta.",
+  "auth.resetPasswordDescription":
+    "Solicita un restablecimiento seguro de la contraseña de tu cuenta.",
   "auth.resetPasswordTitle": "Restablecer contraseña",
   "auth.roles": "Roles",
   "auth.sessionActive": "Activa",
@@ -827,7 +897,8 @@ const spanishDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.sessionsTitle": "Gestión de sesiones",
   "auth.status": "Estado",
   "auth.verificationToken": "Token de verificación",
-  "auth.verifyEmailDescription": "Verifica la dirección de correo electrónico cuando haya un token disponible.",
+  "auth.verifyEmailDescription":
+    "Verifica la dirección de correo electrónico cuando haya un token disponible.",
   "auth.welcomeBack": "Te damos la bienvenida",
   "badge.closedBeta": "Beta cerrada",
   "dashboard.title": "Panel",
@@ -873,6 +944,9 @@ const spanishDictionary: Partial<Record<EnglishTranslationKey, string>> = {
 };
 
 const frenchDictionary: Partial<Record<EnglishTranslationKey, string>> = {
+  "metadata.description": "Espace professionnel de production éditoriale",
+  "language.switcher": "Langue de la plateforme",
+  "language.apply": "Appliquer la langue",
   "action.changePassword": "Changer le mot de passe",
   "action.continue": "Continuer",
   "action.login": "Se connecter",
@@ -898,10 +972,12 @@ const frenchDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.errorChangePassword": "Le mot de passe n’a pas pu être changé.",
   "auth.errorLogin": "Échec de l’authentification.",
   "auth.errorProfile": "Le profil n’a pas pu être chargé.",
-  "auth.errorResetPassword": "La réinitialisation du mot de passe n’a pas pu être demandée.",
+  "auth.errorResetPassword":
+    "La réinitialisation du mot de passe n’a pas pu être demandée.",
   "auth.errorSessions": "Les sessions n’ont pas pu être chargées.",
   "auth.lastLoginAt": "Dernière connexion",
-  "auth.loginDescription": "Utilise les identifiants de ton compte pour accéder au tableau de bord éditorial.",
+  "auth.loginDescription":
+    "Utilise les identifiants de ton compte pour accéder au tableau de bord éditorial.",
   "auth.loginTitle": "Connexion",
   "auth.manageSessions": "Gérer les sessions",
   "auth.newPassword": "Nouveau mot de passe",
@@ -912,20 +988,25 @@ const frenchDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.password": "Mot de passe",
   "auth.passwordChanged": "Mot de passe changé.",
   "auth.permissions": "Autorisations",
-  "auth.passwordResetAccepted": "Si le compte existe, le processus de réinitialisation a été lancé.",
-  "auth.profileDescription": "Consulte le profil, les rôles, les autorisations et l’activité récente du compte.",
+  "auth.passwordResetAccepted":
+    "Si le compte existe, le processus de réinitialisation a été lancé.",
+  "auth.profileDescription":
+    "Consulte le profil, les rôles, les autorisations et l’activité récente du compte.",
   "auth.profileTitle": "Profil utilisateur",
-  "auth.resetPasswordDescription": "Demande une réinitialisation sécurisée du mot de passe de ton compte.",
+  "auth.resetPasswordDescription":
+    "Demande une réinitialisation sécurisée du mot de passe de ton compte.",
   "auth.resetPasswordTitle": "Réinitialiser le mot de passe",
   "auth.roles": "Rôles",
   "auth.sessionActive": "Active",
   "auth.sessionCurrent": "Actuelle",
   "auth.sessionRevoked": "Révoquée",
-  "auth.sessionsDescription": "Consulte et révoque les sessions actives de la plateforme.",
+  "auth.sessionsDescription":
+    "Consulte et révoque les sessions actives de la plateforme.",
   "auth.sessionsTitle": "Gestion des sessions",
   "auth.status": "Statut",
   "auth.verificationToken": "Jeton de vérification",
-  "auth.verifyEmailDescription": "Vérifie l’adresse e-mail lorsqu’un jeton de vérification est disponible.",
+  "auth.verifyEmailDescription":
+    "Vérifie l’adresse e-mail lorsqu’un jeton de vérification est disponible.",
   "auth.welcomeBack": "Bon retour",
   "badge.closedBeta": "Bêta fermée",
   "dashboard.title": "Tableau de bord",
@@ -971,6 +1052,9 @@ const frenchDictionary: Partial<Record<EnglishTranslationKey, string>> = {
 };
 
 const portugueseDictionary: Partial<Record<EnglishTranslationKey, string>> = {
+  "metadata.description": "Espaço profissional de produção editorial",
+  "language.switcher": "Idioma da plataforma",
+  "language.apply": "Aplicar idioma",
   "action.changePassword": "Alterar palavra-passe",
   "action.continue": "Continuar",
   "action.login": "Iniciar sessão",
@@ -1010,10 +1094,13 @@ const portugueseDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.password": "Palavra-passe",
   "auth.passwordChanged": "Palavra-passe alterada.",
   "auth.permissions": "Permissões",
-  "auth.passwordResetAccepted": "Se a conta existir, o processo de redefinição foi iniciado.",
-  "auth.profileDescription": "Consulta o perfil, funções, permissões e atividade recente da conta.",
+  "auth.passwordResetAccepted":
+    "Se a conta existir, o processo de redefinição foi iniciado.",
+  "auth.profileDescription":
+    "Consulta o perfil, funções, permissões e atividade recente da conta.",
   "auth.profileTitle": "Perfil de utilizador",
-  "auth.resetPasswordDescription": "Solicita uma redefinição segura da palavra-passe da tua conta.",
+  "auth.resetPasswordDescription":
+    "Solicita uma redefinição segura da palavra-passe da tua conta.",
   "auth.resetPasswordTitle": "Redefinir palavra-passe",
   "auth.roles": "Funções",
   "auth.sessionActive": "Ativa",
@@ -1023,7 +1110,8 @@ const portugueseDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.sessionsTitle": "Gestão de sessões",
   "auth.status": "Estado",
   "auth.verificationToken": "Token de verificação",
-  "auth.verifyEmailDescription": "Verifica o endereço de e-mail quando houver um token disponível.",
+  "auth.verifyEmailDescription":
+    "Verifica o endereço de e-mail quando houver um token disponível.",
   "auth.welcomeBack": "Bem-vindo de volta",
   "badge.closedBeta": "Beta fechada",
   "dashboard.title": "Painel",
@@ -1069,6 +1157,9 @@ const portugueseDictionary: Partial<Record<EnglishTranslationKey, string>> = {
 };
 
 const italianDictionary: Partial<Record<EnglishTranslationKey, string>> = {
+  "metadata.description": "Spazio professionale di produzione editoriale",
+  "language.switcher": "Lingua della piattaforma",
+  "language.apply": "Applica lingua",
   "action.changePassword": "Cambia password",
   "action.continue": "Continua",
   "action.login": "Accedi",
@@ -1097,7 +1188,8 @@ const italianDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.errorResetPassword": "Impossibile richiedere la reimpostazione della password.",
   "auth.errorSessions": "Impossibile caricare le sessioni.",
   "auth.lastLoginAt": "Ultimo accesso",
-  "auth.loginDescription": "Usa le credenziali dell’account per accedere al pannello editoriale.",
+  "auth.loginDescription":
+    "Usa le credenziali dell’account per accedere al pannello editoriale.",
   "auth.loginTitle": "Accesso",
   "auth.manageSessions": "Gestisci sessioni",
   "auth.newPassword": "Nuova password",
@@ -1108,10 +1200,13 @@ const italianDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.password": "Password",
   "auth.passwordChanged": "Password cambiata.",
   "auth.permissions": "Autorizzazioni",
-  "auth.passwordResetAccepted": "Se l’account esiste, il processo di reimpostazione è stato avviato.",
-  "auth.profileDescription": "Controlla profilo, ruoli, autorizzazioni e attività recente dell’account.",
+  "auth.passwordResetAccepted":
+    "Se l’account esiste, il processo di reimpostazione è stato avviato.",
+  "auth.profileDescription":
+    "Controlla profilo, ruoli, autorizzazioni e attività recente dell’account.",
   "auth.profileTitle": "Profilo utente",
-  "auth.resetPasswordDescription": "Richiedi una reimpostazione sicura della password del tuo account.",
+  "auth.resetPasswordDescription":
+    "Richiedi una reimpostazione sicura della password del tuo account.",
   "auth.resetPasswordTitle": "Reimposta password",
   "auth.roles": "Ruoli",
   "auth.sessionActive": "Attiva",
@@ -1121,7 +1216,8 @@ const italianDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.sessionsTitle": "Gestione sessioni",
   "auth.status": "Stato",
   "auth.verificationToken": "Token di verifica",
-  "auth.verifyEmailDescription": "Verifica l’indirizzo e-mail quando è disponibile un token.",
+  "auth.verifyEmailDescription":
+    "Verifica l’indirizzo e-mail quando è disponibile un token.",
   "auth.welcomeBack": "Bentornato",
   "label.dashboard": "Dashboard",
   "label.distribution": "Distribuzione",
@@ -1157,6 +1253,9 @@ const italianDictionary: Partial<Record<EnglishTranslationKey, string>> = {
 };
 
 const germanDictionary: Partial<Record<EnglishTranslationKey, string>> = {
+  "metadata.description": "Professioneller Arbeitsbereich für redaktionelle Produktion",
+  "language.switcher": "Plattformsprache",
+  "language.apply": "Sprache anwenden",
   "action.changePassword": "Passwort ändern",
   "action.continue": "Weiter",
   "action.login": "Anmelden",
@@ -1185,7 +1284,8 @@ const germanDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.errorResetPassword": "Passwortzurücksetzung konnte nicht angefordert werden.",
   "auth.errorSessions": "Sitzungen konnten nicht geladen werden.",
   "auth.lastLoginAt": "Letzte Anmeldung",
-  "auth.loginDescription": "Verwende deine Kontodaten, um das redaktionelle Dashboard zu öffnen.",
+  "auth.loginDescription":
+    "Verwende deine Kontodaten, um das redaktionelle Dashboard zu öffnen.",
   "auth.loginTitle": "Anmeldung",
   "auth.manageSessions": "Sitzungen verwalten",
   "auth.newPassword": "Neues Passwort",
@@ -1196,10 +1296,13 @@ const germanDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.password": "Passwort",
   "auth.passwordChanged": "Passwort geändert.",
   "auth.permissions": "Berechtigungen",
-  "auth.passwordResetAccepted": "Wenn das Konto existiert, wurde der Zurücksetzungsprozess gestartet.",
-  "auth.profileDescription": "Prüfe Profil, Rollen, Berechtigungen und aktuelle Kontoaktivität.",
+  "auth.passwordResetAccepted":
+    "Wenn das Konto existiert, wurde der Zurücksetzungsprozess gestartet.",
+  "auth.profileDescription":
+    "Prüfe Profil, Rollen, Berechtigungen und aktuelle Kontoaktivität.",
   "auth.profileTitle": "Benutzerprofil",
-  "auth.resetPasswordDescription": "Fordere eine sichere Passwortzurücksetzung für dein Konto an.",
+  "auth.resetPasswordDescription":
+    "Fordere eine sichere Passwortzurücksetzung für dein Konto an.",
   "auth.resetPasswordTitle": "Passwort zurücksetzen",
   "auth.roles": "Rollen",
   "auth.sessionActive": "Aktiv",
@@ -1209,7 +1312,8 @@ const germanDictionary: Partial<Record<EnglishTranslationKey, string>> = {
   "auth.sessionsTitle": "Sitzungsverwaltung",
   "auth.status": "Status",
   "auth.verificationToken": "Verifizierungstoken",
-  "auth.verifyEmailDescription": "Verifiziere die E-Mail-Adresse, wenn ein Token verfügbar ist.",
+  "auth.verifyEmailDescription":
+    "Verifiziere die E-Mail-Adresse, wenn ein Token verfügbar ist.",
   "auth.welcomeBack": "Willkommen zurück",
   "label.dashboard": "Dashboard",
   "label.distribution": "Distribution",
@@ -1300,11 +1404,11 @@ const routeLabelKeys: Record<string, UiTranslationKey> = {
 const pipelineStepKeys: Record<string, UiTranslationKey> = {
   "Audiobook (optional)": "pipeline.audiobookProduction",
   "Editorial Review": "label.review",
-  "Accessibility": "project.capabilityAccessibility",
-  "Illustration": "project.capabilityIllustrations",
+  Accessibility: "project.capabilityAccessibility",
+  Illustration: "project.capabilityIllustrations",
   "Magazine Digital Outputs (optional)": "label.magazine",
-  "Publication": "label.publishing",
-  "Translation": "label.translation",
+  Publication: "label.publishing",
+  Translation: "label.translation",
   "Video (optional)": "pipeline.videoProduction"
 };
 
@@ -1343,13 +1447,15 @@ const roleLabelKeys: Record<string, UiTranslationKey> = {
 };
 
 const dictionaries: Record<UiLocale, Partial<Record<UiTranslationKey, string>>> = {
-  de: germanDictionary,
-  en: englishDictionary,
-  es: spanishDictionary,
-  fr: frenchDictionary,
-  it: italianDictionary,
-  pt: portugueseDictionary,
-  ro: romanianDictionary
+  "de-DE": germanDictionary,
+  "en-GB": englishDictionary,
+  "en-US": englishDictionary,
+  "es-ES": spanishDictionary,
+  "fr-FR": frenchDictionary,
+  "it-IT": italianDictionary,
+  "pt-BR": portugueseDictionary,
+  "pt-PT": portugueseDictionary,
+  "ro-RO": romanianDictionary
 };
 
 export function createUiTranslator(platformLanguage?: string | null): UiTranslator {
@@ -1367,30 +1473,42 @@ export function resolveUiLocale(platformLanguage?: string | null): UiLocale {
   const normalized = (platformLanguage ?? "").trim().toLowerCase().replace("_", "-");
 
   if (normalized === "ro" || normalized.startsWith("ro-")) {
-    return "ro";
+    return "ro-RO";
+  }
+
+  if (normalized === "en-gb") {
+    return "en-GB";
+  }
+
+  if (normalized === "en" || normalized.startsWith("en-")) {
+    return "en-US";
   }
 
   if (normalized === "es" || normalized.startsWith("es-")) {
-    return "es";
+    return "es-ES";
   }
 
   if (normalized === "fr" || normalized.startsWith("fr-")) {
-    return "fr";
+    return "fr-FR";
+  }
+
+  if (normalized === "pt-br") {
+    return "pt-BR";
   }
 
   if (normalized === "pt" || normalized.startsWith("pt-")) {
-    return "pt";
+    return "pt-PT";
   }
 
   if (normalized === "it" || normalized.startsWith("it-")) {
-    return "it";
+    return "it-IT";
   }
 
   if (normalized === "de" || normalized.startsWith("de-")) {
-    return "de";
+    return "de-DE";
   }
 
-  return "en";
+  return "ro-RO";
 }
 
 export function uiText(locale: UiLocale, key: UiTranslationKey): string {
@@ -1404,7 +1522,7 @@ export function translateModuleTitle(
 ): string {
   const key = moduleLabelKeys[moduleName];
 
-  return key ? createUiTranslator(platformLanguage).t(key) : fallback ?? "";
+  return key ? createUiTranslator(platformLanguage).t(key) : (fallback ?? "");
 }
 
 export function translateRouteLabel(
@@ -1414,28 +1532,40 @@ export function translateRouteLabel(
 ): string {
   const key = routeLabelKeys[href];
 
-  return key ? createUiTranslator(platformLanguage).t(key) : fallback ?? href;
+  return key ? createUiTranslator(platformLanguage).t(key) : (fallback ?? href);
 }
 
-export function translatePipelineStepTitle(title: string, platformLanguage?: string | null): string {
+export function translatePipelineStepTitle(
+  title: string,
+  platformLanguage?: string | null
+): string {
   const key = pipelineStepKeys[title];
 
   return key ? createUiTranslator(platformLanguage).t(key) : title;
 }
 
-export function translateAgentName(agentName: string, platformLanguage?: string | null): string {
+export function translateAgentName(
+  agentName: string,
+  platformLanguage?: string | null
+): string {
   const key = agentLabelKeys[agentName];
 
   return key ? createUiTranslator(platformLanguage).t(key) : agentName;
 }
 
-export function translateWorkflowName(workflowName: string, platformLanguage?: string | null): string {
+export function translateWorkflowName(
+  workflowName: string,
+  platformLanguage?: string | null
+): string {
   const key = workflowLabelKeys[workflowName];
 
   return key ? createUiTranslator(platformLanguage).t(key) : workflowName;
 }
 
-export function translateRoleName(roleName: string, platformLanguage?: string | null): string {
+export function translateRoleName(
+  roleName: string,
+  platformLanguage?: string | null
+): string {
   const key = roleLabelKeys[roleName];
 
   return key ? createUiTranslator(platformLanguage).t(key) : roleName;
