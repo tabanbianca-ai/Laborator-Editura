@@ -52,10 +52,13 @@ test("UI localization includes language labels agent names and workflow names", 
 
   assert.match(i18n, /translateAgentName/);
   assert.match(i18n, /translateWorkflowName/);
-  assert.match(i18n, /return "en"/);
+  assert.match(i18n, /return "ro-RO"/);
 });
 
 test("platform language does not mutate manuscript or translation language fields", () => {
   assert.doesNotMatch(i18n, /setOriginalLanguage|setAuthoringLanguage|setTargetLanguage/);
-  assert.match(adminPage, /does\s+not change Original Language, Authoring Language or Target Language/);
+  assert.match(
+    adminPage,
+    /does\s+not change Original Language, Authoring Language or Target Language/
+  );
 });

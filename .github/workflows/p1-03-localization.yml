@@ -1,0 +1,72 @@
+name: P1-03 Staging Localization Crawl
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: Approved staging application URL
+        required: true
+        default: https://app.laboratoreditorial.com
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1-03-staging-localization
+  cancel-in-progress: false
+
+jobs:
+  localization-crawl:
+    name: Crawl all staging UI locales
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: staging
+
+    steps:
+      - name: Validate read-only staging target
+        env:
+          P1_03_BASE_URL: ${{ inputs.base_url }}
+        run: |
+          set -Eeuo pipefail
+          if [ "$P1_03_BASE_URL" != "https://app.laboratoreditorial.com" ]; then
+            echo "::error title=P1-03 target validation::Only the approved staging application URL is allowed."
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.12.1 --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @laborator/web exec playwright install --with-deps chromium
+
+      - name: Run read-only localization crawl
+        env:
+          P1_03_BASE_URL: ${{ inputs.base_url }}
+          P1_03_REQUIRE_AUTH: "true"
+          P1_03_SESSION_TOKEN: ${{ secrets.P1_03_SESSION_TOKEN }}
+        run: pnpm --filter @laborator/web test:localization
+
+      - name: Publish localization evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: p1-03-localization-evidence-${{ github.run_id }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            apps/web/test-results/p1-03-localization-results.json
+            apps/web/test-results/**/trace.zip

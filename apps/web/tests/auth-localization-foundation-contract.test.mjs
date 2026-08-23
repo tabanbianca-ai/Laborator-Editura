@@ -23,10 +23,22 @@ test("auth frontend routes and pages exist", () => {
   }
 
   assert.match(readSource("components/pages/auth-login-page.tsx"), /loginAction/);
-  assert.match(readSource("components/pages/auth-reset-password-page.tsx"), /requestPasswordResetAction/);
-  assert.match(readSource("components/pages/auth-change-password-page.tsx"), /changePasswordAction/);
-  assert.match(readSource("components/pages/user-profile-page.tsx"), /updateProfileAction/);
-  assert.match(readSource("components/pages/session-management-page.tsx"), /revokeSessionAction/);
+  assert.match(
+    readSource("components/pages/auth-reset-password-page.tsx"),
+    /requestPasswordResetAction/
+  );
+  assert.match(
+    readSource("components/pages/auth-change-password-page.tsx"),
+    /changePasswordAction/
+  );
+  assert.match(
+    readSource("components/pages/user-profile-page.tsx"),
+    /updateProfileAction/
+  );
+  assert.match(
+    readSource("components/pages/session-management-page.tsx"),
+    /revokeSessionAction/
+  );
 });
 
 test("auth client uses public auth endpoints only for login reset and email verification", () => {
@@ -58,9 +70,21 @@ test("middleware protects authenticated application routes", () => {
 test("UI localization supports seven platform languages for auth and navigation labels", () => {
   const i18n = readSource("lib/ui-i18n.ts");
 
-  assert.match(i18n, /export type UiLocale = "en" \| "ro" \| "es" \| "fr" \| "pt" \| "it" \| "de"/);
+  for (const locale of [
+    "ro-RO",
+    "en-US",
+    "en-GB",
+    "es-ES",
+    "fr-FR",
+    "pt-PT",
+    "pt-BR",
+    "it-IT",
+    "de-DE"
+  ]) {
+    assert.match(i18n, new RegExp(`"${locale}"`));
+  }
 
-  for (const locale of ["ro", "es", "fr", "pt", "it", "de"]) {
+  for (const locale of ["ro-RO", "es-ES", "fr-FR", "pt-PT", "it-IT", "de-DE"]) {
     assert.match(i18n, new RegExp(`return "${locale}"`));
   }
 

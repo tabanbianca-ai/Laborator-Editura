@@ -1,6 +1,18 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 const SESSION_COOKIE_NAME = "laborator_session_token";
+const UI_LOCALE_COOKIE_NAME = "laborator_ui_locale";
+const UI_LOCALES = new Set([
+  "ro-RO",
+  "en-US",
+  "en-GB",
+  "es-ES",
+  "fr-FR",
+  "pt-PT",
+  "pt-BR",
+  "it-IT",
+  "de-DE"
+]);
 const PUBLIC_PATHS = new Set(["/login", "/reset-password"]);
 
 export function middleware(request: NextRequest) {
@@ -8,6 +20,27 @@ export function middleware(request: NextRequest) {
 
   if (isFrameworkPath(pathname)) {
     return NextResponse.next();
+  }
+
+  const requestedLocale = request.nextUrl.searchParams.get("locale");
+  if (requestedLocale) {
+    if (!UI_LOCALES.has(requestedLocale)) {
+      const invalidLocaleUrl = request.nextUrl.clone();
+      invalidLocaleUrl.searchParams.delete("locale");
+      invalidLocaleUrl.searchParams.set("localeError", "unsupported");
+      return NextResponse.redirect(invalidLocaleUrl);
+    }
+
+    const localizedUrl = request.nextUrl.clone();
+    localizedUrl.searchParams.delete("locale");
+    const response = NextResponse.redirect(localizedUrl);
+    response.cookies.set(UI_LOCALE_COOKIE_NAME, requestedLocale, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+      secure: request.nextUrl.protocol === "https:"
+    });
+    return response;
   }
 
   const hasSession = Boolean(request.cookies.get(SESSION_COOKIE_NAME)?.value);
