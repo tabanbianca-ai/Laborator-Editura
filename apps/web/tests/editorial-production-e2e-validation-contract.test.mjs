@@ -82,13 +82,22 @@ test("workflow gates preserve rights language workflow and human final authority
   assert.match(client, /Missing current manuscript language metadata/);
   assert.match(client, /Missing translation target language/);
   assert.match(client, /Human approval is required before technical validation/);
-  assert.match(client, /READY_FOR_EXPORT or exported status is required before distribution readiness/);
+  assert.match(
+    client,
+    /READY_FOR_EXPORT or exported status is required before distribution readiness/
+  );
   assert.match(client, /Rights\/provenance blockers must be resolved before publication/);
-  assert.match(client, /Publishing rights are required before official audiobook generation/);
+  assert.match(
+    client,
+    /Publishing rights are required before official audiobook generation/
+  );
   assert.match(client, /Publishing rights are required before official video generation/);
   assert.match(client, /Publishing rights are required before magazine digital outputs/);
   assert.match(page, /ui\.t\("pipeline\.humanAuthority"\)/);
-  assert.match(i18n, /cannot approve workflow, publish, approve audiobook or video, or grant rights/);
+  assert.match(
+    i18n,
+    /cannot approve workflow, publish, approve audiobook or video, or grant rights/
+  );
   assert.match(rightsClient, /TRANSLATION_NOT_AUTHORIZED/);
   assert.match(rightsClient, /Translation authorization is not confirmed/);
   assert.match(rightsClient, /PUBLICATION_NOT_AUTHORIZED/);
@@ -100,7 +109,9 @@ test("distribution and magazine outputs surface readiness without automatic publ
   const distributionClient = readSource("lib/distribution-center-client.ts");
   const distributionPage = readSource("components/pages/distribution-center-page.tsx");
   const magazineClient = readSource("lib/magazine-experience-client.ts");
-  const magazinePage = readSource("components/pages/magazine-digital-experience-page.tsx");
+  const magazinePage = readSource(
+    "components/pages/magazine-digital-experience-page.tsx"
+  );
   const i18n = readSource("lib/ui-i18n.ts");
 
   for (const required of [
@@ -120,14 +131,23 @@ test("distribution and magazine outputs surface readiness without automatic publ
   }
 
   assert.match(distributionPage, /ui\.t\("distribution\.title"\)/);
-  assert.match(i18n, /Publication is disabled here until authorized humans confirm all gates/);
+  assert.match(
+    i18n,
+    /Publication is disabled here until authorized humans confirm all gates/
+  );
   assert.match(distributionPage, /disabled type="button"/);
-  assert.match(magazineClient, /MagazineReadinessStatus = "NOT_READY" \| "READY" \| "PUBLISHED"/);
+  assert.match(
+    magazineClient,
+    /MagazineReadinessStatus = "NOT_READY" \| "READY" \| "PUBLISHED"/
+  );
   assert.match(magazineClient, /draftNeverPublished: true/);
   assert.match(magazinePage, /Flipbook/);
   assert.match(magazinePage, /Generate Preview Audio/);
   assert.match(magazinePage, /Generate Preview Video/);
-  assert.match(magazinePage, /Official .* is available only after article approval and publishing rights/);
+  assert.match(
+    magazinePage,
+    /Official[\s\S]*? is available only after article approval and publishing[\s\S]*?rights/
+  );
   assert.doesNotMatch(distributionClient + magazineClient, /apiPost|apiDelete/);
 });
 

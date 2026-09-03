@@ -151,6 +151,14 @@ export const TABLE_NAMES = [
   "layout_publishing_records",
   "layout_publishing_distribution_records",
   "layout_publication_audit_events",
+  "magazine_issues",
+  "magazine_sections",
+  "magazine_articles",
+  "magazine_article_components",
+  "magazine_review_items",
+  "magazine_common_materials",
+  "magazine_issue_versions",
+  "magazine_audit_events",
   "publishing_publications",
   "publishing_builds",
   "publishing_publication_profiles",
@@ -437,6 +445,14 @@ const TENANT_SCOPED_TABLES = new Set([
   "layout_publishing_records",
   "layout_publishing_distribution_records",
   "layout_publication_audit_events",
+  "magazine_issues",
+  "magazine_sections",
+  "magazine_articles",
+  "magazine_article_components",
+  "magazine_review_items",
+  "magazine_common_materials",
+  "magazine_issue_versions",
+  "magazine_audit_events",
   "publishing_publications",
   "publishing_builds",
   "publishing_publication_profiles",
@@ -970,6 +986,26 @@ function validateTenantBoundaries(data, issues) {
     "distributionRecordId",
     "layout_publishing_distribution_records"
   );
+  validateReferenceTenant(data, issues, "magazine_issues", "projectId", "projects");
+  validateReferenceTenant(data, issues, "magazine_sections", "issueId", "magazine_issues");
+  validateReferenceTenant(data, issues, "magazine_articles", "issueId", "magazine_issues");
+  validateReferenceTenant(data, issues, "magazine_articles", "projectId", "projects");
+  validateReferenceTenant(data, issues, "magazine_articles", "documentId", "documents");
+  validateReferenceTenant(data, issues, "magazine_article_components", "issueId", "magazine_issues");
+  validateReferenceTenant(data, issues, "magazine_article_components", "articleId", "magazine_articles");
+  validateReferenceTenant(data, issues, "magazine_article_components", "sourceComponentId", "magazine_article_components");
+  validateReferenceTenant(data, issues, "magazine_article_components", "transcriptComponentId", "magazine_article_components");
+  validateReferenceTenant(data, issues, "magazine_article_components", "subtitleComponentId", "magazine_article_components");
+  validateReferenceTenant(data, issues, "magazine_review_items", "issueId", "magazine_issues");
+  validateReferenceTenant(data, issues, "magazine_review_items", "articleId", "magazine_articles");
+  validateReferenceTenant(data, issues, "magazine_review_items", "componentId", "magazine_article_components");
+  validateReferenceTenant(data, issues, "magazine_common_materials", "issueId", "magazine_issues");
+  validateReferenceTenant(data, issues, "magazine_issue_versions", "issueId", "magazine_issues");
+  validateReferenceTenant(data, issues, "magazine_audit_events", "issueId", "magazine_issues");
+  validateReferenceTenant(data, issues, "magazine_audit_events", "articleId", "magazine_articles");
+  validateReferenceTenant(data, issues, "magazine_audit_events", "componentId", "magazine_article_components");
+  validateReferenceTenant(data, issues, "magazine_audit_events", "commonMaterialId", "magazine_common_materials");
+  validateReferenceTenant(data, issues, "magazine_audit_events", "issueVersionId", "magazine_issue_versions");
   validateReferenceTenant(data, issues, "publishing_publications", "libraryPublicationId", "library_publications");
   validateReferenceTenant(data, issues, "publishing_publications", "projectId", "projects");
   validateReferenceTenant(data, issues, "publishing_publications", "documentId", "documents");
