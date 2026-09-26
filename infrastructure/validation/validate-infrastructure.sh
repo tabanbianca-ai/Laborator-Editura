@@ -43,6 +43,16 @@ else
   warn "node not installed; .mjs syntax validation skipped."
 fi
 
+if command -v python3 >/dev/null 2>&1; then
+  log "Checking Python script syntax."
+  while IFS= read -r python_script; do
+    debug "python3 AST parse $python_script"
+    python3 -c 'import ast, pathlib, sys; ast.parse(pathlib.Path(sys.argv[1]).read_text(encoding="utf-8"))' "$python_script"
+  done < <(find infrastructure deploy/staging/scripts -type f -name '*.py' 2>/dev/null | sort)
+else
+  warn "python3 not installed; Python syntax validation skipped."
+fi
+
 if find infrastructure deploy/staging/scripts -type f -name '*.ts' 2>/dev/null | grep -q .; then
   if command -v pnpm >/dev/null 2>&1; then
     log "Checking TypeScript through workspace typecheck."

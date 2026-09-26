@@ -44,6 +44,7 @@ normalize_path_aliases
 : "${BACKUP_RETENTION_DAYS:=30}"
 : "${BACKUP_MIN_FREE_MB:=1024}"
 : "${BACKUP_LOCK_DIR:=/tmp/laborator-backup.lock}"
+: "${BACKUP_ENVIRONMENT:=staging}"
 : "${RUNTIME_DB_VOLUME:=laborator-staging_runtime-db}"
 : "${RUNTIME_BACKUPS_VOLUME:=laborator-staging_runtime-backups}"
 : "${STAGING_RELEASES_DIR:=$APP_ROOT/.releases/staging}"
@@ -64,12 +65,25 @@ require_command git
 require_command tar
 require_command df
 require_command awk
+require_command python3
+
+lock_acquired=false
+tmp_dir=""
+cleanup() {
+  if [[ -n "$tmp_dir" && -d "$tmp_dir" ]]; then
+    rm -rf "$tmp_dir"
+  fi
+  if [[ "$lock_acquired" == "true" && -d "$BACKUP_LOCK_DIR" ]]; then
+    rm -rf "$BACKUP_LOCK_DIR"
+  fi
+}
+trap cleanup EXIT
 
 if [[ "$DRY_RUN" == "false" ]]; then
   if ! mkdir "$BACKUP_LOCK_DIR" 2>/dev/null; then
     die "Another backup appears to be running: $BACKUP_LOCK_DIR"
   fi
-  trap 'rm -rf "$BACKUP_LOCK_DIR"' EXIT
+  lock_acquired=true
 fi
 
 ensure_directory "$BACKUP_ROOT"
@@ -95,11 +109,6 @@ if [[ -f "$STAGING_RELEASE_IDENTITY_FILE" ]]; then
   release_identity_included=true
 fi
 
-cleanup() {
-  rm -rf "$tmp_dir"
-}
-trap cleanup EXIT
-
 log "Starting Laborator backup: $backup_name"
 debug "Config file: $CONFIG_FILE"
 debug "Project root: $APP_ROOT"
@@ -113,28 +122,17 @@ if [[ -d "$APP_ROOT/.git" ]]; then
   git_dirty="$(git -C "$APP_ROOT" status --short 2>/dev/null | wc -l | tr -d ' ')"
 fi
 
-cat > "$manifest_path" <<JSON
-{
-  "schemaVersion": "laborator.infrastructure.backup.v1",
-  "createdAt": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
-  "appRoot": "$APP_ROOT",
-  "gitCommit": "$git_commit",
-  "gitDirtyFileCount": "$git_dirty",
-  "composeFile": "$COMPOSE_FILE",
-  "runtimeDbVolume": "$RUNTIME_DB_VOLUME",
-  "runtimeBackupsVolume": "$RUNTIME_BACKUPS_VOLUME",
-  "releaseIdentityFile": "$STAGING_RELEASE_IDENTITY_FILE",
-  "releaseIdentityIncluded": $release_identity_included,
-  "envIncluded": $BACKUP_INCLUDE_ENV,
-  "encryption": "$BACKUP_ENCRYPTION"
-}
-JSON
-
 mkdir -p "$tmp_dir/docker-volumes" "$tmp_dir/config/docker" "$tmp_dir/config/nginx" "$tmp_dir/config/systemd" "$tmp_dir/metadata"
 
 if [[ -f "$COMPOSE_FILE" ]]; then
   cp "$COMPOSE_FILE" "$tmp_dir/config/docker/docker-compose.staging.yml"
+elif [[ "$DRY_RUN" == "true" ]]; then
+  warn "Docker Compose file not found during dry-run: $COMPOSE_FILE"
+else
+  die "Docker Compose file not found: $COMPOSE_FILE"
 fi
+
+printf '%s\n' "$git_commit" > "$tmp_dir/metadata/git-commit.txt"
 
 if [[ "$BACKUP_INCLUDE_ENV" == "true" ]]; then
   [[ -f "$ENV_FILE" ]] || die "BACKUP_INCLUDE_ENV=true but env file does not exist: $ENV_FILE"
@@ -152,7 +150,7 @@ else
 fi
 
 if [[ -d "$NGINX_CONFIG_DIR" ]]; then
-  tar -C "$NGINX_CONFIG_DIR" -czf "$tmp_dir/config/nginx/nginx-config.tar.gz" .
+  COPYFILE_DISABLE=1 tar -C "$NGINX_CONFIG_DIR" -czf "$tmp_dir/config/nginx/nginx-config.tar.gz" .
 fi
 
 if [[ -d "$SYSTEMD_CONFIG_DIR" ]]; then
@@ -181,11 +179,35 @@ backup_volume "$RUNTIME_DB_VOLUME" "runtime-db.tar.gz"
 backup_volume "$RUNTIME_BACKUPS_VOLUME" "runtime-backups.tar.gz"
 
 if [[ "$DRY_RUN" == "true" ]]; then
+  log "DRY-RUN: generate canonical laborator.infrastructure.backup.v2 manifest with per-artifact SHA-256 metadata"
   log "DRY-RUN: tar -C $tmp_dir -czf $archive_path ."
 else
-  tar -C "$tmp_dir" -czf "$archive_path" .
+  manifest_args=(
+    "$SCRIPT_DIR/backup-contract.py"
+    create-manifest
+    --root "$tmp_dir"
+    --output "$manifest_path"
+    --backup-id "$backup_name"
+    --archive-name "$(basename "$archive_path")"
+    --created-at "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+    --environment "$BACKUP_ENVIRONMENT"
+    --git-commit "$git_commit"
+    --git-dirty-file-count "$git_dirty"
+    --runtime-db-volume "$RUNTIME_DB_VOLUME"
+    --runtime-backups-volume "$RUNTIME_BACKUPS_VOLUME"
+    --encryption "$BACKUP_ENCRYPTION"
+  )
+  if [[ "$BACKUP_INCLUDE_ENV" == "true" ]]; then
+    manifest_args+=(--environment-included)
+  fi
+  python3 "${manifest_args[@]}"
+
+  COPYFILE_DISABLE=1 tar -C "$tmp_dir" -czf "$archive_path" .
   tar -tzf "$archive_path" >/dev/null
-  $sha_cmd "$archive_path" > "$archive_path.sha256"
+  (
+    cd "$(dirname "$archive_path")"
+    $sha_cmd "$(basename "$archive_path")"
+  ) > "$archive_path.sha256"
   chmod 600 "$archive_path" "$archive_path.sha256"
 fi
 

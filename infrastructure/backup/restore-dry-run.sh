@@ -34,12 +34,21 @@ done
 require_command docker
 require_command tar
 
-"$SCRIPT_DIR/verify-backup.sh" "$BACKUP_FILE"
+verify_args=("$SCRIPT_DIR/verify-backup.sh" "$BACKUP_FILE")
+if [[ "${VERBOSE:-false}" == "true" ]]; then
+  verify_args+=(--verbose)
+fi
+"${verify_args[@]}"
 
 tmp_dir="$(mktemp -d)"
-suffix="$(date -u +'%Y%m%d%H%M%S')"
+suffix="$(date -u +'%Y%m%d%H%M%S')-$$"
 db_volume="laborator-restore-test-db-$suffix"
 backups_volume="laborator-restore-test-backups-$suffix"
+live_db_volume="${RUNTIME_DB_VOLUME:-laborator-staging_runtime-db}"
+live_backups_volume="${RUNTIME_BACKUPS_VOLUME:-laborator-staging_runtime-backups}"
+
+[[ "$db_volume" != "$live_db_volume" ]] || die "Temporary database volume collides with the live volume"
+[[ "$backups_volume" != "$live_backups_volume" ]] || die "Temporary backup volume collides with the live volume"
 
 cleanup() {
   rm -rf "$tmp_dir"
