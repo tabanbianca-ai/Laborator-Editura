@@ -107,9 +107,17 @@ Main path settings are configurable in `/etc/laborator/infrastructure.env`:
 - `PROJECT_ROOT` / `APP_ROOT`
 - `DOCKER_COMPOSE_PATH` / `COMPOSE_FILE`
 - `BACKUP_DIR` / `BACKUP_ROOT`
+- `BACKUP_ENVIRONMENT`
 - `LOG_DIR`
 - `NGINX_DIR` / `NGINX_CONFIG_DIR`
 - `SYSTEMD_DIR` / `SYSTEMD_CONFIG_DIR`
+
+Infrastructure backups use the canonical
+`laborator.infrastructure.backup.v2` contract. The archive contains a
+versioned `manifest.json`, embedded SHA-256 metadata for every payload, and a
+portable external `.sha256` sidecar. Backups without that manifest are treated
+as historical/unversioned evidence and are not accepted by canonical restore
+commands.
 
 ## Manual Actions After Commit And Push
 

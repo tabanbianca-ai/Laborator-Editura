@@ -16,6 +16,7 @@ import { LayoutPublishingModule } from "./layout-publishing/layout-publishing.mo
 import { LaunchEssentialsModule } from "./launch-essentials/launch-essentials.module";
 import { LibraryModule } from "./library/library.module";
 import { LexicographicModule } from "./lexicographic/lexicographic.module";
+import { MagazineWorkflowModule } from "./magazine-workflow/magazine-workflow.module";
 import { MediaLocalizationModule } from "./media-localization/media-localization.module";
 import { MarketplaceModule } from "./marketplace/marketplace.module";
 import { MultimediaCreationModule } from "./multimedia-creation/multimedia-creation.module";
@@ -64,6 +65,7 @@ import { VpsOperationsModule } from "./vps-operations/vps-operations.module";
     LaunchEssentialsModule,
     LibraryModule,
     MediaLocalizationModule,
+    MagazineWorkflowModule,
     MarketplaceModule,
     MultimediaCreationModule,
     ObservabilityModule,

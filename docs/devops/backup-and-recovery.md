@@ -37,6 +37,9 @@ Current backup assets include:
 - Backups must be encrypted in controlled environments.
 - Backups must include schema or format version metadata.
 - Backups must be checksum-verified.
+- Infrastructure backups must follow the canonical
+  `laborator.infrastructure.backup.v2` manifest contract and embed per-artifact
+  SHA-256 metadata in addition to the archive checksum sidecar.
 - Restore dry-run must be executed periodically.
 - Retention must be documented.
 - Backup failures must alert operators.
@@ -63,5 +66,8 @@ Recovery must define:
 - Backup dry-run works without manual host preparation.
 - Real backup produces verifiable archive metadata.
 - Invalid backups are rejected.
+- Legacy archives without a canonical manifest are preserved as historical
+  evidence but are not restore-eligible without an approved migration and
+  revalidation procedure.
 - Restore dry-run proves data can be recreated.
 - Tenant boundaries remain preserved after restore.
