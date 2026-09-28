@@ -48,6 +48,35 @@ extracts it into an immutable release directory, records release identity, and
 starts staging with `docker compose up -d --no-build` using
 `deploy/staging/docker-compose.artifact.yml`.
 
+The canonical GitHub Actions entry point is
+`.github/workflows/staging-deploy.yml`. That workflow validates the source,
+release archive, manifest, provenance, runtime image references, and runtime
+bundle digest, but it has no SSH, SCP, Docker load, or direct script execution
+path to staging. Deployment is delegated exclusively to the controlled VPS
+Operations approval lifecycle:
+
+```text
+request-deploy
+  -> approve-deploy (authorized human, outside the workflow)
+  -> authorize-deploy
+  -> execute-approved-deploy
+```
+
+The workflow requires the existing approval ID and never requests or approves
+its own deployment. The `staging` GitHub Environment approval remains an
+independent control. Missing, blank, rejected, pending, expired, or mismatched
+approval evidence fails closed before execution.
+
+Configure the `staging` GitHub Environment with:
+
+- variable `VPS_OPERATIONS_ACTION_URL`, using the HTTPS base URL of the
+  controlled Operations Gateway;
+- secret `VPS_ACTION_BEARER_TOKEN`, matching the gateway action token;
+- required human reviewers and the existing protected-main deployment policy.
+
+Do not restore SSH deployment secrets to this workflow. Direct host access is
+not an approved RC deployment path.
+
 The runtime images must already be produced by the approved build pipeline from
 the verified artifact. Docker image IDs recorded during build are retained as
 provenance evidence, but they must not be used as the portable acceptance gate

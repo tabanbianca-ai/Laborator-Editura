@@ -13,7 +13,9 @@ validated, released, recovered, and evolved without changing product behavior.
 Current repository operations include:
 
 - GitHub Actions CI in `.github/workflows/ci.yml`.
-- Manual staging deployment in `.github/workflows/staging-deploy.yml`.
+- Manual staging deployment orchestration in
+  `.github/workflows/staging-deploy.yml`, with execution delegated to the
+  controlled `deploy-approved` VPS Operations lifecycle.
 - Manual staging operations in `.github/workflows/staging-operations.yml`.
 - Staging Docker Compose and Dockerfiles under `deploy/staging`.
 - Staging validation, health, backup, restore, smoke, and bootstrap scripts

@@ -75,8 +75,10 @@ Current repository infrastructure includes:
   infrastructure syntax, Docker Compose configuration, secret scan, and Nginx
   templates.
 - Typecheck, lint, test, build, and audit run when dependencies are available.
-- Staging deployment is manual, gated, and uses SSH with GitHub environment
-  secrets.
+- Staging deployment is manual and gated by both the GitHub `staging`
+  Environment and the VPS Operations approval lifecycle. The workflow verifies
+  artifact identity before delegating execution and has no direct SSH deploy
+  path.
 - Staging deployment script includes backup and health check support.
 - Staging operations include health, backup, backup dry-run, restore dry-run,
   and rollback.
