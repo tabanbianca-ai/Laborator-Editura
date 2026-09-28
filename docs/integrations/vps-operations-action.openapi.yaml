@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: Laborator Editura VPS Operations
   version: 1.0.0
-  description: Read-only VPS operational checks through the secured Laborator Editura Operations Gateway.
+  description: Controlled VPS operations through the secured Laborator Editura Operations Gateway.
 
 servers:
   - url: https://api.laboratoreditorial.com
@@ -12,6 +12,38 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
+  schemas:
+    DeploymentRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          pattern: "^[0-9a-f]{40}$"
+    DeploymentApproval:
+      type: object
+      additionalProperties: false
+      required:
+        - approvalId
+      properties:
+        approvalId:
+          type: string
+          minLength: 1
+    ApprovedDeployment:
+      type: object
+      additionalProperties: false
+      required:
+        - ref
+        - approvalId
+      properties:
+        ref:
+          type: string
+          pattern: "^[0-9a-f]{40}$"
+        approvalId:
+          type: string
+          minLength: 1
 
 security:
   - bearerAuth: []
@@ -23,7 +55,7 @@ paths:
       summary: List allowed VPS operations
       responses:
         "200":
-          description: Allowed read-only VPS operations
+          description: Allowed read-only and approval-governed VPS operations
         "401":
           description: Unauthorized
 
@@ -56,3 +88,77 @@ paths:
           description: Action not allowed
         "401":
           description: Unauthorized
+
+  /actions/vps-operations/request-deploy:
+    post:
+      operationId: requestDeploymentApproval
+      summary: Request approval for an exact source commit deployment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeploymentRequest"
+      responses:
+        "200":
+          description: Deployment approval request recorded
+        "400":
+          description: Invalid deployment reference
+        "401":
+          description: Unauthorized
+
+  /actions/vps-operations/approve-deploy:
+    post:
+      operationId: approveDeployment
+      summary: Record authorized human approval for a deployment request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeploymentApproval"
+      responses:
+        "200":
+          description: Deployment request approved
+        "400":
+          description: Invalid or unavailable approval
+        "401":
+          description: Unauthorized
+
+  /actions/vps-operations/authorize-deploy:
+    post:
+      operationId: authorizeApprovedDeployment
+      summary: Validate that an approval applies to the exact deployment reference
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApprovedDeployment"
+      responses:
+        "200":
+          description: Deployment is authorized
+        "400":
+          description: Approval is missing, invalid, expired, or mismatched
+        "401":
+          description: Unauthorized
+
+  /actions/vps-operations/execute-approved-deploy:
+    post:
+      operationId: executeApprovedDeployment
+      summary: Execute a previously authorized deployment through the controlled agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApprovedDeployment"
+      responses:
+        "200":
+          description: Approved deployment execution result
+        "400":
+          description: Deployment is not authorized
+        "401":
+          description: Unauthorized
+        "503":
+          description: VPS Operations Agent unavailable

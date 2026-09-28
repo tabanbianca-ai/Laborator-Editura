@@ -185,23 +185,92 @@ test("artifact staging deploy uses portable release labels instead of image ID e
   );
 });
 
-test("staging deployment workflow verifies saved runtime image bundle digest from provenance", () => {
+test("staging deployment workflow preserves complete artifact identity verification", () => {
   for (const requiredToken of [
     "runtimeImages.bundleSha256",
     "Runtime image bundle SHA-256 mismatch",
-    "Runtime image bundle was provided, but release provenance is missing",
+    "RELEASE_ARTIFACT_MANIFEST.json is missing from the archive",
+    "manifest.source.commit",
+    "manifest.database.latestMigration",
+    "releaseArtifact.actionsArtifactName",
+    "releaseArtifact.sha256",
     "runtimeImages.apiImage",
     "runtimeImages.webImage",
-    "Tagged runtime images require a SHA-256-verified provenance-bound runtime bundle",
-    "Transferred release artifact SHA-256 mismatch",
-    "deploy-bootstrap",
-    "bootstrap_dir/infrastructure/deploy/deploy-staging-artifact.sh",
-    "Runtime image bundle digest is verified from provenance when provided",
-    "portable runtime labels"
+    "runtimeImages.bundleArtifactName",
+    "Release artifact SHA-256 mismatch",
+    "source_commit must equal current origin/main"
   ]) {
     assert.match(
       stagingDeployWorkflow,
       new RegExp(requiredToken.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    );
+  }
+});
+
+test("staging deployment delegates execution exclusively to deploy-approved governance", () => {
+  assert.match(
+    stagingDeployWorkflow,
+    /approval_id:\n\s+description: Existing human-approved/
+  );
+  assert.match(stagingDeployWorkflow, /approval_id:[\s\S]*?required: true/);
+  assert.match(stagingDeployWorkflow, /deploy-approved:/);
+  assert.match(stagingDeployWorkflow, /environment: staging/);
+  assert.match(stagingDeployWorkflow, /VPS_OPERATIONS_ACTION_URL/);
+  assert.match(stagingDeployWorkflow, /VPS_ACTION_BEARER_TOKEN/);
+  assert.match(stagingDeployWorkflow, /call_gateway "authorize-deploy"/);
+  assert.match(stagingDeployWorkflow, /call_gateway "execute-approved-deploy"/);
+  assert.match(
+    stagingDeployWorkflow,
+    /approval_id is required; an unapproved deployment is forbidden/
+  );
+
+  const authorizeIndex = stagingDeployWorkflow.indexOf('call_gateway "authorize-deploy"');
+  const executeIndex = stagingDeployWorkflow.indexOf(
+    'call_gateway "execute-approved-deploy"'
+  );
+  assert.ok(authorizeIndex >= 0 && executeIndex > authorizeIndex);
+
+  for (const forbiddenDirectDeployment of [
+    "VPS_SSH_PRIVATE_KEY",
+    "VPS_KNOWN_HOSTS",
+    "VPS_HOST",
+    "VPS_PORT",
+    "VPS_USER",
+    "DEPLOY_PATH",
+    "scp -i",
+    "ssh -i",
+    "docker load -i",
+    "bootstrap_dir/infrastructure/deploy/deploy-staging-artifact.sh"
+  ]) {
+    assert.doesNotMatch(
+      stagingDeployWorkflow,
+      new RegExp(forbiddenDirectDeployment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    );
+  }
+
+  assert.doesNotMatch(stagingDeployWorkflow, /call_gateway "approve-deploy"/);
+  assert.doesNotMatch(stagingDeployWorkflow, /call_gateway "request-deploy"/);
+});
+
+test("staging deployment gateway remains fail-closed", () => {
+  for (const requiredControl of [
+    "set -Eeuo pipefail",
+    "curl --fail-with-body",
+    "VPS_OPERATIONS_ACTION_URL must be configured as HTTPS",
+    "VPS_ACTION_BEARER_TOKEN is not configured",
+    "deployment gateway returned an error",
+    "deployment gateway source commit mismatch",
+    "deployment gateway approval ID mismatch",
+    "deployment gateway response lacks explicit success evidence",
+    "DENIED",
+    "REJECTED",
+    "EXPIRED",
+    "FAILED",
+    "PENDING"
+  ]) {
+    assert.match(
+      stagingDeployWorkflow,
+      new RegExp(requiredControl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
     );
   }
 });
