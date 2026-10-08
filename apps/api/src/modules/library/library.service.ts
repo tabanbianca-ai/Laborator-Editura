@@ -162,6 +162,13 @@ export class LibraryService {
       throw new BadRequestException("title, author and publicationType are required.");
     }
 
+    if (
+      input.projectId &&
+      (input.lifecycleStatus === "PUBLICAT" || input.visibility === "PUBLIC")
+    ) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, input.projectId);
+    }
+
     const now = new Date().toISOString();
     const itemLanguage = this.normalizeOptionalIsoLanguage(input.language, input.locale);
     const publication: LibraryPublicationRecord = {
@@ -464,6 +471,17 @@ export class LibraryService {
       if (!publication) {
         skippedPublicationIds.push(publicationId);
         continue;
+      }
+
+      if (
+        publication.projectId &&
+        (input.action === "MARK_PUBLIC" ||
+          (input.action === "CHANGE_STATUS" && input.lifecycleStatus === "PUBLICAT"))
+      ) {
+        await this.projectsService.assertProjectReadyForEditorialProcessing(
+          actor,
+          publication.projectId
+        );
       }
 
       const updated = this.applyBulkMutation(publication, input);
