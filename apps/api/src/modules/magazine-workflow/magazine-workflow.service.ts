@@ -111,10 +111,7 @@ export class MagazineWorkflowService {
     this.validateRequired(input.issueNumber, "issueNumber");
     this.validateRequired(input.language, "language");
 
-    const project = await this.projectsService.assertProjectReadyForEditorialProcessing(
-      actor,
-      input.projectId
-    );
+    const project = await this.projectsService.getProject(actor, input.projectId);
 
     if (project.publicationType !== "MAGAZINE") {
       throw new BadRequestException("Magazine workflow requires a Magazine project.");
@@ -1396,7 +1393,6 @@ export class MagazineWorkflowService {
     this.validateActor(actor);
     this.assertAuthorizedHuman(actor);
     const issue = await this.getIssue(actor, issueId);
-    await this.projectsService.assertProjectReadyForEditorialProcessing(actor, issue.projectId);
 
     if (!issue.preflight || this.gateBlocksPublication(issue.preflight)) {
       throw new BadRequestException(
@@ -1436,10 +1432,6 @@ export class MagazineWorkflowService {
     this.validateActor(actor);
     this.assertAuthorizedHuman(actor);
     const overview = await this.getIssueOverview(actor, issueId);
-    await this.projectsService.assertProjectReadyForEditorialProcessing(
-      actor,
-      overview.issue.projectId
-    );
     this.assertIssuePublishable(overview);
     const officialVersion = await this.createIssueVersion(
       actor,
@@ -1560,10 +1552,6 @@ export class MagazineWorkflowService {
     this.assertAuthorizedHuman(actor);
     this.validateRequired(input.reason, "reason");
     const overview = await this.getIssueOverview(actor, issueId);
-    await this.projectsService.assertProjectReadyForEditorialProcessing(
-      actor,
-      overview.issue.projectId
-    );
 
     if (
       overview.issue.status !== "WITHDRAWN" &&
@@ -1626,7 +1614,6 @@ export class MagazineWorkflowService {
     this.validateActor(actor);
     this.validateRequired(input.channel, "channel");
     const issue = await this.getIssue(actor, issueId);
-    await this.projectsService.assertProjectReadyForEditorialProcessing(actor, issue.projectId);
 
     if (!issue.currentOfficialVersionId || !LOCKED_PUBLICATION_STATES.has(issue.status)) {
       throw new BadRequestException(

@@ -1,6 +1,5 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
-import { ProjectsService } from "../projects/projects.service";
 import { QaService } from "../qa/qa.service";
 import { type QaIssueType } from "../qa/qa.types";
 import { SemanticFidelityService } from "../semantic-fidelity/semantic-fidelity.service";
@@ -44,7 +43,6 @@ const HUMAN_FINAL_AUTHORITY_RULE =
 export class WorkflowService {
   constructor(
     private readonly repository: InMemoryWorkflowRepository,
-    private readonly projectsService: ProjectsService,
     private readonly qaService: QaService,
     private readonly semanticFidelityService: SemanticFidelityService
   ) {}
@@ -54,10 +52,6 @@ export class WorkflowService {
     this.validateTarget(input);
     const scope = input.scope ?? this.scopeForTarget(input);
     this.validateScope(scope, input.segmentId);
-
-    if (input.projectId) {
-      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, input.projectId);
-    }
 
     const existing = await this.repository.findStateByTarget({
       ...input,

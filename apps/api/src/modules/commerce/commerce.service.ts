@@ -1,6 +1,5 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
-import { ProjectsService } from "../projects/projects.service";
 import { DatabaseCommerceRepository } from "./commerce.repository";
 import {
   type CommerceActor,
@@ -19,10 +18,7 @@ import {
 
 @Injectable()
 export class CommerceService {
-  constructor(
-    private readonly repository: DatabaseCommerceRepository,
-    private readonly projectsService: ProjectsService
-  ) {}
+  constructor(private readonly repository: DatabaseCommerceRepository) {}
 
   async createEdition(actor: CommerceActor, input: CreateCommerceEditionInput): Promise<CommerceEdition> {
     this.validateActor(actor);
@@ -164,11 +160,6 @@ export class CommerceService {
     this.assertAuthorizedHuman(actor);
 
     const existing = await this.getEdition(actor, editionId);
-
-    if (existing.projectId) {
-      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, existing.projectId);
-    }
-
     const now = new Date().toISOString();
     const approved: CommerceEdition = {
       ...existing,

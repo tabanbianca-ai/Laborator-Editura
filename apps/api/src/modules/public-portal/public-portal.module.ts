@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { ProjectsModule } from "../projects/projects.module";
 import { runtimeDatabaseProvider } from "../runtime-database.provider";
 import {
   PublicCatalogController,
@@ -9,7 +8,6 @@ import { DatabasePublicPortalRepository } from "./public-portal.repository";
 import { PublicPortalService } from "./public-portal.service";
 
 @Module({
-  imports: [ProjectsModule],
   controllers: [PublicPortalAdminController, PublicCatalogController],
   providers: [
     runtimeDatabaseProvider,
