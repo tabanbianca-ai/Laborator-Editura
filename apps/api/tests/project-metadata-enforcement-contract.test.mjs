@@ -23,7 +23,7 @@ function readMethod(source, methodName) {
 test("projects service defines one tenant-scoped read-only readiness validator", () => {
   const source = readModule("projects", "projects.service.ts");
   const validator = source.match(
-    /async assertProjectReadyForEditorialProcessing\([\s\S]*?\n  }\n\n  async listProjects/
+    /async assertProjectReadyForEditorialProcessing\([\s\S]*?\n {2}}\n\n {2}async listProjects/
   )?.[0];
 
   assert.ok(validator);
@@ -71,8 +71,8 @@ test("mandatory gate requirements are derived from the canonical editorial proce
 
 test("legacy project reads remain independent from readiness enforcement", () => {
   const source = readModule("projects", "projects.service.ts");
-  const getProject = source.match(/async getProject\([\s\S]*?\n  }\n\n  async assertProjectReady/)?.[0];
-  const listProjects = source.match(/async listProjects\([\s\S]*?\n  }\n\n  async listProjectDossiers/)?.[0];
+  const getProject = source.match(/async getProject\([\s\S]*?\n {2}}\n\n {2}async assertProjectReady/)?.[0];
+  const listProjects = source.match(/async listProjects\([\s\S]*?\n {2}}\n\n {2}async listProjectDossiers/)?.[0];
 
   assert.ok(getProject);
   assert.ok(listProjects);
