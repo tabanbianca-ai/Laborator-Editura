@@ -1,5 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
+import { ProjectsService } from "../projects/projects.service";
 import { DatabasePublicPortalRepository } from "./public-portal.repository";
 import {
   type CreatePublicCatalogItemInput,
@@ -15,7 +16,10 @@ import {
 
 @Injectable()
 export class PublicPortalService {
-  constructor(private readonly repository: DatabasePublicPortalRepository) {}
+  constructor(
+    private readonly repository: DatabasePublicPortalRepository,
+    private readonly projectsService: ProjectsService
+  ) {}
 
   async createCatalogItem(
     actor: PublicPortalActor,
@@ -156,6 +160,11 @@ export class PublicPortalService {
     this.assertAuthorizedHuman(actor);
 
     const existing = await this.getCatalogItem(actor, itemId);
+
+    if (existing.projectId) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, existing.projectId);
+    }
+
     const now = new Date().toISOString();
     const approved: PublicCatalogItem = {
       ...existing,
