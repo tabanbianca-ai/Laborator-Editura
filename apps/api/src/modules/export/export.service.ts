@@ -71,7 +71,10 @@ export class ExportService {
       throw new BadRequestException("Cannot export unless status is READY_FOR_EXPORT.");
     }
 
-    const project = await this.projectsService.getProject(actor, input.projectId);
+    const project = await this.projectsService.assertProjectReadyForEditorialProcessing(
+      actor,
+      input.projectId
+    );
     const document = await this.documentsService.getDocument(actor, input.documentId);
     const segments = await this.segmentsService.listSegments(actor, input.documentId);
     const translations = await this.translationsService.listTranslationsByDocument(
