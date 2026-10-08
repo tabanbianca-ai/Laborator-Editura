@@ -1,5 +1,38 @@
 import type { TranslationMemoryEntry } from "./translation-memory.types";
 
+type TranslationMemoryIdentity = Pick<
+  TranslationMemoryEntry,
+  | "domain"
+  | "organizationId"
+  | "sourceLanguage"
+  | "sourceText"
+  | "targetLanguage"
+  | "targetText"
+>;
+
+export function normalizeTmIdentityText(value: string): string {
+  return value
+    .normalize("NFC")
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .map((line) => line.replace(/[ \t]+/g, " ").replace(/^[ \t]+|[ \t]+$/g, ""))
+    .join("\n")
+    .trim();
+}
+
+export function buildTranslationMemoryIdentityKey(
+  entry: TranslationMemoryIdentity
+): string {
+  return JSON.stringify([
+    entry.organizationId,
+    entry.sourceLanguage.trim().toLowerCase(),
+    entry.targetLanguage.trim().toLowerCase(),
+    normalizeTmIdentityText(entry.sourceText),
+    normalizeTmIdentityText(entry.targetText),
+    entry.domain?.normalize("NFC").trim() || null
+  ]);
+}
+
 export function normalizeTmText(value: string): string {
   return value.trim().replace(/\s+/g, " ").toLocaleLowerCase();
 }
