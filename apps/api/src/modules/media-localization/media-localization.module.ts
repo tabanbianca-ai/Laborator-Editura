@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { LayoutPublishingModule } from "../layout-publishing/layout-publishing.module";
 import { LexicographicModule } from "../lexicographic/lexicographic.module";
 import { MultimediaCreationModule } from "../multimedia-creation/multimedia-creation.module";
+import { ProjectsModule } from "../projects/projects.module";
 import { runtimeDatabaseProvider } from "../runtime-database.provider";
 import { SemanticFidelityModule } from "../semantic-fidelity/semantic-fidelity.module";
 import { TerminologyModule } from "../terminology/terminology.module";
@@ -17,6 +18,7 @@ import { MediaLocalizationService } from "./media-localization.service";
     TerminologyModule,
     SemanticFidelityModule,
     MultimediaCreationModule,
+    ProjectsModule,
     LayoutPublishingModule
   ],
   controllers: [MediaLocalizationController],
