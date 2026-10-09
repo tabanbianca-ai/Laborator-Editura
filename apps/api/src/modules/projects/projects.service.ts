@@ -204,6 +204,59 @@ export class ProjectsService {
     return project;
   }
 
+  async assertProjectReadyForEditorialProcessing(
+    actor: ProjectActor,
+    projectId: string
+  ): Promise<Project> {
+    const project = await this.getProject(actor, projectId);
+
+    if (!PROJECT_PUBLICATION_TYPES.includes(project.publicationType)) {
+      throw new BadRequestException(
+        "Project is not ready for editorial processing: publicationType is missing or unsupported."
+      );
+    }
+
+    if (!PROJECT_EDITORIAL_DOMAINS.includes(project.editorialDomain)) {
+      throw new BadRequestException(
+        "Project is not ready for editorial processing: editorialDomain is missing or unsupported."
+      );
+    }
+
+    if (!Array.isArray(project.editorialProcess) || project.editorialProcess.length === 0) {
+      throw new BadRequestException(
+        "Project is not ready for editorial processing: editorialProcess is missing or empty."
+      );
+    }
+
+    const mandatoryGates = BASE_EDITORIAL_PROCESS.filter((stage) =>
+      stage === "REVIEW" || stage === "EDITORIAL_VALIDATION" || stage === "FINAL_APPROVAL"
+    );
+    let previousGateIndex = -1;
+
+    for (const gate of mandatoryGates) {
+      const gateIndexes = project.editorialProcess.flatMap((stage, index) =>
+        stage === gate ? [index] : []
+      );
+      const gateIndex = gateIndexes[0];
+
+      if (gateIndexes.length !== 1 || gateIndex === undefined) {
+        throw new BadRequestException(
+          `Project is not ready for editorial processing: ${gate} must appear exactly once.`
+        );
+      }
+
+      if (gateIndex <= previousGateIndex) {
+        throw new BadRequestException(
+          "Project is not ready for editorial processing: mandatory editorial gates are not in canonical order."
+        );
+      }
+
+      previousGateIndex = gateIndex;
+    }
+
+    return project;
+  }
+
   async listProjects(actor: ProjectActor): Promise<Project[]> {
     this.validateActor(actor);
     return this.repository.listProjects(actor.organizationId);

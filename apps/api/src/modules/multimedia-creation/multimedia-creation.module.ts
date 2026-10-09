@@ -1,10 +1,12 @@
 import { Module } from "@nestjs/common";
+import { ProjectsModule } from "../projects/projects.module";
 import { runtimeDatabaseProvider } from "../runtime-database.provider";
 import { MultimediaCreationController } from "./multimedia-creation.controller";
 import { DatabaseMultimediaRepository } from "./multimedia-creation.repository";
 import { MultimediaCreationService } from "./multimedia-creation.service";
 
 @Module({
+  imports: [ProjectsModule],
   controllers: [MultimediaCreationController],
   providers: [
     runtimeDatabaseProvider,
