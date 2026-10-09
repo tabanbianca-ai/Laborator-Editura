@@ -75,7 +75,7 @@ jobs:
           corepack prepare pnpm@10.12.1 --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --filter @laborator/shared
+        run: pnpm install --frozen-lockfile
 
       - name: API contract and integration tests
         run: node --test apps/api/tests/*.test.mjs
