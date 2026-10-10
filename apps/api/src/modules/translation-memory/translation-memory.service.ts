@@ -1,6 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
-import { InMemoryTranslationMemoryRepository } from "./translation-memory.repository";
+import {
+  InMemoryTranslationMemoryRepository,
+  TRANSLATION_MEMORY_DUPLICATE_MESSAGE,
+  TranslationMemoryDuplicateError
+} from "./translation-memory.repository";
 import {
   type CreateTranslationMemoryEntryInput,
   type ListTranslationMemoryInput,
@@ -13,7 +17,11 @@ import {
   type TranslationMemoryProposal,
   type UpdateTranslationMemoryEntryInput
 } from "./translation-memory.types";
-import { normalizeTmText, sortTranslationMemoryMatches } from "./translation-memory.utils";
+import {
+  buildTranslationMemoryIdentityKey,
+  normalizeTmText,
+  sortTranslationMemoryMatches
+} from "./translation-memory.utils";
 
 const DEFAULT_SEARCH_LIMIT = 10;
 const DEFAULT_SIMILARITY_THRESHOLD = 0.2;
@@ -33,7 +41,9 @@ export class TranslationMemoryService {
     const approvalStatus = input.approvalStatus ?? "PENDING";
 
     if (origin === "AI" && approvalStatus === "APPROVED") {
-      throw new BadRequestException("AI suggestions must enter Translation Memory as pending.");
+      throw new BadRequestException(
+        "AI suggestions must enter Translation Memory as pending."
+      );
     }
 
     const now = new Date().toISOString();
@@ -64,10 +74,16 @@ export class TranslationMemoryService {
       metadata: input.metadata
     };
 
-    const created = await this.repository.createEntry(entry);
+    const created = await this.persistUnique(() => this.repository.createEntry(entry));
     await this.audit("CREATE", actor, created.id, undefined, created);
     if (created.approvalStatus === "APPROVED") {
-      await this.audit("TRANSLATION_MEMORY_ENTRY_ADDED", actor, created.id, undefined, created);
+      await this.audit(
+        "TRANSLATION_MEMORY_ENTRY_ADDED",
+        actor,
+        created.id,
+        undefined,
+        created
+      );
     }
 
     return created;
@@ -103,13 +119,21 @@ export class TranslationMemoryService {
 
     this.validateConfidenceScore(updated.confidenceScore);
 
-    const saved = await this.repository.updateEntry(updated);
+    const identityChanged =
+      buildTranslationMemoryIdentityKey(existing) !==
+      buildTranslationMemoryIdentityKey(updated);
+    const saved = identityChanged
+      ? await this.persistUnique(() => this.repository.updateEntryIfUnique(updated))
+      : await this.repository.updateEntry(updated);
     await this.audit("UPDATE", actor, saved.id, existing, saved);
-    if (
-      existing.approvalStatus !== "APPROVED" &&
-      saved.approvalStatus === "APPROVED"
-    ) {
-      await this.audit("TRANSLATION_MEMORY_ENTRY_ADDED", actor, saved.id, existing, saved);
+    if (existing.approvalStatus !== "APPROVED" && saved.approvalStatus === "APPROVED") {
+      await this.audit(
+        "TRANSLATION_MEMORY_ENTRY_ADDED",
+        actor,
+        saved.id,
+        existing,
+        saved
+      );
     }
 
     return saved;
@@ -127,7 +151,9 @@ export class TranslationMemoryService {
       organizationId: actor.organizationId
     });
 
-    const approvedEntries = entries.filter((entry) => entry.approvalStatus === "APPROVED");
+    const approvedEntries = entries.filter(
+      (entry) => entry.approvalStatus === "APPROVED"
+    );
     const matches = sortTranslationMemoryMatches(
       approvedEntries,
       input.sourceText,
@@ -172,14 +198,15 @@ export class TranslationMemoryService {
       confidenceScore: this.calculateProposalConfidence(match),
       consultedSources: [
         "Translation Memory",
-        match.matchType === "CONTEXT" ? "Context match" : `${match.matchType.toLowerCase()} match`
+        match.matchType === "CONTEXT"
+          ? "Context match"
+          : `${match.matchType.toLowerCase()} match`
       ],
       glossaryUsed: undefined,
       translationMemoryMatch: match,
       terminologyStatus: "NOT_CHECKED",
       semanticValidation: "SUPPORTING_EVIDENCE",
-      explanation:
-        `TM proposes this ${match.matchType.toLowerCase()} match because an approved entry exists for ${match.entry.sourceLanguage}->${match.entry.targetLanguage}. It must never replace text automatically.`,
+      explanation: `TM proposes this ${match.matchType.toLowerCase()} match because an approved entry exists for ${match.entry.sourceLanguage}->${match.entry.targetLanguage}. It must never replace text automatically.`,
       automaticReplacement: false,
       humanFinalAuthority: true
     }));
@@ -198,7 +225,9 @@ export class TranslationMemoryService {
     }
 
     if (existing.origin === "AI") {
-      throw new BadRequestException("AI suggestions cannot be approved directly into TM.");
+      throw new BadRequestException(
+        "AI suggestions cannot be approved directly into TM."
+      );
     }
 
     const now = new Date().toISOString();
@@ -213,7 +242,9 @@ export class TranslationMemoryService {
       updatedAt: now
     };
 
-    const saved = await this.repository.updateEntry(approved);
+    const saved = await this.persistUnique(() =>
+      this.repository.updateEntryIfUnique(approved)
+    );
     await this.audit("APPROVE", actor, saved.id, existing, saved);
     await this.audit("TRANSLATION_MEMORY_ENTRY_ADDED", actor, saved.id, existing, saved);
 
@@ -255,6 +286,20 @@ export class TranslationMemoryService {
     });
   }
 
+  private async persistUnique(
+    operation: () => Promise<TranslationMemoryEntry>
+  ): Promise<TranslationMemoryEntry> {
+    try {
+      return await operation();
+    } catch (error) {
+      if (error instanceof TranslationMemoryDuplicateError) {
+        throw new BadRequestException(TRANSLATION_MEMORY_DUPLICATE_MESSAGE);
+      }
+
+      throw error;
+    }
+  }
+
   private validateActor(actor: TranslationMemoryActor): void {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("userId and organizationId are required.");
@@ -262,7 +307,12 @@ export class TranslationMemoryService {
   }
 
   private validateCreateInput(input: CreateTranslationMemoryEntryInput): void {
-    for (const key of ["sourceText", "targetText", "sourceLanguage", "targetLanguage"] as const) {
+    for (const key of [
+      "sourceText",
+      "targetText",
+      "sourceLanguage",
+      "targetLanguage"
+    ] as const) {
       if (!input[key]) {
         throw new BadRequestException(`${key} is required.`);
       }
