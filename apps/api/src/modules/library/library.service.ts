@@ -5,6 +5,7 @@ import {
   type LanguageLocaleMetadata
 } from "@laborator/shared";
 import { randomUUID } from "node:crypto";
+import { ProjectsService } from "../projects/projects.service";
 import { DatabaseLibraryRepository } from "./library.repository";
 import {
   type AddBookmarkInput,
@@ -43,7 +44,10 @@ import {
 
 @Injectable()
 export class LibraryService {
-  constructor(private readonly repository: DatabaseLibraryRepository) {}
+  constructor(
+    private readonly repository: DatabaseLibraryRepository,
+    private readonly projectsService: ProjectsService
+  ) {}
 
   async listLibrary(actor: LibraryActor): Promise<LibraryItem[]> {
     this.validateActor(actor);
@@ -158,6 +162,13 @@ export class LibraryService {
       throw new BadRequestException("title, author and publicationType are required.");
     }
 
+    if (
+      input.projectId &&
+      (input.lifecycleStatus === "PUBLICAT" || input.visibility === "PUBLIC")
+    ) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, input.projectId);
+    }
+
     const now = new Date().toISOString();
     const itemLanguage = this.normalizeOptionalIsoLanguage(input.language, input.locale);
     const publication: LibraryPublicationRecord = {
@@ -236,6 +247,10 @@ export class LibraryService {
     this.validateActor(actor);
     const existing = await this.requirePublication(actor, publicationId);
 
+    if (input.lifecycleStatus === "PUBLICAT" && existing.projectId) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, existing.projectId);
+    }
+
     if (!this.canTransition(existing.lifecycleStatus, input.lifecycleStatus)) {
       throw new BadRequestException("Invalid Library lifecycle status transition.");
     }
@@ -264,6 +279,11 @@ export class LibraryService {
   ): Promise<LibraryPublicationRecord> {
     this.validateActor(actor);
     const existing = await this.requirePublication(actor, publicationId);
+
+    if (input.visibility === "PUBLIC" && existing.projectId) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, existing.projectId);
+    }
+
     const updated: LibraryPublicationRecord = {
       ...existing,
       visibility: input.visibility,
@@ -451,6 +471,17 @@ export class LibraryService {
       if (!publication) {
         skippedPublicationIds.push(publicationId);
         continue;
+      }
+
+      if (
+        publication.projectId &&
+        (input.action === "MARK_PUBLIC" ||
+          (input.action === "CHANGE_STATUS" && input.lifecycleStatus === "PUBLICAT"))
+      ) {
+        await this.projectsService.assertProjectReadyForEditorialProcessing(
+          actor,
+          publication.projectId
+        );
       }
 
       const updated = this.applyBulkMutation(publication, input);

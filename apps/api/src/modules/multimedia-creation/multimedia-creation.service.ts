@@ -1,5 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
+import { ProjectsService } from "../projects/projects.service";
 import { DatabaseMultimediaRepository } from "./multimedia-creation.repository";
 import {
   type AudioProjectProfile,
@@ -19,7 +20,10 @@ import {
 
 @Injectable()
 export class MultimediaCreationService {
-  constructor(private readonly repository: DatabaseMultimediaRepository) {}
+  constructor(
+    private readonly repository: DatabaseMultimediaRepository,
+    private readonly projectsService: ProjectsService
+  ) {}
 
   async createProject(
     actor: MultimediaActor,
@@ -157,6 +161,11 @@ export class MultimediaCreationService {
     this.assertAuthorizedHuman(actor);
 
     const existing = await this.getProject(actor, projectId);
+
+    if (existing.projectId) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, existing.projectId);
+    }
+
     const now = new Date().toISOString();
     const nextVersion = existing.versionHistory.length + 1;
     const approved: MultimediaProject = {
@@ -224,6 +233,11 @@ export class MultimediaCreationService {
     }
 
     const existing = await this.getProject(actor, projectId);
+
+    if (existing.projectId) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, existing.projectId);
+    }
+
     const now = new Date().toISOString();
     const exportRecord: MultimediaExportHistoryItem = {
       id: randomUUID(),

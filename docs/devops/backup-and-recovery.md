@@ -70,4 +70,9 @@ Recovery must define:
   evidence but are not restore-eligible without an approved migration and
   revalidation procedure.
 - Restore dry-run proves data can be recreated.
+- Staging runtime restore dry-runs must validate isolation before creating
+  temporary files, use a unique temporary target outside active runtime
+  storage, compare the complete restored snapshot with the validated backup,
+  verify Workflow persistence, and confirm that any existing active runtime
+  database remains unchanged.
 - Tenant boundaries remain preserved after restore.

@@ -10,6 +10,7 @@ import {
 } from "../library/library.types";
 import { RightsProvenanceService } from "../rights-provenance/rights-provenance.service";
 import { type PublishingAuthorization } from "../rights-provenance/rights-provenance.types";
+import { ProjectsService } from "../projects/projects.service";
 import { WorkflowService } from "../workflow/workflow.service";
 import { type WorkflowState } from "../workflow/workflow.types";
 import { DatabaseLayoutPublicationRepository } from "./layout-publishing.repository";
@@ -47,6 +48,7 @@ import {
 export class LayoutPublishingService {
   constructor(
     private readonly repository: DatabaseLayoutPublicationRepository,
+    private readonly projectsService: ProjectsService,
     private readonly libraryService: LibraryService,
     private readonly exportService: ExportService,
     private readonly rightsProvenanceService: RightsProvenanceService,
@@ -59,6 +61,10 @@ export class LayoutPublishingService {
   ): Promise<LayoutPublicationPlan> {
     this.validateActor(actor);
     this.validateCreateInput(input);
+
+    if (input.projectId) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, input.projectId);
+    }
 
     const now = new Date().toISOString();
     const planId = randomUUID();
@@ -160,6 +166,11 @@ export class LayoutPublishingService {
     this.assertAuthorizedHuman(actor);
 
     const existing = await this.getPlan(actor, planId);
+
+    if (existing.projectId) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, existing.projectId);
+    }
+
     const now = new Date().toISOString();
     const approved: LayoutPublicationPlan = {
       ...existing,
@@ -230,6 +241,11 @@ export class LayoutPublishingService {
     }
 
     const existing = await this.getPlan(actor, planId);
+
+    if (existing.projectId) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, existing.projectId);
+    }
+
     const now = new Date().toISOString();
     const exportRecord: LayoutPublicationExportHistory = {
       id: randomUUID(),
@@ -272,6 +288,11 @@ export class LayoutPublishingService {
     }
 
     const publication = await this.libraryService.getPublication(actor, input.publicationId);
+
+    if (publication.projectId) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(actor, publication.projectId);
+    }
+
     const [editions, versions, files, rightsAuthorizations, workflow, artifacts, layoutPlan] =
       await Promise.all([
         this.libraryService.listPublicationEditions(actor, publication.id),
@@ -396,6 +417,7 @@ export class LayoutPublishingService {
 
     const preflight = await this.requirePreflight(actor, input.preflightResultId);
     this.assertPreflightMatchesInput(preflight, input.publicationId, input.editionId, input.versionId);
+    await this.assertPreflightProjectReady(actor, preflight);
 
     const now = new Date().toISOString();
     const selectedChannels = input.selectedChannels ?? preflight.selectedChannels;
@@ -453,6 +475,7 @@ export class LayoutPublishingService {
 
     const existing = await this.requirePublishingRecord(actor, publishingRecordId);
     const preflight = await this.requirePreflight(actor, existing.preflightResultId);
+    await this.assertPreflightProjectReady(actor, preflight);
     this.assertReadyPreflight(preflight);
     this.assertPublishingTransition(existing.publishingState, "GATA_PENTRU_PUBLICARE", {
       allowWithdrawnCorrection: true
@@ -489,6 +512,7 @@ export class LayoutPublishingService {
     const existing = await this.requirePublishingRecord(actor, publishingRecordId);
     this.assertPublishingTransition(existing.publishingState, "PUBLICAT");
     const preflight = await this.requirePreflight(actor, existing.preflightResultId);
+    await this.assertPreflightProjectReady(actor, preflight);
     this.assertReadyPreflight(preflight);
 
     const now = new Date().toISOString();
@@ -605,6 +629,7 @@ export class LayoutPublishingService {
     }
 
     const preflight = await this.requirePreflight(actor, input.preflightResultId);
+    await this.assertPreflightProjectReady(actor, preflight);
     this.assertPreflightMatchesInput(preflight, previous.publicationId, input.editionId, input.versionId);
     this.assertReadyPreflight(preflight);
 
@@ -676,8 +701,13 @@ export class LayoutPublishingService {
     }
 
     const publishingRecord = await this.requirePublishingRecord(actor, publishingRecordId);
-    const now = new Date().toISOString();
     const deliveryStatus = input.deliveryStatus ?? "PENDING";
+
+    if (deliveryStatus !== "WITHDRAWN") {
+      await this.assertPublishingRecordProjectReady(actor, publishingRecord);
+    }
+
+    const now = new Date().toISOString();
     const record: PublishingDistributionRecord = {
       id: randomUUID(),
       organizationId: actor.organizationId,
@@ -741,6 +771,12 @@ export class LayoutPublishingService {
     }
 
     const existing = await this.findDistributionRecord(actor, distributionRecordId);
+
+    if (input.deliveryStatus !== "WITHDRAWN") {
+      const publishingRecord = await this.requirePublishingRecord(actor, existing.publishingRecordId);
+      await this.assertPublishingRecordProjectReady(actor, publishingRecord);
+    }
+
     const now = new Date().toISOString();
     const updated: PublishingDistributionRecord = {
       ...existing,
@@ -1205,6 +1241,26 @@ export class LayoutPublishingService {
     ) {
       throw new BadRequestException("Preflight result does not match selected publication edition/version.");
     }
+  }
+
+  private async assertPreflightProjectReady(
+    actor: LayoutPublishingActor,
+    preflight: PublishingPreflightResult
+  ): Promise<void> {
+    if (preflight.projectId) {
+      await this.projectsService.assertProjectReadyForEditorialProcessing(
+        actor,
+        preflight.projectId
+      );
+    }
+  }
+
+  private async assertPublishingRecordProjectReady(
+    actor: LayoutPublishingActor,
+    publishingRecord: PublishingRecord
+  ): Promise<void> {
+    const preflight = await this.requirePreflight(actor, publishingRecord.preflightResultId);
+    await this.assertPreflightProjectReady(actor, preflight);
   }
 
   private assertPublishingTransition(

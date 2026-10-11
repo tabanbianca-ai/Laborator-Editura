@@ -187,9 +187,30 @@ infrastructure/deploy/rollback-staging-artifact.sh \
   --artifact <previous-approved-artifact.tar.gz> \
   --sha256 <previous-artifact-sha256> \
   --source-commit <previous-source-commit> \
+  --migration-version <previous-migration-version> \
   --api-image <previous-approved-api-image> \
-  --web-image <previous-approved-web-image>
+  --web-image <previous-approved-web-image> \
+  --api-image-id <previous-api-image-id> \
+  --web-image-id <previous-web-image-id> \
+  --runtime-metadata <previous-runtime-images.json> \
+  --runtime-image-bundle <previous-runtime-images.tar> \
+  --provenance <previous-build-provenance.json> \
+  --current-release-identity <current-release-identity.json> \
+  --backup <verified-canonical-backup.tar.gz>
 ```
+
+Rollback preflight fails closed unless the release artifact, runtime metadata,
+saved image bundle, and build provenance all identify the same source commit,
+artifact SHA-256, migration, API image, WEB image, and immutable build-time
+image IDs. The runtime bundle digest must match provenance, the target must
+differ from the currently deployed source, and migration versions must match
+unless a separately approved data migration rollback procedure exists.
+
+A live rollback additionally requires a canonical backup accepted by
+`infrastructure/backup/verify-backup.sh`. The artifact Compose file must retain
+the `runtime-db` and `runtime-backups` named volumes and may not configure
+ephemeral or destructive storage. Dry-run validation may use temporary fixture
+evidence with `--dry-run --skip-compose`; it never satisfies live authorization.
 
 The legacy source rollback remains available for non-RC source deployments:
 

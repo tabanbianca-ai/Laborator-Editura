@@ -1,4 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { getDefaultRuntimeDatabase, type FileBackedRuntimeDatabase } from "@laborator/db";
+import { RUNTIME_DATABASE } from "../runtime-database.provider";
 import {
   type WorkflowAuditEvent,
   type WorkflowRepository,
@@ -9,52 +11,47 @@ import {
 
 @Injectable()
 export class InMemoryWorkflowRepository implements WorkflowRepository {
-  private readonly states = new Map<string, WorkflowState>();
-  private readonly transitions: WorkflowTransition[] = [];
-  private readonly auditEvents: WorkflowAuditEvent[] = [];
+  constructor(
+    @Inject(RUNTIME_DATABASE)
+    private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
+  ) {}
 
   async createState(state: WorkflowState): Promise<WorkflowState> {
-    this.states.set(this.keyForState(state), state);
-    return state;
+    return this.database.insert("workflow_states", state);
   }
 
   async updateState(state: WorkflowState): Promise<WorkflowState> {
-    this.states.set(this.keyForState(state), state);
-    return state;
+    return this.database.upsert("workflow_states", state);
   }
 
   async findStateByTarget(
     input: WorkflowTargetInput & { organizationId: string }
   ): Promise<WorkflowState | null> {
-    return this.states.get(this.keyForTarget(input)) ?? null;
+    const states = this.database.selectForTenant<WorkflowState>(
+      "workflow_states",
+      input.organizationId,
+      (state) =>
+        state.projectId === input.projectId &&
+        state.documentId === input.documentId &&
+        state.segmentId === input.segmentId
+    );
+
+    return states[0] ?? null;
   }
 
   async appendTransition(transition: WorkflowTransition): Promise<WorkflowTransition> {
-    this.transitions.push(transition);
-    return transition;
+    return this.database.insert("workflow_transitions", transition);
   }
 
   async appendAuditEvent(event: WorkflowAuditEvent): Promise<void> {
-    this.auditEvents.push(event);
+    this.database.insert("workflow_audit_events", event);
   }
 
   getTransitions(): WorkflowTransition[] {
-    return [...this.transitions];
+    return this.database.select("workflow_transitions") as WorkflowTransition[];
   }
 
   getAuditEvents(): WorkflowAuditEvent[] {
-    return [...this.auditEvents];
-  }
-
-  private keyForState(state: WorkflowState): string {
-    return this.keyForTarget(state);
-  }
-
-  private keyForTarget(input: WorkflowTargetInput & { organizationId: string }): string {
-    return [
-      input.organizationId,
-      input.documentId,
-      input.segmentId ?? "DOCUMENT"
-    ].join(":");
+    return this.database.select("workflow_audit_events") as WorkflowAuditEvent[];
   }
 }

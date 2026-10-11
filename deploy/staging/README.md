@@ -156,8 +156,19 @@ STAGING_BACKUP_FILE=/var/backups/laborator/staging/runtime-db-YYYY-MM-DDTHH-mm-s
 pnpm staging:restore:dry-run
 ```
 
-Restore dry-run writes to `STAGING_RESTORE_DB_PATH`, not the live staging
-runtime database.
+Restore dry-run validates the runtime backup contract, creates a unique
+temporary directory under the parent of `STAGING_RESTORE_DB_PATH`, restores
+there, compares the complete restored snapshot with the backup, and verifies
+Workflow state, transition, and audit persistence. Before creating the
+temporary directory, it fails closed when the configured target is anywhere
+inside the active `LABORATOR_RUNTIME_DB_PATH` storage directory. It also
+verifies that an existing live database remains byte-for-byte unchanged.
+
+The temporary output is removed after successful validation. Set
+`STAGING_KEEP_RESTORE_OUTPUT=true` only when an operator needs to retain the
+isolated result for further inspection. In Docker backup mode, the backup is
+copied read-only from the API container and restoration runs locally; the
+active container and its runtime volume are never restoration targets.
 
 ## End-To-End Staging Validation
 
