@@ -14,14 +14,6 @@ const rollbackScript = join(
   "deploy",
   "rollback-staging-artifact.sh"
 );
-const artifactPath = join(
-  repositoryRoot,
-  "artifacts",
-  "releases",
-  "v1.0",
-  "rc1",
-  "laborator-editura-1.0.0-rc.1-30b39ec.tar.gz"
-);
 const composePath = join(
   repositoryRoot,
   "deploy",
@@ -36,7 +28,6 @@ const configPath = join(
   "laborator-backup.env.example"
 );
 
-const artifactSha256 = "9665892b4600387326d4e569de9fbf3a7f08f9ffb565bfda71664fa89f8c792e";
 const sourceCommit = "30b39ec0034f335bdbda210f09c8ad66a26a25a2";
 const currentSourceCommit = "add6e73221d70fbc07d0f724a8322d5aa3b503d9";
 const migrationVersion = "0008_security_hardening_phase_1.sql";
@@ -164,9 +155,9 @@ function runRollback(fixture, { confirm = true, dryRun = true } = {}) {
 
   args.push(
     "--artifact",
-    artifactPath,
+    fixture.artifactPath,
     "--sha256",
-    artifactSha256,
+    fixture.artifactSha256,
     "--source-commit",
     sourceCommit,
     "--migration-version",
@@ -212,6 +203,7 @@ function runRollback(fixture, { confirm = true, dryRun = true } = {}) {
 
 function createFixture() {
   const root = mkdtempSync(join(tmpdir(), "laborator-safe-rollback-"));
+  const artifactPath = join(root, "laborator-editura-1.0.0-rc.1-30b39ec.tar.gz");
   const bundlePath = join(root, "runtime-images.tar");
   const runtimeMetadataPath = join(root, "runtime-images.json");
   const provenancePath = join(root, "build-provenance.json");
@@ -220,9 +212,11 @@ function createFixture() {
   const releaseDir = join(root, "releases");
 
   mkdirSync(dirname(runtimeDbPath), { recursive: true });
+  writeReleaseArtifact(artifactPath);
   writeDockerBundle(bundlePath);
   writeFileSync(runtimeDbPath, '{"workflow_states":[{"id":"preserved"}]}\n');
 
+  const artifactSha256 = sha256(artifactPath);
   const bundleSha256 = sha256(bundlePath);
   writeJson(runtimeMetadataPath, {
     releaseVersion: "1.0.0-rc.1",
@@ -259,6 +253,8 @@ function createFixture() {
 
   return {
     root,
+    artifactPath,
+    artifactSha256,
     bundlePath,
     runtimeMetadataPath,
     provenancePath,
@@ -277,6 +273,45 @@ function sha256(path) {
 
 function writeJson(path, value) {
   writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+function writeReleaseArtifact(path) {
+  const artifactRoot = mkdtempSync(join(tmpdir(), "laborator-release-artifact-"));
+
+  try {
+    mkdirSync(join(artifactRoot, "apps", "api", "dist", "apps", "api", "src"), {
+      recursive: true
+    });
+    mkdirSync(join(artifactRoot, "apps", "web", ".next"), { recursive: true });
+    writeJson(join(artifactRoot, "RELEASE_ARTIFACT_MANIFEST.json"), {
+      releaseCandidate: "1.0.0-rc.1",
+      source: { commit: sourceCommit },
+      database: { latestMigration: migrationVersion }
+    });
+    writeFileSync(join(artifactRoot, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    writeFileSync(
+      join(artifactRoot, "apps", "api", "dist", "apps", "api", "src", "main.js"),
+      "export {};\n"
+    );
+    writeFileSync(join(artifactRoot, "apps", "web", ".next", "BUILD_ID"), "test-build\n");
+
+    const tar = spawnSync(
+      "tar",
+      [
+        "-C",
+        artifactRoot,
+        "-czf",
+        path,
+        "RELEASE_ARTIFACT_MANIFEST.json",
+        "pnpm-lock.yaml",
+        "apps"
+      ],
+      { encoding: "utf8" }
+    );
+    assert.equal(tar.status, 0, tar.stderr || tar.stdout);
+  } finally {
+    rmSync(artifactRoot, { recursive: true, force: true });
+  }
 }
 
 function writeDockerBundle(path, { extraFile } = {}) {
