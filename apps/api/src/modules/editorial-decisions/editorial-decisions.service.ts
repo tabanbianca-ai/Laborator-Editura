@@ -5,16 +5,20 @@ import { type LexicographicAuthority } from "../lexicographic/lexicographic.type
 import { SemanticFidelityService } from "../semantic-fidelity/semantic-fidelity.service";
 import { TerminologyService } from "../terminology/terminology.service";
 import { TranslationMemoryService } from "../translation-memory/translation-memory.service";
+import { TranslationsService } from "../translations/translations.service";
+import { WorkflowService } from "../workflow/workflow.service";
 import { DatabaseEditorialDecisionRepository } from "./editorial-decisions.repository";
 import {
   EDITORIAL_DECISION_PRIORITY_RULE,
   type CreateEditorialDecisionRecommendationInput,
+  type CreateEditorialCorrectionInput,
   type EditorialDecisionActor,
   type EditorialDecisionAuditAction,
   type EditorialDecisionAuditTrailItem,
   type EditorialDecisionEvidenceSource,
   type EditorialDecisionEvidenceSourceType,
-  type EditorialDecisionRecommendation
+  type EditorialDecisionRecommendation,
+  type RequestEditorialChangesInput
 } from "./editorial-decisions.types";
 
 @Injectable()
@@ -24,7 +28,9 @@ export class EditorialDecisionService {
     private readonly lexicographicService: LexicographicService,
     private readonly terminologyService: TerminologyService,
     private readonly translationMemoryService: TranslationMemoryService,
-    private readonly semanticFidelityService: SemanticFidelityService
+    private readonly semanticFidelityService: SemanticFidelityService,
+    private readonly translationsService: TranslationsService,
+    private readonly workflowService: WorkflowService
   ) {}
 
   async createRecommendation(
@@ -129,6 +135,165 @@ export class EditorialDecisionService {
     await this.audit("RECOMMENDATION_CREATED", actor, created.id, undefined, created);
 
     return created;
+  }
+
+  async createCorrection(
+    actor: EditorialDecisionActor,
+    input: CreateEditorialCorrectionInput
+  ): Promise<EditorialDecisionRecommendation> {
+    if (!input.proposedText.trim() || !input.issueType.trim()) {
+      throw new BadRequestException("proposedText and issueType are required.");
+    }
+
+    const recommendation = await this.createRecommendation(actor, {
+      ...input,
+      metadata: {
+        ...(input.metadata ?? {}),
+        correctionExplanation: input.explanation,
+        correctionProposal: true
+      }
+    });
+    const corrected: EditorialDecisionRecommendation = {
+      ...recommendation,
+      proposedText: input.proposedText.trim(),
+      translationId: input.translationId,
+      issueType: input.issueType.trim(),
+      severity: input.severity,
+      recommendation: input.explanation?.trim() || recommendation.recommendation,
+      updatedAt: new Date().toISOString()
+    };
+    const saved = await this.repository.updateRecommendation(corrected);
+    await this.audit("VERSION_CREATED", actor, saved.id, recommendation, saved);
+    return saved;
+  }
+
+  async listRecommendations(
+    actor: EditorialDecisionActor,
+    documentId: string,
+    segmentId?: string
+  ): Promise<EditorialDecisionRecommendation[]> {
+    this.validateActor(actor);
+    if (!documentId) {
+      throw new BadRequestException("documentId is required.");
+    }
+    return this.repository.listRecommendations({
+      organizationId: actor.organizationId,
+      documentId,
+      segmentId
+    });
+  }
+
+  async acceptCorrection(
+    actor: EditorialDecisionActor,
+    editorialDecisionId: string
+  ): Promise<EditorialDecisionRecommendation> {
+    this.validateActor(actor);
+    this.assertAuthorizedHuman(actor);
+    const existing = await this.getRecommendation(actor, editorialDecisionId);
+
+    if (!existing.proposedText || !existing.segmentId || !existing.documentId) {
+      throw new BadRequestException("Only a complete correction proposal can be accepted.");
+    }
+    if (existing.approvalStatus !== "PENDING_HUMAN_APPROVAL") {
+      throw new BadRequestException("Only pending corrections can be accepted.");
+    }
+
+    const translation = await this.translationsService.submitTranslation(actor, {
+      segmentId: existing.segmentId,
+      targetText: existing.proposedText,
+      domain: existing.domain,
+      metadata: {
+        editorialCorrectionAccepted: true,
+        editorialDecisionId: existing.id,
+        reviewedBy: actor.userId
+      }
+    });
+    const now = new Date().toISOString();
+    const accepted: EditorialDecisionRecommendation = {
+      ...existing,
+      approvalStatus: "APPROVED",
+      approvedBy: actor.userId,
+      approvedAt: now,
+      version: existing.version + 1,
+      updatedAt: now,
+      auditTrail: [
+        ...existing.auditTrail,
+        this.auditTrailItem("APPROVED", actor, now, existing.version + 1, {
+          acceptedTranslationId: translation.id
+        })
+      ],
+      metadata: {
+        ...(existing.metadata ?? {}),
+        acceptedTranslationId: translation.id
+      }
+    };
+    const saved = await this.repository.updateRecommendation(accepted);
+    await this.audit("APPROVED", actor, saved.id, existing, saved);
+    await this.workflowService.completeEditorialReview(actor, {
+      projectId: saved.projectId,
+      documentId: saved.documentId!,
+      editorialDecisionId: saved.id,
+      outcome: "ACCEPTED_CORRECTION"
+    });
+    return saved;
+  }
+
+  async requestChanges(
+    actor: EditorialDecisionActor,
+    input: RequestEditorialChangesInput
+  ): Promise<EditorialDecisionRecommendation> {
+    this.validateActor(actor);
+    this.assertAuthorizedHuman(actor);
+    if (!input.reason.trim()) {
+      throw new BadRequestException("reason is required.");
+    }
+    const recommendation = await this.createRecommendation(actor, {
+      ...input,
+      metadata: {
+        changeRequest: true,
+        reason: input.reason
+      }
+    });
+    const now = new Date().toISOString();
+    const requested = await this.repository.updateRecommendation({
+      ...recommendation,
+      approvalStatus: "CHANGES_REQUESTED",
+      recommendation: input.reason.trim(),
+      updatedAt: now
+    });
+    await this.audit("VERSION_CREATED", actor, requested.id, recommendation, requested);
+    await this.workflowService.blockWorkflow(actor, {
+      projectId: input.projectId,
+      documentId: input.documentId,
+      reason: input.reason.trim()
+    });
+    return requested;
+  }
+
+  async completeWithoutChanges(
+    actor: EditorialDecisionActor,
+    input: CreateEditorialDecisionRecommendationInput
+  ): Promise<EditorialDecisionRecommendation> {
+    this.validateActor(actor);
+    this.assertAuthorizedHuman(actor);
+    if (!input.documentId) {
+      throw new BadRequestException("documentId is required.");
+    }
+    const recommendation = await this.createRecommendation(actor, {
+      ...input,
+      metadata: {
+        ...(input.metadata ?? {}),
+        noChangesRequired: true
+      }
+    });
+    const approved = await this.approveRecommendation(actor, recommendation.id);
+    await this.workflowService.completeEditorialReview(actor, {
+      projectId: approved.projectId,
+      documentId: input.documentId,
+      editorialDecisionId: approved.id,
+      outcome: "NO_CHANGES_REQUIRED"
+    });
+    return approved;
   }
 
   async getRecommendation(

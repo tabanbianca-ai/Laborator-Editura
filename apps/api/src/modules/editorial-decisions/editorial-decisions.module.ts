@@ -4,6 +4,8 @@ import { runtimeDatabaseProvider } from "../runtime-database.provider";
 import { SemanticFidelityModule } from "../semantic-fidelity/semantic-fidelity.module";
 import { TerminologyModule } from "../terminology/terminology.module";
 import { TranslationMemoryModule } from "../translation-memory/translation-memory.module";
+import { TranslationsModule } from "../translations/translations.module";
+import { WorkflowModule } from "../workflow/workflow.module";
 import { EditorialDecisionController } from "./editorial-decisions.controller";
 import { DatabaseEditorialDecisionRepository } from "./editorial-decisions.repository";
 import { EditorialDecisionService } from "./editorial-decisions.service";
@@ -13,7 +15,9 @@ import { EditorialDecisionService } from "./editorial-decisions.service";
     LexicographicModule,
     TerminologyModule,
     TranslationMemoryModule,
-    SemanticFidelityModule
+    SemanticFidelityModule,
+    TranslationsModule,
+    WorkflowModule
   ],
   controllers: [EditorialDecisionController],
   providers: [

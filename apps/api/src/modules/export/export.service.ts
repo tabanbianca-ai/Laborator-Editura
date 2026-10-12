@@ -391,7 +391,8 @@ export class ExportService {
       DRAFT: "draft",
       SUBMITTED: "human_edited",
       VALIDATED: "reviewed",
-      APPROVED: "approved"
+      APPROVED: "approved",
+      OUTDATED: "draft"
     };
 
     return statusMap[status];

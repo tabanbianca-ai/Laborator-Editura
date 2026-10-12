@@ -1,5 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
+import { DocumentsService } from "../documents/documents.service";
 import { ProjectsService } from "../projects/projects.service";
 import { QaService } from "../qa/qa.service";
 import { type QaIssueType } from "../qa/qa.types";
@@ -8,6 +9,7 @@ import { InMemoryWorkflowRepository } from "./workflow.repository";
 import {
   type AdvanceWorkflowInput,
   type BlockWorkflowInput,
+  type CompleteEditorialReviewInput,
   type StartWorkflowInput,
   type UnblockWorkflowInput,
   type WorkflowActor,
@@ -45,6 +47,7 @@ export class WorkflowService {
   constructor(
     private readonly repository: InMemoryWorkflowRepository,
     private readonly projectsService: ProjectsService,
+    private readonly documentsService: DocumentsService,
     private readonly qaService: QaService,
     private readonly semanticFidelityService: SemanticFidelityService
   ) {}
@@ -124,6 +127,13 @@ export class WorkflowService {
 
     const updated = this.applyStatus(actor, existing, toStatus);
     const saved = await this.repository.updateState(updated);
+    if (toStatus === "IN_REVIEW") {
+      await this.documentsService.markDocumentStatus(actor, saved.documentId, "IN_REVIEW");
+    } else if (toStatus === "APPROVED") {
+      await this.documentsService.markDocumentStatus(actor, saved.documentId, "APPROVED");
+    } else if (toStatus === "EXPORTED") {
+      await this.documentsService.markDocumentStatus(actor, saved.documentId, "EXPORTED");
+    }
     await this.recordTransition(
       actor,
       existing,
@@ -199,12 +209,55 @@ export class WorkflowService {
       throw new BadRequestException("Document must be in review before approval.");
     }
 
+    if (existing.metadata?.editorialReviewCompleted !== true) {
+      throw new BadRequestException(
+        "Mandatory editorial correction review must be completed before approval."
+      );
+    }
+
     await this.assertNoBlockingSemanticIssues(actor, existing);
 
     const updated = this.applyStatus(actor, existing, "APPROVED");
     const saved = await this.repository.updateState(updated);
+    await this.documentsService.markDocumentStatus(actor, saved.documentId, "APPROVED");
     await this.recordTransition(actor, existing, saved, "DOCUMENT_APPROVED");
 
+    return saved;
+  }
+
+  async completeEditorialReview(
+    actor: WorkflowActor,
+    input: CompleteEditorialReviewInput
+  ): Promise<WorkflowState> {
+    this.validateActor(actor);
+    this.assertAuthorizedHuman(actor);
+    const existing = await this.getExistingState(actor, input);
+
+    if (existing.status !== "IN_REVIEW") {
+      throw new BadRequestException("Editorial review can be completed only while the document is in review.");
+    }
+
+    const updated: WorkflowState = {
+      ...existing,
+      metadata: {
+        ...(existing.metadata ?? {}),
+        editorialDecisionId: input.editorialDecisionId,
+        editorialReviewCompleted: true,
+        editorialReviewCompletedAt: new Date().toISOString(),
+        editorialReviewCompletedBy: actor.userId,
+        editorialReviewOutcome: input.outcome
+      },
+      updatedAt: new Date().toISOString(),
+      updatedBy: actor.userId
+    };
+    const saved = await this.repository.updateState(updated);
+    await this.recordTransition(
+      actor,
+      existing,
+      saved,
+      "EDITORIAL_REVIEW_COMPLETED",
+      input.outcome
+    );
     return saved;
   }
 
@@ -248,6 +301,7 @@ export class WorkflowService {
 
     const updated = this.applyStatus(actor, existing, "EXPORTED");
     const saved = await this.repository.updateState(updated);
+    await this.documentsService.markDocumentStatus(actor, saved.documentId, "EXPORTED");
     await this.recordTransition(actor, existing, saved, "DOCUMENT_EXPORTED");
 
     return saved;
@@ -264,6 +318,11 @@ export class WorkflowService {
 
     if (toStatus === "APPROVED") {
       this.assertAuthorizedHuman(actor);
+      if (state.metadata?.editorialReviewCompleted !== true) {
+        throw new BadRequestException(
+          "Mandatory editorial correction review must be completed before approval."
+        );
+      }
       await this.assertNoBlockingSemanticIssues(actor, state);
     }
 

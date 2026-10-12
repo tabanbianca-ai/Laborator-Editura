@@ -29,6 +29,7 @@ test("translation workspace client uses existing backend endpoints only", () => 
     "/segments",
     "/translations",
     "/translations/submit",
+    "/translations/segments/",
     "/terminology/check-segment",
     "/lexicographic/search",
     "/semantic-fidelity/issues"
@@ -55,6 +56,10 @@ test("translation workspace renders selectors segments source target and save ac
   assert.match(page, /Save translation/);
   assert.match(actions, /saveWorkspaceTranslationAction/);
   assert.match(actions, /submitWorkspaceTranslation/);
+  assert.match(actions, /reviseWorkspaceSourceAction/);
+  assert.match(actions, /advanceTranslationWorkflowAction/);
+  assert.match(page, /Workflow and version history/);
+  assert.match(page, /Existing translations become outdated/);
 });
 
 test("translation workspace displays translator and original author attribution", () => {

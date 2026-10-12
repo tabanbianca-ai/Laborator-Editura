@@ -27,7 +27,8 @@ test("review workspace client exposes parallel review and proposal models", () =
     "acceptedRejectedProposalsAudited",
     "versionHistoryPreserved",
     "reviewProposals",
-    "buildReviewProposals"
+    "listEditorialRecommendations",
+    "mapEditorialRecommendations"
   ]) {
     assert.match(client, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }

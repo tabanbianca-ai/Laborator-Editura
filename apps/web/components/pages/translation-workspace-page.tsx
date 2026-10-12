@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { formatLanguageLocale } from "@laborator/shared";
-import { saveWorkspaceTranslationAction } from "../../lib/translation-workspace-actions";
+import {
+  advanceTranslationWorkflowAction,
+  reviseWorkspaceSourceAction,
+  saveWorkspaceTranslationAction
+} from "../../lib/translation-workspace-actions";
 import type {
   LexicographicReference,
   TranslationWorkspaceData,
@@ -85,6 +89,10 @@ export function TranslationWorkspacePage({
             latestTranslation={latestTranslation}
             segment={activeSegment}
             semanticScore={latestTranslation?.metadata?.semanticScore}
+            translations={workspace.translations.filter(
+              (translation) => translation.segmentId === activeSegment.id
+            )}
+            workflow={workspace.workflow}
           />
 
           <ReferencePanels
@@ -147,11 +155,15 @@ function SegmentRail({
 function TranslationEditorPanel({
   latestTranslation,
   segment,
-  semanticScore
+  semanticScore,
+  translations,
+  workflow
 }: {
   latestTranslation: WorkspaceTranslationRecord | null;
   segment: WorkspaceSegmentRecord;
   semanticScore?: number;
+  translations: WorkspaceTranslationRecord[];
+  workflow: TranslationWorkspaceData["workflow"];
 }) {
   return (
     <section className="translation-editor-panel" aria-label="Translation editor">
@@ -161,6 +173,54 @@ function TranslationEditorPanel({
           <Badge tone="neutral">{formatLanguage(segment.sourceLanguage, segment.sourceLocale)}</Badge>
           <span>{formatLanguage(segment.targetLanguage, segment.targetLocale)}</span>
           <Badge tone="info">v1.0</Badge>
+        </div>
+        <details>
+          <summary>Authorized source revision</summary>
+          <form action={reviseWorkspaceSourceAction} className="translation-save-form">
+            <input name="documentId" type="hidden" value={segment.documentId} />
+            <input name="segmentId" type="hidden" value={segment.id} />
+            <label className="ui-input-field">
+              <span>Revised source text</span>
+              <textarea className="ui-input" defaultValue={segment.sourceText} name="sourceText" required rows={6} />
+            </label>
+            <label className="ui-input-field">
+              <span>Revision reason</span>
+              <input className="ui-input" name="reason" required />
+            </label>
+            <Button type="submit" variant="secondary">Save source revision</Button>
+          </form>
+          <p className="review-human-authority">
+            The original source version remains in immutable history. Existing translations become outdated.
+          </p>
+        </details>
+      </Card>
+
+      <Card title="Workflow and version history">
+        <div className="review-status-row">
+          <Badge tone={workflow?.status === "IN_REVIEW" ? "success" : "info"}>
+            {workflow?.status?.replace(/_/g, " ") ?? "workflow unavailable"}
+          </Badge>
+          {workflow && ["IN_TRANSLATION", "IN_QA", "IN_SEMANTIC_REVIEW"].includes(workflow.status) ? (
+            <form action={advanceTranslationWorkflowAction}>
+              <input name="documentId" type="hidden" value={segment.documentId} />
+              <input name="projectId" type="hidden" value={segment.projectId} />
+              <input name="segmentId" type="hidden" value={segment.id} />
+              <Button type="submit" variant="secondary">Advance workflow</Button>
+            </form>
+          ) : null}
+        </div>
+        <div className="reference-stack">
+          {[...translations]
+            .sort((left, right) =>
+              Number(right.metadata?.translationVersion ?? 0) - Number(left.metadata?.translationVersion ?? 0)
+            )
+            .map((translation) => (
+              <ReferenceItem
+                key={translation.id}
+                label={`Version ${translation.metadata?.translationVersion ?? 1} - ${translation.status}`}
+                text={translation.targetText}
+              />
+            ))}
         </div>
       </Card>
 

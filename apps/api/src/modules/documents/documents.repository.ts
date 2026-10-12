@@ -30,6 +30,20 @@ export class DatabaseDocumentsRepository {
     );
   }
 
+  async findDocumentByImportChecksum(
+    organizationId: string,
+    projectId: string,
+    checksum: string
+  ): Promise<Document | null> {
+    return this.database.selectForTenant<Document>(
+      "documents",
+      organizationId,
+      (document) =>
+        document.projectId === projectId &&
+        document.metadata?.originalSourceSha256 === checksum
+    )[0] ?? null;
+  }
+
   async appendAuditEvent(event: DocumentAuditEvent): Promise<void> {
     this.database.insert("foundation_audit_events", event);
   }

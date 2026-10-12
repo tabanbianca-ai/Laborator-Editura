@@ -1,8 +1,11 @@
-import { Body, Controller, Get, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import { CurrentActor } from "../auth/request-context.decorator";
 import { type AuthenticatedRequestContext } from "../auth/request-context.types";
 import { TranslationsService } from "./translations.service";
-import { type SubmitTranslationInput } from "./translations.types";
+import {
+  type ReviseSegmentSourceForTranslationInput,
+  type SubmitTranslationInput
+} from "./translations.types";
 
 @Controller("translations")
 export class TranslationsController {
@@ -22,5 +25,14 @@ export class TranslationsController {
     @Query("documentId") documentId: string
   ) {
     return this.translationsService.listTranslationsByDocument(actor, documentId);
+  }
+
+  @Post("segments/:id/source-revisions")
+  reviseSegmentSource(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Param("id") id: string,
+    @Body() input: ReviseSegmentSourceForTranslationInput
+  ) {
+    return this.translationsService.reviseSegmentSource(actor, id, input);
   }
 }

@@ -58,6 +58,24 @@ export interface ReviewProposal {
   resolvedAt?: string;
 }
 
+interface EditorialDecisionRecord {
+  approvalStatus: "APPROVED" | "CHANGES_REQUESTED" | "PENDING_HUMAN_APPROVAL" | "REJECTED";
+  confidenceScore: number;
+  createdAt: string;
+  createdBy: string;
+  documentId?: string;
+  id: string;
+  issueType?: string;
+  projectId?: string;
+  proposedText?: string;
+  recommendation: string;
+  segmentId?: string;
+  sourceText: string;
+  targetLanguage: string;
+  targetText: string;
+  updatedAt: string;
+}
+
 export type ParallelReviewDisplayMode = "TWO_COLUMNS" | "THREE_COLUMNS" | "FOUR_COLUMNS";
 
 export interface ParallelReviewInterfaceState {
@@ -128,13 +146,14 @@ export async function getReviewWorkspaceData({
     });
   }
 
-  const [segmentsResult, translationsResult, workflowResult] = await Promise.all([
+  const [segmentsResult, translationsResult, workflowResult, recommendationsResult] = await Promise.all([
     listReviewSegments(selectedDocument.id),
     listReviewTranslations(selectedDocument.id),
     getWorkflowStatus({
       documentId: selectedDocument.id,
       projectId: selectedDocument.projectId
-    })
+    }),
+    listEditorialRecommendations(selectedDocument.id, segmentId)
   ]);
   const segments = [...(segmentsResult.data ?? [])].sort((left, right) => left.order - right.order);
   const translations = translationsResult.data ?? [];
@@ -154,7 +173,7 @@ export async function getReviewWorkspaceData({
       projects,
       projectsError: projectsResult.error,
       parallelReview: parallelReviewInterface,
-      reviewProposals: [],
+      reviewProposals: mapEditorialRecommendations(recommendationsResult.data ?? []),
       selectedDocument,
       selectedProject,
       semanticIssues: [],
@@ -190,12 +209,7 @@ export async function getReviewWorkspaceData({
       segmentId: activeSegment.id
     })
   ]);
-  const reviewProposals = buildReviewProposals({
-    latestTranslation,
-    segment: activeSegment,
-    semanticIssues: semanticResult.data ?? [],
-    terminology: terminologyResult.data ?? null
-  });
+  const reviewProposals = mapEditorialRecommendations(recommendationsResult.data ?? []);
 
   return {
     activeSegment,
@@ -230,6 +244,77 @@ export function approveReviewDocument(input: {
   return apiPost<ReviewWorkflowState, typeof input>("/workflow/approve", input);
 }
 
+export function advanceReviewWorkflow(input: {
+  documentId: string;
+  projectId?: string;
+}): Promise<ApiResult<ReviewWorkflowState>> {
+  return apiPost<ReviewWorkflowState, typeof input>("/workflow/advance", input);
+}
+
+export function unblockReviewWorkflow(input: {
+  documentId: string;
+  projectId?: string;
+  reason: string;
+}): Promise<ApiResult<ReviewWorkflowState>> {
+  return apiPost<ReviewWorkflowState, typeof input>("/workflow/unblock", input);
+}
+
+export function createEditorialCorrection(input: {
+  documentId: string;
+  explanation?: string;
+  issueType: string;
+  projectId: string;
+  proposedText: string;
+  segmentId: string;
+  severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  sourceLanguage: string;
+  sourceText: string;
+  targetLanguage: string;
+  targetText: string;
+  translationId?: string;
+}): Promise<ApiResult<EditorialDecisionRecord>> {
+  return apiPost<EditorialDecisionRecord, typeof input>("/editorial-decisions/corrections", input);
+}
+
+export function acceptEditorialCorrection(id: string): Promise<ApiResult<EditorialDecisionRecord>> {
+  return apiPost<EditorialDecisionRecord, Record<string, never>>(
+    `/editorial-decisions/corrections/${encodeURIComponent(id)}/accept`,
+    {}
+  );
+}
+
+export function rejectEditorialCorrection(id: string): Promise<ApiResult<EditorialDecisionRecord>> {
+  return apiPost<EditorialDecisionRecord, Record<string, never>>(
+    `/editorial-decisions/corrections/${encodeURIComponent(id)}/reject`,
+    {}
+  );
+}
+
+export function requestEditorialChanges(input: {
+  documentId: string;
+  projectId?: string;
+  reason: string;
+  segmentId?: string;
+  sourceLanguage: string;
+  sourceText: string;
+  targetLanguage: string;
+  targetText: string;
+}): Promise<ApiResult<EditorialDecisionRecord>> {
+  return apiPost<EditorialDecisionRecord, typeof input>("/editorial-decisions/request-changes", input);
+}
+
+export function completeEditorialReviewWithoutChanges(input: {
+  documentId: string;
+  projectId?: string;
+  segmentId?: string;
+  sourceLanguage: string;
+  sourceText: string;
+  targetLanguage: string;
+  targetText: string;
+}): Promise<ApiResult<EditorialDecisionRecord>> {
+  return apiPost<EditorialDecisionRecord, typeof input>("/editorial-decisions/complete-no-changes", input);
+}
+
 export type ReviewLexicographicEvidence = LexicographicReference;
 
 export const parallelReviewInterface: ParallelReviewInterfaceState = {
@@ -255,6 +340,17 @@ function listReviewTranslations(documentId: string): Promise<ApiResult<Workspace
   return apiGet<WorkspaceTranslationRecord[]>(
     `/translations?documentId=${encodeURIComponent(documentId)}`
   );
+}
+
+function listEditorialRecommendations(
+  documentId: string,
+  segmentId?: string
+): Promise<ApiResult<EditorialDecisionRecord[]>> {
+  const query = new URLSearchParams({ documentId });
+  if (segmentId) {
+    query.set("segmentId", segmentId);
+  }
+  return apiGet<EditorialDecisionRecord[]>(`/editorial-decisions/recommendations?${query.toString()}`);
 }
 
 function getWorkflowStatus(input: {
@@ -340,56 +436,35 @@ function findLatestTranslation(
   );
 }
 
-function buildReviewProposals(input: {
-  latestTranslation: WorkspaceTranslationRecord | null;
-  segment: WorkspaceSegmentRecord;
-  semanticIssues: SemanticIssue[];
-  terminology: TerminologyCheckResult | null;
-}): ReviewProposal[] {
-  const currentTranslation = input.latestTranslation?.targetText ?? input.segment.latestTargetText ?? "";
-
-  if (!currentTranslation) {
-    return [];
-  }
-
-  const semanticProposals = input.semanticIssues
-    .filter((issue) => issue.status === "OPEN")
-    .slice(0, 3)
-    .map((issue, index) => ({
-      proposalId: `${input.segment.id}-semantic-${index + 1}`,
-      projectId: input.segment.projectId,
-      documentId: input.segment.documentId,
-      segmentId: input.segment.id,
-      sourceText: input.segment.sourceText,
-      currentTranslation,
-      proposedText: issue.alternatives?.[0] ?? currentTranslation,
-      language: input.segment.targetLanguage,
-      issueType: issue.type,
-      explanation: issue.aiExplanation ?? issue.message,
-      confidence: 0.72,
-      status: "PENDING" as const,
-      createdByAgent: "Review Agent" as const,
-      createdAt: issue.createdAt
+function mapEditorialRecommendations(records: EditorialDecisionRecord[]): ReviewProposal[] {
+  return records
+    .filter(
+      (record) =>
+        Boolean(record.documentId && record.segmentId && record.projectId && record.proposedText)
+    )
+    .map((record) => ({
+      proposalId: record.id,
+      projectId: record.projectId!,
+      documentId: record.documentId!,
+      segmentId: record.segmentId!,
+      sourceText: record.sourceText,
+      currentTranslation: record.targetText,
+      proposedText: record.proposedText!,
+      language: record.targetLanguage,
+      issueType: record.issueType ?? "EDITORIAL_CORRECTION",
+      explanation: record.recommendation,
+      confidence: record.confidenceScore,
+      status:
+        record.approvalStatus === "APPROVED"
+          ? "ACCEPTED"
+          : record.approvalStatus === "REJECTED"
+            ? "REJECTED"
+            : "PENDING",
+      createdByAgent: "Editorial Decision Subagent",
+      reviewedBy: record.approvalStatus === "PENDING_HUMAN_APPROVAL" ? undefined : record.createdBy,
+      createdAt: record.createdAt,
+      resolvedAt: record.approvalStatus === "PENDING_HUMAN_APPROVAL" ? undefined : record.updatedAt
     }));
-
-  const terminologyProposals = (input.terminology?.violations ?? []).slice(0, 3).map((violation, index) => ({
-    proposalId: `${input.segment.id}-terminology-${index + 1}`,
-    projectId: input.segment.projectId,
-    documentId: input.segment.documentId,
-    segmentId: input.segment.id,
-    sourceText: input.segment.sourceText,
-    currentTranslation,
-    proposedText: currentTranslation,
-    language: input.segment.targetLanguage,
-    issueType: violation.type,
-    explanation: violation.message,
-    confidence: 0.68,
-    status: "PENDING" as const,
-    createdByAgent: "Editorial Decision Subagent" as const,
-    createdAt: input.latestTranslation?.updatedAt ?? input.segment.updatedAt
-  }));
-
-  return [...semanticProposals, ...terminologyProposals];
 }
 
 function emptyReviewWorkspace(input: {

@@ -1,6 +1,15 @@
 import type { ComponentProps } from "react";
 import Link from "next/link";
-import { approveReviewAction } from "../../lib/review-workspace-actions";
+import {
+  acceptEditorialCorrectionAction,
+  advanceReviewWorkflowAction,
+  approveReviewAction,
+  completeEditorialReviewAction,
+  createEditorialCorrectionAction,
+  rejectEditorialCorrectionAction,
+  requestEditorialChangesAction,
+  unblockReviewWorkflowAction
+} from "../../lib/review-workspace-actions";
 import type {
   ParallelReviewInterfaceState,
   ReviewProposal,
@@ -249,6 +258,48 @@ function ReviewComparisonPanel({
             )}
 
             <ReviewProposalList proposals={proposals} />
+            {targetText ? (
+              <form action={createEditorialCorrectionAction} className="translation-save-form">
+                <input name="documentId" type="hidden" value={segment.documentId} />
+                <input name="projectId" type="hidden" value={segment.projectId} />
+                <input name="segmentId" type="hidden" value={segment.id} />
+                <input name="sourceLanguage" type="hidden" value={segment.sourceLanguage} />
+                <input name="sourceText" type="hidden" value={segment.sourceText} />
+                <input name="targetLanguage" type="hidden" value={segment.targetLanguage} />
+                <input name="targetText" type="hidden" value={targetText} />
+                <input name="translationId" type="hidden" value={latestTranslation?.id ?? ""} />
+                <label className="ui-input-field">
+                  <span>Proposed correction</span>
+                  <textarea className="ui-input" name="proposedText" required rows={5} />
+                </label>
+                <label className="ui-input-field">
+                  <span>Issue type</span>
+                  <select className="ui-input ui-select" defaultValue="LANGUAGE_CORRECTION" name="issueType">
+                    <option value="ORTHOGRAPHY">Orthography and diacritics</option>
+                    <option value="PUNCTUATION">Punctuation</option>
+                    <option value="GRAMMAR">Grammar and agreement</option>
+                    <option value="SYNTAX">Syntax</option>
+                    <option value="TERMINOLOGY">Terminology</option>
+                    <option value="STYLE">Style or repetition</option>
+                    <option value="LANGUAGE_CORRECTION">Editorial correction</option>
+                  </select>
+                </label>
+                <label className="ui-input-field">
+                  <span>Severity</span>
+                  <select className="ui-input ui-select" defaultValue="HIGH" name="severity">
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                    <option value="CRITICAL">Critical</option>
+                  </select>
+                </label>
+                <label className="ui-input-field">
+                  <span>Explanation</span>
+                  <textarea className="ui-input" name="explanation" required rows={3} />
+                </label>
+                <Button type="submit">Propose correction</Button>
+              </form>
+            ) : null}
           </article>
         </div>
 
@@ -300,16 +351,31 @@ function ReviewProposalList({ proposals }: { proposals: ReviewProposal[] }) {
               {proposal.status}
             </Badge>
           </div>
-          <p className="review-proposal-text">{proposal.proposedText}</p>
+          <div className="review-proposal-diff" aria-label="Proposed text change">
+            <del>{proposal.currentTranslation}</del>
+            <ins>{proposal.proposedText}</ins>
+          </div>
           <p className="review-human-authority">{proposal.explanation}</p>
           <div className="review-status-row">
             <Badge tone="info">Confidence {Math.round(proposal.confidence * 100)}%</Badge>
             <Badge tone="neutral">{proposal.createdByAgent}</Badge>
           </div>
-          <div className="review-action-form" aria-label="Individual proposal actions">
-            <Button disabled type="button" variant="secondary">Accept proposal</Button>
-            <Button disabled type="button" variant="secondary">Reject proposal</Button>
-          </div>
+          {proposal.status === "PENDING" ? (
+            <div className="review-action-form" aria-label="Individual proposal actions">
+              <form action={acceptEditorialCorrectionAction}>
+                <input name="documentId" type="hidden" value={proposal.documentId} />
+                <input name="segmentId" type="hidden" value={proposal.segmentId} />
+                <input name="proposalId" type="hidden" value={proposal.proposalId} />
+                <Button type="submit">Accept proposal</Button>
+              </form>
+              <form action={rejectEditorialCorrectionAction}>
+                <input name="documentId" type="hidden" value={proposal.documentId} />
+                <input name="segmentId" type="hidden" value={proposal.segmentId} />
+                <input name="proposalId" type="hidden" value={proposal.proposalId} />
+                <Button type="submit" variant="secondary">Reject proposal</Button>
+              </form>
+            </div>
+          ) : null}
           <p className="review-human-authority">
             Accept and reject decisions are audited. The current translation is preserved until accepted.
           </p>
@@ -358,6 +424,21 @@ function ReviewReferencePanels({
   const lexicographicSupport = latestTranslation?.metadata?.lexicographicSupport ?? [];
   const dictionaryEvidence = workspace.terminology?.dictionaryEvidence ?? [];
   const canApprove = workspace.workflow?.status === "IN_REVIEW" && Boolean(workspace.selectedDocument);
+  const canAdvance = Boolean(
+    workspace.workflow &&
+    !["IN_REVIEW", "APPROVED", "READY_FOR_EXPORT", "EXPORTED", "BLOCKED"].includes(
+      workspace.workflow.status
+    )
+  );
+  const commonFields = {
+    documentId: workspace.selectedDocument?.id ?? "",
+    projectId: workspace.selectedProject?.id ?? "",
+    segmentId: workspace.activeSegment?.id ?? "",
+    sourceLanguage: workspace.activeSegment?.sourceLanguage ?? "",
+    sourceText: workspace.activeSegment?.sourceText ?? "",
+    targetLanguage: workspace.activeSegment?.targetLanguage ?? "",
+    targetText: latestTranslation?.targetText ?? ""
+  };
 
   return (
     <aside className="translation-reference-panels" aria-label="Review validation panels">
@@ -372,13 +453,44 @@ function ReviewReferencePanels({
             label="Reviewer attribution"
             text={workspace.workflow?.approvedBy ?? workspace.workflow?.updatedBy ?? "Recorded when approved"}
           />
-          <form action={approveReviewAction} className="review-action-form">
-            <input name="documentId" type="hidden" value={workspace.selectedDocument?.id ?? ""} />
-            <input name="projectId" type="hidden" value={workspace.selectedProject?.id ?? ""} />
-            <input name="segmentId" type="hidden" value={workspace.activeSegment?.id ?? ""} />
-            <Button disabled={!canApprove} type="submit">Approve review</Button>
-            <Button disabled type="button" variant="secondary">Request changes</Button>
-          </form>
+          {canAdvance ? (
+            <form action={advanceReviewWorkflowAction} className="review-action-form">
+              <WorkflowHiddenFields values={commonFields} />
+              <Button type="submit" variant="secondary">Advance workflow</Button>
+            </form>
+          ) : null}
+          {workspace.workflow?.status === "BLOCKED" ? (
+            <form action={unblockReviewWorkflowAction} className="translation-save-form">
+              <WorkflowHiddenFields values={commonFields} />
+              <label className="ui-input-field">
+                <span>Resume note</span>
+                <input className="ui-input" name="reason" required />
+              </label>
+              <Button type="submit" variant="secondary">Resume review</Button>
+            </form>
+          ) : null}
+          {canApprove ? (
+            <>
+              <form action={completeEditorialReviewAction} className="review-action-form">
+                <WorkflowHiddenFields values={commonFields} />
+                <Button disabled={!latestTranslation} type="submit" variant="secondary">
+                  Complete review without changes
+                </Button>
+              </form>
+              <form action={approveReviewAction} className="review-action-form">
+                <WorkflowHiddenFields values={commonFields} />
+                <Button type="submit">Approve corrected translation</Button>
+              </form>
+              <form action={requestEditorialChangesAction} className="translation-save-form">
+                <WorkflowHiddenFields values={commonFields} />
+                <label className="ui-input-field">
+                  <span>Required changes</span>
+                  <textarea className="ui-input" name="reason" required rows={3} />
+                </label>
+                <Button type="submit" variant="secondary">Request changes</Button>
+              </form>
+            </>
+          ) : null}
         </div>
       </Card>
 
@@ -482,6 +594,20 @@ function ReviewReferencePanels({
         </div>
       </Card>
     </aside>
+  );
+}
+
+function WorkflowHiddenFields({
+  values
+}: {
+  values: Record<string, string>;
+}) {
+  return (
+    <>
+      {Object.entries(values).map(([name, value]) => (
+        <input key={name} name={name} type="hidden" value={value} />
+      ))}
+    </>
   );
 }
 

@@ -16,6 +16,7 @@ export type WorkflowAuditAction =
   | "WORKFLOW_ADVANCED"
   | "WORKFLOW_BLOCKED"
   | "WORKFLOW_UNBLOCKED"
+  | "EDITORIAL_REVIEW_COMPLETED"
   | "DOCUMENT_APPROVED"
   | "READY_FOR_EXPORT"
   | "DOCUMENT_EXPORTED";
@@ -24,6 +25,11 @@ export interface WorkflowActor {
   userId: string;
   organizationId: string;
   roles?: string[];
+}
+
+export interface CompleteEditorialReviewInput extends WorkflowTargetInput {
+  editorialDecisionId: string;
+  outcome: "ACCEPTED_CORRECTION" | "NO_CHANGES_REQUIRED";
 }
 
 export interface WorkflowTargetInput {

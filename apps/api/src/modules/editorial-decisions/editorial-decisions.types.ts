@@ -10,7 +10,8 @@ export type EditorialDecisionEvidenceSourceType =
 export type EditorialDecisionApprovalStatus =
   | "PENDING_HUMAN_APPROVAL"
   | "APPROVED"
-  | "REJECTED";
+  | "REJECTED"
+  | "CHANGES_REQUESTED";
 
 export type EditorialDecisionAuditAction =
   | "RECOMMENDATION_CREATED"
@@ -52,6 +53,10 @@ export interface EditorialDecisionRecommendation {
   segmentId?: string;
   sourceText: string;
   targetText: string;
+  proposedText?: string;
+  translationId?: string;
+  issueType?: string;
+  severity?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   sourceLanguage: string;
   targetLanguage: string;
   domain?: string;
@@ -95,6 +100,26 @@ export interface CreateEditorialDecisionRecommendationInput {
   metadata?: Record<string, unknown>;
 }
 
+export interface CreateEditorialCorrectionInput
+  extends CreateEditorialDecisionRecommendationInput {
+  proposedText: string;
+  translationId?: string;
+  issueType: string;
+  severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  explanation?: string;
+}
+
+export interface RequestEditorialChangesInput {
+  projectId?: string;
+  documentId: string;
+  segmentId?: string;
+  sourceText: string;
+  targetText: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  reason: string;
+}
+
 export interface EditorialDecisionRepository {
   createRecommendation(
     recommendation: EditorialDecisionRecommendation
@@ -111,6 +136,11 @@ export interface EditorialDecisionRepository {
     sourceLanguage: string;
     targetLanguage: string;
     domain?: string;
+  }): Promise<EditorialDecisionRecommendation[]>;
+  listRecommendations(input: {
+    organizationId: string;
+    documentId: string;
+    segmentId?: string;
   }): Promise<EditorialDecisionRecommendation[]>;
   appendAuditEvent(event: EditorialDecisionAuditEvent): Promise<void>;
 }

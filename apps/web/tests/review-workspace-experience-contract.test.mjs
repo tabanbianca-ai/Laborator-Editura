@@ -30,7 +30,11 @@ test("review workspace client uses existing authenticated endpoints only", () =>
     "/terminology/check-segment",
     "/lexicographic/search",
     "/semantic-fidelity/issues",
+    "/editorial-decisions/recommendations",
+    "/editorial-decisions/corrections",
+    "/editorial-decisions/request-changes",
     "/workflow/status",
+    "/workflow/advance",
     "/workflow/approve"
   ]) {
     assert.match(client, new RegExp(endpoint.replaceAll("/", "\\/")));
@@ -85,14 +89,21 @@ test("review workspace displays approval status and attribution", () => {
   assert.match(client, /ReviewWorkflowState/);
 });
 
-test("review workspace exposes human approval action and request changes placeholder", () => {
+test("review workspace exposes functioning human review and approval actions", () => {
   const page = readSource("components/pages/review-workspace-page.tsx");
   const actions = readSource("lib/review-workspace-actions.ts");
 
-  assert.match(page, /Approve review/);
+  assert.match(page, /Approve corrected translation/);
+  assert.match(page, /Propose correction/);
+  assert.match(page, /Accept proposal/);
+  assert.match(page, /Reject proposal/);
   assert.match(page, /Request changes/);
   assert.match(page, /Human Final Authority/);
   assert.match(actions, /approveReviewAction/);
   assert.match(actions, /approveReviewDocument/);
+  assert.match(actions, /createEditorialCorrection/);
+  assert.match(actions, /acceptEditorialCorrection/);
+  assert.match(actions, /rejectEditorialCorrection/);
+  assert.match(actions, /requestEditorialChanges/);
   assert.doesNotMatch(page + actions, /markExported|ready-for-export|PUBLIC_RELEASE|autoApprove|autoPublish/);
 });

@@ -1806,6 +1806,33 @@ textarea {
   padding: 10px;
 }
 
+.review-proposal-diff {
+  display: grid;
+  gap: 8px;
+}
+
+.review-proposal-diff del,
+.review-proposal-diff ins {
+  border-radius: 8px;
+  display: block;
+  line-height: 1.55;
+  padding: 10px;
+  text-decoration-thickness: 2px;
+}
+
+.review-proposal-diff del {
+  background: #fff1f0;
+  border: 1px solid #efc4c0;
+  color: #7a2924;
+}
+
+.review-proposal-diff ins {
+  background: #eef6f1;
+  border: 1px solid #cbe0d5;
+  color: #17211f;
+  text-decoration: none;
+}
+
 .review-issue-item {
   align-items: flex-start;
   background: #f6f8f5;

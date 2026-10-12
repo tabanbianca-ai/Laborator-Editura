@@ -44,6 +44,19 @@ export class DatabaseTranslationsRepository {
     return translations[0] ?? null;
   }
 
+  async listTranslationsBySegment(
+    organizationId: string,
+    segmentId: string
+  ): Promise<SegmentTranslation[]> {
+    return this.database
+      .selectForTenant<SegmentTranslation>(
+        "segment_translations",
+        organizationId,
+        (translation) => translation.segmentId === segmentId
+      )
+      .sort((left, right) => left.createdAt.localeCompare(right.createdAt));
+  }
+
   async appendAuditEvent(event: TranslationAuditEvent): Promise<void> {
     this.database.insert("foundation_audit_events", event);
   }

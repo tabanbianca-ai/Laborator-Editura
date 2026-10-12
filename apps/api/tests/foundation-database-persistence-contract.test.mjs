@@ -43,7 +43,10 @@ test("foundation modules inject database repositories into API execution", () =>
 
     assert.match(moduleSource, new RegExp(className));
     assert.match(moduleSource, /runtimeDatabaseProvider/);
-    assert.match(moduleSource, new RegExp(`providers: \\[runtimeDatabaseProvider, ${className}`));
+    assert.match(
+      moduleSource,
+      new RegExp(`providers: \\[\\s*runtimeDatabaseProvider,\\s*${className}`)
+    );
     assert.match(serviceSource, new RegExp(`private readonly repository: ${className}`));
   }
 });

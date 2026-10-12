@@ -8,6 +8,8 @@ import {
 export interface TranslationActor {
   userId: string;
   organizationId: string;
+  roles?: string[];
+  permissions?: string[];
 }
 
 export type TranslationAuditAction = "CREATE" | "UPDATE" | "DELETE" | "APPROVE" | "EXPORT";
@@ -24,7 +26,7 @@ export interface SegmentTranslation {
   sourceLocale?: string;
   targetLanguage: string;
   targetLocale?: string;
-  status: "DRAFT" | "SUBMITTED" | "VALIDATED" | "APPROVED";
+  status: "DRAFT" | "SUBMITTED" | "VALIDATED" | "APPROVED" | "OUTDATED";
   createdBy: string;
   createdAt: string;
   updatedAt: string;
@@ -70,6 +72,11 @@ export interface SubmitTranslationInput {
   domain?: string;
   translatorName?: string;
   metadata?: Record<string, unknown>;
+}
+
+export interface ReviseSegmentSourceForTranslationInput {
+  sourceText: string;
+  reason: string;
 }
 
 export interface TranslationAuditEvent {
