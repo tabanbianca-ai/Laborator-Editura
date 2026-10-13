@@ -185,6 +185,19 @@ export interface TranslationWorkspaceData {
   workflowError: string | null;
 }
 
+export interface AiTranslationProposal {
+  automaticApproval: false;
+  automaticPublication: false;
+  confidence: number;
+  createdAt: string;
+  explanation: string;
+  id: string;
+  model: string;
+  proposedText: string;
+  provider: "OPENAI" | "ANTHROPIC";
+  status: "PENDING_HUMAN_REVIEW";
+}
+
 export interface TranslationWorkflowState {
   blockedReason?: string;
   documentId: string;
@@ -322,6 +335,14 @@ export function submitWorkspaceTranslation(input: {
   translatorName?: string;
 }): Promise<ApiResult<WorkspaceTranslationRecord>> {
   return apiPost<WorkspaceTranslationRecord, typeof input>("/translations/submit", input);
+}
+
+export function generateAiTranslationProposal(input: {
+  domain?: string;
+  explicitExternalProcessingAuthorization: true;
+  segmentId: string;
+}): Promise<ApiResult<AiTranslationProposal>> {
+  return apiPost<AiTranslationProposal, typeof input>("/translations/ai-proposals", input);
 }
 
 export function reviseWorkspaceSource(

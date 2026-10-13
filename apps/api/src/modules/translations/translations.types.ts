@@ -79,6 +79,12 @@ export interface ReviseSegmentSourceForTranslationInput {
   reason: string;
 }
 
+export interface GenerateAiTranslationProposalInput {
+  segmentId: string;
+  domain?: string;
+  explicitExternalProcessingAuthorization: boolean;
+}
+
 export interface TranslationAuditEvent {
   id: string;
   organizationId: string;

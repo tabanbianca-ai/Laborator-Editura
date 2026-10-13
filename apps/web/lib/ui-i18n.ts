@@ -1,4 +1,11 @@
 import type { WorkspaceModule } from "./workspace-types";
+import {
+  editorialEnglish,
+  editorialPortuguese,
+  editorialRomanian,
+  editorialSpanish,
+  type EditorialUiKey
+} from "./editorial-ui-translations";
 
 export const UI_LOCALES = [
   "ro-RO",
@@ -1355,6 +1362,34 @@ export interface UiTranslator {
   t: (key: UiTranslationKey) => string;
 }
 
+export interface EditorialUiTranslator {
+  locale: UiLocale;
+  status(value?: string | null): string;
+  t(key: EditorialUiKey): string;
+}
+
+const editorialStatusKeys: Record<string, EditorialUiKey> = {
+  ACCEPTED: "statusAccepted",
+  APPROVED: "statusApproved",
+  BLOCKED: "statusBlocked",
+  DRAFT: "statusDraft",
+  EXPORTED: "statusExported",
+  IN_QA: "statusInQa",
+  IN_REVIEW: "statusInReview",
+  IN_SEMANTIC_REVIEW: "statusSemanticReview",
+  IN_TRANSLATION: "statusInTranslation",
+  NEW: "statusNew",
+  OUTDATED: "statusDraft",
+  PENDING: "statusPending",
+  PENDING_HUMAN_REVIEW: "statusPending",
+  READY_FOR_EXPORT: "statusReadyForExport",
+  REJECTED: "statusRejected",
+  REVIEWED: "statusReviewed",
+  SUBMITTED: "statusSubmitted",
+  TRANSLATED: "statusTranslated",
+  VALIDATED: "statusValidated"
+};
+
 const moduleLabelKeys: Record<WorkspaceModule, UiTranslationKey> = {
   ADMINISTRATION: "label.administration",
   AUTHOR_STUDIO: "label.authorStudio",
@@ -1465,6 +1500,34 @@ export function createUiTranslator(platformLanguage?: string | null): UiTranslat
     locale,
     t(key) {
       return uiText(locale, key);
+    }
+  };
+}
+
+export function createEditorialUiTranslator(
+  platformLanguage?: string | null
+): EditorialUiTranslator {
+  const locale = resolveUiLocale(platformLanguage);
+  const dictionary = locale === "ro-RO"
+    ? editorialRomanian
+    : locale === "es-ES"
+      ? editorialSpanish
+      : locale === "pt-PT" || locale === "pt-BR"
+        ? editorialPortuguese
+        : editorialEnglish;
+
+  return {
+    locale,
+    status(value) {
+      if (!value) {
+        return dictionary.workflowPending ?? editorialEnglish.workflowPending;
+      }
+
+      const key = editorialStatusKeys[value];
+      return key ? dictionary[key] ?? editorialEnglish[key] : value.replace(/_/g, " ");
+    },
+    t(key) {
+      return dictionary[key] ?? editorialEnglish[key];
     }
   };
 }

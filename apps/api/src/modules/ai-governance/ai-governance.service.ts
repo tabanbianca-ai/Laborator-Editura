@@ -136,6 +136,16 @@ export class AiGovernanceService {
     input: CreateAiUsageRecordInput
   ): Promise<AiUsageRecord> {
     this.assertAdminActor(actor);
+    return this.recordAgentExecution(actor, input);
+  }
+
+  async recordAgentExecution(
+    actor: AiGovernanceActor,
+    input: CreateAiUsageRecordInput
+  ): Promise<AiUsageRecord> {
+    if (!actor.userId || !actor.organizationId) {
+      throw new BadRequestException("Authenticated AI execution context is required.");
+    }
     this.validateRequired(input.agentName, "agentName");
     this.validateRequired(input.executionType, "executionType");
 
@@ -187,6 +197,33 @@ export class AiGovernanceService {
     }
 
     return created;
+  }
+
+  async authorizeAgentExecution(
+    actor: AiGovernanceActor,
+    input: CreateAiUsageRecordInput
+  ): Promise<void> {
+    if (!actor.userId || !actor.organizationId) {
+      throw new BadRequestException("Authenticated AI execution context is required.");
+    }
+
+    const policyEvaluation = await this.evaluatePolicy(actor, input, input.estimatedCost ?? 0);
+    if (policyEvaluation.hardLimitReached || policyEvaluation.approvalRequiredOverThreshold) {
+      await this.audit("AI_ACTION_BLOCKED", actor, {}, {
+        agentName: input.agentName,
+        executionType: input.executionType,
+        projectId: input.projectId,
+        documentId: input.documentId,
+        blockedActionOnly: true,
+        dataDeleted: false,
+        policyEvaluation
+      });
+      throw new ForbiddenException(
+        policyEvaluation.hardLimitReached
+          ? "AI execution is blocked by the active cost policy."
+          : "AI execution requires authorized human budget approval."
+      );
+    }
   }
 
   async listBudgets(actor: AiGovernanceActor): Promise<AiBudget[]> {

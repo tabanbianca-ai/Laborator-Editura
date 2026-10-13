@@ -3,14 +3,16 @@ import { runtimeDatabaseProvider } from "../runtime-database.provider";
 import { AiGovernanceController } from "./ai-governance.controller";
 import { DatabaseAiGovernanceRepository } from "./ai-governance.repository";
 import { AiGovernanceService } from "./ai-governance.service";
+import { AiTranslationProviderService } from "./ai-translation-provider.service";
 
 @Module({
   controllers: [AiGovernanceController],
   providers: [
     runtimeDatabaseProvider,
     DatabaseAiGovernanceRepository,
-    AiGovernanceService
+    AiGovernanceService,
+    AiTranslationProviderService
   ],
-  exports: [AiGovernanceService]
+  exports: [AiGovernanceService, AiTranslationProviderService]
 })
 export class AiGovernanceModule {}

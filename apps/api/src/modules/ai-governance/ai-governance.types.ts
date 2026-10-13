@@ -542,6 +542,48 @@ export type AiCostAuditAction =
   | "AI_BUDGET_OVERRIDE_APPROVED"
   | "AI_BUDGET_OVERRIDE_REJECTED";
 
+export interface AiTranslationProposalInput {
+  projectId: string;
+  documentId: string;
+  segmentId: string;
+  sourceText: string;
+  sourceLanguage: string;
+  sourceLocale?: string;
+  targetLanguage: string;
+  targetLocale?: string;
+  domain?: string;
+  explicitExternalProcessingAuthorization: true;
+  glossaryEntries: Array<{
+    sourceTerm: string;
+    approvedTranslation: string;
+  }>;
+  translationMemoryProposals: Array<{
+    sourceText: string;
+    proposedTargetText: string;
+    confidenceScore: number;
+  }>;
+}
+
+export interface AiTranslationProposal {
+  id: string;
+  projectId: string;
+  documentId: string;
+  segmentId: string;
+  sourceLanguage: string;
+  sourceLocale?: string;
+  targetLanguage: string;
+  targetLocale?: string;
+  proposedText: string;
+  explanation: string;
+  confidence: number;
+  provider: AiProviderName;
+  model: string;
+  status: "PENDING_HUMAN_REVIEW";
+  automaticApproval: false;
+  automaticPublication: false;
+  createdAt: string;
+}
+
 export interface AiGovernanceActor {
   userId: string;
   organizationId: string;

@@ -184,7 +184,8 @@ test("DOCX import through human approval persists one canonical editorial workfl
     terminology,
     qa,
     semantic,
-    workflowService
+    workflowService,
+    { async generateProposal() { throw new Error("AI provider is not used by this workflow test."); } }
   );
   const editorialRepository = new DatabaseEditorialDecisionRepository(database);
   const editorialService = new EditorialDecisionService(

@@ -1,4 +1,5 @@
 import { DocumentsPage } from "../../components/pages/documents-page";
+import { getWorkspacePreferences } from "../../lib/workspace-client";
 
 export default async function DocumentsRoute({
   searchParams
@@ -6,5 +7,6 @@ export default async function DocumentsRoute({
   searchParams: Promise<{ importError?: string }>;
 }) {
   const params = await searchParams;
-  return <DocumentsPage importError={params.importError} />;
+  const preferences = await getWorkspacePreferences();
+  return <DocumentsPage importError={params.importError} platformLanguage={preferences.data?.platformLanguage} />;
 }

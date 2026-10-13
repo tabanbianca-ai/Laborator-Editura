@@ -3,6 +3,7 @@ import { CurrentActor } from "../auth/request-context.decorator";
 import { type AuthenticatedRequestContext } from "../auth/request-context.types";
 import { TranslationsService } from "./translations.service";
 import {
+  type GenerateAiTranslationProposalInput,
   type ReviseSegmentSourceForTranslationInput,
   type SubmitTranslationInput
 } from "./translations.types";
@@ -17,6 +18,14 @@ export class TranslationsController {
     @Body() input: SubmitTranslationInput
   ) {
     return this.translationsService.submitTranslation(actor, input);
+  }
+
+  @Post("ai-proposals")
+  generateAiProposal(
+    @CurrentActor() actor: AuthenticatedRequestContext,
+    @Body() input: GenerateAiTranslationProposalInput
+  ) {
+    return this.translationsService.generateAiProposal(actor, input);
   }
 
   @Get()

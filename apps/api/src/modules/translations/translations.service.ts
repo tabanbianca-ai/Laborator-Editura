@@ -1,6 +1,8 @@
 import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
 import { validateTranslationTargetV1 } from "@laborator/shared";
 import { randomUUID } from "node:crypto";
+import { AiTranslationProviderService } from "../ai-governance/ai-translation-provider.service";
+import { type AiTranslationProposal } from "../ai-governance/ai-governance.types";
 import { LexicographicService } from "../lexicographic/lexicographic.service";
 import { type LexicographicEntryEvidence } from "../lexicographic/lexicographic.types";
 import { QaService } from "../qa/qa.service";
@@ -12,6 +14,7 @@ import { TranslationMemoryService } from "../translation-memory/translation-memo
 import { WorkflowService } from "../workflow/workflow.service";
 import { DatabaseTranslationsRepository } from "./translations.repository";
 import {
+  type GenerateAiTranslationProposalInput,
   type SegmentTranslation,
   type SubmitTranslationInput,
   type ReviseSegmentSourceForTranslationInput,
@@ -32,8 +35,69 @@ export class TranslationsService {
     private readonly terminologyService: TerminologyService,
     private readonly qaService: QaService,
     private readonly semanticFidelityService: SemanticFidelityService,
-    private readonly workflowService: WorkflowService
+    private readonly workflowService: WorkflowService,
+    private readonly aiTranslationProviderService: AiTranslationProviderService
   ) {}
+
+  async generateAiProposal(
+    actor: TranslationActor,
+    input: GenerateAiTranslationProposalInput
+  ): Promise<AiTranslationProposal> {
+    this.validateActor(actor);
+    this.assertTranslationWrite(actor);
+    if (!input.segmentId) {
+      throw new BadRequestException("segmentId is required.");
+    }
+    if (input.explicitExternalProcessingAuthorization !== true) {
+      throw new ForbiddenException(
+        "Explicit authorization is required before external AI processing."
+      );
+    }
+
+    const segment = await this.segmentsService.getSegment(actor, input.segmentId);
+    this.assertTranslationTargetSupported(segment.targetLanguage, segment.targetLocale);
+    const [tmProposals, terminology] = await Promise.all([
+      this.translationMemoryService.buildProposals(actor, {
+        context: `${segment.projectId}:${segment.documentId}:${segment.id}`,
+        domain: input.domain,
+        sourceLanguage: segment.sourceLanguage,
+        sourceText: segment.sourceText,
+        targetLanguage: segment.targetLanguage,
+        limit: 5
+      }),
+      this.terminologyService.searchTerms(actor, {
+        language: segment.targetLanguage,
+        domain: input.domain,
+        projectId: segment.projectId,
+        status: "VALIDATED",
+        limit: 100
+      })
+    ]);
+
+    return this.aiTranslationProviderService.generateProposal(actor, {
+      projectId: segment.projectId,
+      documentId: segment.documentId,
+      segmentId: segment.id,
+      sourceText: segment.sourceText,
+      sourceLanguage: segment.sourceLanguage,
+      sourceLocale: segment.sourceLocale,
+      targetLanguage: segment.targetLanguage,
+      targetLocale: segment.targetLocale,
+      domain: input.domain,
+      explicitExternalProcessingAuthorization: true,
+      glossaryEntries: terminology
+        .filter((term) => Boolean(term.approvedTranslation))
+        .map((term) => ({
+          sourceTerm: term.term,
+          approvedTranslation: term.approvedTranslation!
+        })),
+      translationMemoryProposals: tmProposals.map((proposal) => ({
+        sourceText: proposal.sourceText,
+        proposedTargetText: proposal.proposedTargetText,
+        confidenceScore: proposal.confidenceScore
+      }))
+    });
+  }
 
   async submitTranslation(
     actor: TranslationActor,

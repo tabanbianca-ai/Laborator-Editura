@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { AiGovernanceModule } from "../ai-governance/ai-governance.module";
 import { LexicographicModule } from "../lexicographic/lexicographic.module";
 import { DocumentsModule } from "../documents/documents.module";
 import { QaModule } from "../qa/qa.module";
@@ -14,6 +15,7 @@ import { TranslationsService } from "./translations.service";
 
 @Module({
   imports: [
+    AiGovernanceModule,
     SegmentsModule,
     DocumentsModule,
     LexicographicModule,

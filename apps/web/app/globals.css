@@ -1995,6 +1995,17 @@ textarea {
   accent-color: #1f6f62;
 }
 
+.ai-translation-proposal {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.875rem 0;
+}
+
+.ai-translation-proposal .reference-item {
+  display: grid;
+  gap: 0.75rem;
+}
+
 .rights-summary-card {
   background: #f6f8f5;
   border: 1px solid #e1e7e2;
@@ -2845,7 +2856,7 @@ textarea {
   }
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1440px) {
   .editor-workbench {
     grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
   }
