@@ -54,6 +54,22 @@ export class DatabaseEditorialDecisionRepository implements EditorialDecisionRep
     );
   }
 
+  async listRecommendations(input: {
+    organizationId: string;
+    documentId: string;
+    segmentId?: string;
+  }): Promise<EditorialDecisionRecommendation[]> {
+    return this.database
+      .selectForTenant<EditorialDecisionRecommendation>(
+        "editorial_decisions",
+        input.organizationId,
+        (decision) =>
+          decision.documentId === input.documentId &&
+          (input.segmentId === undefined || decision.segmentId === input.segmentId)
+      )
+      .sort((left, right) => left.createdAt.localeCompare(right.createdAt));
+  }
+
   async appendAuditEvent(event: EditorialDecisionAuditEvent): Promise<void> {
     this.database.insert("editorial_decision_audit_events", event);
   }

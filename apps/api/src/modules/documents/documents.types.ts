@@ -1,6 +1,8 @@
 export interface DocumentActor {
   userId: string;
   organizationId: string;
+  roles?: string[];
+  permissions?: string[];
 }
 
 export type DocumentAuditAction = "CREATE" | "UPDATE" | "DELETE" | "APPROVE" | "EXPORT";
@@ -56,6 +58,55 @@ export interface CreateDocumentInput {
   originalAuthorId?: string;
   originalAuthorName?: string;
   metadata?: Record<string, unknown>;
+}
+
+export type CanonicalDocumentBlockType =
+  | "PARAGRAPH"
+  | "HEADING"
+  | "LIST_ITEM"
+  | "TABLE"
+  | "CAPTION"
+  | "IMAGE"
+  | "FOOTNOTE"
+  | "ENDNOTE";
+
+export interface CanonicalDocumentBlock {
+  id: string;
+  order: number;
+  type: CanonicalDocumentBlockType;
+  text: string;
+  html: string;
+  headingLevel?: number;
+  listType?: "ORDERED" | "UNORDERED";
+  sourceReference: string;
+}
+
+export interface DocxImportInput {
+  projectId: string;
+  title?: string;
+  originalLanguage: string;
+  originalLocale?: string;
+  authoringLanguage?: string;
+  authoringLocale?: string;
+  targetLanguage: string;
+  targetLocale?: string;
+  translatorName?: string;
+  originalAuthorName?: string;
+}
+
+export interface UploadedDocxFile {
+  buffer: Buffer;
+  mimetype: string;
+  originalname: string;
+  size: number;
+}
+
+export interface ParsedDocxDocument {
+  blocks: CanonicalDocumentBlock[];
+  canonicalHtml: string;
+  plainText: string;
+  messages: string[];
+  imageCount: number;
 }
 
 export interface DocumentAuditEvent {

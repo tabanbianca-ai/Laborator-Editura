@@ -29,6 +29,9 @@ export interface WorkspaceTranslationMetadata {
   terminologyProposalExplanation?: LinguisticProposalExplanation;
   translationMemoryProposals?: TranslationMemoryProposal[];
   terminologyValid?: boolean;
+  revisionOfTranslationId?: string;
+  sourceVersion?: number;
+  translationVersion?: number;
 }
 
 export interface WorkspaceTranslationRecord {
@@ -44,7 +47,7 @@ export interface WorkspaceTranslationRecord {
   sourceLanguage: string;
   sourceLocale?: string;
   sourceText: string;
-  status: "APPROVED" | "DRAFT" | "SUBMITTED" | "VALIDATED";
+  status: "APPROVED" | "DRAFT" | "OUTDATED" | "SUBMITTED" | "VALIDATED";
   targetLanguage: string;
   targetLocale?: string;
   targetText: string;
@@ -178,6 +181,29 @@ export interface TranslationWorkspaceData {
   translationMemoryProposalsError: string | null;
   translations: WorkspaceTranslationRecord[];
   translationsError: string | null;
+  workflow: TranslationWorkflowState | null;
+  workflowError: string | null;
+}
+
+export interface AiTranslationProposal {
+  automaticApproval: false;
+  automaticPublication: false;
+  confidence: number;
+  createdAt: string;
+  explanation: string;
+  id: string;
+  model: string;
+  proposedText: string;
+  provider: "OPENAI" | "ANTHROPIC";
+  status: "PENDING_HUMAN_REVIEW";
+}
+
+export interface TranslationWorkflowState {
+  blockedReason?: string;
+  documentId: string;
+  id: string;
+  projectId?: string;
+  status: "DRAFT" | "IN_TRANSLATION" | "IN_QA" | "IN_SEMANTIC_REVIEW" | "IN_REVIEW" | "APPROVED" | "READY_FOR_EXPORT" | "EXPORTED" | "BLOCKED";
 }
 
 interface TranslationWorkspaceInput {
@@ -208,9 +234,10 @@ export async function getTranslationWorkspaceData({
     });
   }
 
-  const [segmentsResult, translationsResult] = await Promise.all([
+  const [segmentsResult, translationsResult, workflowResult] = await Promise.all([
     listWorkspaceSegments(selectedDocument.id),
-    listWorkspaceTranslations(selectedDocument.id)
+    listWorkspaceTranslations(selectedDocument.id),
+    getTranslationWorkflow(selectedDocument.id, selectedDocument.projectId)
   ]);
   const segments = [...(segmentsResult.data ?? [])].sort((left, right) => left.order - right.order);
   const translations = translationsResult.data ?? [];
@@ -240,7 +267,9 @@ export async function getTranslationWorkspaceData({
       translationMemoryProposals: [],
       translationMemoryProposalsError: null,
       translations,
-      translationsError: translationsResult.error
+      translationsError: translationsResult.error,
+      workflow: workflowResult.data,
+      workflowError: workflowResult.error
     };
   }
 
@@ -293,7 +322,9 @@ export async function getTranslationWorkspaceData({
     translationMemoryProposals: tmProposalResult.data ?? [],
     translationMemoryProposalsError: tmProposalResult.error,
     translations,
-    translationsError: translationsResult.error
+    translationsError: translationsResult.error,
+    workflow: workflowResult.data,
+    workflowError: workflowResult.error
   };
 }
 
@@ -306,6 +337,28 @@ export function submitWorkspaceTranslation(input: {
   return apiPost<WorkspaceTranslationRecord, typeof input>("/translations/submit", input);
 }
 
+export function generateAiTranslationProposal(input: {
+  domain?: string;
+  explicitExternalProcessingAuthorization: true;
+  segmentId: string;
+}): Promise<ApiResult<AiTranslationProposal>> {
+  return apiPost<AiTranslationProposal, typeof input>("/translations/ai-proposals", input);
+}
+
+export function reviseWorkspaceSource(
+  segmentId: string,
+  input: { reason: string; sourceText: string }
+): Promise<ApiResult<{ outdatedTranslations: number; segment: WorkspaceSegmentRecord }>> {
+  return apiPost(`/translations/segments/${encodeURIComponent(segmentId)}/source-revisions`, input);
+}
+
+export function advanceTranslationWorkflow(input: {
+  documentId: string;
+  projectId?: string;
+}): Promise<ApiResult<TranslationWorkflowState>> {
+  return apiPost<TranslationWorkflowState, typeof input>("/workflow/advance", input);
+}
+
 function listWorkspaceSegments(documentId: string): Promise<ApiResult<WorkspaceSegmentRecord[]>> {
   return apiGet<WorkspaceSegmentRecord[]>(`/segments?documentId=${encodeURIComponent(documentId)}`);
 }
@@ -314,6 +367,17 @@ function listWorkspaceTranslations(documentId: string): Promise<ApiResult<Worksp
   return apiGet<WorkspaceTranslationRecord[]>(
     `/translations?documentId=${encodeURIComponent(documentId)}`
   );
+}
+
+function getTranslationWorkflow(
+  documentId: string,
+  projectId?: string
+): Promise<ApiResult<TranslationWorkflowState>> {
+  const query = new URLSearchParams({ documentId });
+  if (projectId) {
+    query.set("projectId", projectId);
+  }
+  return apiGet<TranslationWorkflowState>(`/workflow/status?${query.toString()}`);
 }
 
 function checkTerminology(input: {
@@ -432,6 +496,8 @@ function emptyWorkspace(input: {
     translationMemoryProposals: [],
     translationMemoryProposalsError: null,
     translations: [],
-    translationsError: null
+    translationsError: null,
+    workflow: null,
+    workflowError: null
   };
 }

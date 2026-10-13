@@ -87,6 +87,19 @@ export class DocumentsService {
     return this.repository.listDocuments(actor.organizationId, projectId);
   }
 
+  async findByImportChecksum(
+    actor: DocumentActor,
+    projectId: string,
+    checksum: string
+  ): Promise<Document | null> {
+    this.validateActor(actor);
+    return this.repository.findDocumentByImportChecksum(
+      actor.organizationId,
+      projectId,
+      checksum
+    );
+  }
+
   async markDocumentStatus(
     actor: DocumentActor,
     documentId: string,

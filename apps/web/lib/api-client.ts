@@ -88,6 +88,45 @@ export async function apiPost<T, TBody extends object>(
   }
 }
 
+export async function apiPostForm<T>(path: string, body: FormData): Promise<ApiResult<T>> {
+  const token = await getSessionToken();
+
+  if (!token) {
+    return {
+      data: null,
+      error: "Authenticated session required."
+    };
+  }
+
+  try {
+    const response = await fetch(toApiUrl(path), {
+      body,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      method: "POST"
+    });
+
+    if (!response.ok) {
+      return {
+        data: null,
+        error: `API request failed with status ${response.status}.`
+      };
+    }
+
+    return {
+      data: (await response.json()) as T,
+      error: null
+    };
+  } catch {
+    return {
+      data: null,
+      error: "API request could not be completed."
+    };
+  }
+}
+
 export async function apiPostPublic<T, TBody extends object>(
   path: string,
   body: TBody

@@ -89,7 +89,10 @@ test("workflow validates project readiness before state lookup or persistence", 
   assert.ok(guardIndex >= 0);
   assert.ok(guardIndex < startWorkflow.indexOf("findStateByTarget"));
   assert.ok(guardIndex < startWorkflow.indexOf("createState"));
-  assert.match(module, /imports: \[ProjectsModule, QaModule, SemanticFidelityModule\]/);
+  assert.match(
+    module,
+    /imports: \[ProjectsModule, DocumentsModule, QaModule, SemanticFidelityModule\]/
+  );
 });
 
 test("export and magazine protected boundaries use the canonical validator", () => {

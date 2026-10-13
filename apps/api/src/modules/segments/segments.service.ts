@@ -4,6 +4,8 @@ import { DocumentsService } from "../documents/documents.service";
 import { DatabaseSegmentsRepository } from "./segments.repository";
 import {
   type CreateSegmentInput,
+  type CanonicalSegmentInput,
+  type ReviseSegmentSourceInput,
   type Segment,
   type SegmentActor,
   type SegmentAuditAction,
@@ -49,6 +51,80 @@ export class SegmentsService {
     await this.audit("CREATE", actor, segment.id, undefined, segment);
 
     return segment;
+  }
+
+  async createCanonicalSegments(
+    actor: SegmentActor,
+    inputs: CanonicalSegmentInput[]
+  ): Promise<Segment[]> {
+    const saved: Segment[] = [];
+
+    for (const input of inputs.sort((left, right) => left.order! - right.order!)) {
+      const existing = await this.repository.findBySourceBlock(
+        actor.organizationId,
+        input.documentId,
+        input.sourceBlockId
+      );
+
+      if (existing) {
+        saved.push(existing);
+        continue;
+      }
+
+      saved.push(await this.createSegment(actor, {
+        ...input,
+        metadata: {
+          ...(input.metadata ?? {}),
+          sourceBlockId: input.sourceBlockId,
+          sourceBlockOrder: input.sourceBlockOrder,
+          sourceChecksum: input.sourceChecksum,
+          sourceVersion: input.sourceVersion
+        }
+      }));
+    }
+
+    return saved;
+  }
+
+  async reviseSource(
+    actor: SegmentActor,
+    segmentId: string,
+    input: ReviseSegmentSourceInput
+  ): Promise<Segment> {
+    if (!input.sourceText.trim() || !input.reason.trim()) {
+      throw new BadRequestException("sourceText and reason are required.");
+    }
+
+    const segment = await this.getSegment(actor, segmentId);
+    const sourceVersion = Number(segment.metadata?.sourceVersion ?? 1);
+    const sourceVersions = Array.isArray(segment.metadata?.sourceVersions)
+      ? segment.metadata.sourceVersions
+      : [];
+    const saved = await this.repository.updateSegment({
+      ...segment,
+      sourceText: input.sourceText.trim(),
+      status: "NEW",
+      latestTranslationId: undefined,
+      latestTargetText: undefined,
+      updatedAt: new Date().toISOString(),
+      metadata: {
+        ...(segment.metadata ?? {}),
+        sourceVersion: sourceVersion + 1,
+        sourceVersions: [
+          ...sourceVersions,
+          {
+            changedAt: new Date().toISOString(),
+            changedBy: actor.userId,
+            reason: input.reason.trim(),
+            sourceText: segment.sourceText,
+            version: sourceVersion
+          }
+        ]
+      }
+    });
+
+    await this.audit("UPDATE", actor, saved.id, segment, saved);
+    return saved;
   }
 
   async getSegment(actor: SegmentActor, segmentId: string): Promise<Segment> {

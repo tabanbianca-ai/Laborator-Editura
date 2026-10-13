@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { DocumentsModule } from "../documents/documents.module";
 import { ProjectsModule } from "../projects/projects.module";
 import { QaModule } from "../qa/qa.module";
 import { SemanticFidelityModule } from "../semantic-fidelity/semantic-fidelity.module";
@@ -8,7 +9,7 @@ import { InMemoryWorkflowRepository } from "./workflow.repository";
 import { WorkflowService } from "./workflow.service";
 
 @Module({
-  imports: [ProjectsModule, QaModule, SemanticFidelityModule],
+  imports: [ProjectsModule, DocumentsModule, QaModule, SemanticFidelityModule],
   controllers: [WorkflowController],
   providers: [runtimeDatabaseProvider, InMemoryWorkflowRepository, WorkflowService],
   exports: [WorkflowService]

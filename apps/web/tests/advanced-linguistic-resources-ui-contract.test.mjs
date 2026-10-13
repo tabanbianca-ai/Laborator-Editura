@@ -19,11 +19,11 @@ test("translation workspace consumes TM proposals and linguistic explanations", 
   assert.match(client, /\/translation-memory\/proposals/);
   assert.match(client, /proposalExplanation/);
   assert.match(client, /sourcePriority/);
-  assert.match(page, /Translation Memory proposals/);
-  assert.match(page, /proposal only/);
-  assert.match(page, /Glossary priority/);
-  assert.match(page, /Glossary conflict/);
-  assert.match(page, /Confidence/);
+  assert.match(page, /ui\.t\("translationMemoryProposals"\)/);
+  assert.match(page, /ui\.t\("aiProposalOnly"\)/);
+  assert.match(page, /ui\.t\("glossaryPriority"\)/);
+  assert.match(page, /ui\.t\("glossaryConflict"\)/);
+  assert.match(page, /ui\.t\("confidence"\)/);
 });
 
 test("administration displays advanced linguistic resource governance", () => {

@@ -30,7 +30,11 @@ test("review workspace client uses existing authenticated endpoints only", () =>
     "/terminology/check-segment",
     "/lexicographic/search",
     "/semantic-fidelity/issues",
+    "/editorial-decisions/recommendations",
+    "/editorial-decisions/corrections",
+    "/editorial-decisions/request-changes",
     "/workflow/status",
+    "/workflow/advance",
     "/workflow/approve"
   ]) {
     assert.match(client, new RegExp(endpoint.replaceAll("/", "\\/")));
@@ -45,25 +49,25 @@ test("review workspace client uses existing authenticated endpoints only", () =>
 test("review workspace renders comparison panels and review selectors", () => {
   const page = readSource("components/pages/review-workspace-page.tsx");
 
-  assert.match(page, /Review & approval workspace/);
+  assert.match(page, /ui\.t\("reviewApprovalWorkspace"\)/);
   assert.match(page, /ReviewSegmentRail/);
-  assert.match(page, /Source text/);
-  assert.match(page, /Translated text/);
-  assert.match(page, /Project/);
-  assert.match(page, /Document/);
-  assert.match(page, /No document selected/);
-  assert.match(page, /No segments available for review/);
+  assert.match(page, /ui\.t\("sourceText"\)/);
+  assert.match(page, /ui\.t\("translatedText"\)/);
+  assert.match(page, /ui\.t\("project"\)/);
+  assert.match(page, /ui\.t\("document"\)/);
+  assert.match(page, /ui\.t\("noDocumentSelected"\)/);
+  assert.match(page, /ui\.t\("emptyReviewSegments"\)/);
 });
 
 test("review workspace includes required validation and evidence panels", () => {
   const page = readSource("components/pages/review-workspace-page.tsx");
   const client = readSource("lib/review-workspace-client.ts");
 
-  assert.match(page, /Semantic fidelity summary/);
-  assert.match(page, /Terminology \/ glossary validation/);
-  assert.match(page, /Lexicographic references/);
-  assert.match(page, /Editorial decision recommendations/);
-  assert.match(page, /Issue list/);
+  assert.match(page, /ui\.t\("semanticFidelitySummary"\)/);
+  assert.match(page, /ui\.t\("glossaryTerminology"\)/);
+  assert.match(page, /ui\.t\("lexicographicReferences"\)/);
+  assert.match(page, /ui\.t\("recommendationStatus"\)/);
+  assert.match(page, /ui\.t\("issueList"\)/);
   assert.match(page, /dictionaryEvidence/);
   assert.match(page, /lexicographicSupport/);
   assert.match(client, /TerminologyCheckResult/);
@@ -75,24 +79,31 @@ test("review workspace displays approval status and attribution", () => {
   const page = readSource("components/pages/review-workspace-page.tsx");
   const client = readSource("lib/review-workspace-client.ts");
 
-  assert.match(page, /Approval status/);
-  assert.match(page, /Reviewer attribution/);
-  assert.match(page, /Reviewer/);
-  assert.match(page, /Translator ID/);
-  assert.match(page, /Translator/);
-  assert.match(page, /Original author/);
-  assert.match(page, /Preserved/);
+  assert.match(page, /ui\.t\("approvalStatus"\)/);
+  assert.match(page, /ui\.t\("reviewerAttribution"\)/);
+  assert.match(page, /ui\.t\("reviewer"\)/);
+  assert.match(page, /ui\.t\("translatorId"\)/);
+  assert.match(page, /ui\.t\("translator"\)/);
+  assert.match(page, /ui\.t\("originalAuthor"\)/);
+  assert.match(page, /ui\.t\("preserved"\)/);
   assert.match(client, /ReviewWorkflowState/);
 });
 
-test("review workspace exposes human approval action and request changes placeholder", () => {
+test("review workspace exposes functioning human review and approval actions", () => {
   const page = readSource("components/pages/review-workspace-page.tsx");
   const actions = readSource("lib/review-workspace-actions.ts");
 
-  assert.match(page, /Approve review/);
-  assert.match(page, /Request changes/);
-  assert.match(page, /Human Final Authority/);
+  assert.match(page, /ui\.t\("approveCorrectedTranslation"\)/);
+  assert.match(page, /ui\.t\("createCorrection"\)/);
+  assert.match(page, /ui\.t\("acceptProposal"\)/);
+  assert.match(page, /ui\.t\("rejectProposal"\)/);
+  assert.match(page, /ui\.t\("requestChanges"\)/);
+  assert.match(page, /ui\.t\("humanAuthorityReview"\)/);
   assert.match(actions, /approveReviewAction/);
   assert.match(actions, /approveReviewDocument/);
+  assert.match(actions, /createEditorialCorrection/);
+  assert.match(actions, /acceptEditorialCorrection/);
+  assert.match(actions, /rejectEditorialCorrection/);
+  assert.match(actions, /requestEditorialChanges/);
   assert.doesNotMatch(page + actions, /markExported|ready-for-export|PUBLIC_RELEASE|autoApprove|autoPublish/);
 });

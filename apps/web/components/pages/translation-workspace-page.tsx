@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { formatLanguageLocale } from "@laborator/shared";
-import { saveWorkspaceTranslationAction } from "../../lib/translation-workspace-actions";
+import {
+  advanceTranslationWorkflowAction,
+  reviseWorkspaceSourceAction,
+  saveWorkspaceTranslationAction
+} from "../../lib/translation-workspace-actions";
 import type {
   LexicographicReference,
   TranslationWorkspaceData,
@@ -8,22 +12,27 @@ import type {
   WorkspaceTranslationRecord
 } from "../../lib/translation-workspace-client";
 import { Badge, Button, Card, EmptyState, ErrorState, PageHeader } from "../ui";
+import { createEditorialUiTranslator, type EditorialUiTranslator } from "../../lib/ui-i18n";
+import { TranslationTargetEditor } from "../translation/translation-target-editor";
 
 interface TranslationWorkspacePageProps {
   error?: string;
+  platformLanguage?: string;
   workspace: TranslationWorkspaceData;
 }
 
 export function TranslationWorkspacePage({
   error,
+  platformLanguage,
   workspace
 }: TranslationWorkspacePageProps) {
+  const ui = createEditorialUiTranslator(platformLanguage);
   const activeSegment = workspace.activeSegment;
   const latestTranslation = workspace.latestTranslation;
 
   return (
     <main className="page-stack">
-      <PageHeader eyebrow="Translation" title="Translation workspace" />
+      <PageHeader eyebrow={ui.t("translation")} title={ui.t("translationWorkspace")} />
 
       {error ? <ErrorState message={error} /> : null}
       {workspace.projectsError ? <ErrorState message={workspace.projectsError} /> : null}
@@ -31,20 +40,20 @@ export function TranslationWorkspacePage({
       {workspace.segmentsError ? <ErrorState message={workspace.segmentsError} /> : null}
       {workspace.translationsError ? <ErrorState message={workspace.translationsError} /> : null}
 
-      <section className="translation-selector-grid" aria-label="Project and document selection">
-        <Card title="Project">
+      <section className="translation-selector-grid" aria-label={ui.t("projectDocumentSelection")}>
+        <Card title={ui.t("project")}>
           <p className="selector-value">
-            {workspace.selectedProject?.name ?? "Not selected"}
+            {workspace.selectedProject?.name ?? ui.t("notSelected")}
           </p>
           <select className="ui-input ui-select" disabled name="project-selector">
             <option>
-              {workspace.selectedProject?.name ?? "Project selector"}
+              {workspace.selectedProject?.name ?? ui.t("project")}
             </option>
           </select>
         </Card>
-        <Card title="Document">
+        <Card title={ui.t("document")}>
           <p className="selector-value">
-            {workspace.selectedDocument?.title ?? "Not selected"}
+            {workspace.selectedDocument?.title ?? ui.t("notSelected")}
           </p>
           <div className="document-link-list">
             {workspace.documents.slice(0, 6).map((document) => (
@@ -65,31 +74,39 @@ export function TranslationWorkspacePage({
       </section>
 
       {!workspace.selectedDocument ? (
-        <EmptyState title="No document selected" />
+        <EmptyState title={ui.t("noDocumentSelected")} />
       ) : null}
 
       {workspace.selectedDocument && !activeSegment ? (
-        <EmptyState title="No segments available" />
+        <EmptyState title={ui.t("emptySegments")} />
       ) : null}
 
       {activeSegment ? (
-        <section className="translation-workspace-grid" aria-label="Translation workspace">
+        <section className="translation-workspace-grid" aria-label={ui.t("translationWorkspace")}>
           <SegmentRail
             activeSegmentId={activeSegment.id}
             documentId={workspace.selectedDocument?.id ?? activeSegment.documentId}
             segments={workspace.segments}
             translations={workspace.translations}
+            ui={ui}
           />
 
           <TranslationEditorPanel
             latestTranslation={latestTranslation}
             segment={activeSegment}
             semanticScore={latestTranslation?.metadata?.semanticScore}
+            translations={workspace.translations.filter(
+              (translation) => translation.segmentId === activeSegment.id
+            )}
+            workflow={workspace.workflow}
+            domain={workspace.selectedProject?.domain}
+            ui={ui}
           />
 
           <ReferencePanels
             latestTranslation={latestTranslation}
             workspace={workspace}
+            ui={ui}
           />
         </section>
       ) : null}
@@ -101,19 +118,21 @@ function SegmentRail({
   activeSegmentId,
   documentId,
   segments,
-  translations
+  translations,
+  ui
 }: {
   activeSegmentId: string;
   documentId: string;
   segments: WorkspaceSegmentRecord[];
   translations: WorkspaceTranslationRecord[];
+  ui: EditorialUiTranslator;
 }) {
   return (
-    <aside className="translation-segment-rail" aria-label="Segments">
+    <aside className="translation-segment-rail" aria-label={ui.t("segments")}>
       <div className="section-heading">
         <div>
-          <p className="section-kicker">Segments</p>
-          <h2>Source units</h2>
+          <p className="section-kicker">{ui.t("segments")}</p>
+          <h2>{ui.t("sourceUnits")}</h2>
         </div>
         <Badge tone="info">{segments.length}</Badge>
       </div>
@@ -133,9 +152,9 @@ function SegmentRail({
               )}`}
               key={segment.id}
             >
-              <span>Segment {segment.order}</span>
+              <span>{ui.t("segment")} {segment.order}</span>
               <strong>{truncate(segment.sourceText, 76)}</strong>
-              <Badge tone={toneForTranslationStatus(translation?.status)}>{statusLabel(translation?.status)}</Badge>
+              <Badge tone={toneForTranslationStatus(translation?.status)}>{statusLabel(translation?.status, ui)}</Badge>
             </Link>
           );
         })}
@@ -147,24 +166,80 @@ function SegmentRail({
 function TranslationEditorPanel({
   latestTranslation,
   segment,
-  semanticScore
+  semanticScore,
+  translations,
+  workflow,
+  domain,
+  ui
 }: {
   latestTranslation: WorkspaceTranslationRecord | null;
   segment: WorkspaceSegmentRecord;
   semanticScore?: number;
+  translations: WorkspaceTranslationRecord[];
+  workflow: TranslationWorkspaceData["workflow"];
+  domain?: string;
+  ui: EditorialUiTranslator;
 }) {
   return (
-    <section className="translation-editor-panel" aria-label="Translation editor">
-      <Card title="Source text">
+    <section className="translation-editor-panel" aria-label={ui.t("translationWorkspace")}>
+      <Card title={ui.t("sourceText")}>
         <p className="source-text-block">{segment.sourceText}</p>
         <div className="translation-language-row">
           <Badge tone="neutral">{formatLanguage(segment.sourceLanguage, segment.sourceLocale)}</Badge>
           <span>{formatLanguage(segment.targetLanguage, segment.targetLocale)}</span>
           <Badge tone="info">v1.0</Badge>
         </div>
+        <details>
+          <summary>{ui.t("authorizedSourceRevision")}</summary>
+          <form action={reviseWorkspaceSourceAction} className="translation-save-form">
+            <input name="documentId" type="hidden" value={segment.documentId} />
+            <input name="segmentId" type="hidden" value={segment.id} />
+            <label className="ui-input-field">
+              <span>{ui.t("sourceText")}</span>
+              <textarea className="ui-input" defaultValue={segment.sourceText} name="sourceText" required rows={6} />
+            </label>
+            <label className="ui-input-field">
+              <span>{ui.t("explanation")}</span>
+              <input className="ui-input" name="reason" required />
+            </label>
+            <Button type="submit" variant="secondary">{ui.t("saveSourceRevision")}</Button>
+          </form>
+          <p className="review-human-authority">
+            {ui.t("sourceRevisionHistory")}
+          </p>
+        </details>
       </Card>
 
-      <Card title="Target text">
+      <Card title={ui.t("workflowHistory")}>
+        <div className="review-status-row">
+          <Badge tone={workflow?.status === "IN_REVIEW" ? "success" : "info"}>
+            {workflow ? ui.status(workflow.status) : ui.t("workflowUnavailable")}
+          </Badge>
+          {workflow && ["IN_TRANSLATION", "IN_QA", "IN_SEMANTIC_REVIEW"].includes(workflow.status) ? (
+            <form action={advanceTranslationWorkflowAction}>
+              <input name="documentId" type="hidden" value={segment.documentId} />
+              <input name="projectId" type="hidden" value={segment.projectId} />
+              <input name="segmentId" type="hidden" value={segment.id} />
+              <Button type="submit" variant="secondary">{ui.t("advanceWorkflow")}</Button>
+            </form>
+          ) : null}
+        </div>
+        <div className="reference-stack">
+          {[...translations]
+            .sort((left, right) =>
+              Number(right.metadata?.translationVersion ?? 0) - Number(left.metadata?.translationVersion ?? 0)
+            )
+            .map((translation) => (
+              <ReferenceItem
+                key={translation.id}
+                label={`${ui.t("version")} ${translation.metadata?.translationVersion ?? 1} - ${ui.status(translation.status)}`}
+                text={translation.targetText}
+              />
+            ))}
+        </div>
+      </Card>
+
+      <Card title={ui.t("targetText")}>
         <form action={saveWorkspaceTranslationAction} className="translation-save-form">
           <input name="documentId" type="hidden" value={segment.documentId} />
           <input name="segmentId" type="hidden" value={segment.id} />
@@ -173,17 +248,24 @@ function TranslationEditorPanel({
             type="hidden"
             value={latestTranslation?.originalAuthorName ?? ""}
           />
+          <TranslationTargetEditor
+            aiLabels={{
+              authorization: ui.t("aiAuthorization"),
+              confidence: ui.t("confidence"),
+              explanation: ui.t("explanation"),
+              generate: ui.t("aiGenerate"),
+              proposal: ui.t("aiProposal"),
+              proposalOnly: ui.t("aiProposalOnly"),
+              unavailable: ui.t("aiUnavailable"),
+              useProposal: ui.t("aiUseProposal")
+            }}
+            domain={domain}
+            initialTargetText={latestTranslation?.targetText ?? segment.latestTargetText ?? ""}
+            segmentId={segment.id}
+            targetTextLabel={ui.t("translation")}
+          />
           <label className="ui-input-field">
-            <span>Translation</span>
-            <textarea
-              className="ui-input translation-target-textarea"
-              defaultValue={latestTranslation?.targetText ?? segment.latestTargetText ?? ""}
-              name="targetText"
-              rows={14}
-            />
-          </label>
-          <label className="ui-input-field">
-            <span>Translator name</span>
+            <span>{ui.t("translatorName")}</span>
             <input
               className="ui-input"
               defaultValue={latestTranslation?.translatorName ?? ""}
@@ -191,15 +273,15 @@ function TranslationEditorPanel({
             />
           </label>
           <div className="translation-editor-footer">
-            <AttributionBlock latestTranslation={latestTranslation} />
+            <AttributionBlock latestTranslation={latestTranslation} ui={ui} />
             <div className="translation-action-cluster">
               <Badge tone={toneForTranslationStatus(latestTranslation?.status)}>
-                {statusLabel(latestTranslation?.status)}
+                {statusLabel(latestTranslation?.status, ui)}
               </Badge>
               {typeof semanticScore === "number" ? (
                 <Badge tone={semanticScore >= 90 ? "success" : "warning"}>{semanticScore}% semantic</Badge>
               ) : null}
-              <Button type="submit">Save translation</Button>
+              <Button type="submit">{ui.t("saveTranslation")}</Button>
             </div>
           </div>
         </form>
@@ -209,27 +291,29 @@ function TranslationEditorPanel({
 }
 
 function AttributionBlock({
-  latestTranslation
+  latestTranslation,
+  ui
 }: {
   latestTranslation: WorkspaceTranslationRecord | null;
+  ui: EditorialUiTranslator;
 }) {
   return (
     <dl className="translation-attribution">
       <div>
-        <dt>Translator ID</dt>
-        <dd>{latestTranslation?.translatorId ?? latestTranslation?.createdBy ?? "Pending"}</dd>
+        <dt>{ui.t("translatorId")}</dt>
+        <dd>{latestTranslation?.translatorId ?? latestTranslation?.createdBy ?? ui.t("workflowPending")}</dd>
       </div>
       <div>
-        <dt>Translator</dt>
-        <dd>{latestTranslation?.translatorName ?? "Not recorded"}</dd>
+        <dt>{ui.t("translator")}</dt>
+        <dd>{latestTranslation?.translatorName ?? ui.t("notRecorded")}</dd>
       </div>
       <div>
-        <dt>Target language</dt>
-        <dd>{latestTranslation ? formatLanguage(latestTranslation.targetLanguage, latestTranslation.targetLocale) : "Pending"}</dd>
+        <dt>{ui.t("targetLanguage")}</dt>
+        <dd>{latestTranslation ? formatLanguage(latestTranslation.targetLanguage, latestTranslation.targetLocale) : ui.t("workflowPending")}</dd>
       </div>
       <div>
-        <dt>Original author</dt>
-        <dd>{latestTranslation?.originalAuthorName ?? "Preserved"}</dd>
+        <dt>{ui.t("originalAuthor")}</dt>
+        <dd>{latestTranslation?.originalAuthorName ?? ui.t("preserved")}</dd>
       </div>
     </dl>
   );
@@ -237,10 +321,12 @@ function AttributionBlock({
 
 function ReferencePanels({
   latestTranslation,
-  workspace
+  workspace,
+  ui
 }: {
   latestTranslation: WorkspaceTranslationRecord | null;
   workspace: TranslationWorkspaceData;
+  ui: EditorialUiTranslator;
 }) {
   const lexicographicSupport = latestTranslation?.metadata?.lexicographicSupport ?? [];
   const dictionaryEvidence = workspace.terminology?.dictionaryEvidence ?? [];
@@ -250,16 +336,16 @@ function ReferencePanels({
       : latestTranslation?.metadata?.translationMemoryProposals ?? [];
 
   return (
-    <aside className="translation-reference-panels" aria-label="Translation references">
-      <Card title="Glossary / terminology">
+    <aside className="translation-reference-panels" aria-label={ui.t("translationReferences")}>
+      <Card title={ui.t("glossaryTerminology")}>
         {workspace.terminologyError ? <ErrorState message={workspace.terminologyError} /> : null}
         {workspace.terminology ? (
           <div className="reference-stack">
             <Badge tone={workspace.terminology.valid ? "success" : "danger"}>
-              {workspace.terminology.valid ? "No blocking terms" : "Terminology review"}
+              {workspace.terminology.valid ? ui.t("noBlockingTerms") : ui.t("terminologyReview")}
             </Badge>
             {workspace.terminology.violations.length === 0 ? (
-              <EmptyState title="No terminology violations" />
+              <EmptyState title={ui.t("emptyTerminologyViolations")} />
             ) : (
               workspace.terminology.violations.map((violation) => (
                 <ReferenceItem
@@ -269,58 +355,58 @@ function ReferencePanels({
                 />
               ))
             )}
-            <EvidenceList entries={dictionaryEvidence} title="Dictionary evidence" />
+            <EvidenceList entries={dictionaryEvidence} title={ui.t("dictionaryEvidence")} />
             {workspace.terminology.proposalExplanation ? (
               <ReferenceItem
-                label={`Confidence ${Math.round(workspace.terminology.proposalExplanation.confidenceScore * 100)}%`}
+                label={`${ui.t("confidence")} ${Math.round(workspace.terminology.proposalExplanation.confidenceScore * 100)}%`}
                 text={workspace.terminology.proposalExplanation.explanation}
               />
             ) : null}
             {workspace.terminology.glossaryPriority ? (
               <ReferenceItem
-                label="Glossary priority"
+                label={ui.t("glossaryPriority")}
                 text={workspace.terminology.glossaryPriority.join(" > ")}
               />
             ) : null}
             {workspace.terminology.glossaryConflicts?.map((conflict) => (
               <ReferenceItem
                 key={`${conflict.term}-${conflict.termIds.join("-")}`}
-                label="Glossary conflict"
+                label={ui.t("glossaryConflict")}
                 text={conflict.message}
               />
             ))}
           </div>
         ) : (
-          <EmptyState title="No terminology data" />
+          <EmptyState title={ui.t("emptyTerminology")} />
         )}
       </Card>
 
-      <Card title="Translation Memory proposals">
+      <Card title={ui.t("translationMemoryProposals")}>
         {workspace.translationMemoryProposalsError ? (
           <ErrorState message={workspace.translationMemoryProposalsError} />
         ) : null}
         <div className="reference-stack">
           {tmProposals.length === 0 ? (
-            <EmptyState title="No TM proposals" />
+            <EmptyState title={ui.t("emptyTm")} />
           ) : (
             tmProposals.map((proposal) => (
               <ReferenceItem
                 key={proposal.id}
                 label={`${proposal.translationMemoryMatch.matchType} ${Math.round(proposal.confidenceScore * 100)}%`}
-                text={`${proposal.proposedTargetText} - proposal only`}
+                text={`${proposal.proposedTargetText} - ${ui.t("aiProposalOnly")}`}
               />
             ))
           )}
         </div>
       </Card>
 
-      <Card title="Lexicographic references">
+      <Card title={ui.t("lexicographicReferences")}>
         {workspace.lexicographicReferencesError ? (
           <ErrorState message={workspace.lexicographicReferencesError} />
         ) : null}
         <div className="reference-stack">
           {workspace.lexicographicReferences.length === 0 && lexicographicSupport.length === 0 ? (
-            <EmptyState title="No lexicographic references" />
+            <EmptyState title={ui.t("emptyLexicographic")} />
           ) : null}
           {workspace.lexicographicReferences.map((entry) => (
             <ReferenceItem
@@ -329,24 +415,24 @@ function ReferencePanels({
               text={`${entry.sourceLanguage.toUpperCase()}${entry.targetLanguage ? ` -> ${entry.targetLanguage.toUpperCase()}` : ""}`}
             />
           ))}
-          <EvidenceList entries={lexicographicSupport} title="Translation evidence" />
+          <EvidenceList entries={lexicographicSupport} title={ui.t("translationEvidence")} />
         </div>
       </Card>
 
-      <Card title="Semantic fidelity">
+      <Card title={ui.t("semanticFidelity")}>
         {workspace.semanticIssuesError ? <ErrorState message={workspace.semanticIssuesError} /> : null}
         <div className="reference-stack">
           {typeof latestTranslation?.metadata?.semanticScore === "number" ? (
             <ReferenceItem
-              label="Semantic score"
+              label={ui.t("semanticScore")}
               text={`${latestTranslation.metadata.semanticScore}%`}
             />
           ) : null}
           {latestTranslation?.semanticReportId ? (
-            <ReferenceItem label="Report" text={latestTranslation.semanticReportId} />
+            <ReferenceItem label={ui.t("report")} text={latestTranslation.semanticReportId} />
           ) : null}
           {workspace.semanticIssues.length === 0 ? (
-            <EmptyState title="No semantic issues" />
+            <EmptyState title={ui.t("emptySemantic")} />
           ) : (
             workspace.semanticIssues.map((issue) => (
               <ReferenceItem
@@ -428,16 +514,16 @@ function toneForTranslationStatus(status: WorkspaceTranslationRecord["status"] |
   return "warning";
 }
 
-function statusLabel(status: WorkspaceTranslationRecord["status"] | undefined): string {
+function statusLabel(status: WorkspaceTranslationRecord["status"] | undefined, ui: EditorialUiTranslator): string {
   if (status === "APPROVED") {
-    return "approved";
+    return ui.t("statusApproved");
   }
 
   if (status === "VALIDATED") {
-    return "reviewed";
+    return ui.t("statusReviewed");
   }
 
-  return "draft";
+  return ui.t("statusDraft");
 }
 
 function truncate(value: string, maxLength: number): string {

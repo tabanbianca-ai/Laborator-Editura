@@ -1,6 +1,15 @@
 import type { ComponentProps } from "react";
 import Link from "next/link";
-import { approveReviewAction } from "../../lib/review-workspace-actions";
+import {
+  acceptEditorialCorrectionAction,
+  advanceReviewWorkflowAction,
+  approveReviewAction,
+  completeEditorialReviewAction,
+  createEditorialCorrectionAction,
+  rejectEditorialCorrectionAction,
+  requestEditorialChangesAction,
+  unblockReviewWorkflowAction
+} from "../../lib/review-workspace-actions";
 import type {
   ParallelReviewInterfaceState,
   ReviewProposal,
@@ -15,11 +24,13 @@ import type {
   WorkspaceTranslationRecord
 } from "../../lib/translation-workspace-client";
 import { Badge, Button, Card, EmptyState, ErrorState, PageHeader } from "../ui";
+import { createEditorialUiTranslator, type EditorialUiTranslator } from "../../lib/ui-i18n";
 
 type BadgeTone = ComponentProps<typeof Badge>["tone"];
 
 interface ReviewWorkspacePageProps {
   error?: string;
+  platformLanguage?: string;
   workspace: ReviewWorkspaceData;
 }
 
@@ -32,15 +43,17 @@ interface ReviewIssue {
 
 export function ReviewWorkspacePage({
   error,
+  platformLanguage,
   workspace
 }: ReviewWorkspacePageProps) {
+  const ui = createEditorialUiTranslator(platformLanguage);
   const activeSegment = workspace.activeSegment;
   const latestTranslation = workspace.latestTranslation;
   const issues = buildReviewIssues(workspace);
 
   return (
     <main className="page-stack">
-      <PageHeader eyebrow="Editorial review" title="Review & approval workspace" />
+      <PageHeader eyebrow={ui.t("review")} title={ui.t("reviewApprovalWorkspace")} />
 
       {error ? <ErrorState message={error} /> : null}
       {workspace.projectsError ? <ErrorState message={workspace.projectsError} /> : null}
@@ -48,20 +61,20 @@ export function ReviewWorkspacePage({
       {workspace.segmentsError ? <ErrorState message={workspace.segmentsError} /> : null}
       {workspace.translationsError ? <ErrorState message={workspace.translationsError} /> : null}
 
-      <section className="translation-selector-grid" aria-label="Review document selection">
-        <Card title="Project">
+      <section className="translation-selector-grid" aria-label={ui.t("reviewDocumentSelection")}>
+        <Card title={ui.t("project")}>
           <p className="selector-value">
-            {workspace.selectedProject?.name ?? "Not selected"}
+            {workspace.selectedProject?.name ?? ui.t("notSelected")}
           </p>
           <select className="ui-input ui-select" disabled name="review-project-selector">
             <option>
-              {workspace.selectedProject?.name ?? "Project selector"}
+              {workspace.selectedProject?.name ?? ui.t("project")}
             </option>
           </select>
         </Card>
-        <Card title="Document">
+        <Card title={ui.t("document")}>
           <p className="selector-value">
-            {workspace.selectedDocument?.title ?? "Not selected"}
+            {workspace.selectedDocument?.title ?? ui.t("notSelected")}
           </p>
           <div className="document-link-list">
             {workspace.documents.slice(0, 6).map((document) => (
@@ -82,21 +95,22 @@ export function ReviewWorkspacePage({
       </section>
 
       {!workspace.selectedDocument ? (
-        <EmptyState title="No document selected" />
+        <EmptyState title={ui.t("noDocumentSelected")} />
       ) : null}
 
       {workspace.selectedDocument && !activeSegment ? (
-        <EmptyState title="No segments available for review" />
+        <EmptyState title={ui.t("emptyReviewSegments")} />
       ) : null}
 
       {activeSegment ? (
-        <section className="translation-workspace-grid" aria-label="Editorial review workspace">
+        <section className="translation-workspace-grid" aria-label={ui.t("reviewApprovalWorkspace")}>
           <ReviewSegmentRail
             activeSegmentId={activeSegment.id}
             documentId={workspace.selectedDocument?.id ?? activeSegment.documentId}
             segments={workspace.segments}
             semanticIssues={workspace.semanticIssues}
             translations={workspace.translations}
+            ui={ui}
           />
 
           <ReviewComparisonPanel
@@ -105,12 +119,14 @@ export function ReviewWorkspacePage({
             proposals={workspace.reviewProposals}
             segment={activeSegment}
             workflowStatus={workspace.workflow?.status}
+            ui={ui}
           />
 
           <ReviewReferencePanels
             issues={issues}
             latestTranslation={latestTranslation}
             workspace={workspace}
+            ui={ui}
           />
         </section>
       ) : null}
@@ -123,20 +139,22 @@ function ReviewSegmentRail({
   documentId,
   segments,
   semanticIssues,
-  translations
+  translations,
+  ui
 }: {
   activeSegmentId: string;
   documentId: string;
   segments: WorkspaceSegmentRecord[];
   semanticIssues: SemanticIssue[];
   translations: WorkspaceTranslationRecord[];
+  ui: EditorialUiTranslator;
 }) {
   return (
-    <aside className="translation-segment-rail" aria-label="Review segments">
+    <aside className="translation-segment-rail" aria-label={ui.t("reviewSegments")}>
       <div className="section-heading">
         <div>
-          <p className="section-kicker">Segments</p>
-          <h2>Review queue</h2>
+          <p className="section-kicker">{ui.t("segments")}</p>
+          <h2>{ui.t("reviewQueue")}</h2>
         </div>
         <Badge tone="info">{segments.length}</Badge>
       </div>
@@ -162,14 +180,14 @@ function ReviewSegmentRail({
               )}`}
               key={segment.id}
             >
-              <span>Segment {segment.order}</span>
+              <span>{ui.t("segment")} {segment.order}</span>
               <strong>{truncate(segment.sourceText, 76)}</strong>
               <div className="review-segment-badges">
                 <Badge tone={toneForTranslationStatus(translation?.status)}>
-                  {statusLabel(translation?.status)}
+                  {statusLabel(translation?.status, ui)}
                 </Badge>
                 {blockingIssues.length > 0 ? (
-                  <Badge tone="danger">{blockingIssues.length} issue</Badge>
+                  <Badge tone="danger">{blockingIssues.length} {ui.t("issues")}</Badge>
                 ) : null}
               </div>
             </Link>
@@ -185,37 +203,39 @@ function ReviewComparisonPanel({
   parallelReview,
   proposals,
   segment,
-  workflowStatus
+  workflowStatus,
+  ui
 }: {
   latestTranslation: WorkspaceTranslationRecord | null;
   parallelReview: ParallelReviewInterfaceState;
   proposals: ReviewProposal[];
   segment: WorkspaceSegmentRecord;
   workflowStatus?: ReviewWorkflowStatus;
+  ui: EditorialUiTranslator;
 }) {
   const targetText = latestTranslation?.targetText;
 
   return (
-    <section className="translation-editor-panel" aria-label="Source and target comparison">
-      <Card title="Parallel translation and review">
+    <section className="translation-editor-panel" aria-label={ui.t("parallelReview")}>
+      <Card title={ui.t("parallelReview")}>
         <div className="parallel-review-toolbar">
-          <Badge tone="info">Default: two columns</Badge>
-          <Badge tone="neutral">Optional: three columns</Badge>
-          <Badge tone="neutral">Optional: four columns</Badge>
+          <Badge tone="info">{ui.t("defaultTwoColumns")}</Badge>
+          <Badge tone="neutral">{ui.t("optionalThreeColumns")}</Badge>
+          <Badge tone="neutral">{ui.t("optionalFourColumns")}</Badge>
         </div>
-        <div className="parallel-review-mode-controls" aria-label="Parallel review mode controls">
+        <div className="parallel-review-mode-controls" aria-label={ui.t("parallelModeControls")}>
           <label>
-            Display mode
+            {ui.t("displayMode")}
             <select className="ui-input ui-select" disabled name="parallel-review-display-mode">
-              <option>Two columns</option>
-              <option>Three columns</option>
-              <option>Four columns</option>
+              <option>{ui.t("twoColumns")}</option>
+              <option>{ui.t("threeColumns")}</option>
+              <option>{ui.t("fourColumns")}</option>
             </select>
           </label>
           <label>
-            Optional language or version
+            {ui.t("optionalLanguageVersion")}
             <select className="ui-input ui-select" disabled name="parallel-review-optional-column">
-              <option>Choose language or version independently</option>
+              <option>{ui.t("chooseLanguageVersion")}</option>
             </select>
           </label>
         </div>
@@ -223,95 +243,151 @@ function ReviewComparisonPanel({
           <article className="parallel-review-column parallel-review-column-original">
             <div className="section-heading">
               <div>
-                <p className="section-kicker">Column 1</p>
-                <h3>Source text</h3>
+                <p className="section-kicker">{ui.t("columnOne")}</p>
+                <h3>{ui.t("sourceText")}</h3>
               </div>
               <Badge tone="neutral">{segment.sourceLanguage.toUpperCase()}</Badge>
             </div>
             <p className="source-text-block">{segment.sourceText}</p>
             <p className="review-human-authority">
-              Original text is immutable. Sentence and paragraph alignment is preserved.
+              {ui.t("originalTextRule")}
             </p>
           </article>
 
           <article className="parallel-review-column parallel-review-column-translation">
             <div className="section-heading">
               <div>
-                <p className="section-kicker">Column 2</p>
-                <h3>Translated text</h3>
+                <p className="section-kicker">{ui.t("columnTwo")}</p>
+                <h3>{ui.t("translatedText")}</h3>
               </div>
               <Badge tone="neutral">{segment.targetLanguage.toUpperCase()}</Badge>
             </div>
             {targetText ? (
               <p className="source-text-block">{targetText}</p>
             ) : (
-              <EmptyState title="No translation submitted" />
+              <EmptyState title={ui.t("emptyTranslation")} />
             )}
 
-            <ReviewProposalList proposals={proposals} />
+            <ReviewProposalList proposals={proposals} ui={ui} />
+            {targetText ? (
+              <form action={createEditorialCorrectionAction} className="translation-save-form">
+                <input name="documentId" type="hidden" value={segment.documentId} />
+                <input name="projectId" type="hidden" value={segment.projectId} />
+                <input name="segmentId" type="hidden" value={segment.id} />
+                <input name="sourceLanguage" type="hidden" value={segment.sourceLanguage} />
+                <input name="sourceText" type="hidden" value={segment.sourceText} />
+                <input name="targetLanguage" type="hidden" value={segment.targetLanguage} />
+                <input name="targetText" type="hidden" value={targetText} />
+                <input name="translationId" type="hidden" value={latestTranslation?.id ?? ""} />
+                <label className="ui-input-field">
+                  <span>{ui.t("correction")}</span>
+                  <textarea className="ui-input" name="proposedText" required rows={5} />
+                </label>
+                <label className="ui-input-field">
+                  <span>{ui.t("issueType")}</span>
+                  <select className="ui-input ui-select" defaultValue="LANGUAGE_CORRECTION" name="issueType">
+                    <option value="ORTHOGRAPHY">{ui.t("correctionOrthography")}</option>
+                    <option value="PUNCTUATION">{ui.t("correctionPunctuation")}</option>
+                    <option value="GRAMMAR">{ui.t("correctionGrammar")}</option>
+                    <option value="SYNTAX">{ui.t("correctionSyntax")}</option>
+                    <option value="TERMINOLOGY">{ui.t("correctionTerminology")}</option>
+                    <option value="STYLE">{ui.t("correctionStyle")}</option>
+                    <option value="LANGUAGE_CORRECTION">{ui.t("correctionEditorial")}</option>
+                  </select>
+                </label>
+                <label className="ui-input-field">
+                  <span>{ui.t("severity")}</span>
+                  <select className="ui-input ui-select" defaultValue="HIGH" name="severity">
+                    <option value="LOW">{ui.t("severityLow")}</option>
+                    <option value="MEDIUM">{ui.t("severityMedium")}</option>
+                    <option value="HIGH">{ui.t("severityHigh")}</option>
+                    <option value="CRITICAL">{ui.t("severityCritical")}</option>
+                  </select>
+                </label>
+                <label className="ui-input-field">
+                  <span>{ui.t("explanation")}</span>
+                  <textarea className="ui-input" name="explanation" required rows={3} />
+                </label>
+                <Button type="submit">{ui.t("createCorrection")}</Button>
+              </form>
+            ) : null}
           </article>
         </div>
 
-        <div className="parallel-review-options" aria-label="Parallel review display options">
-          <Badge tone="success">Synchronized scrolling can be toggled</Badge>
-          <Badge tone="success">Differences highlighted</Badge>
-          <Badge tone="success">Columns can be resized or hidden</Badge>
-          <Badge tone="success">Version history preserved</Badge>
+        <div className="parallel-review-options" aria-label={ui.t("parallelDisplayOptions")}>
+          <Badge tone="success">{ui.t("synchronizedScrolling")}</Badge>
+          <Badge tone="success">{ui.t("differencesHighlighted")}</Badge>
+          <Badge tone="success">{ui.t("columnsResizable")}</Badge>
+          <Badge tone="success">{ui.t("versionHistoryPreserved")}</Badge>
         </div>
 
         <div className="review-status-row">
           <Badge tone={toneForTranslationStatus(latestTranslation?.status)}>
-            {statusLabel(latestTranslation?.status)}
+            {statusLabel(latestTranslation?.status, ui)}
           </Badge>
           <Badge tone={toneForWorkflowStatus(workflowStatus)}>
-            {workflowStatus ? workflowStatus.replace(/_/g, " ") : "workflow pending"}
+            {ui.status(workflowStatus)}
           </Badge>
         </div>
       </Card>
 
-      <Card title="Attribution and authority">
-        <AttributionBlock latestTranslation={latestTranslation} />
+      <Card title={ui.t("attributionAuthority")}>
+        <AttributionBlock latestTranslation={latestTranslation} ui={ui} />
         <p className="review-human-authority">
-          Human Final Authority: AI recommendations, proposed replacement variants, and validation panels are advisory.
-          Translation remains unchanged until an authorized human accepts a proposal.
+          {ui.t("humanAuthorityReview")}
         </p>
       </Card>
     </section>
   );
 }
 
-function ReviewProposalList({ proposals }: { proposals: ReviewProposal[] }) {
+function ReviewProposalList({ proposals, ui }: { proposals: ReviewProposal[]; ui: EditorialUiTranslator }) {
   if (proposals.length === 0) {
     return (
       <div className="parallel-review-proposals">
-        <EmptyState title="No pending replacement variants" />
+        <EmptyState title={ui.t("emptyReviewProposals")} />
       </div>
     );
   }
 
   return (
-    <div className="parallel-review-proposals" aria-label="Review Agent proposed replacement variants">
-      <p className="section-kicker">Proposed replacement variants</p>
+    <div className="parallel-review-proposals" aria-label={ui.t("proposedReplacementVariants")}>
+      <p className="section-kicker">{ui.t("proposedReplacementVariants")}</p>
       {proposals.map((proposal) => (
         <article className="review-proposal-card" key={proposal.proposalId}>
           <div className="review-proposal-heading">
-            <strong>{proposal.issueType.replace(/_/g, " ")}</strong>
+            <strong>{correctionTypeLabel(proposal.issueType, ui)}</strong>
             <Badge tone={proposal.status === "PENDING" ? "warning" : "success"}>
-              {proposal.status}
+              {ui.status(proposal.status)}
             </Badge>
           </div>
-          <p className="review-proposal-text">{proposal.proposedText}</p>
+          <div className="review-proposal-diff" aria-label={ui.t("proposedTextChange")}>
+            <del>{proposal.currentTranslation}</del>
+            <ins>{proposal.proposedText}</ins>
+          </div>
           <p className="review-human-authority">{proposal.explanation}</p>
           <div className="review-status-row">
-            <Badge tone="info">Confidence {Math.round(proposal.confidence * 100)}%</Badge>
-            <Badge tone="neutral">{proposal.createdByAgent}</Badge>
+            <Badge tone="info">{ui.t("confidence")} {Math.round(proposal.confidence * 100)}%</Badge>
+            <Badge tone="neutral">{reviewAgentLabel(proposal.createdByAgent, ui)}</Badge>
           </div>
-          <div className="review-action-form" aria-label="Individual proposal actions">
-            <Button disabled type="button" variant="secondary">Accept proposal</Button>
-            <Button disabled type="button" variant="secondary">Reject proposal</Button>
-          </div>
+          {proposal.status === "PENDING" ? (
+            <div className="review-action-form" aria-label={ui.t("individualProposalActions")}>
+              <form action={acceptEditorialCorrectionAction}>
+                <input name="documentId" type="hidden" value={proposal.documentId} />
+                <input name="segmentId" type="hidden" value={proposal.segmentId} />
+                <input name="proposalId" type="hidden" value={proposal.proposalId} />
+                <Button type="submit">{ui.t("acceptProposal")}</Button>
+              </form>
+              <form action={rejectEditorialCorrectionAction}>
+                <input name="documentId" type="hidden" value={proposal.documentId} />
+                <input name="segmentId" type="hidden" value={proposal.segmentId} />
+                <input name="proposalId" type="hidden" value={proposal.proposalId} />
+                <Button type="submit" variant="secondary">{ui.t("rejectProposal")}</Button>
+              </form>
+            </div>
+          ) : null}
           <p className="review-human-authority">
-            Accept and reject decisions are audited. The current translation is preserved until accepted.
+            {ui.t("useDecisionsAudited")}
           </p>
         </article>
       ))}
@@ -320,27 +396,29 @@ function ReviewProposalList({ proposals }: { proposals: ReviewProposal[] }) {
 }
 
 function AttributionBlock({
-  latestTranslation
+  latestTranslation,
+  ui
 }: {
   latestTranslation: WorkspaceTranslationRecord | null;
+  ui: EditorialUiTranslator;
 }) {
   return (
     <dl className="translation-attribution">
       <div>
-        <dt>Translator ID</dt>
-        <dd>{latestTranslation?.translatorId ?? latestTranslation?.createdBy ?? "Pending"}</dd>
+        <dt>{ui.t("translatorId")}</dt>
+        <dd>{latestTranslation?.translatorId ?? latestTranslation?.createdBy ?? ui.t("workflowPending")}</dd>
       </div>
       <div>
-        <dt>Translator</dt>
-        <dd>{latestTranslation?.translatorName ?? "Not recorded"}</dd>
+        <dt>{ui.t("translator")}</dt>
+        <dd>{latestTranslation?.translatorName ?? ui.t("notRecorded")}</dd>
       </div>
       <div>
-        <dt>Reviewer</dt>
-        <dd>Recorded on human approval</dd>
+        <dt>{ui.t("reviewer")}</dt>
+        <dd>{ui.t("recordedWhenApproved")}</dd>
       </div>
       <div>
-        <dt>Original author</dt>
-        <dd>{latestTranslation?.originalAuthorName ?? "Preserved"}</dd>
+        <dt>{ui.t("originalAuthor")}</dt>
+        <dd>{latestTranslation?.originalAuthorName ?? ui.t("preserved")}</dd>
       </div>
     </dl>
   );
@@ -349,43 +427,91 @@ function AttributionBlock({
 function ReviewReferencePanels({
   issues,
   latestTranslation,
-  workspace
+  workspace,
+  ui
 }: {
   issues: ReviewIssue[];
   latestTranslation: WorkspaceTranslationRecord | null;
   workspace: ReviewWorkspaceData;
+  ui: EditorialUiTranslator;
 }) {
   const lexicographicSupport = latestTranslation?.metadata?.lexicographicSupport ?? [];
   const dictionaryEvidence = workspace.terminology?.dictionaryEvidence ?? [];
   const canApprove = workspace.workflow?.status === "IN_REVIEW" && Boolean(workspace.selectedDocument);
+  const canAdvance = Boolean(
+    workspace.workflow &&
+    !["IN_REVIEW", "APPROVED", "READY_FOR_EXPORT", "EXPORTED", "BLOCKED"].includes(
+      workspace.workflow.status
+    )
+  );
+  const commonFields = {
+    documentId: workspace.selectedDocument?.id ?? "",
+    projectId: workspace.selectedProject?.id ?? "",
+    segmentId: workspace.activeSegment?.id ?? "",
+    sourceLanguage: workspace.activeSegment?.sourceLanguage ?? "",
+    sourceText: workspace.activeSegment?.sourceText ?? "",
+    targetLanguage: workspace.activeSegment?.targetLanguage ?? "",
+    targetText: latestTranslation?.targetText ?? ""
+  };
 
   return (
-    <aside className="translation-reference-panels" aria-label="Review validation panels">
-      <Card title="Approval status">
+    <aside className="translation-reference-panels" aria-label={ui.t("reviewValidationPanels")}>
+      <Card title={ui.t("approvalStatus")}>
         {workspace.workflowError ? <ErrorState message={workspace.workflowError} /> : null}
         <div className="reference-stack">
           <ReferenceItem
-            label="Workflow"
-            text={workspace.workflow?.status?.replace(/_/g, " ") ?? "No active workflow status"}
+            label={ui.t("workflow")}
+            text={workspace.workflow ? ui.status(workspace.workflow.status) : ui.t("noActiveWorkflow")}
           />
           <ReferenceItem
-            label="Reviewer attribution"
-            text={workspace.workflow?.approvedBy ?? workspace.workflow?.updatedBy ?? "Recorded when approved"}
+            label={ui.t("reviewerAttribution")}
+            text={workspace.workflow?.approvedBy ?? workspace.workflow?.updatedBy ?? ui.t("recordedWhenApproved")}
           />
-          <form action={approveReviewAction} className="review-action-form">
-            <input name="documentId" type="hidden" value={workspace.selectedDocument?.id ?? ""} />
-            <input name="projectId" type="hidden" value={workspace.selectedProject?.id ?? ""} />
-            <input name="segmentId" type="hidden" value={workspace.activeSegment?.id ?? ""} />
-            <Button disabled={!canApprove} type="submit">Approve review</Button>
-            <Button disabled type="button" variant="secondary">Request changes</Button>
-          </form>
+          {canAdvance ? (
+            <form action={advanceReviewWorkflowAction} className="review-action-form">
+              <WorkflowHiddenFields values={commonFields} />
+              <Button type="submit" variant="secondary">{ui.t("advanceWorkflow")}</Button>
+            </form>
+          ) : null}
+          {workspace.workflow?.status === "BLOCKED" ? (
+            <form action={unblockReviewWorkflowAction} className="translation-save-form">
+              <WorkflowHiddenFields values={commonFields} />
+              <label className="ui-input-field">
+                <span>{ui.t("resumeNote")}</span>
+                <input className="ui-input" name="reason" required />
+              </label>
+              <Button type="submit" variant="secondary">{ui.t("resumeReview")}</Button>
+            </form>
+          ) : null}
+          {canApprove ? (
+            <>
+              <form action={completeEditorialReviewAction} className="review-action-form">
+                <WorkflowHiddenFields values={commonFields} />
+                <Button disabled={!latestTranslation} type="submit" variant="secondary">
+                  {ui.t("completeReview")}
+                </Button>
+              </form>
+              <form action={approveReviewAction} className="review-action-form">
+                <WorkflowHiddenFields values={commonFields} />
+                <Button type="submit">{ui.t("approveCorrectedTranslation")}</Button>
+              </form>
+              <form action={requestEditorialChangesAction} className="translation-save-form">
+                <WorkflowHiddenFields values={commonFields} />
+                <label className="ui-input-field">
+                  <span>{ui.t("requiredChanges")}</span>
+                  <textarea className="ui-input" name="reason" required rows={3} />
+                </label>
+                <Button type="submit" variant="secondary">{ui.t("requestChanges")}</Button>
+              </form>
+            </>
+          ) : null}
         </div>
       </Card>
 
-      <Card title="Issue list">
+      <Card title={ui.t("issueList")}>
         <div className="reference-stack">
           {issues.length === 0 ? (
-            <EmptyState title="No open review issues" />
+            <EmptyState title={ui.t("emptyReviewIssues")} />
           ) : (
             issues.map((issue) => (
               <div className="review-issue-item" key={issue.id}>
@@ -400,19 +526,19 @@ function ReviewReferencePanels({
         </div>
       </Card>
 
-      <Card title="Semantic fidelity summary">
+      <Card title={ui.t("semanticFidelitySummary")}>
         {workspace.semanticIssuesError ? <ErrorState message={workspace.semanticIssuesError} /> : null}
         <div className="reference-stack">
           {typeof latestTranslation?.metadata?.semanticScore === "number" ? (
             <ReferenceItem
-              label="Semantic score"
+              label={ui.t("semanticScore")}
               text={`${latestTranslation.metadata.semanticScore}%`}
             />
           ) : (
-            <ReferenceItem label="Semantic score" text="Not calculated" />
+            <ReferenceItem label={ui.t("semanticScore")} text={ui.t("notCalculated")} />
           )}
           {workspace.semanticIssues.length === 0 ? (
-            <EmptyState title="No semantic issues" />
+            <EmptyState title={ui.t("emptySemantic")} />
           ) : (
             workspace.semanticIssues.map((issue) => (
               <ReferenceItem
@@ -425,15 +551,15 @@ function ReviewReferencePanels({
         </div>
       </Card>
 
-      <Card title="Terminology / glossary validation">
+      <Card title={ui.t("glossaryTerminology")}>
         {workspace.terminologyError ? <ErrorState message={workspace.terminologyError} /> : null}
         {workspace.terminology ? (
           <div className="reference-stack">
             <Badge tone={workspace.terminology.valid ? "success" : "danger"}>
-              {workspace.terminology.valid ? "Terminology compliant" : "Terminology review required"}
+              {workspace.terminology.valid ? ui.t("terminologyCompliant") : ui.t("terminologyReviewRequired")}
             </Badge>
             {workspace.terminology.violations.length === 0 ? (
-              <EmptyState title="No terminology violations" />
+              <EmptyState title={ui.t("emptyTerminologyViolations")} />
             ) : (
               workspace.terminology.violations.map((violation) => (
                 <ReferenceItem
@@ -443,20 +569,20 @@ function ReviewReferencePanels({
                 />
               ))
             )}
-            <EvidenceList entries={dictionaryEvidence} title="Dictionary evidence" />
+            <EvidenceList entries={dictionaryEvidence} title={ui.t("dictionaryEvidence")} />
           </div>
         ) : (
-          <EmptyState title="No terminology data" />
+          <EmptyState title={ui.t("emptyTerminology")} />
         )}
       </Card>
 
-      <Card title="Lexicographic references">
+      <Card title={ui.t("lexicographicReferences")}>
         {workspace.lexicographicReferencesError ? (
           <ErrorState message={workspace.lexicographicReferencesError} />
         ) : null}
         <div className="reference-stack">
           {workspace.lexicographicReferences.length === 0 && lexicographicSupport.length === 0 ? (
-            <EmptyState title="No lexicographic references" />
+            <EmptyState title={ui.t("emptyLexicographic")} />
           ) : null}
           {workspace.lexicographicReferences.map((entry) => (
             <ReferenceItem
@@ -465,23 +591,37 @@ function ReviewReferencePanels({
               text={`${entry.sourceLanguage.toUpperCase()}${entry.targetLanguage ? ` -> ${entry.targetLanguage.toUpperCase()}` : ""}`}
             />
           ))}
-          <EvidenceList entries={lexicographicSupport} title="Translation evidence" />
+          <EvidenceList entries={lexicographicSupport} title={ui.t("translationEvidence")} />
         </div>
       </Card>
 
-      <Card title="Editorial decision recommendations">
+      <Card title={ui.t("recommendationStatus")}>
         <div className="reference-stack">
           <ReferenceItem
-            label="Recommendation status"
-            text="No saved editorial recommendation selected."
+            label={ui.t("recommendationStatus")}
+            text={ui.t("noSavedRecommendation")}
           />
           <ReferenceItem
-            label="Authority"
-            text="Recommendations remain advisory until an authorized human approves them."
+            label={ui.t("authority")}
+            text={ui.t("recommendationAdvisory")}
           />
         </div>
       </Card>
     </aside>
+  );
+}
+
+function WorkflowHiddenFields({
+  values
+}: {
+  values: Record<string, string>;
+}) {
+  return (
+    <>
+      {Object.entries(values).map(([name, value]) => (
+        <input key={name} name={name} type="hidden" value={value} />
+      ))}
+    </>
   );
 }
 
@@ -604,16 +744,38 @@ function toneForSeverity(severity: ReviewIssue["severity"]): BadgeTone {
   return "info";
 }
 
-function statusLabel(status: WorkspaceTranslationRecord["status"] | undefined): string {
+function statusLabel(status: WorkspaceTranslationRecord["status"] | undefined, ui: EditorialUiTranslator): string {
   if (status === "APPROVED") {
-    return "approved";
+    return ui.t("statusApproved");
   }
 
   if (status === "VALIDATED" || status === "SUBMITTED") {
-    return "reviewed";
+    return ui.t("statusReviewed");
   }
 
-  return "draft";
+  return ui.t("statusDraft");
+}
+
+function correctionTypeLabel(issueType: string, ui: EditorialUiTranslator): string {
+  const labels: Record<string, Parameters<EditorialUiTranslator["t"]>[0]> = {
+    EDITORIAL_CORRECTION: "correctionEditorial",
+    GRAMMAR_AGREEMENT: "correctionGrammar",
+    ORTHOGRAPHY_DIACRITICS: "correctionOrthography",
+    PUNCTUATION: "correctionPunctuation",
+    STYLE_REPETITION: "correctionStyle",
+    SYNTAX: "correctionSyntax",
+    TERMINOLOGY: "correctionTerminology"
+  };
+
+  const key = labels[issueType];
+  return key ? ui.t(key) : issueType.replace(/_/g, " ");
+}
+
+function reviewAgentLabel(
+  agent: ReviewProposal["createdByAgent"],
+  ui: EditorialUiTranslator
+): string {
+  return agent === "Review Agent" ? ui.t("reviewAgent") : ui.t("editorialDecisionSubagent");
 }
 
 function truncate(value: string, maxLength: number): string {

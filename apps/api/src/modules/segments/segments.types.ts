@@ -1,6 +1,8 @@
 export interface SegmentActor {
   userId: string;
   organizationId: string;
+  roles?: string[];
+  permissions?: string[];
 }
 
 export type SegmentAuditAction = "CREATE" | "UPDATE" | "DELETE" | "APPROVE" | "EXPORT";
@@ -47,4 +49,16 @@ export interface SegmentAuditEvent {
   beforeState?: Segment | null;
   afterState?: Segment | null;
   createdAt: string;
+}
+
+export interface CanonicalSegmentInput extends CreateSegmentInput {
+  sourceBlockId: string;
+  sourceBlockOrder: number;
+  sourceChecksum: string;
+  sourceVersion: number;
+}
+
+export interface ReviseSegmentSourceInput {
+  sourceText: string;
+  reason: string;
 }

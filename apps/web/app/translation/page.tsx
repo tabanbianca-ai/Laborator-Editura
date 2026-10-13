@@ -1,5 +1,6 @@
 import { TranslationWorkspacePage } from "../../components/pages/translation-workspace-page";
 import { getTranslationWorkspaceData } from "../../lib/translation-workspace-client";
+import { getWorkspacePreferences } from "../../lib/workspace-client";
 
 interface TranslationRouteProps {
   searchParams?: Promise<{
@@ -15,14 +16,18 @@ function getQueryValue(value: string | string[] | undefined): string | undefined
 
 export default async function TranslationRoute({ searchParams }: TranslationRouteProps) {
   const params = await searchParams;
-  const workspace = await getTranslationWorkspaceData({
-    documentId: getQueryValue(params?.documentId),
-    segmentId: getQueryValue(params?.segmentId)
-  });
+  const [workspace, preferences] = await Promise.all([
+    getTranslationWorkspaceData({
+      documentId: getQueryValue(params?.documentId),
+      segmentId: getQueryValue(params?.segmentId)
+    }),
+    getWorkspacePreferences()
+  ]);
 
   return (
     <TranslationWorkspacePage
       error={getQueryValue(params?.error)}
+      platformLanguage={preferences.data?.platformLanguage}
       workspace={workspace}
     />
   );

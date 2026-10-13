@@ -1,4 +1,4 @@
-import { apiGet, apiPost, type ApiResult } from "./api-client";
+import { apiGet, apiPost, apiPostForm, type ApiResult } from "./api-client";
 
 export type ProjectOrigin =
   | "ORIGINAL_CREATION"
@@ -166,6 +166,29 @@ export interface ProjectDossierRecord {
   updatedAt: string;
 }
 
+export interface DocumentSegmentRecord {
+  id: string;
+  documentId: string;
+  projectId: string;
+  sourceText: string;
+  sourceLanguage: string;
+  sourceLocale?: string;
+  targetLanguage: string;
+  targetLocale?: string;
+  order: number;
+  status: "NEW" | "IN_TRANSLATION" | "TRANSLATED" | "IN_REVIEW" | "APPROVED";
+  latestTranslationId?: string;
+  latestTargetText?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface DocxImportResultRecord {
+  document: DocumentRecord;
+  duplicate: boolean;
+  segments: DocumentSegmentRecord[];
+  unsupportedElements: string[];
+}
+
 export interface ProjectDossierItemRecord {
   assignedAt: string;
   assignedBy: string;
@@ -225,6 +248,7 @@ export interface DocumentRecord {
   targetLocale?: string;
   title: string;
   updatedAt: string;
+  metadata?: Record<string, unknown>;
 }
 
 export function listProjects(): Promise<ApiResult<ProjectRecord[]>> {
@@ -276,4 +300,26 @@ export function listDocuments(projectId?: string): Promise<ApiResult<DocumentRec
   const query = projectId ? `?projectId=${encodeURIComponent(projectId)}` : "";
 
   return apiGet<DocumentRecord[]>(`/documents${query}`);
+}
+
+export function getDocument(documentId: string): Promise<ApiResult<DocumentRecord>> {
+  return apiGet<DocumentRecord>(`/documents/${encodeURIComponent(documentId)}`);
+}
+
+export function listDocumentSegments(
+  documentId: string
+): Promise<ApiResult<DocumentSegmentRecord[]>> {
+  return apiGet<DocumentSegmentRecord[]>(`/segments?documentId=${encodeURIComponent(documentId)}`);
+}
+
+export function createDocumentSegment(input: {
+  documentId: string;
+  projectId: string;
+  sourceText: string;
+}): Promise<ApiResult<DocumentSegmentRecord>> {
+  return apiPost<DocumentSegmentRecord, typeof input>("/segments", input);
+}
+
+export function importDocxDocument(formData: FormData): Promise<ApiResult<DocxImportResultRecord>> {
+  return apiPostForm<DocxImportResultRecord>("/documents/import-docx", formData);
 }

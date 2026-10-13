@@ -1,17 +1,23 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
 import { validateTranslationTargetV1 } from "@laborator/shared";
 import { randomUUID } from "node:crypto";
+import { AiTranslationProviderService } from "../ai-governance/ai-translation-provider.service";
+import { type AiTranslationProposal } from "../ai-governance/ai-governance.types";
 import { LexicographicService } from "../lexicographic/lexicographic.service";
 import { type LexicographicEntryEvidence } from "../lexicographic/lexicographic.types";
 import { QaService } from "../qa/qa.service";
 import { SemanticFidelityService } from "../semantic-fidelity/semantic-fidelity.service";
 import { SegmentsService } from "../segments/segments.service";
+import { DocumentsService } from "../documents/documents.service";
 import { TerminologyService } from "../terminology/terminology.service";
 import { TranslationMemoryService } from "../translation-memory/translation-memory.service";
+import { WorkflowService } from "../workflow/workflow.service";
 import { DatabaseTranslationsRepository } from "./translations.repository";
 import {
+  type GenerateAiTranslationProposalInput,
   type SegmentTranslation,
   type SubmitTranslationInput,
+  type ReviseSegmentSourceForTranslationInput,
   type TranslationActor,
   type TranslationAuditAction,
   type TranslationAuditEvent,
@@ -23,18 +29,82 @@ export class TranslationsService {
   constructor(
     private readonly repository: DatabaseTranslationsRepository,
     private readonly segmentsService: SegmentsService,
+    private readonly documentsService: DocumentsService,
     private readonly lexicographicService: LexicographicService,
     private readonly translationMemoryService: TranslationMemoryService,
     private readonly terminologyService: TerminologyService,
     private readonly qaService: QaService,
-    private readonly semanticFidelityService: SemanticFidelityService
+    private readonly semanticFidelityService: SemanticFidelityService,
+    private readonly workflowService: WorkflowService,
+    private readonly aiTranslationProviderService: AiTranslationProviderService
   ) {}
+
+  async generateAiProposal(
+    actor: TranslationActor,
+    input: GenerateAiTranslationProposalInput
+  ): Promise<AiTranslationProposal> {
+    this.validateActor(actor);
+    this.assertTranslationWrite(actor);
+    if (!input.segmentId) {
+      throw new BadRequestException("segmentId is required.");
+    }
+    if (input.explicitExternalProcessingAuthorization !== true) {
+      throw new ForbiddenException(
+        "Explicit authorization is required before external AI processing."
+      );
+    }
+
+    const segment = await this.segmentsService.getSegment(actor, input.segmentId);
+    this.assertTranslationTargetSupported(segment.targetLanguage, segment.targetLocale);
+    const [tmProposals, terminology] = await Promise.all([
+      this.translationMemoryService.buildProposals(actor, {
+        context: `${segment.projectId}:${segment.documentId}:${segment.id}`,
+        domain: input.domain,
+        sourceLanguage: segment.sourceLanguage,
+        sourceText: segment.sourceText,
+        targetLanguage: segment.targetLanguage,
+        limit: 5
+      }),
+      this.terminologyService.searchTerms(actor, {
+        language: segment.targetLanguage,
+        domain: input.domain,
+        projectId: segment.projectId,
+        status: "VALIDATED",
+        limit: 100
+      })
+    ]);
+
+    return this.aiTranslationProviderService.generateProposal(actor, {
+      projectId: segment.projectId,
+      documentId: segment.documentId,
+      segmentId: segment.id,
+      sourceText: segment.sourceText,
+      sourceLanguage: segment.sourceLanguage,
+      sourceLocale: segment.sourceLocale,
+      targetLanguage: segment.targetLanguage,
+      targetLocale: segment.targetLocale,
+      domain: input.domain,
+      explicitExternalProcessingAuthorization: true,
+      glossaryEntries: terminology
+        .filter((term) => Boolean(term.approvedTranslation))
+        .map((term) => ({
+          sourceTerm: term.term,
+          approvedTranslation: term.approvedTranslation!
+        })),
+      translationMemoryProposals: tmProposals.map((proposal) => ({
+        sourceText: proposal.sourceText,
+        proposedTargetText: proposal.proposedTargetText,
+        confidenceScore: proposal.confidenceScore
+      }))
+    });
+  }
 
   async submitTranslation(
     actor: TranslationActor,
     input: SubmitTranslationInput
   ): Promise<SegmentTranslation> {
     this.validateActor(actor);
+    this.assertTranslationWrite(actor);
 
     if (!input.segmentId || !input.targetText) {
       throw new BadRequestException("segmentId and targetText are required.");
@@ -44,6 +114,12 @@ export class TranslationsService {
     this.assertTranslationTargetSupported(segment.targetLanguage, segment.targetLocale);
     const now = new Date().toISOString();
     const translationId = randomUUID();
+    const previousTranslations = await this.repository.listTranslationsBySegment(
+      actor.organizationId,
+      segment.id
+    );
+    const previousTranslation = previousTranslations.at(-1);
+    const version = previousTranslations.length + 1;
     const lexicographicEntries = await this.lexicographicService.searchEntries(actor, {
       term: segment.sourceText,
       sourceLanguage: segment.sourceLanguage,
@@ -115,7 +191,7 @@ export class TranslationsService {
         confidenceScore: 1,
         approvalStatus: "APPROVED",
         origin: "HUMAN",
-        version: 1,
+        version,
         metadata: {
           translationId,
           validatedTranslationOnly: true,
@@ -147,6 +223,7 @@ export class TranslationsService {
       qaReportId: qaReport.id,
       semanticReportId: semanticReport.id,
       metadata: {
+        ...input.metadata,
         terminologyValid: terminology.valid,
         terminologyProposalExplanation: terminology.proposalExplanation,
         translationMemoryProposals,
@@ -158,14 +235,58 @@ export class TranslationsService {
         targetLocale: segment.targetLocale,
         qaScore: qaReport.score,
         semanticScore: semanticReport.score,
-        ...input.metadata
+        revisionOfTranslationId: previousTranslation?.id,
+        sourceVersion: Number(segment.metadata?.sourceVersion ?? 1),
+        translationVersion: version
       }
     });
 
     await this.audit("CREATE", actor, translation.id, undefined, translation);
     await this.segmentsService.markTranslated(actor, segment.id, translation.id, input.targetText);
+    await this.ensureTranslationWorkflow(actor, segment.projectId, segment.documentId);
 
     return translation;
+  }
+
+  async reviseSegmentSource(
+    actor: TranslationActor,
+    segmentId: string,
+    input: ReviseSegmentSourceForTranslationInput
+  ): Promise<{ segment: Awaited<ReturnType<SegmentsService["reviseSource"]>>; outdatedTranslations: number }> {
+    this.validateActor(actor);
+    this.assertTranslationWrite(actor);
+
+    const existingTranslations = await this.repository.listTranslationsBySegment(
+      actor.organizationId,
+      segmentId
+    );
+    const segment = await this.segmentsService.reviseSource(actor, segmentId, input);
+
+    for (const translation of existingTranslations) {
+      if (translation.status === "OUTDATED") {
+        continue;
+      }
+
+      const updated = await this.repository.updateTranslation({
+        ...translation,
+        status: "OUTDATED",
+        updatedAt: new Date().toISOString(),
+        metadata: {
+          ...(translation.metadata ?? {}),
+          outdatedAt: new Date().toISOString(),
+          outdatedReason: input.reason,
+          replacementSourceVersion: segment.metadata?.sourceVersion
+        }
+      });
+      await this.audit("UPDATE", actor, updated.id, translation, updated);
+    }
+
+    return {
+      segment,
+      outdatedTranslations: existingTranslations.filter(
+        (translation) => translation.status !== "OUTDATED"
+      ).length
+    };
   }
 
   async listTranslationsByDocument(
@@ -229,6 +350,43 @@ export class TranslationsService {
   private validateActor(actor: TranslationActor): void {
     if (!actor.userId || !actor.organizationId) {
       throw new BadRequestException("userId and organizationId are required.");
+    }
+  }
+
+  private assertTranslationWrite(actor: TranslationActor): void {
+    if (actor.permissions === undefined && actor.roles === undefined) {
+      return;
+    }
+
+    const permissions = new Set(actor.permissions ?? []);
+    const roles = new Set((actor.roles ?? []).map((role) => role.toUpperCase()));
+    const allowed = permissions.has("translation:write") ||
+      permissions.has("translation.write") ||
+      ["PLATFORM_CREATOR", "ADMIN", "EDITOR", "TRANSLATOR", "REVIEWER"].some((role) => roles.has(role));
+
+    if (!allowed) {
+      throw new ForbiddenException("Translation write permission is required.");
+    }
+  }
+
+  private async ensureTranslationWorkflow(
+    actor: TranslationActor,
+    projectId: string,
+    documentId: string
+  ): Promise<void> {
+    const workflow = await this.workflowService.startWorkflow(actor, {
+      projectId,
+      documentId,
+      scope: "DOCUMENT"
+    });
+
+    if (workflow.status === "DRAFT") {
+      await this.workflowService.advanceWorkflow(actor, {
+        projectId,
+        documentId,
+        toStatus: "IN_TRANSLATION"
+      });
+      await this.documentsService.markDocumentStatus(actor, documentId, "IN_TRANSLATION");
     }
   }
 

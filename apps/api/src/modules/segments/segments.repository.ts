@@ -32,6 +32,20 @@ export class DatabaseSegmentsRepository {
       .sort((left, right) => left.order - right.order);
   }
 
+  async findBySourceBlock(
+    organizationId: string,
+    documentId: string,
+    sourceBlockId: string
+  ): Promise<Segment | null> {
+    return this.database.selectForTenant<Segment>(
+      "document_segments",
+      organizationId,
+      (segment) =>
+        segment.documentId === documentId &&
+        segment.metadata?.sourceBlockId === sourceBlockId
+    )[0] ?? null;
+  }
+
   async appendAuditEvent(event: SegmentAuditEvent): Promise<void> {
     this.database.insert("foundation_audit_events", event);
   }
