@@ -41,7 +41,9 @@ test("core module screens use shared shell components and placeholders", () => {
   assert.match(coreScreen, /Button disabled/);
   assert.match(projectsPage, /project\.newProject/);
   assert.match(projectsPage, /\/projects\/new/);
-  assert.match(documentsPage, /Import document/);
+  assert.match(documentsPage, /ui\.t\("importDocument"\)/);
+  assert.match(documentsPage, /importDocxAction/);
+  assert.match(documentsPage, /ui\.t\("importAndSegment"\)/);
 });
 
 test("core module client provides safe placeholders without destructive actions", () => {

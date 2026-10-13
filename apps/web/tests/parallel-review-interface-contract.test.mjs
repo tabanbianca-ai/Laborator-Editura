@@ -38,18 +38,18 @@ test("review workspace renders default two-column parallel comparison", () => {
   const page = readSource("components/pages/review-workspace-page.tsx");
 
   for (const marker of [
-    "Parallel translation and review",
-    "Default: two columns",
-    "Column 1",
-    "Source text",
-    "Column 2",
-    "Translated text",
-    "Display mode",
-    "Optional language or version",
-    "Choose language or version independently",
+    'ui.t("parallelReview")',
+    'ui.t("defaultTwoColumns")',
+    'ui.t("columnOne")',
+    'ui.t("sourceText")',
+    'ui.t("columnTwo")',
+    'ui.t("translatedText")',
+    'ui.t("displayMode")',
+    'ui.t("optionalLanguageVersion")',
+    'ui.t("chooseLanguageVersion")',
     "parallel-review-grid-two",
-    "Original text is immutable",
-    "Sentence and paragraph alignment is preserved"
+    'ui.t("originalTextRule")',
+    'parallel-review-grid-two'
   ]) {
     assert.match(page, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
@@ -59,11 +59,11 @@ test("review workspace exposes optional three and four column modes without dupl
   const page = readSource("components/pages/review-workspace-page.tsx");
   const styles = readSource("app/globals.css");
 
-  assert.match(page, /Optional: three columns/);
-  assert.match(page, /Optional: four columns/);
-  assert.match(page, /Synchronized scrolling can be toggled/);
-  assert.match(page, /Differences highlighted/);
-  assert.match(page, /Columns can be resized or hidden/);
+  assert.match(page, /ui\.t\("optionalThreeColumns"\)/);
+  assert.match(page, /ui\.t\("optionalFourColumns"\)/);
+  assert.match(page, /ui\.t\("synchronizedScrolling"\)/);
+  assert.match(page, /ui\.t\("differencesHighlighted"\)/);
+  assert.match(page, /ui\.t\("columnsResizable"\)/);
   assert.match(styles, /\.parallel-review-grid-two/);
   assert.doesNotMatch(page, /new ReviewWorkflow|createReviewWorkflow|autoApprove|autoPublish/);
 });
@@ -72,13 +72,13 @@ test("proposal actions remain individual, non-imposed and auditable", () => {
   const page = readSource("components/pages/review-workspace-page.tsx");
 
   for (const marker of [
-    "Proposed replacement variants",
-    "Accept proposal",
-    "Reject proposal",
-    "Individual proposal actions",
-    "Accept and reject decisions are audited",
-    "current translation is preserved until accepted",
-    "Translation remains unchanged until an authorized human accepts a proposal"
+    'ui.t("proposedReplacementVariants")',
+    'ui.t("acceptProposal")',
+    'ui.t("rejectProposal")',
+    'ui.t("individualProposalActions")',
+    'ui.t("useDecisionsAudited")',
+    'proposal.currentTranslation',
+    'proposal.status === "PENDING"'
   ]) {
     assert.match(page, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }

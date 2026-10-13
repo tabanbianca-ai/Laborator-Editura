@@ -47,19 +47,19 @@ test("translation workspace renders selectors segments source target and save ac
   const page = readSource("components/pages/translation-workspace-page.tsx");
   const actions = readSource("lib/translation-workspace-actions.ts");
 
-  assert.match(page, /Project/);
-  assert.match(page, /Document/);
+  assert.match(page, /ui\.t\("project"\)/);
+  assert.match(page, /ui\.t\("document"\)/);
   assert.match(page, /SegmentRail/);
-  assert.match(page, /Source text/);
-  assert.match(page, /Target text/);
+  assert.match(page, /ui\.t\("sourceText"\)/);
+  assert.match(page, /ui\.t\("targetText"\)/);
   assert.match(page, /textarea/);
-  assert.match(page, /Save translation/);
+  assert.match(page, /ui\.t\("saveTranslation"\)/);
   assert.match(actions, /saveWorkspaceTranslationAction/);
   assert.match(actions, /submitWorkspaceTranslation/);
   assert.match(actions, /reviseWorkspaceSourceAction/);
   assert.match(actions, /advanceTranslationWorkflowAction/);
-  assert.match(page, /Workflow and version history/);
-  assert.match(page, /Existing translations become outdated/);
+  assert.match(page, /ui\.t\("workflowHistory"\)/);
+  assert.match(page, /ui\.t\("sourceRevisionHistory"\)/);
 });
 
 test("translation workspace displays translator and original author attribution", () => {
@@ -70,17 +70,17 @@ test("translation workspace displays translator and original author attribution"
   assert.match(page + client + actions, /translatorName/);
   assert.match(page + client + actions, /translatorId/);
   assert.match(page + client + actions, /originalAuthorName/);
-  assert.match(page, /Original author/);
-  assert.match(page, /Preserved/);
+  assert.match(page, /ui\.t\("originalAuthor"\)/);
+  assert.match(page, /ui\.t\("preserved"\)/);
 });
 
 test("translation workspace includes terminology lexicographic and semantic support panels", () => {
   const page = readSource("components/pages/translation-workspace-page.tsx");
   const client = readSource("lib/translation-workspace-client.ts");
 
-  assert.match(page, /Glossary \/ terminology/);
-  assert.match(page, /Lexicographic references/);
-  assert.match(page, /Semantic fidelity/);
+  assert.match(page, /ui\.t\("glossaryTerminology"\)/);
+  assert.match(page, /ui\.t\("lexicographicReferences"\)/);
+  assert.match(page, /ui\.t\("semanticFidelity"\)/);
   assert.match(page, /dictionaryEvidence/);
   assert.match(page, /lexicographicSupport/);
   assert.match(page, /semanticScore/);
@@ -93,8 +93,8 @@ test("translation workspace keeps statuses human-governed and avoids automatic p
   const page = readSource("components/pages/translation-workspace-page.tsx");
   const actions = readSource("lib/translation-workspace-actions.ts");
 
-  assert.match(page, /draft/);
-  assert.match(page, /reviewed/);
-  assert.match(page, /approved/);
+  assert.match(page, /ui\.t\("statusDraft"\)/);
+  assert.match(page, /ui\.t\("statusReviewed"\)/);
+  assert.match(page, /ui\.t\("statusApproved"\)/);
   assert.doesNotMatch(page + actions, /publish|approveTranslation|approveDocument|markExported|PUBLIC_RELEASE/);
 });

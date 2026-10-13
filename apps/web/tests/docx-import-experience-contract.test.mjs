@@ -19,7 +19,7 @@ test("documents workspace exposes secure DOCX import and canonical document deta
   assert.match(actions, /importDocxDocument/);
   assert.match(client, /documents\/import-docx/);
   assert.match(client, /apiPostForm/);
-  assert.match(detail, /Canonical segments/);
-  assert.match(detail, /Unsupported DOCX elements/);
+  assert.match(detail, /ui\.t\("canonicalSegments"\)/);
+  assert.match(detail, /ui\.t\("unsupportedDocx"\)/);
   assert.match(detail, /createDocumentSegmentAction/);
 });
