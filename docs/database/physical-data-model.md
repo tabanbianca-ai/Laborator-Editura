@@ -37,6 +37,7 @@ Current migration files:
 | `0006_terminology_governance_v2.sql` | Terminology governance fields, quality constraints, rejected terminology support, and terminology blocker indexes. |
 | `0007_founder_protection_v1.sql` | Founder protection, founder ownership transfers, expiration, unique pending transfer constraint, and RLS. |
 | `0008_security_hardening_phase_1.sql` | Login attempts, security events, session expiration metadata, and security indexes. |
+| `0009_workflow_definitions_versions_v1.sql` | Tenant-scoped workflow definitions, immutable versions, instances, approvals, transitions, and configuration audit. |
 
 ## Current PostgreSQL Tables
 

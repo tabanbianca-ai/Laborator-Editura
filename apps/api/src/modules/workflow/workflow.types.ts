@@ -25,6 +25,8 @@ export interface WorkflowActor {
   userId: string;
   organizationId: string;
   roles?: string[];
+  permissions?: string[];
+  canonicalPermissions?: string[];
 }
 
 export interface CompleteEditorialReviewInput extends WorkflowTargetInput {
@@ -112,4 +114,202 @@ export interface WorkflowRepository {
   findStateByTarget(input: WorkflowTargetInput & { organizationId: string }): Promise<WorkflowState | null>;
   appendTransition(transition: WorkflowTransition): Promise<WorkflowTransition>;
   appendAuditEvent(event: WorkflowAuditEvent): Promise<void>;
+}
+
+export type WorkflowDefinitionStatus = "DRAFT" | "ACTIVE" | "SUSPENDED" | "ARCHIVED";
+export type WorkflowVersionStatus = "DRAFT" | "ACTIVE" | "RETIRED";
+export type ConfigurableWorkflowInstanceStatus = "RUNNING" | "BLOCKED" | "COMPLETED";
+export type WorkflowApprovalStatus = "GRANTED" | "REJECTED";
+export type WorkflowRuleOperator =
+  | "EQUALS"
+  | "NOT_EQUALS"
+  | "IN"
+  | "NOT_IN"
+  | "EXISTS"
+  | "GREATER_THAN_OR_EQUAL"
+  | "LESS_THAN_OR_EQUAL";
+
+export interface WorkflowRuleCondition {
+  fact: string;
+  operator: WorkflowRuleOperator;
+  value?: unknown;
+}
+
+export interface WorkflowRulePredicate {
+  all?: WorkflowRulePredicate[];
+  any?: WorkflowRulePredicate[];
+  condition?: WorkflowRuleCondition;
+  not?: WorkflowRulePredicate;
+}
+
+export interface WorkflowRuleEffect {
+  outcome: "ALLOW" | "BLOCK" | "REQUIRE_APPROVAL";
+  reason?: string;
+  requiredRoles?: string[];
+}
+
+export interface WorkflowIfThenRule {
+  id: string;
+  name: string;
+  if: WorkflowRulePredicate;
+  then: WorkflowRuleEffect;
+  else?: WorkflowRuleEffect;
+}
+
+export interface WorkflowApprovalRequirement {
+  minimumApprovals: number;
+  required: boolean;
+  roles: string[];
+}
+
+export interface WorkflowStageDefinition {
+  id: string;
+  name: string;
+  order: number;
+  initial?: boolean;
+  final?: boolean;
+  responsibleRoles: string[];
+  approval?: WorkflowApprovalRequirement;
+  metadata?: Record<string, unknown>;
+}
+
+export interface WorkflowTransitionDefinition {
+  id: string;
+  action: string;
+  fromStageId: string;
+  toStageId: string;
+  allowedRoles: string[];
+  rules: WorkflowIfThenRule[];
+  metadata?: Record<string, unknown>;
+}
+
+export interface WorkflowDefinition {
+  id: string;
+  organizationId: string;
+  key: string;
+  name: string;
+  description?: string;
+  category: string;
+  status: WorkflowDefinitionStatus;
+  currentVersionId?: string;
+  createdBy: string;
+  createdAt: string;
+  updatedBy: string;
+  updatedAt: string;
+}
+
+export interface WorkflowVersion {
+  id: string;
+  organizationId: string;
+  workflowDefinitionId: string;
+  version: number;
+  status: WorkflowVersionStatus;
+  stages: WorkflowStageDefinition[];
+  transitions: WorkflowTransitionDefinition[];
+  createdBy: string;
+  createdAt: string;
+  approvedBy?: string;
+  approvedAt?: string;
+}
+
+export interface ConfigurableWorkflowInstance {
+  id: string;
+  organizationId: string;
+  workflowDefinitionId: string;
+  workflowVersionId: string;
+  projectId?: string;
+  documentId?: string;
+  scopeType: "PROJECT" | "DOCUMENT" | "SEGMENT";
+  scopeId: string;
+  currentStageId: string;
+  status: ConfigurableWorkflowInstanceStatus;
+  startedBy: string;
+  startedAt: string;
+  updatedBy: string;
+  updatedAt: string;
+  completedAt?: string;
+  blockedReason?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface ConfigurableWorkflowTransition {
+  id: string;
+  organizationId: string;
+  workflowInstanceId: string;
+  workflowVersionId: string;
+  transitionDefinitionId: string;
+  action: string;
+  fromStageId: string;
+  toStageId: string;
+  actorId: string;
+  createdAt: string;
+  evaluatedRules: Array<{
+    ruleId: string;
+    outcome: WorkflowRuleEffect["outcome"];
+  }>;
+}
+
+export interface WorkflowApprovalRecord {
+  id: string;
+  organizationId: string;
+  workflowInstanceId: string;
+  workflowVersionId: string;
+  stageId: string;
+  status: WorkflowApprovalStatus;
+  actorId: string;
+  actorRoles: string[];
+  reason?: string;
+  createdAt: string;
+}
+
+export type WorkflowConfigurationAuditAction =
+  | "WORKFLOW_DEFINITION_CREATED"
+  | "WORKFLOW_VERSION_CREATED"
+  | "WORKFLOW_VERSION_ACTIVATED"
+  | "CONFIGURABLE_WORKFLOW_STARTED"
+  | "CONFIGURABLE_TRANSITION_EXECUTED"
+  | "WORKFLOW_APPROVAL_GRANTED"
+  | "WORKFLOW_APPROVAL_REJECTED";
+
+export interface WorkflowConfigurationAuditEvent {
+  id: string;
+  organizationId: string;
+  action: WorkflowConfigurationAuditAction;
+  actorId: string;
+  entityId: string;
+  entityType: "DEFINITION" | "VERSION" | "INSTANCE" | "APPROVAL";
+  createdAt: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface CreateWorkflowDefinitionInput {
+  key: string;
+  name: string;
+  description?: string;
+  category: string;
+}
+
+export interface CreateWorkflowVersionInput {
+  stages: WorkflowStageDefinition[];
+  transitions: WorkflowTransitionDefinition[];
+}
+
+export interface StartConfigurableWorkflowInput {
+  workflowDefinitionId: string;
+  workflowVersionId?: string;
+  projectId?: string;
+  documentId?: string;
+  scopeType: ConfigurableWorkflowInstance["scopeType"];
+  scopeId: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface TransitionConfigurableWorkflowInput {
+  transitionId: string;
+  context?: Record<string, unknown>;
+}
+
+export interface RecordWorkflowApprovalInput {
+  decision: WorkflowApprovalStatus;
+  reason?: string;
 }

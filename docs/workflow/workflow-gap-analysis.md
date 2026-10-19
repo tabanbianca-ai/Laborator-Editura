@@ -11,10 +11,11 @@ The repository has a functional MVP Workflow v1 for document and segment
 states. It enforces important gates for QA, Semantic Fidelity, terminology,
 approval, ready-for-export, and export.
 
-The target architecture requires a broader configurable Workflow Engine with
-versioned workflow definitions, immutable workflow versions, workflow
-instances, stages, tasks, assignments, approvals, conditions, notifications,
-deadlines, events, automation, escalation, and observability.
+The additive configurable foundation now provides versioned definitions,
+immutable activated versions, version-bound instances, stages, transitions,
+structured conditions, role-based approvals, persistence, and audit. Tasks,
+assignments, notifications, deadlines, events, automation execution,
+escalation, and workflow-specific observability remain incremental gaps.
 
 ## Current Strengths
 
@@ -31,38 +32,17 @@ deadlines, events, automation, escalation, and observability.
 
 ## Gaps
 
-### Workflow Definitions
+### Implemented Configurable Foundation
 
-Gap:
-
-- No versioned `WorkflowDefinition` or `WorkflowVersion` runtime was identified.
-
-Impact:
-
-- Process models are not yet configurable without code.
-
-### Workflow Instances
-
-Gap:
-
-- Current workflow state acts as a lightweight instance for document or segment
-  scope, but it does not reference an immutable workflow definition version.
-
-Impact:
-
-- Existing workflows cannot prove which process version governed execution.
-
-### Repository Persistence
-
-Gap:
-
-- The inspected Workflow repository is in-memory, while runtime database table
-  names exist for workflow state, transitions, and audit.
-
-Impact:
-
-- Workflow v1 behavior works as a contract foundation, but a future database
-  repository alignment is required for production-grade durability.
+- `WorkflowDefinition` and numbered `WorkflowVersion` records are persisted.
+- Activated workflow versions are immutable and carry a configuration digest
+  in PostgreSQL.
+- New instances retain the governing version identifier for their lifecycle.
+- Stage transitions, approvals, evaluated rules, and configuration actions are
+  tenant-scoped and auditable.
+- The legacy Workflow v1 repository also remains file-backed and durable.
+- Existing fixed editorial gates and APIs remain unchanged during incremental
+  adoption.
 
 ### Task Management
 
@@ -75,24 +55,24 @@ Impact:
 
 - Work Table cannot yet be fully driven by Workflow Engine task definitions.
 
-### Conditions and Automation
+### Automation Execution
 
 Gap:
 
-- Transition conditions are hardcoded in service logic.
-- No configurable condition or automation model was identified.
+- Structured transition conditions are configurable.
+- Workflow-triggered automation execution is not implemented.
 
 Impact:
 
-- Workflow changes currently require code changes.
+- External automation remains unavailable and cannot bypass domain validation.
 
-### Approval Model
+### Advanced Approval Model
 
 Gap:
 
-- Approval logic exists across multiple modules.
-- There is no unified workflow approval model for single, multiple, parallel,
-  sequential, or veto approval.
+- Configurable stages support role-based minimum human approval counts.
+- Existing approval logic still exists across multiple modules.
+- Parallel, sequential, and veto orchestration are not yet centralized.
 
 Impact:
 

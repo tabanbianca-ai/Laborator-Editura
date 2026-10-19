@@ -26,6 +26,7 @@
 - `0006_terminology_governance_v2.sql`
 - `0007_founder_protection_v1.sql`
 - `0008_security_hardening_phase_1.sql`
+- `0009_workflow_definitions_versions_v1.sql`
 
 ## Runtime Table Inventory
 
@@ -168,6 +169,12 @@ semantic_fidelity_audit_events
 workflow_states
 workflow_transitions
 workflow_audit_events
+workflow_definitions
+workflow_versions
+workflow_instances
+workflow_instance_transitions
+workflow_approval_records
+workflow_configuration_audit_events
 lexicographic_sources
 lexicographic_entries
 lexicographic_decisions

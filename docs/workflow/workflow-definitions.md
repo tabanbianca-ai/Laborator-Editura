@@ -8,6 +8,25 @@ Editura.
 Workflow definitions describe process templates. Workflow instances execute a
 specific immutable version of a definition.
 
+## Implemented Foundation
+
+Migration `0009_workflow_definitions_versions_v1.sql` and the additive API
+foundation implement:
+
+- tenant-scoped workflow definitions and numbered versions;
+- immutable activated version snapshots;
+- ordered stages and explicit transitions;
+- structured `IF`/`THEN`/`ELSE`, `AND`, `OR`, and `NOT` predicates without
+  executable configuration code;
+- role-restricted transitions and human approval requirements;
+- instances bound to one active version for their full lifecycle;
+- persisted transition, approval, and configuration audit evidence;
+- project and document reference validation through existing module services.
+
+Existing `/workflow/*` editorial gates remain authoritative and unchanged.
+Configurable workflows coordinate process stages; they do not replace QA,
+Semantic Fidelity, terminology, rights, export, or publishing validation.
+
 ## WorkflowDefinition
 
 Required fields:
@@ -157,3 +176,8 @@ These are definition families, not hardcoded implementation branches.
 Workflow definitions, stages, transitions, conditions, assignments, deadlines,
 notifications, and automation rules must be configurable without code after the
 Workflow Engine is fully implemented.
+
+The current foundation makes definitions, stages, transitions, conditions, and
+role approvals configurable. Task templates, assignments, deadlines,
+notifications, escalations, and automation execution remain future incremental
+work.

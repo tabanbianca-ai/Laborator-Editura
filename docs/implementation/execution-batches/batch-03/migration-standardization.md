@@ -23,6 +23,7 @@ Migration metadata is represented by `MigrationManifest` in
 | `0006_terminology_governance_v2` | LocalizationResource | no | rollback by backup/restore | tested |
 | `0007_founder_protection_v1` | Identity, Organization | no | rollback by backup/restore | tested |
 | `0008_security_hardening_phase_1` | Identity, AuditRecord | no | rollback by backup/restore | tested |
+| `0009_workflow_definitions_versions_v1` | Workflow | no | rollback by backup/restore | tested |
 
 ## Rules
 

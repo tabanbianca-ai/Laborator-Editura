@@ -105,6 +105,7 @@ Current migration scripts:
 - `0006_terminology_governance_v2.sql`.
 - `0007_founder_protection_v1.sql`.
 - `0008_security_hardening_phase_1.sql`.
+- `0009_workflow_definitions_versions_v1.sql`.
 
 ### JSON Master Data
 
