@@ -21,17 +21,24 @@ Existing Workflow v1 endpoints:
 - `POST /workflow/ready-for-export`.
 - `POST /workflow/exported`.
 
-Existing target examples from the specification:
+Additive configurable workflow endpoints:
 
 - `POST /workflows`.
 - `GET /workflows`.
 - `POST /workflow-instances`.
 - `GET /workflow-instances/{id}`.
 - `POST /workflow-instances/{id}/transition`.
-- `POST /workflow-rules`.
-- `GET /tasks`.
+- `GET /workflows/{id}/versions`.
+- `POST /workflows/{id}/versions`.
+- `POST /workflows/{id}/versions/{versionId}/activate`.
+- `POST /workflow-instances/{id}/approvals`.
 
-## Target Definition APIs
+Future examples from the specification:
+
+- `POST /workflow-rules` for independently managed rule catalogs.
+- `GET /tasks` for workflow-generated task views.
+
+## Configurable Definition APIs
 
 ### Create Workflow Definition
 
@@ -49,15 +56,33 @@ GET /workflows
 
 Lists workflow definitions visible to the authenticated user.
 
+### Create Workflow Version
+
+```text
+POST /workflows/{id}/versions
+```
+
+Creates a complete draft version snapshot with stages, transitions, rules, and
+approval requirements.
+
+### Activate Workflow Version
+
+```text
+POST /workflows/{id}/versions/{versionId}/activate
+```
+
+Activates and freezes a valid draft version through an authorized administrator.
+
 ### Create Workflow Rule
 
 ```text
 POST /workflow-rules
 ```
 
-Creates or versions a configurable workflow rule.
+Remains a future independent rule-catalog endpoint. Rules are currently stored
+inside immutable workflow version snapshots.
 
-## Target Instance APIs
+## Configurable Instance APIs
 
 ### Start Workflow Instance
 
@@ -83,6 +108,15 @@ POST /workflow-instances/{id}/transition
 ```
 
 Executes a validated transition.
+
+### Record Human Approval
+
+```text
+POST /workflow-instances/{id}/approvals
+```
+
+Records one authenticated human decision for the current stage. AI and system
+roles cannot satisfy approval requirements.
 
 ## Target Task APIs
 

@@ -14,15 +14,15 @@
   "dependencies": {
     "@laborator/db": "workspace:*",
     "@laborator/shared": "workspace:*",
+    "@modelcontextprotocol/node": "^2.0.0",
+    "@modelcontextprotocol/server": "^2.3.1",
     "@nestjs/common": "^11.1.2",
     "@nestjs/core": "^11.1.2",
     "@nestjs/platform-express": "^11.1.2",
+    "mammoth": "1.11.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
-    "@modelcontextprotocol/server": "^2.0.0",
-    "mammoth": "1.11.0",
-    "zod": "^4.0.0",
-    "@modelcontextprotocol/node": "^2.0.0"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.7",
