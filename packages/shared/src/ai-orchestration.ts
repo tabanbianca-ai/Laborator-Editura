@@ -14,6 +14,21 @@ export type AiAgentType =
   | "TRANSLATION_AGENT"
   | "VIDEO_AGENT";
 
+/** Agent types classify capabilities; they are not unique governance identities. */
+export interface CanonicalAiAgentIdentity {
+  agentId: string;
+  canonicalName: string;
+  kind: "PRINCIPAL" | "SUBAGENT";
+  parentAgentIds: string[];
+  governanceVersion: string;
+  legacyTypes: AiAgentType[];
+}
+
+export type AiAgentIdentityResolution =
+  | { status: "RESOLVED"; identity: CanonicalAiAgentIdentity }
+  | { status: "AMBIGUOUS"; candidateAgentIds: string[] }
+  | { status: "UNKNOWN" };
+
 export type AiRiskLevel = "CRITICAL" | "HIGH" | "LOW" | "MEDIUM";
 
 export type AiHumanReviewPolicy =
