@@ -78,6 +78,11 @@ and Marketplace APIs retain their existing responses and behavior.
 
 ## Future Execution Endpoints
 
+GAP-02.3 implements controlled task creation, retrieval, explicit background run,
+and cancellation as documented in [Execution Runtime](execution-runtime.md).
+General capability routing, external-provider handlers, and the agent execute
+convenience endpoint below remain future capabilities.
+
 ### Create AI Task
 
 ```text

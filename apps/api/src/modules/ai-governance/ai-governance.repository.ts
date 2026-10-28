@@ -29,6 +29,15 @@ export class DatabaseAiGovernanceRepository implements AiGovernanceRepository {
     )[0] ?? null;
   }
 
+  isAgentExecutionDisabled(organizationId: string, registryId: string, canonicalAgentId: string, operation: string): boolean {
+    return this.database.selectForTenant<{
+      id: string; organizationId: string; targetType: string; targetId: string; disabled: boolean;
+    }>("ai_kill_switches", organizationId).some((entry) => entry.disabled && (
+      entry.targetType === "AGENT" && [registryId, canonicalAgentId].includes(entry.targetId) ||
+      entry.targetType === "EXECUTION_TYPE" && entry.targetId === operation
+    ));
+  }
+
   saveAgentRegistry(record: AgentRegistryRecord): AgentRegistryRecord {
     return this.database.upsert("ai_agent_registry", record);
   }

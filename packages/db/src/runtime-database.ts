@@ -964,6 +964,7 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
   validateReferenceTenant(data, issues, "ai_agent_registry", "activeVersionId", "ai_agent_configuration_versions");
   validateReferenceTenant(data, issues, "ai_prompt_registry", "agentId", "ai_agent_registry");
   validateReferenceTenant(data, issues, "ai_execution_records", "agentId", "ai_agent_registry");
+  validateReferenceTenant(data, issues, "ai_execution_records", "agentVersionId", "ai_agent_configuration_versions");
   validateReferenceTenant(data, issues, "ai_execution_records", "modelId", "ai_model_registry");
   validateReferenceTenant(data, issues, "ai_execution_records", "promptId", "ai_prompt_registry");
   validateReferenceTenant(data, issues, "rag_collections", "embeddingModelId", "ai_model_registry");

@@ -141,6 +141,10 @@ Identity resolution is not authorization or evidence of runtime availability.
 
 ## Operational Configuration (GAP-02.2)
 
+GAP-02.3 extends availability for explicitly validated local bindings; see
+[Execution Runtime](execution-runtime.md). The GAP-02.2 unavailable baseline
+below remains applicable to all configurations without validation receipts.
+
 `AiAgentRegistryService` extends AI Governance using the existing
 `ai_agent_registry` tenant table and additive `ai_agent_configuration_versions`.
 The catalog is always projected from the 24 governance profiles; GET requests

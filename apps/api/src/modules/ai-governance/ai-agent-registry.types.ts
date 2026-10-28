@@ -43,4 +43,5 @@ export interface AgentConfigurationVersion {
   approvedAt?: string;
   activatedBy?: string;
   activatedAt?: string;
+  validatedHandlerKeys?: string[];
 }
