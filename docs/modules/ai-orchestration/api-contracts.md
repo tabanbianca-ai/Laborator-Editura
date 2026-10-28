@@ -41,7 +41,42 @@ Existing AI-related APIs:
 The target AI Orchestration endpoints below are not currently implemented as
 a complete orchestrator runtime.
 
-## Target Endpoints
+## Operational Registry API (GAP-02.2)
+
+These additive routes require a server-authenticated human ADMIN or
+PLATFORM_CREATOR. All configuration and audit records are tenant scoped.
+
+| Method | Route | Response |
+| --- | --- | --- |
+| GET | `/ai/agents` | 24 canonical identity views with configuration and availability |
+| GET | `/ai/agents/:id` | Canonical identity view; aliases resolved explicitly |
+| GET | `/ai/agents/:id/versions` | Tenant configuration history, ordered by version |
+| POST | `/ai/agents/:id/versions` | New draft with monotonic version and SHA-256 |
+| PATCH | `/ai/agents/:id/versions/:versionId` | Updated draft, incremented revision |
+| POST | `/ai/agents/:id/versions/:versionId/approve` | Frozen, human-approved version |
+| POST | `/ai/agents/:id/versions/:versionId/activate` | Updated tenant agent view |
+| POST | `/ai/agents/:id/disable` | Disabled view; historical versions retained |
+
+Draft bodies contain only `reason` and `bindings`. Each binding requires
+`capabilityId`, `operationId`, `handlerKey`, `inputSchemaRef`, `outputSchemaRef`,
+and non-empty `requiredPermissions`. Operation IDs must be unique. Unknown
+fields are rejected. Drafts may contain zero bindings and remain unavailable.
+Approval/activation bodies contain only `configurationSha256` and `reason`;
+disable bodies contain only `reason`. Actors and tenants cannot be supplied.
+
+Version responses include `id`, `organizationId`, `registryId`, `version`,
+`revision`, `governanceVersion`, `configurationSha256`, `bindings`, `status`,
+creation/update actors/times, and approval/activation actors/times when present.
+Agent responses include the GAP-02.1 identity, configuration `status`,
+`activeVersion`, `activeVersionId`, and computed `availability`.
+
+Malformed or ambiguous identities return 400, unauthorized callers 403,
+missing/cross-tenant versions 404, and stale digests or immutable edits 409.
+Activation before approval returns 403. Current availability always denies
+execution because execution runtime is outside GAP-02.2. Existing governance
+and Marketplace APIs retain their existing responses and behavior.
+
+## Future Execution Endpoints
 
 ### Create AI Task
 

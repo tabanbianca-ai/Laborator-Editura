@@ -526,6 +526,11 @@ export type AiModelSelectionMode = "AUTOMATIC" | "MANUAL";
 export type AiBudgetWarningThreshold = 80 | 90 | 100;
 
 export type AiCostAuditAction =
+  | "AI_AGENT_DRAFT_CREATED"
+  | "AI_AGENT_DRAFT_UPDATED"
+  | "AI_AGENT_VERSION_APPROVED"
+  | "AI_AGENT_VERSION_ACTIVATED"
+  | "AI_AGENT_DISABLED"
   | "AI_PROVIDER_CHANGED"
   | "AI_FALLBACK_ACTIVATED"
   | "AI_FALLBACK_RECOVERED"
