@@ -16,19 +16,28 @@ function load(path) {
   if (cache.has(path)) return cache.get(path).exports;
   const module = { exports: {} };
   cache.set(path, module);
-  const output = ts.transpileModule(readFileSync(path, "utf8"), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022,
-      experimentalDecorators: true, esModuleInterop: true }
-  }).outputText;
-  new Function("exports", "require", "module", output)(module.exports, (id) => {
-    if (id.startsWith(".")) {
-      const candidate = resolve(dirname(path), id);
-      if (existsSync(`${candidate}.ts`)) return load(`${candidate}.ts`);
-    }
-    if (id === "@laborator/db") return load(join(root, "packages/db/src/runtime-database.ts"));
-    return require(id);
-  }, module);
-  return module.exports;
+  try {
+    const output = ts.transpileModule(readFileSync(path, "utf8"), {
+      compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022,
+        experimentalDecorators: true, esModuleInterop: true }
+    }).outputText;
+    new Function("exports", "require", "module", output)(module.exports, (id) => {
+      if (id.startsWith(".")) {
+        const candidate = resolve(dirname(path), id);
+        if (existsSync(`${candidate}.ts`)) return load(`${candidate}.ts`);
+        if (existsSync(join(candidate, "index.ts"))) return load(join(candidate, "index.ts"));
+      }
+      if (id === "@laborator/db") return load(join(root, "packages/db/src/runtime-database.ts"));
+      // CI runs API tests before workspace builds; load the real shared sources too.
+      if (id === "@laborator/shared") return load(join(root, "packages/shared/src/index.ts"));
+      return require(id);
+    }, module);
+    return module.exports;
+  } catch (error) {
+    // Failed evaluation must not leave partial exports cached for later tests.
+    cache.delete(path);
+    throw error;
+  }
 }
 const moduleClass = (module, file, name) => load(join(root, `apps/api/src/modules/${module}/${file}.ts`))[name];
 const { FileBackedRuntimeDatabase } = load(join(root, "packages/db/src/runtime-database.ts"));
