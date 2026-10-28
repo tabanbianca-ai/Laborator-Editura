@@ -120,7 +120,26 @@ AI agents may not:
 
 Authorized humans always retain final decision authority.
 
-## Gap Summary
+## Canonical Identity Mapping (GAP-02.1)
+
+`ai-agent-identity.ts` projects identities directly from
+`AI_AGENT_GOVERNANCE_PROFILES`; it does not maintain another agent registry.
+Canonical IDs, names, governance versions, kinds, and parent relationships
+remain owned by those profiles. Shared `AiAgentType` values remain compatible
+capability classifications, not additional principal identities.
+
+Legacy translation, research, author-studio, scheduling, lexicographic,
+semantic, editorial-decision, localization, and platform-engineering names
+resolve to their existing specialized identities. `Layout Publishing Agent`
+and `Multimedia Creation Agent` resolve to explicit candidate sets because
+their historical service boundaries span multiple agents. Callers must choose
+the appropriate specialization; the resolver never chooses one silently.
+
+Resolution returns `RESOLVED`, `AMBIGUOUS`, or `UNKNOWN`. No historical usage
+records, governance profiles, API responses, or execution behavior are rewritten.
+Identity resolution is not authorization or evidence of runtime availability.
+
+## Remaining Registry Gaps
 
 Strengths:
 
