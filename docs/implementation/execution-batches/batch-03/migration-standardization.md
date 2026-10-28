@@ -24,6 +24,7 @@ Migration metadata is represented by `MigrationManifest` in
 | `0007_founder_protection_v1` | Identity, Organization | no | rollback by backup/restore | tested |
 | `0008_security_hardening_phase_1` | Identity, AuditRecord | no | rollback by backup/restore | tested |
 | `0009_workflow_definitions_versions_v1` | Workflow | no | rollback by backup/restore | tested |
+| `0010_ai_agent_registry_versions_v1` | AI Governance | no | preserve registry history | static and isolated runtime tests |
 
 ## Rules
 

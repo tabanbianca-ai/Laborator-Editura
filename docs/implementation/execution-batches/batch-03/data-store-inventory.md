@@ -27,6 +27,7 @@
 - `0007_founder_protection_v1.sql`
 - `0008_security_hardening_phase_1.sql`
 - `0009_workflow_definitions_versions_v1.sql`
+- `0010_ai_agent_registry_versions_v1.sql`
 
 ## Runtime Table Inventory
 
@@ -83,6 +84,7 @@ ai_cost_policies
 ai_budget_override_requests
 ai_cost_audit_events
 ai_agent_registry
+ai_agent_configuration_versions
 ai_model_registry
 ai_provider_registry
 ai_prompt_registry

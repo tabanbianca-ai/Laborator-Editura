@@ -139,7 +139,38 @@ Resolution returns `RESOLVED`, `AMBIGUOUS`, or `UNKNOWN`. No historical usage
 records, governance profiles, API responses, or execution behavior are rewritten.
 Identity resolution is not authorization or evidence of runtime availability.
 
-## Remaining Registry Gaps
+## Operational Configuration (GAP-02.2)
+
+`AiAgentRegistryService` extends AI Governance using the existing
+`ai_agent_registry` tenant table and additive `ai_agent_configuration_versions`.
+The catalog is always projected from the 24 governance profiles; GET requests
+do not seed or duplicate identities. Legacy aliases use GAP-02.1 resolution.
+
+Human administrators and Platform Creators can create and edit drafts, approve
+the exact configuration SHA-256, activate an approved version, and disable an
+agent. AI/system/automation roles are denied even when combined with ADMIN.
+Approved payloads are frozen. Activated versions are immutable, and a new
+version changes only the tenant's active pointer. Disabling preserves history.
+
+Bindings store capability, operation, handler key, input/output schema references,
+and required permissions. Configuration accepts no executable code, provider
+URLs, authority changes, client identity, or validation flags. Binding keys are
+metadata only; they do not grant permissions or enable execution.
+
+All agents currently return `availability.status = UNAVAILABLE`,
+`executable = false`, `validatedBindingCount = 0`, and
+`reason = EXECUTION_RUNTIME_NOT_IMPLEMENTED`, including activated agents.
+A future runtime must validate handlers against a server-owned catalog and
+apply IAM, workflow, governance, provider, cost, quota, and consent gates.
+
+Registry changes use existing `ai_cost_audit_events`, accessible through the
+unchanged administrative `/ai-governance/audit` endpoint. Runtime backup and
+restore include the new version table and tenant reference validation.
+Migration `0010_ai_agent_registry_versions_v1.sql` follows 0009 and adds RLS,
+tenant-scoped references, version uniqueness, approval checks, and immutability.
+It does not modify existing Workflow, Marketplace, or cost-policy APIs.
+
+## Remaining Runtime Gaps
 
 Strengths:
 
@@ -150,8 +181,8 @@ Strengths:
 
 Gaps:
 
-- No canonical AI Orchestration Agent Registry API exists yet.
-- No runtime registry-to-execution binding exists yet.
+- Operational configuration APIs exist; executable handler validation and
+  dispatch remain unavailable.
 - No chain execution runtime exists yet.
 - No prompt or model routing policy is linked directly to each agent runtime.
 
