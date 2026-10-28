@@ -1,6 +1,7 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { createHash, randomUUID } from "node:crypto";
 import { z } from "zod";
+import { AiHandlerRegistry } from "./ai-handler-registry";
 import { listCanonicalAiAgentIdentities, resolveAiAgentIdentity } from "./ai-agent-identity";
 import { DatabaseAiGovernanceRepository } from "./ai-governance.repository";
 import { type AiGovernanceActor, type AiCostAuditAction } from "./ai-governance.types";
@@ -25,7 +26,8 @@ const decisionSchema = z.object({
 
 @Injectable()
 export class AiAgentRegistryService {
-  constructor(private readonly repository: DatabaseAiGovernanceRepository) {}
+  constructor(private readonly repository: DatabaseAiGovernanceRepository,
+    private readonly handlers: AiHandlerRegistry = new AiHandlerRegistry()) {}
 
   listAgents(actor: AiGovernanceActor) {
     this.assertAdmin(actor);
@@ -40,16 +42,19 @@ export class AiAgentRegistryService {
       ? this.repository.listAgentVersions(actor.organizationId, registry.id)
         .find((version) => version.id === registry.activeVersionId)
       : undefined;
+    const validated = active?.bindings.filter((binding) =>
+      active.validatedHandlerKeys?.includes(binding.handlerKey) && this.handlers.validate(identity.agentId, binding)) ?? [];
+    const executable = Boolean(registry?.enabled && active?.status === "ACTIVE" && validated.length);
     return {
       ...identity,
       status: registry?.enabled && active?.status === "ACTIVE" ? "ACTIVE" : "DISABLED",
       activeVersion: active?.version ?? null,
       activeVersionId: active?.id ?? null,
       availability: {
-        status: "UNAVAILABLE" as const,
-        executable: false as const,
-        reason: "EXECUTION_RUNTIME_NOT_IMPLEMENTED",
-        validatedBindingCount: 0
+        status: executable ? "AVAILABLE" : "UNAVAILABLE",
+        executable,
+        reason: executable ? "VALIDATED_LOCAL_HANDLER" : "NO_VALIDATED_EXECUTABLE_BINDING",
+        validatedBindingCount: validated.length
       }
     };
   }
@@ -107,6 +112,8 @@ export class AiAgentRegistryService {
     const now = new Date().toISOString();
     const updated = this.repository.saveAgentVersion({
       ...version, status: "APPROVED", approvedBy: actor.userId, approvedAt: now,
+      validatedHandlerKeys: version.bindings.filter((binding) =>
+        this.handlers.validate(this.identity(agentId).agentId, binding)).map((binding) => binding.handlerKey),
       updatedBy: actor.userId, updatedAt: now
     });
     await this.audit(actor, "AI_AGENT_VERSION_APPROVED", version, { ...updated, decision: input });
