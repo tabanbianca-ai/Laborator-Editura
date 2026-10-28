@@ -965,6 +965,7 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
   validateReferenceTenant(data, issues, "ai_prompt_registry", "agentId", "ai_agent_registry");
   validateReferenceTenant(data, issues, "ai_execution_records", "agentId", "ai_agent_registry");
   validateReferenceTenant(data, issues, "ai_execution_records", "agentVersionId", "ai_agent_configuration_versions");
+  validateAgentTaskResources(data, issues);
   validateReferenceTenant(data, issues, "ai_execution_records", "modelId", "ai_model_registry");
   validateReferenceTenant(data, issues, "ai_execution_records", "promptId", "ai_prompt_registry");
   validateReferenceTenant(data, issues, "rag_collections", "embeddingModelId", "ai_model_registry");
@@ -1517,6 +1518,26 @@ function validateTenantBoundaries(data: Record<string, unknown>, issues: string[
     "schedulingAgentRunId",
     "scheduling_agent_runs"
   );
+}
+
+function validateAgentTaskResources(data: Record<string, unknown>, issues: string[]): void {
+  const references = new Map<string, RuntimeDatabaseTableName>([
+    ["PROJECT", "projects"], ["DOCUMENT", "documents"],
+    ["MANUSCRIPT", "author_manuscripts"], ["LINGUISTIC_SOURCE", "research_sources"]
+  ]);
+  for (const row of rowsFor(data, "ai_execution_records")) {
+    if (row.resource === undefined || row.resource === null) continue;
+    const resource = row.resource as Record<string, unknown>;
+    const table = typeof resource.type === "string" ? references.get(resource.type) : undefined;
+    if (!table || typeof resource.id !== "string" || !resource.id) {
+      issues.push(`data.ai_execution_records row ${row.id} has invalid handler resource`);
+      continue;
+    }
+    const parent = rowsFor(data, table).find((candidate) => candidate.id === resource.id);
+    if (!parent || parent.organizationId !== row.organizationId) {
+      issues.push(`data.ai_execution_records row ${row.id} has missing or cross-tenant handler resource`);
+    }
+  }
 }
 
 function validateReferenceTenant(

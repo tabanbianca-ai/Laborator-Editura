@@ -29,8 +29,9 @@ export class DatabaseSchedulingRepository implements SchedulingRepository {
     return this.database.findByIdForTenant<SchedulingTask>("scheduling_tasks", id, organizationId);
   }
 
-  async listTasks(organizationId: string): Promise<SchedulingTask[]> {
-    return this.database.selectForTenant<SchedulingTask>("scheduling_tasks", organizationId);
+  async listTasks(organizationId: string, projectId?: string, creatorId?: string): Promise<SchedulingTask[]> {
+    return this.database.selectForTenant<SchedulingTask>("scheduling_tasks", organizationId,
+      (task) => (!projectId || task.projectId === projectId) && (!creatorId || task.createdBy === creatorId));
   }
 
   async createEvent(event: SchedulingEvent): Promise<SchedulingEvent> {
@@ -45,8 +46,9 @@ export class DatabaseSchedulingRepository implements SchedulingRepository {
     return this.database.findByIdForTenant<SchedulingEvent>("scheduling_events", id, organizationId);
   }
 
-  async listEvents(organizationId: string): Promise<SchedulingEvent[]> {
-    return this.database.selectForTenant<SchedulingEvent>("scheduling_events", organizationId);
+  async listEvents(organizationId: string, projectId?: string, creatorId?: string): Promise<SchedulingEvent[]> {
+    return this.database.selectForTenant<SchedulingEvent>("scheduling_events", organizationId,
+      (event) => (!projectId || event.projectId === projectId) && (!creatorId || event.createdBy === creatorId));
   }
 
   async createReminder(reminder: SchedulingReminder): Promise<SchedulingReminder> {

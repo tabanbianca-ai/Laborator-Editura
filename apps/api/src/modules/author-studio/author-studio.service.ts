@@ -193,6 +193,11 @@ export class AuthorStudioService {
     return this.repository.findLatestDraftForSection(section.id, actor.organizationId);
   }
 
+  async listDraftVersions(actor: AuthorStudioActor, sectionId: string): Promise<AuthorDraft[]> {
+    const section = await this.requireSectionAccess(actor, sectionId);
+    return this.repository.listDraftVersionsForSection(section.id, actor.organizationId);
+  }
+
   async addNote(actor: AuthorStudioActor, manuscriptId: string, input: CreateAuthorNoteInput): Promise<AuthorNote> {
     const manuscript = await this.requireManuscriptAccess(actor, manuscriptId);
 

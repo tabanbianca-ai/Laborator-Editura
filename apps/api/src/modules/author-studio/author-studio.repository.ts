@@ -79,6 +79,11 @@ export class DatabaseAuthorStudioRepository implements AuthorStudioRepository {
     return drafts.sort((left, right) => right.version - left.version)[0] ?? null;
   }
 
+  async listDraftVersionsForSection(sectionId: string, organizationId: string): Promise<AuthorDraft[]> {
+    return this.database.selectForTenant<AuthorDraft>("author_drafts", organizationId,
+      (draft) => draft.sectionId === sectionId).sort((a, b) => a.version - b.version);
+  }
+
   async createNote(note: AuthorNote): Promise<AuthorNote> {
     return this.database.insert("author_notes", note);
   }

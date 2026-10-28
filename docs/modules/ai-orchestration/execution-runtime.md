@@ -1,17 +1,17 @@
-# GAP-02.3 Controlled Execution Runtime
+# Controlled Execution Runtime (GAP-02.3 / GAP-02.4.2)
 
 ## Scope and Availability
 
 The runtime reuses GAP-02.1 identities and GAP-02.2 configuration versions.
 It supports the existing 18 principals and six subagents without adding agents.
-Only the Quality Agent metadata validator currently has an executable handler.
-This deterministic local implementation checks title and original language;
-it does not perform full editorial quality assessment or call a model/provider.
-Its READY result applies only to these metadata checks, never publication approval.
-The other 23 identities remain unavailable until their real handlers are reviewed,
-implemented, validated, and explicitly activated through human configuration approval.
+Six deterministic local handlers are implemented: Quality plus Coordinator,
+Projects, Manuscripts, Documentation, and Planning & Coordination. Their exact
+capabilities and limitations are listed in the [capability matrix](agent-capability-matrix.md).
+The other 18 identities remain unavailable. Every tenant activation requires
+explicit human configuration approval; no agent is enabled by installing this code.
+These handlers produce advisory reports and never editorial approval or model output.
 
-The server-owned allowlist accepts exactly:
+The existing Quality allowlist entry remains compatible:
 
 ```json
 {
@@ -33,8 +33,10 @@ identity, grant permissions, or declare a binding validated.
 ## API and Lifecycle
 
 - `POST /ai/tasks`: create a task with `agentId`, `operationId`, `projectId`,
-  `documentId`, and `idempotencyKey`. Unknown fields are rejected.
-- `GET /ai/tasks/:id`: owner or same-tenant administrator reads task status.
+  a descriptor-specific `resource` (or legacy Quality `documentId`), and
+  `idempotencyKey`. Unknown fields are rejected. See [handler contract](local-handler-contract.md).
+- `GET /ai/tasks/:id`: owner or same-tenant administrator reads task status after
+  fresh resource and secondary-source authorization.
 - `POST /ai/tasks/:id/run`: owner schedules a CREATED task; returns HTTP 202.
 - `POST /ai/tasks/:id/cancel`: owner or same-tenant administrator cancels a
   nonterminal task. Running handlers receive an abort signal; cancelled results
@@ -53,15 +55,17 @@ current configuration digest, exact binding, RBAC permissions, document/project
 ownership, Workspace Need-to-Know access, Workflow status, AI Governance cost
 authorization, applicable budgets, quotas, and agent/operation kill switches.
 Configuration and kill switches are rechecked after asynchronous authorization.
-Document metadata is loaded through DocumentsService. Restricted classification
-is used conservatively for the access check; missing workflow or access fails closed.
+Module-owned adapters load authorized resources through their existing services.
+Restricted classification is used conservatively. Quality requires a nonblocked
+document workflow; the new read-only reports may analyze resources before workflow
+creation. Missing resource access always fails closed.
 
 ## Persistence and Audit
 
 Existing `ai_execution_records` and `ai_operational_audit_events` are reused.
 Every persisted lifecycle change appends an event. Existing usage accounting
 stores execution/correlation references, outcome, cost, and tokens. The current
-local handler consumes zero provider tokens and costs EUR 0; no estimated
+local handlers consume zero provider tokens and cost EUR 0; no estimated
 external-provider billing is represented as actual usage.
 Audit contains IDs and safe failure codes, not manuscript content or raw errors.
 Cancellation records the requesting actor, including administrative cancellation.
