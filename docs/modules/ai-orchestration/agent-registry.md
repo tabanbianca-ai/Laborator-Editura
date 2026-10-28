@@ -1,5 +1,11 @@
 # AI Agent Registry
 
+The current tested handler catalog is documented in the
+[capability matrix](agent-capability-matrix.md) and [local handler contract](local-handler-contract.md).
+GAP-02.4.2 adds five local advisory adapters while preserving all canonical identities
+and human-approved tenant configuration. Historical foundation notes below describe
+their original scope; they do not imply automatic availability of new handlers.
+
 ## Purpose
 
 The Agent Registry defines which editorial AI agents exist, which capabilities
@@ -185,8 +191,9 @@ Strengths:
 
 Gaps:
 
-- Operational configuration APIs exist; executable handler validation and
-  dispatch remain unavailable.
+- Operational configuration, validated local handlers, and controlled dispatch
+  exist. Eighteen identities still lack executable handlers; provider-backed
+  runtime integration remains unavailable.
 - No chain execution runtime exists yet.
 - No prompt or model routing policy is linked directly to each agent runtime.
 

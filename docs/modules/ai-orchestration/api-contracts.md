@@ -1,5 +1,9 @@
 # AI Orchestration API Contracts
 
+GAP-02.4.2 extends task inputs with descriptor-specific resource references and
+protects persisted report reads with fresh resource authorization. Legacy Quality
+requests remain valid. See [Local Handler Contract](local-handler-contract.md).
+
 ## Purpose
 
 This document defines the target public API contracts for the AI

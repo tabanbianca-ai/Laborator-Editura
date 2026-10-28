@@ -20,6 +20,15 @@ import {
 export class SchedulingService {
   constructor(private readonly repository: DatabaseSchedulingRepository) {}
 
+  async getProjectAgenda(actor: SchedulingActor, projectId: string) {
+    this.validateActor(actor);
+    const admin = actor.roles?.some((role) => ["ADMIN", "PLATFORM_CREATOR"].includes(role.toUpperCase()));
+    const tasks = await this.repository.listTasks(actor.organizationId, projectId, admin ? undefined : actor.userId);
+    const events = await this.repository.listEvents(actor.organizationId, projectId, admin ? undefined : actor.userId);
+    await this.audit("AGENDA_VIEWED", actor, undefined, { projectId, taskCount: tasks.length, eventCount: events.length });
+    return { tasks, events };
+  }
+
   async getAgenda(actor: SchedulingActor): Promise<SchedulingAgenda> {
     this.validateActor(actor);
 
@@ -391,7 +400,8 @@ export class SchedulingService {
       | ScheduledAgentRun
       | SchedulingAgenda
       | undefined,
-    afterState: SchedulingTask | SchedulingEvent | SchedulingReminder | ScheduledAgentRun | SchedulingAgenda,
+    afterState: SchedulingTask | SchedulingEvent | SchedulingReminder | ScheduledAgentRun | SchedulingAgenda |
+      { projectId: string; taskCount: number; eventCount: number },
     schedulingTaskId?: string,
     schedulingEventId?: string,
     schedulingReminderId?: string,

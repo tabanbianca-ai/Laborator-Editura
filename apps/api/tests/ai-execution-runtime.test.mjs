@@ -24,7 +24,10 @@ const identity = load(join(moduleRoot, "ai-agent-identity.ts"), { "./ai-governan
 const dbModule = load(join(root, "packages/db/src/runtime-database.ts"));
 const mocks = { "@laborator/db": dbModule, "../runtime-database.provider": { RUNTIME_DATABASE: "runtime" } };
 const repoModule = load(join(moduleRoot, "ai-governance.repository.ts"), mocks);
-const handlerModule = load(join(moduleRoot, "ai-handler-registry.ts"));
+const contractModule = load(join(moduleRoot, "ai-handler.contract.ts"));
+const handlerModule = load(join(moduleRoot, "ai-handler-registry.ts"), {
+  "./ai-handler.contract": contractModule, "./ai-agent-identity": identity
+});
 const registryModule = load(join(moduleRoot, "ai-agent-registry.service.ts"), {
   "./ai-agent-identity": identity, "./ai-governance.repository": repoModule, "./ai-handler-registry": handlerModule
 });
@@ -33,6 +36,7 @@ const costModule = load(join(moduleRoot, "ai-governance.service.ts"), {
 });
 const executionRepoModule = load(join(moduleRoot, "ai-execution.repository.ts"), mocks);
 const { AiExecutionService } = load(join(moduleRoot, "ai-execution.service.ts"), {
+  "./ai-handler.contract": contractModule,
   "./ai-agent-identity": identity, "./ai-governance.repository": repoModule,
   "./ai-governance.service": costModule, "./ai-handler-registry": handlerModule,
   "./ai-execution.repository": executionRepoModule,

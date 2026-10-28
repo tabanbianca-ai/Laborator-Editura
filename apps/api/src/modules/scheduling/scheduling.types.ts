@@ -171,7 +171,8 @@ export interface SchedulingAuditEvent {
   action: SchedulingAuditAction;
   actorId: string;
   beforeState?: SchedulingTask | SchedulingEvent | SchedulingReminder | ScheduledAgentRun | SchedulingAgenda;
-  afterState?: SchedulingTask | SchedulingEvent | SchedulingReminder | ScheduledAgentRun | SchedulingAgenda;
+  afterState?: SchedulingTask | SchedulingEvent | SchedulingReminder | ScheduledAgentRun | SchedulingAgenda |
+    { projectId: string; taskCount: number; eventCount: number };
   createdAt: string;
 }
 

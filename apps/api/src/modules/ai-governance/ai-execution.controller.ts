@@ -12,7 +12,7 @@ export class AiExecutionController {
   }
   @Get(":id")
   get(@CurrentActor() actor: AuthenticatedRequestContext, @Param("id") id: string) {
-    return this.runtime.get(actor, id);
+    return this.runtime.read(actor, id);
   }
   @Post(":id/run")
   @HttpCode(202)

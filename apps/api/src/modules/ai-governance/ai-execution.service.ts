@@ -11,10 +11,12 @@ import { resolveAiAgentIdentity } from "./ai-agent-identity";
 import { AiHandlerRegistry } from "./ai-handler-registry";
 import { AiExecutionRepository } from "./ai-execution.repository";
 import { type AgentExecutionTask, type AgentTaskStatus } from "./ai-execution.types";
+import { resourceSchema, localReportSchema, type LocalHandlerInput } from "./ai-handler.contract";
 
 const taskSchema = z.object({
   agentId: z.string().min(1).max(120), operationId: z.string().min(1).max(120),
-  projectId: z.string().min(1).max(120), documentId: z.string().min(1).max(120),
+  projectId: z.string().min(1).max(120), documentId: z.string().min(1).max(120).optional(),
+  resource: resourceSchema.optional(),
   idempotencyKey: z.string().min(1).max(120)
 }).strict();
 const terminal = new Set<AgentTaskStatus>(["COMPLETED", "FAILED", "CANCELLED", "BLOCKED"]);
@@ -55,20 +57,31 @@ export class AiExecutionService {
       !this.handlers.validate(identity.identity.agentId, binding)) {
       throw new ForbiddenException("Executable handler binding has not been validated.");
     }
+    const resource = request.resource ?? (request.documentId ? { type: "DOCUMENT" as const, id: request.documentId } : undefined);
+    const descriptor = this.handlers.descriptor(identity.identity.agentId, binding);
+    if (!resource || !descriptor?.inputSchema.safeParse({ projectId: request.projectId, resource }).success ||
+      request.documentId && (resource.type !== "DOCUMENT" || request.documentId !== resource.id)) {
+      throw new BadRequestException("Resource does not match the handler input schema.");
+    }
     const now = new Date().toISOString();
-    return this.repository.create({
+    const created = this.repository.create({
       id: randomUUID(), organizationId: actor.organizationId, userId: actor.userId,
       agentId: registry.id, canonicalAgentId: identity.identity.agentId,
       agentVersionId: version.id, configurationSha256: version.configurationSha256,
-      binding, projectId: request.projectId, documentId: request.documentId,
+      binding, projectId: request.projectId, documentId: resource.type === "DOCUMENT" ? resource.id : undefined,
+      resource,
       idempotencyKey: request.idempotencyKey,
       requestHash: createHash("sha256").update(JSON.stringify({
         agentId: identity.identity.agentId, operationId: request.operationId,
-        projectId: request.projectId, documentId: request.documentId, versionId: version.id
+        projectId: request.projectId, documentId: resource.type === "DOCUMENT" ? resource.id : undefined,
+        versionId: version.id,
+        ...(resource.type !== "DOCUMENT" ? { resource } : {})
       })).digest("hex"),
       correlationId: randomUUID(), status: "CREATED", createdAt: now, updatedAt: now,
       inputTokens: 0, outputTokens: 0, actualCost: 0, currency: "EUR"
     });
+    // Idempotent creation must not expose a previous result without a fresh read authorization.
+    return { ...created, result: undefined };
   }
 
   get(actor: AuthenticatedRequestContext, taskId: string) {
@@ -76,6 +89,15 @@ export class AiExecutionService {
     const task = this.repository.get(actor.organizationId, taskId);
     if (!task || (task.userId !== actor.userId && !actor.roles.includes("ADMIN") &&
       !actor.roles.includes("PLATFORM_CREATOR"))) throw new NotFoundException("AI task not found.");
+    return task;
+  }
+
+  async read(actor: AuthenticatedRequestContext, taskId: string) {
+    const task = this.get(actor, taskId);
+    await this.resourceAccess(actor, task);
+    if (task.result && task.canonicalAgentId !== "quality-agent") {
+      await this.handlers.authorizeResult(task.canonicalAgentId, task.binding, actor, this.resourceInput(task), task.result);
+    }
     return task;
   }
 
@@ -104,17 +126,26 @@ export class AiExecutionService {
     }
     const release = this.repository.acquireExecution();
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    let timeout: ReturnType<typeof setTimeout> | undefined;
     this.controllers.set(taskId, controller);
     let running = false;
     try {
+      timeout = setTimeout(() => controller.abort(), this.handlers.descriptor(task.canonicalAgentId, task.binding)?.timeoutMs ?? 5000);
       const metadata = await this.authorize(actor, task);
       this.assertConfiguration(actor, task);
       task = this.move(this.get(actor, taskId), "AUTHORIZED");
       if (task.status !== "AUTHORIZED") throw new ConflictException("Task authorization failed.");
       task = this.move(task, "RUNNING");
       running = true;
-      const result = resultSchema.parse(await this.handlers.execute(task.canonicalAgentId, task.binding, metadata, controller.signal));
+      const result = task.canonicalAgentId === "quality-agent"
+        ? resultSchema.parse(await this.handlers.execute(task.canonicalAgentId, task.binding, metadata, controller.signal))
+        : localReportSchema.parse(await this.handlers.executeResource(task.canonicalAgentId, task.binding, actor,
+          this.resourceInput(task), controller.signal));
+      await this.resourceAccess(actor, task);
+      this.assertConfiguration(actor, task);
+      if (task.canonicalAgentId !== "quality-agent") {
+        await this.handlers.authorizeResult(task.canonicalAgentId, task.binding, actor, this.resourceInput(task), result);
+      }
       if (controller.signal.aborted && this.get(actor, taskId).status !== "CANCELLED") throw new Error("HANDLER_TIMEOUT");
       await this.recordUsage(actor, task, "SUCCEEDED");
       const current = this.get(actor, taskId);
@@ -133,7 +164,7 @@ export class AiExecutionService {
         running ? "FAILED" : "BLOCKED");
     } finally {
       this.controllers.delete(taskId);
-      clearTimeout(timeout);
+      if (timeout) clearTimeout(timeout);
       release();
     }
   }
@@ -163,25 +194,49 @@ export class AiExecutionService {
 
   private async authorize(actor: AuthenticatedRequestContext, task: AgentExecutionTask) {
     const identity = this.assertConfiguration(actor, task);
-    const permissions = new Set<string>(actor.canonicalPermissions ?? []);
-    if (!task.binding.requiredPermissions.every((permission) => permissions.has(permission))) throw new ForbiddenException();
-    const document = await this.documents.getDocument(actor, task.documentId);
-    if (document.projectId !== task.projectId) throw new ForbiddenException();
-    const access = await this.workspace.evaluateNeedToKnowAccess(actor, {
-      projectId: task.projectId, documentId: task.documentId, resourceId: task.documentId,
-      resourceType: "DOCUMENT", confidentialClassification: "RESTRICTED", requestedAction: "AI_METADATA_VALIDATION"
-    });
-    if (access.decision !== "ALLOW") throw new ForbiddenException();
-    const state = await this.workflow.getWorkflowStatus(actor, {
-      projectId: task.projectId, documentId: task.documentId
-    });
-    if (!state || state.status === "BLOCKED") throw new ForbiddenException();
+    const metadata = await this.resourceAccess(actor, task);
+    const descriptor = this.handlers.descriptor(task.canonicalAgentId, task.binding)!;
+    if (descriptor.workflowRequired) {
+      if (!task.documentId) throw new ForbiddenException();
+      const state = await this.workflow.getWorkflowStatus(actor, {
+        projectId: task.projectId, documentId: task.documentId
+      });
+      if (!state || !descriptor.allowedWorkflowStates.includes(state.status)) throw new ForbiddenException();
+    }
     await this.governance.authorizeAgentExecution(actor, {
       agentName: identity.canonicalName as Parameters<AiGovernanceService["authorizeAgentExecution"]>[1]["agentName"],
       executionType: task.binding.operationId, projectId: task.projectId, documentId: task.documentId,
-      estimatedCost: 0, inputTokens: 0, outputTokens: 0
+      estimatedCost: descriptor.estimatedCost, inputTokens: 0, outputTokens: 0
     });
     await this.checkLimits(actor, task, identity.canonicalName);
+    return metadata;
+  }
+
+  private resourceInput(task: AgentExecutionTask): LocalHandlerInput {
+    const resource = task.resource ?? (task.documentId ? { type: "DOCUMENT" as const, id: task.documentId } : undefined);
+    if (!resource) throw new ForbiddenException();
+    return { projectId: task.projectId, resource };
+  }
+
+  private async resourceAccess(actor: AuthenticatedRequestContext, task: AgentExecutionTask) {
+    const descriptor = this.handlers.descriptor(task.canonicalAgentId, task.binding);
+    if (!descriptor) throw new ForbiddenException();
+    const permissions = new Set<string>(actor.canonicalPermissions ?? []);
+    if (![...task.binding.requiredPermissions, ...descriptor.requiredPermissions].every((permission) => permissions.has(permission))) throw new ForbiddenException();
+    const input = descriptor.inputSchema.parse(this.resourceInput(task));
+    const access = await this.workspace.evaluateNeedToKnowAccess(actor, {
+      projectId: task.projectId, documentId: task.documentId, resourceId: input.resource.id,
+      manuscriptId: input.resource.type === "MANUSCRIPT" ? input.resource.id : undefined,
+      resourceType: descriptor.resourceScope, confidentialClassification: descriptor.classification,
+      requestedAction: descriptor.operationId
+    });
+    if (access.decision !== "ALLOW") throw new ForbiddenException();
+    if (task.canonicalAgentId !== "quality-agent") {
+      await this.handlers.authorizeResource(task.canonicalAgentId, task.binding, actor, input);
+      return {};
+    }
+    const document = await this.documents.getDocument(actor, input.resource.id);
+    if (document.projectId !== task.projectId) throw new ForbiddenException();
     return { title: document.title, originalLanguage: document.originalLanguage };
   }
 

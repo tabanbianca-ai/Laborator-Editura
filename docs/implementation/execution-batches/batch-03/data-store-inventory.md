@@ -29,6 +29,7 @@
 - `0009_workflow_definitions_versions_v1.sql`
 - `0010_ai_agent_registry_versions_v1.sql`
 - `0011_ai_execution_runtime_v1.sql`
+- `0012_local_agent_handler_resources_v1.sql`
 
 ## Runtime Table Inventory
 

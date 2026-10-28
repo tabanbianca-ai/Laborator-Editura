@@ -27,7 +27,10 @@ const repoModule = load(join(moduleRoot, "ai-governance.repository.ts"), {
   "../runtime-database.provider": { RUNTIME_DATABASE: "RUNTIME_DATABASE" }
 });
 const { AiAgentRegistryService } = load(join(moduleRoot, "ai-agent-registry.service.ts"), {
-  "./ai-handler-registry": load(join(moduleRoot, "ai-handler-registry.ts")),
+  "./ai-handler-registry": load(join(moduleRoot, "ai-handler-registry.ts"), {
+    "./ai-handler.contract": load(join(moduleRoot, "ai-handler.contract.ts")),
+    "./ai-agent-identity": identity
+  }),
   "./ai-agent-identity": identity,
   "./ai-governance.repository": repoModule
 });

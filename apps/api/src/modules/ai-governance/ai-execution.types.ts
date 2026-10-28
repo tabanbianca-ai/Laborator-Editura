@@ -1,4 +1,5 @@
 import { type AgentCapabilityBinding } from "./ai-agent-registry.types";
+import { type HandlerResource, type LocalHandlerReport } from "./ai-handler.contract";
 
 export type AgentTaskStatus = "CREATED" | "AUTHORIZED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELLED" | "BLOCKED";
 export interface AgentExecutionTask {
@@ -11,7 +12,8 @@ export interface AgentExecutionTask {
   configurationSha256: string;
   binding: AgentCapabilityBinding;
   projectId: string;
-  documentId: string;
+  documentId?: string;
+  resource?: HandlerResource;
   idempotencyKey: string;
   requestHash: string;
   correlationId: string;
@@ -24,5 +26,5 @@ export interface AgentExecutionTask {
   currency: "EUR";
   usageRecorded?: boolean;
   failureCode?: string;
-  result?: { readiness: "READY" | "READY_WITH_WARNINGS"; issues: string[]; humanApprovalRequired: true };
+  result?: LocalHandlerReport;
 }
