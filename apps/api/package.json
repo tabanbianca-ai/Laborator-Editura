@@ -14,8 +14,8 @@
   "dependencies": {
     "@laborator/db": "workspace:*",
     "@laborator/shared": "workspace:*",
-    "@modelcontextprotocol/node": "^2.1.1",
-    "@modelcontextprotocol/server": "^2.3.1",
+    "@modelcontextprotocol/node": "^2.1.2",
+    "@modelcontextprotocol/server": "^2.4.0",
     "@nestjs/common": "^11.1.2",
     "@nestjs/core": "^11.1.2",
     "@nestjs/platform-express": "^11.1.2",

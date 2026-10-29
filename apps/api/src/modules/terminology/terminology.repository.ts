@@ -51,7 +51,7 @@ export class InMemoryTerminologyRepository implements TerminologyRepository {
           term.projectId === input.projectId ||
           term.glossaryScope === "PLATFORM" ||
           term.glossaryScope === "PERSONAL") &&
-        (input.ownerUserId === undefined || term.ownerUserId === input.ownerUserId) &&
+        (term.glossaryScope !== "PERSONAL" || input.ownerUserId === undefined || term.ownerUserId === input.ownerUserId) &&
         (input.status === undefined || term.status === input.status) &&
         queryMatches
       );
@@ -80,7 +80,7 @@ export class InMemoryTerminologyRepository implements TerminologyRepository {
             term.projectId === input.projectId ||
             term.glossaryScope === "PLATFORM" ||
             term.glossaryScope === "PERSONAL") &&
-          (input.ownerUserId === undefined || term.ownerUserId === input.ownerUserId)
+          (term.glossaryScope !== "PERSONAL" || input.ownerUserId === undefined || term.ownerUserId === input.ownerUserId)
         );
       })
     );
@@ -127,7 +127,7 @@ export class InMemoryTerminologyRepository implements TerminologyRepository {
             term.projectId === input.projectId ||
             term.glossaryScope === "PLATFORM" ||
             term.glossaryScope === "PERSONAL") &&
-          (input.ownerUserId === undefined || term.ownerUserId === input.ownerUserId)
+          (term.glossaryScope !== "PERSONAL" || input.ownerUserId === undefined || term.ownerUserId === input.ownerUserId)
         );
       })
     );

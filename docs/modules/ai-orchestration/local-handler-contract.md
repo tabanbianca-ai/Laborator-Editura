@@ -1,5 +1,10 @@
 # GAP-02.4.2 Local Handler Contract
 
+GAP-02.4.3 preserves this six-handler baseline and adds the
+[linguistic extension](linguistic-handler-contract.md). That extension permits a
+disabled external-processing descriptor for discoverability only: it never validates
+an executable binding. All executable descriptors remain zero-cost and local.
+
 ## Server-Owned Descriptors
 
 `AiHandlerRegistry` combines the existing Quality descriptor with adapters exported

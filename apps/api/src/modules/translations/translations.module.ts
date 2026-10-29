@@ -1,5 +1,7 @@
 import { Module } from "@nestjs/common";
-import { AiGovernanceModule } from "../ai-governance/ai-governance.module";
+import { AiTranslationProviderModule } from "../ai-governance/ai-translation-provider.module";
+import { WorkspaceModule } from "../workspace/workspace.module";
+import { LinguisticAgentAdapter } from "./linguistic-agent.adapter";
 import { LexicographicModule } from "../lexicographic/lexicographic.module";
 import { DocumentsModule } from "../documents/documents.module";
 import { QaModule } from "../qa/qa.module";
@@ -15,7 +17,8 @@ import { TranslationsService } from "./translations.service";
 
 @Module({
   imports: [
-    AiGovernanceModule,
+    AiTranslationProviderModule,
+    WorkspaceModule,
     SegmentsModule,
     DocumentsModule,
     LexicographicModule,
@@ -26,7 +29,7 @@ import { TranslationsService } from "./translations.service";
     WorkflowModule
   ],
   controllers: [TranslationsController],
-  providers: [runtimeDatabaseProvider, DatabaseTranslationsRepository, TranslationsService],
-  exports: [TranslationsService]
+  providers: [runtimeDatabaseProvider, DatabaseTranslationsRepository, TranslationsService, LinguisticAgentAdapter],
+  exports: [TranslationsService, LinguisticAgentAdapter]
 })
 export class TranslationsModule {}

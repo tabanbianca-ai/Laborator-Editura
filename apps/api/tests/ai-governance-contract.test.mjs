@@ -27,11 +27,14 @@ function readSource(name) {
 test("AI governance module is registered with required authenticated admin endpoints", () => {
   const controller = readSource("ai-governance.controller.ts");
   const moduleSource = readSource("ai-governance.module.ts");
+  const providerModule = readSource("ai-translation-provider.module.ts");
   const service = readSource("ai-governance.service.ts");
 
   assert.match(appModule, /AiGovernanceModule/);
-  assert.match(moduleSource, /DatabaseAiGovernanceRepository/);
-  assert.match(moduleSource, /AiGovernanceService/);
+  assert.match(moduleSource, /imports:\s*\[AiTranslationProviderModule/u);
+  assert.match(moduleSource, /exports:\s*\[AiTranslationProviderModule\]/u);
+  assert.match(providerModule, /providers:\s*\[runtimeDatabaseProvider, DatabaseAiGovernanceRepository, AiGovernanceService, AiTranslationProviderService\]/u);
+  assert.match(providerModule, /exports:\s*\[DatabaseAiGovernanceRepository, AiGovernanceService, AiTranslationProviderService\]/u);
   assert.match(controller, /@Controller\("ai-governance"\)/);
   assert.match(controller, /@Get\("providers"\)/);
   assert.match(controller, /@Post\("providers\/:provider\/status"\)/);

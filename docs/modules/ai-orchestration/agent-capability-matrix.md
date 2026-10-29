@@ -9,7 +9,7 @@ it does not mean that any tenant has activated the agent. No activation is autom
 | projects-agent | projects.readiness.v1 | PROJECT / project.read | Readiness/completeness report |
 | manuscripts-agent | manuscripts.integrity.v1 | MANUSCRIPT / document.read | Structure and version integrity |
 | documentation-agent | documentation.citations.v1 | LINGUISTIC_SOURCE / project.read | Citation and authorized reference metadata |
-| translation-agent | None | Not available | No runtime translation binding |
+| translation-agent | translation.proposal.v1 | DOCUMENT + segmentId / document.read | Paid execution disabled pending atomic financial reservations |
 | review-agent | None | Not available | No runtime review binding |
 | layout-agent | None | Not available | No runtime layout binding |
 | publishing-agent | None | Not available | No runtime publishing binding |
@@ -23,8 +23,8 @@ it does not mean that any tenant has activated the agent. No activation is autom
 | administration-agent | None | Not available | No runtime administration binding |
 | evolution-agent | None | Not available | No runtime evolution binding |
 | quality-agent | quality.metadata.v1 | DOCUMENT / document.read | Existing title/language validator preserved |
-| terminology-lexicography-subagent | None | Not available | Parent: Translation |
-| semantic-fidelity-subagent | None | Not available | Parent: Translation |
+| terminology-lexicography-subagent | terminology.analyze.v1 | DOCUMENT + segmentId / document.read | Local glossary conflict and approved TM analysis; parent Translation |
+| semantic-fidelity-subagent | semantic.analyze.v1 | DOCUMENT + segmentId / document.read | Local semantic findings; parent Translation |
 | editorial-decision-subagent | None | Not available | Parent: Review |
 | planning-coordination-subagent | planning.dependencies.v1 | PROJECT / project.read | Scheduling/dependency report; parent Coordinator |
 | media-localization-subagent | None | Not available | Parents: Audio and Video |
@@ -38,3 +38,6 @@ additional to the table's minimum canonical permission.
 
 See [Local Handler Contract](local-handler-contract.md) for schemas, provenance,
 workflow rules, bounded execution, authorization, and operational limitations.
+The [linguistic contract](linguistic-handler-contract.md) defines the added segment
+authorization and paid-execution prohibition. Nine descriptors do not mean nine
+executable handlers: only eight have validated local execution paths.

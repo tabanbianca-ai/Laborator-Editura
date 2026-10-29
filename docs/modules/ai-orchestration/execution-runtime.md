@@ -1,15 +1,19 @@
-# Controlled Execution Runtime (GAP-02.3 / GAP-02.4.2)
+# Controlled Execution Runtime (GAP-02.3 / GAP-02.4.2 / GAP-02.4.3)
 
 ## Scope and Availability
 
 The runtime reuses GAP-02.1 identities and GAP-02.2 configuration versions.
 It supports the existing 18 principals and six subagents without adding agents.
-Six deterministic local handlers are implemented: Quality plus Coordinator,
-Projects, Manuscripts, Documentation, and Planning & Coordination. Their exact
+Eight deterministic local handlers are implemented: Quality plus Coordinator,
+Projects, Manuscripts, Documentation, Planning & Coordination, Terminology &
+Lexicography, and Semantic Fidelity. Their exact
 capabilities and limitations are listed in the [capability matrix](agent-capability-matrix.md).
-The other 18 identities remain unavailable. Every tenant activation requires
+The other 16 identities remain unavailable, including paid Translation. Every tenant activation requires
 explicit human configuration approval; no agent is enabled by installing this code.
 These handlers produce advisory reports and never editorial approval or model output.
+Segment-specific requests, evidence revocation, the composite recovery constraint,
+and the mandatory paid-translation block are defined in the
+[linguistic contract](linguistic-handler-contract.md).
 
 The existing Quality allowlist entry remains compatible:
 
