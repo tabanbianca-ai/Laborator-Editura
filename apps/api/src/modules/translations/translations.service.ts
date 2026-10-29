@@ -86,7 +86,7 @@ export class TranslationsService {
       domain: input.domain,
       explicitExternalProcessingAuthorization: true,
       glossaryEntries: terminology
-        .filter((term) => Boolean(term.approvedTranslation))
+        .filter((term) => term.glossaryScope !== "PERSONAL" && Boolean(term.approvedTranslation))
         .map((term) => ({
           sourceTerm: term.term,
           approvedTranslation: term.approvedTranslation!

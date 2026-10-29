@@ -42,7 +42,7 @@ function load(path) {
 const moduleClass = (module, file, name) => load(join(root, `apps/api/src/modules/${module}/${file}.ts`))[name];
 const { FileBackedRuntimeDatabase } = load(join(root, "packages/db/src/runtime-database.ts"));
 const admin = { userId: "owner", organizationId: "org", roles: ["ADMIN"],
-  permissions: ["read", "admin:manage"], canonicalPermissions: ["project.read", "document.read"] };
+  permissions: ["read", "admin:manage"], canonicalPermissions: ["project.read", "document.read", "segment.read", "translation.read", "translation.write"] };
 const member = { ...admin, userId: "author", roles: ["AUTHOR"], permissions: ["read"] };
 const now = "2026-01-01T00:00:00.000Z";
 const protectedTables = ["projects", "documents", "author_manuscripts", "author_manuscript_sections",
@@ -50,7 +50,7 @@ const protectedTables = ["projects", "documents", "author_manuscripts", "author_
   "scheduling_tasks", "scheduling_events"];
 const snapshot = (db) => Object.fromEntries(protectedTables.map((table) => [table, db.select(table)]));
 
-async function harness(t) {
+async function harness(t, linguistic = false) {
   const directory = mkdtempSync(join(tmpdir(), "local-handlers-"));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const db = new FileBackedRuntimeDatabase(join(directory, "runtime.json"));
@@ -104,18 +104,41 @@ async function harness(t) {
     new (moduleClass("research", "documentation-agent.adapter", "DocumentationAgentAdapter"))(research, lexicographic, workspace),
     new (moduleClass("scheduling", "planning-agent.adapter", "PlanningAgentAdapter"))(scheduling, projects, definitions)
   ];
-  const handlers = new (moduleClass("ai-governance", "ai-handler-registry", "AiHandlerRegistry"))(...adapters);
   const governanceRepo = new (moduleClass("ai-governance", "ai-governance.repository", "DatabaseAiGovernanceRepository"))(db);
+  const governance = new (moduleClass("ai-governance", "ai-governance.service", "AiGovernanceService"))(governanceRepo);
+  let linguisticServices;
+  if (linguistic) {
+    const segments = make("segments", "segments.repository", "DatabaseSegmentsRepository", "segments.service", "SegmentsService", documents);
+    const terminology = make("terminology", "terminology.repository", "InMemoryTerminologyRepository", "terminology.service", "TerminologyService", lexicographic);
+    const memory = make("translation-memory", "translation-memory.repository", "InMemoryTranslationMemoryRepository", "translation-memory.service", "TranslationMemoryService");
+    const qa = make("qa", "qa.repository", "InMemoryQaRepository", "qa.service", "QaService", terminology);
+    const semantic = make("semantic-fidelity", "semantic-fidelity.repository", "InMemorySemanticFidelityRepository", "semantic-fidelity.service", "SemanticFidelityService", lexicographic, terminology, memory, qa);
+    const provider = new (moduleClass("ai-governance", "ai-translation-provider.service", "AiTranslationProviderService"))(governance);
+    const translations = make("translations", "translations.repository", "DatabaseTranslationsRepository", "translations.service", "TranslationsService",
+      segments, documents, lexicographic, memory, terminology, qa, semantic, workflow, provider);
+    const adapter = new (moduleClass("translations", "linguistic-agent.adapter", "LinguisticAgentAdapter"))(
+      segments, documents, workspace, terminology, lexicographic, memory, semantic, translations);
+    adapters.push(adapter);
+    linguisticServices = { segments, terminology, memory, semantic, translations, provider, adapter };
+    db.insert("document_segments", { id: "segment", organizationId: "org", projectId: "project", documentId: "document",
+      sourceText: "La connaissance et la raison nous permettent de comprendre le monde et de progresser ensemble.",
+      latestTargetText: "Cunoaștere.", sourceLanguage: "fr", targetLanguage: "ro", targetLocale: "ro-RO",
+      status: "TRANSLATED", order: 1, createdBy: "author", createdAt: now, updatedAt: now });
+    const grant = db.select("workspace_need_to_know_grants")[0];
+    db.upsert("workspace_need_to_know_grants", { ...grant, accessScope: { ...grant.accessScope, segmentIds: ["segment"] } });
+  }
+  const handlers = new (moduleClass("ai-governance", "ai-handler-registry", "AiHandlerRegistry"))(...adapters);
   const registry = new (moduleClass("ai-governance", "ai-agent-registry.service", "AiAgentRegistryService"))(governanceRepo, handlers);
   const executionRepo = new (moduleClass("ai-governance", "ai-execution.repository", "AiExecutionRepository"))(db);
   const runtime = new (moduleClass("ai-governance", "ai-execution.service", "AiExecutionService"))(executionRepo, governanceRepo,
-    new (moduleClass("ai-governance", "ai-governance.service", "AiGovernanceService"))(governanceRepo),
+    governance,
     handlers, documents, workspace, workflow);
   const descriptors = adapters.flatMap((adapter) => adapter.descriptors());
   const bindingFor = (descriptor) => ({ handlerKey: descriptor.id, capabilityId: descriptor.capabilityId,
     operationId: descriptor.operationId, inputSchemaRef: descriptor.inputSchemaRef,
     outputSchemaRef: descriptor.outputSchemaRef, requiredPermissions: descriptor.requiredPermissions });
   for (const descriptor of descriptors) {
+    if (descriptor.availability) continue;
     const version = await registry.createDraft(admin, descriptor.agentId, { bindings: [bindingFor(descriptor)], reason: "Test configuration" });
     const decision = { configurationSha256: version.configurationSha256, reason: "Explicit human approval" };
     await registry.approveVersion(admin, descriptor.agentId, version.id, decision);
@@ -125,9 +148,10 @@ async function harness(t) {
     const descriptor = descriptors.find((item) => item.agentId === agentId);
     const ids = { PROJECT: "project", MANUSCRIPT: "manuscript", LINGUISTIC_SOURCE: "source" };
     return { agentId, operationId: descriptor.operationId, projectId: "project",
-      resource: { type: descriptor.resourceScope, id: ids[descriptor.resourceScope] }, idempotencyKey: key };
+      resource: { type: descriptor.resourceScope, id: descriptor.resourceScope === "DOCUMENT" ? "document" : ids[descriptor.resourceScope] }, idempotencyKey: key,
+      ...(linguistic && agentId.endsWith("subagent") && ["terminology-lexicography-subagent", "semantic-fidelity-subagent"].includes(agentId) ? { segmentId: "segment" } : {}) };
   };
-  return { db, runtime, registry, handlers, adapters, descriptors, bindingFor, request, projects, governanceRepo };
+  return { db, runtime, registry, handlers, adapters, descriptors, bindingFor, request, projects, governanceRepo, linguisticServices };
 }
 
 for (const agentId of ["coordinator-agent", "projects-agent", "manuscripts-agent", "documentation-agent", "planning-coordination-subagent"]) {
@@ -354,4 +378,332 @@ test("Quality retains its legacy request/result contract and workflow gate with 
   const blocked = h.runtime.create(member, { ...input, idempotencyKey: "workflow-blocked" });
   h.db.upsert("workflow_states", { ...h.db.select("workflow_states")[0], status: "BLOCKED" });
   assert.equal((await h.runtime.execute(member, blocked.id)).status, "BLOCKED");
+});
+
+for (const agent of ["terminology-lexicography-subagent", "semantic-fidelity-subagent"]) {
+  test(`${agent} uses real linguistic services and persists segment evidence without editorial changes`, async (t) => {
+    const h = await harness(t, true);
+    const before = snapshot(h.db);
+    const segment = h.db.select("document_segments");
+    const task = h.runtime.create(member, h.request(agent));
+    const completed = await h.runtime.execute(member, task.id);
+    assert.equal(completed.status, "COMPLETED");
+    assert.equal(completed.result.humanApprovalRequired, true);
+    assert.ok(completed.result.provenance.some((ref) => ref.resourceType === "SEGMENT" && ref.resourceId === "segment"));
+    if (agent.startsWith("semantic")) assert.ok(completed.result.findings.some((finding) => finding.code === "OMITTED_MEANING"));
+    assert.deepEqual(h.db.select("document_segments"), segment);
+    assert.deepEqual(snapshot(h.db), before);
+    assert.doesNotMatch(JSON.stringify(completed.result), /La connaissance|Cunoaștere/u);
+    const restored = new FileBackedRuntimeDatabase(`${h.db.getPath()}.restored`);
+    restored.restoreBackup(h.db.createBackup());
+    assert.deepEqual(restored.select("ai_execution_records")[0].result, completed.result);
+    assert.equal(validateBackup(h.db.createBackup()).valid, true);
+    assert.deepEqual(h.db.select("ai_operational_audit_events").map((row) => row.action),
+      ["AI_TASK_CREATED", "AI_TASK_AUTHORIZED", "AI_TASK_RUNNING", "AI_TASK_COMPLETED"]);
+  });
+}
+
+test("linguistic authorization rejects foreign, unassigned, mismatched and missing segments", async (t) => {
+  const h = await harness(t, true);
+  const original = h.db.select("document_segments")[0];
+  for (const [id, organizationId, documentId] of [["foreign", "other-org", "document"],
+    ["unassigned", "org", "document"], ["mismatched", "org", "another-document"]]) {
+    h.db.insert("document_segments", { ...original, id, organizationId, documentId });
+  }
+  for (const segmentId of ["foreign", "unassigned", "mismatched", "missing"]) {
+    const task = h.runtime.create(member, { ...h.request("semantic-fidelity-subagent", segmentId), segmentId });
+    assert.equal((await h.runtime.execute(member, task.id)).status, "BLOCKED");
+  }
+  assert.throws(() => h.runtime.create(member, { ...h.request("semantic-fidelity-subagent"), segmentId: undefined }), /schema/u);
+  const task = h.runtime.create(member, h.request("semantic-fidelity-subagent", "rbac"));
+  assert.equal((await h.runtime.execute({ ...member, canonicalPermissions: [] }, task.id)).status, "BLOCKED");
+});
+
+test("linguistic results become inaccessible when segment content or grants change", async (t) => {
+  const h = await harness(t, true);
+  const task = h.runtime.create(member, h.request("semantic-fidelity-subagent"));
+  assert.equal((await h.runtime.execute(member, task.id)).status, "COMPLETED");
+  const original = h.db.select("document_segments")[0];
+  h.db.upsert("document_segments", { ...original, latestTargetText: "Changed translation" });
+  await assert.rejects(h.runtime.read(member, task.id), /evidence changed/u);
+  h.db.upsert("document_segments", original);
+  const grant = h.db.select("workspace_need_to_know_grants")[0];
+  h.db.upsert("workspace_need_to_know_grants", { ...grant, status: "REVOKED" });
+  await assert.rejects(h.runtime.read(member, task.id));
+  assert.equal(h.runtime.create(member, h.request("semantic-fidelity-subagent")).result, undefined);
+});
+
+test("validated glossary conflicts override Translation Memory suggestions without altering either", async (t) => {
+  const h = await harness(t, true);
+  const base = { organizationId: "org", language: "ro", term: "connaissance", status: "VALIDATED",
+    ownerUserId: "owner", approvedTranslation: "cunoaștere", preferredVariants: [], forbiddenVariants: [],
+    sourceReferences: [], sourceValidationStatus: "VERIFIED", createdAt: now, updatedAt: now };
+  h.db.insert("terminology_terms", { ...base, id: "project-term", projectId: "project", glossaryScope: "PROJECT" });
+  h.db.insert("terminology_terms", { ...base, id: "platform-term", approvedTranslation: "știință", glossaryScope: "PLATFORM" });
+  const segment = h.db.select("document_segments")[0];
+  h.db.upsert("document_segments", { ...segment, latestTargetText: "știință" });
+  h.db.insert("translation_memory_entries", { id: "memory", organizationId: "org", projectId: "project", documentId: "document",
+    sourceText: segment.sourceText, targetText: "știință", sourceLanguage: "fr", targetLanguage: "ro", origin: "HUMAN",
+    confidenceScore: 1, approvalStatus: "APPROVED", approvedBy: "owner", createdBy: "author", createdAt: now, updatedAt: now });
+  const grant = h.db.select("workspace_need_to_know_grants")[0];
+  h.db.upsert("workspace_need_to_know_grants", { ...grant, accessScope: { ...grant.accessScope,
+    linguisticSourceIds: ["source", "dictionary", "project-term", "platform-term", "memory"] } });
+  const before = { terms: h.db.select("terminology_terms"), memory: h.db.select("translation_memory_entries") };
+  const task = h.runtime.create(member, h.request("terminology-lexicography-subagent"));
+  const result = await h.runtime.execute(member, task.id);
+  assert.equal(result.status, "COMPLETED");
+  assert.ok(result.result.findings.some((finding) => finding.referenceId === "project-term"));
+  assert.ok(result.result.issues.includes("GLOSSARY_CONFLICT"));
+  assert.equal(result.result.metrics.translationMemoryMatches, 1);
+  assert.equal(result.result.metrics.validatedTerminologyPriority, 1);
+  assert.deepEqual(h.db.select("terminology_terms"), before.terms);
+  assert.deepEqual(h.db.select("translation_memory_entries"), before.memory);
+});
+
+test("paid translation remains unavailable even after human activation and concurrent attempts", async (t) => {
+  const h = await harness(t, true);
+  const descriptor = h.descriptors.find((item) => item.agentId === "translation-agent");
+  assert.equal(descriptor.availability, "PAID_EXECUTION_DISABLED");
+  assert.equal(h.handlers.validate(descriptor.agentId, h.bindingFor(descriptor)), false);
+  const version = await h.registry.createDraft(admin, descriptor.agentId, { bindings: [h.bindingFor(descriptor)], reason: "Test only" });
+  const decision = { configurationSha256: version.configurationSha256, reason: "Explicit test approval" };
+  await h.registry.approveVersion(admin, descriptor.agentId, version.id, decision);
+  await h.registry.activateVersion(admin, descriptor.agentId, version.id, decision);
+  const input = { projectId: "project", resource: { type: "DOCUMENT", id: "document" }, segmentId: "segment",
+    explicitExternalProcessingAuthorization: true };
+  let providerCalls = 0;
+  h.linguisticServices.translations.generateAiProposal = async () => { providerCalls++; throw new Error("must not call"); };
+  const outcomes = await Promise.allSettled(Array.from({ length: 4 }, () =>
+    h.linguisticServices.adapter.execute("translation-agent", admin, input, new AbortController().signal)));
+  assert.ok(outcomes.every((result) => result.status === "rejected" && /ATOMIC_RESERVATIONS_REQUIRED/u.test(result.reason.message)));
+  assert.throws(() => h.runtime.create(admin, { ...input, agentId: descriptor.agentId,
+    operationId: descriptor.operationId, idempotencyKey: "paid" }), /binding/u);
+  assert.equal(providerCalls, 0);
+  assert.equal(h.db.select("ai_usage_records").length, 0);
+});
+
+test("linguistic runtime enforces workflow, active versions, bindings and exhausted budgets", async (t) => {
+  const h = await harness(t, true);
+  const request = h.request("semantic-fidelity-subagent");
+  assert.throws(() => h.runtime.create(member, { ...request, operationId: "unregistered" }), /binding/u);
+  const task = h.runtime.create(member, request);
+  const state = h.db.select("workflow_states")[0];
+  h.db.upsert("workflow_states", { ...state, status: "APPROVED" });
+  assert.equal((await h.runtime.execute(member, task.id)).status, "BLOCKED");
+  h.db.upsert("workflow_states", state);
+  const second = h.runtime.create(member, h.request("semantic-fidelity-subagent", "budget"));
+  h.db.insert("ai_budgets", { id: "empty", organizationId: "org", budgetScope: "ORGANIZATION",
+    amount: 0, currency: "EUR", period: "MONTHLY" });
+  assert.equal((await h.runtime.execute(member, second.id)).status, "BLOCKED");
+  await h.registry.disableAgent(admin, "semantic-fidelity-subagent", { reason: "Test disable" });
+  assert.throws(() => h.runtime.create(member, h.request("semantic-fidelity-subagent", "disabled")), /activated/u);
+});
+
+test("linguistic cancellation and exclusive execution do not publish partial results", async (t) => {
+  const h = await harness(t, true);
+  const original = h.linguisticServices.semantic.runCheckOnSegment.bind(h.linguisticServices.semantic);
+  let finish;
+  let started;
+  const began = new Promise((resolve) => { started = resolve; });
+  h.linguisticServices.semantic.runCheckOnSegment = async (...args) => {
+    started();
+    await new Promise((resolve) => { finish = resolve; });
+    return original(...args);
+  };
+  const task = h.runtime.create(member, h.request("semantic-fidelity-subagent"));
+  const running = h.runtime.execute(member, task.id);
+  await began;
+  const second = h.runtime.create(member, h.request("terminology-lexicography-subagent"));
+  await assert.rejects(h.runtime.execute(member, second.id), /busy/u);
+  h.runtime.cancel(member, task.id);
+  finish();
+  assert.equal((await running).status, "CANCELLED");
+  assert.equal(h.runtime.get(member, task.id).result, undefined);
+});
+
+test("linguistic backup validators reject segment tenant and document mismatches", async (t) => {
+  const h = await harness(t, true);
+  const task = h.runtime.create(member, h.request("semantic-fidelity-subagent"));
+  await h.runtime.execute(member, task.id);
+  const backup = h.db.createBackup();
+  backup.data.document_segments[0].organizationId = "other-org";
+  assert.equal(validateBackup(backup).valid, false);
+  const restored = new FileBackedRuntimeDatabase(`${h.db.getPath()}.rejected`);
+  assert.throws(() => restored.restoreBackup(backup));
+});
+
+test("FR to RO service/provider integration uses real glossary and TM with deterministic provider transport only", async (t) => {
+  const h = await harness(t, true);
+  const keys = ["AI_EXTERNAL_PROCESSING_ENABLED", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"];
+  const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
+  const fetch = globalThis.fetch;
+  t.after(() => {
+    globalThis.fetch = fetch;
+    for (const key of keys) {
+      if (saved[key] === undefined) delete process.env[key]; else process.env[key] = saved[key];
+    }
+  });
+  process.env.AI_EXTERNAL_PROCESSING_ENABLED = "true";
+  process.env.OPENAI_API_KEY = "isolated-test-key";
+  delete process.env.ANTHROPIC_API_KEY;
+  const segment = h.db.select("document_segments")[0];
+  h.db.insert("terminology_terms", { id: "approved-term", organizationId: "org", projectId: "project",
+    language: "ro", term: "connaissance", approvedTranslation: "cunoaștere", status: "VALIDATED", glossaryScope: "PROJECT",
+    preferredVariants: [], forbiddenVariants: [], createdAt: now, updatedAt: now });
+  h.db.insert("translation_memory_entries", { id: "approved-memory", organizationId: "org", projectId: "project",
+    sourceText: segment.sourceText, targetText: "Cunoaștere validată.", sourceLanguage: "fr", targetLanguage: "ro",
+    approvalStatus: "APPROVED", confidenceScore: 1, origin: "HUMAN", createdBy: "owner", createdAt: now, updatedAt: now });
+  let body;
+  let calls = 0;
+  globalThis.fetch = async (_url, init) => {
+    calls++;
+    body = JSON.parse(init.body);
+    return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({
+      translation: "Cunoașterea și rațiunea.", explanation: "Validated glossary preserved.", confidence: 0.9
+    }) } }], usage: { prompt_tokens: 20, completion_tokens: 8 } }), { status: 200 });
+  };
+  await assert.rejects(h.linguisticServices.translations.generateAiProposal({ ...member, permissions: ["translation:write"] }, {
+    segmentId: "segment", explicitExternalProcessingAuthorization: false
+  }), /authorization/u);
+  assert.equal(calls, 0);
+  const before = h.db.select("document_segments");
+  const proposal = await h.linguisticServices.translations.generateAiProposal({ ...member, permissions: ["translation:write"] }, {
+    segmentId: "segment", explicitExternalProcessingAuthorization: true
+  });
+  assert.equal(proposal.status, "PENDING_HUMAN_REVIEW");
+  assert.equal(proposal.automaticApproval, false);
+  assert.equal(proposal.automaticPublication, false);
+  assert.equal(proposal.sourceLanguage, "fr");
+  assert.equal(proposal.targetLanguage, "ro");
+  const payload = JSON.parse(body.messages[1].content);
+  assert.equal(payload.approvedGlossary[0].approvedTranslation, "cunoaștere");
+  assert.equal(payload.translationMemory[0].proposedTargetText, "Cunoaștere validată.");
+  assert.deepEqual(h.db.select("document_segments"), before);
+  assert.equal(h.db.select("ai_usage_records").filter((record) => record.status === "SUCCEEDED").length, 1);
+});
+
+test("linguistic analysis fails closed on unauthorized evidence and unsupported language policy", async (t) => {
+  const h = await harness(t, true);
+  const grant = h.db.select("workspace_need_to_know_grants")[0];
+  h.db.upsert("workspace_need_to_know_grants", { ...grant, accessScope: { ...grant.accessScope, linguisticSourceIds: ["source"] } });
+  const task = h.runtime.create(member, h.request("semantic-fidelity-subagent"));
+  assert.equal((await h.runtime.execute(member, task.id)).status, "FAILED");
+  assert.equal(h.runtime.get(member, task.id).result, undefined);
+  h.db.upsert("workspace_need_to_know_grants", grant);
+  const segment = h.db.select("document_segments")[0];
+  h.db.upsert("document_segments", { ...segment, targetLanguage: "ja", targetLocale: "ja-JP" });
+  const invalid = h.runtime.create(member, h.request("semantic-fidelity-subagent", "language"));
+  assert.equal((await h.runtime.execute(member, invalid.id)).status, "BLOCKED");
+});
+
+test("linguistic runtime validates output and withholds results on an expired cooperative deadline", async (t) => {
+  const h = await harness(t, true);
+  const execute = h.linguisticServices.adapter.execute.bind(h.linguisticServices.adapter);
+  h.linguisticServices.adapter.execute = async (...args) => ({ ...await execute(...args), humanApprovalRequired: false });
+  const invalid = h.runtime.create(member, h.request("semantic-fidelity-subagent"));
+  assert.equal((await h.runtime.execute(member, invalid.id)).status, "FAILED");
+  assert.equal(h.runtime.get(member, invalid.id).result, undefined);
+  h.linguisticServices.adapter.execute = async (...args) => {
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    return execute(...args);
+  };
+  const descriptors = h.linguisticServices.adapter.descriptors.bind(h.linguisticServices.adapter);
+  h.linguisticServices.adapter.descriptors = () => descriptors().map((descriptor) => ({ ...descriptor, timeoutMs: 10 }));
+  const timed = h.runtime.create(member, h.request("semantic-fidelity-subagent", "deadline"));
+  assert.equal((await h.runtime.execute(member, timed.id)).status, "FAILED");
+  assert.equal(h.runtime.get(member, timed.id).result, undefined);
+});
+
+test("linguistic term search includes other editors' platform terms but excludes private personal terms", async (t) => {
+  const h = await harness(t, true);
+  const term = { organizationId: "org", term: "connaissance", language: "ro", approvedTranslation: "cunoaștere",
+    status: "VALIDATED", preferredVariants: [], forbiddenVariants: [], ownerUserId: "someone-else", createdAt: now, updatedAt: now };
+  h.db.insert("terminology_terms", { ...term, id: "platform", glossaryScope: "PLATFORM" });
+  h.db.insert("terminology_terms", { ...term, id: "private", glossaryScope: "PERSONAL" });
+  const results = await h.linguisticServices.terminology.searchTerms(member, { language: "ro", projectId: "project" });
+  assert.ok(results.some((entry) => entry.id === "platform"));
+  assert.ok(!results.some((entry) => entry.id === "private"));
+});
+
+test("linguistic idempotency pins the segment and legacy handlers reject linguistic inputs", async (t) => {
+  const h = await harness(t, true);
+  const request = h.request("semantic-fidelity-subagent");
+  const first = h.runtime.create(member, request);
+  assert.equal(h.runtime.create(member, request).id, first.id);
+  assert.throws(() => h.runtime.create(member, { ...request, segmentId: "different-segment" }), /payload mismatch/u);
+  assert.throws(() => h.runtime.create(member, { ...request, explicitExternalProcessingAuthorization: true }), /payload mismatch/u);
+  assert.throws(() => h.runtime.create(member, { ...h.request("projects-agent"), segmentId: "segment" }), /schema/u);
+  assert.equal(h.db.select("ai_execution_records").length, 1);
+});
+
+test("segment grant revocation during linguistic execution prevents result publication", async (t) => {
+  const h = await harness(t, true);
+  const original = h.linguisticServices.semantic.runCheckOnSegment.bind(h.linguisticServices.semantic);
+  h.linguisticServices.semantic.runCheckOnSegment = async (...args) => {
+    const report = await original(...args);
+    const grant = h.db.select("workspace_need_to_know_grants")[0];
+    // An empty scope means project-wide access in the existing Workspace contract.
+    h.db.upsert("workspace_need_to_know_grants", { ...grant, accessScope: { ...grant.accessScope, segmentIds: ["another-segment"] } });
+    return report;
+  };
+  const before = h.db.select("document_segments");
+  const task = h.runtime.create(member, h.request("semantic-fidelity-subagent"));
+  const result = await h.runtime.execute(member, task.id);
+  assert.equal(result.status, "FAILED");
+  assert.equal(result.result, undefined);
+  await assert.rejects(h.runtime.read(member, task.id));
+  assert.deepEqual(h.db.select("document_segments"), before);
+  assert.equal(h.db.select("ai_operational_audit_events").at(-1).action, "AI_TASK_FAILED");
+});
+
+test("unauthorized Translation Memory is rejected before linguistic services consult it", async (t) => {
+  const h = await harness(t, true);
+  const segment = h.db.select("document_segments")[0];
+  h.db.insert("translation_memory_entries", { id: "restricted-memory", organizationId: "org", projectId: "project",
+    sourceText: segment.sourceText, targetText: "Restricted evidence", sourceLanguage: "fr", targetLanguage: "ro",
+    approvalStatus: "APPROVED", confidenceScore: 1, origin: "HUMAN", createdBy: "owner", createdAt: now, updatedAt: now });
+  let consultations = 0;
+  const original = h.linguisticServices.semantic.runCheckOnSegment.bind(h.linguisticServices.semantic);
+  h.linguisticServices.semantic.runCheckOnSegment = async (...args) => { consultations++; return original(...args); };
+  const task = h.runtime.create(member, h.request("semantic-fidelity-subagent"));
+  assert.equal((await h.runtime.execute(member, task.id)).status, "FAILED");
+  assert.equal(consultations, 0);
+  assert.equal(h.runtime.get(member, task.id).result, undefined);
+});
+
+test("central translation provider retries fail safely without changing content or exposing credentials", async (t) => {
+  const h = await harness(t, true);
+  const keys = ["AI_EXTERNAL_PROCESSING_ENABLED", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"];
+  const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
+  const fetch = globalThis.fetch;
+  t.after(() => {
+    globalThis.fetch = fetch;
+    for (const key of keys) {
+      if (saved[key] === undefined) delete process.env[key]; else process.env[key] = saved[key];
+    }
+  });
+  process.env.AI_EXTERNAL_PROCESSING_ENABLED = "true";
+  process.env.OPENAI_API_KEY = "isolated-test-key";
+  delete process.env.ANTHROPIC_API_KEY;
+  let calls = 0;
+  globalThis.fetch = async () => {
+    calls++;
+    return new Response(JSON.stringify({ error: { message: "isolated-test-key confidential upstream error" } }), { status: 503 });
+  };
+  const before = h.db.select("document_segments");
+  await assert.rejects(h.linguisticServices.translations.generateAiProposal({ ...member, permissions: ["translation:write"] }, {
+    segmentId: "segment", explicitExternalProcessingAuthorization: true
+  }), (error) => {
+    assert.match(error.message, /temporarily unavailable/u);
+    assert.doesNotMatch(error.message, /isolated-test-key|confidential upstream error/u);
+    return true;
+  });
+  assert.equal(calls, 2);
+  assert.deepEqual(h.db.select("document_segments"), before);
+  const usage = h.db.select("ai_usage_records");
+  assert.equal(usage.length, 1);
+  assert.equal(usage[0].status, "FAILED");
+  assert.doesNotMatch(JSON.stringify(usage), /isolated-test-key|La connaissance|confidential upstream error/u);
+  // This exercises the legacy provider path, not a paid runtime execution/reservation.
+  assert.equal(h.db.select("ai_execution_records").length, 0);
 });

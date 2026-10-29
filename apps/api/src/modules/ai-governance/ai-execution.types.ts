@@ -13,6 +13,8 @@ export interface AgentExecutionTask {
   binding: AgentCapabilityBinding;
   projectId: string;
   documentId?: string;
+  segmentId?: string;
+  explicitExternalProcessingAuthorization?: boolean;
   resource?: HandlerResource;
   idempotencyKey: string;
   requestHash: string;

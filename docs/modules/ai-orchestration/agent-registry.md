@@ -5,6 +5,8 @@ The current tested handler catalog is documented in the
 GAP-02.4.2 adds five local advisory adapters while preserving all canonical identities
 and human-approved tenant configuration. Historical foundation notes below describe
 their original scope; they do not imply automatic availability of new handlers.
+GAP-02.4.3 adds two local linguistic handlers and a paid translation descriptor that
+cannot validate an executable binding. See the [linguistic contract](linguistic-handler-contract.md).
 
 ## Purpose
 
@@ -192,7 +194,7 @@ Strengths:
 Gaps:
 
 - Operational configuration, validated local handlers, and controlled dispatch
-  exist. Eighteen identities still lack executable handlers; provider-backed
+  exist. Sixteen identities still lack executable handlers; provider-backed
   runtime integration remains unavailable.
 - No chain execution runtime exists yet.
 - No prompt or model routing policy is linked directly to each agent runtime.

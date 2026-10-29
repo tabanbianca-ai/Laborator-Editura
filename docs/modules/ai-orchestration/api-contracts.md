@@ -3,6 +3,13 @@
 GAP-02.4.2 extends task inputs with descriptor-specific resource references and
 protects persisted report reads with fresh resource authorization. Legacy Quality
 requests remain valid. See [Local Handler Contract](local-handler-contract.md).
+GAP-02.4.3 adds descriptor-required `segmentId` to document-scoped linguistic
+requests and structured findings/provenance to their results. Consent metadata is
+immutable and participates in idempotency. Paid Translation has no valid executable
+binding and task creation is rejected even with consent and human activation.
+See [Linguistic Handler Contract](linguistic-handler-contract.md) for the implemented
+API subset and its security/financial limitations; target contracts below are not
+claims that deferred provider execution is operational.
 
 ## Purpose
 

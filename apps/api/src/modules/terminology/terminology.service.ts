@@ -304,6 +304,7 @@ export class TerminologyService {
 
     return this.repository.searchTerms({
       ...input,
+      ownerUserId: actor.userId,
       organizationId: actor.organizationId
     });
   }

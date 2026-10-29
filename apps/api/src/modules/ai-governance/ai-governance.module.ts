@@ -1,9 +1,8 @@
 import { Module } from "@nestjs/common";
 import { runtimeDatabaseProvider } from "../runtime-database.provider";
 import { AiGovernanceController } from "./ai-governance.controller";
-import { DatabaseAiGovernanceRepository } from "./ai-governance.repository";
-import { AiGovernanceService } from "./ai-governance.service";
-import { AiTranslationProviderService } from "./ai-translation-provider.service";
+import { AiTranslationProviderModule } from "./ai-translation-provider.module";
+import { TranslationsModule } from "../translations/translations.module";
 import { AiAgentRegistryController } from "./ai-agent-registry.controller";
 import { AiAgentRegistryService } from "./ai-agent-registry.service";
 import { AiHandlerRegistry } from "./ai-handler-registry";
@@ -19,18 +18,15 @@ import { ResearchModule } from "../research/research.module";
 import { SchedulingModule } from "../scheduling/scheduling.module";
 
 @Module({
-  imports: [DocumentsModule, WorkspaceModule, WorkflowModule, ProjectsModule, AuthorStudioModule, ResearchModule, SchedulingModule],
+  imports: [AiTranslationProviderModule, TranslationsModule, DocumentsModule, WorkspaceModule, WorkflowModule, ProjectsModule, AuthorStudioModule, ResearchModule, SchedulingModule],
   controllers: [AiGovernanceController, AiAgentRegistryController, AiExecutionController],
   providers: [
     runtimeDatabaseProvider,
-    DatabaseAiGovernanceRepository,
-    AiGovernanceService,
     AiAgentRegistryService,
     AiHandlerRegistry,
     AiExecutionRepository,
-    AiExecutionService,
-    AiTranslationProviderService
+    AiExecutionService
   ],
-  exports: [AiGovernanceService, AiTranslationProviderService]
+  exports: [AiTranslationProviderModule]
 })
 export class AiGovernanceModule {}

@@ -17,6 +17,8 @@ const taskSchema = z.object({
   agentId: z.string().min(1).max(120), operationId: z.string().min(1).max(120),
   projectId: z.string().min(1).max(120), documentId: z.string().min(1).max(120).optional(),
   resource: resourceSchema.optional(),
+  segmentId: z.string().min(1).max(120).optional(),
+  explicitExternalProcessingAuthorization: z.boolean().optional(),
   idempotencyKey: z.string().min(1).max(120)
 }).strict();
 const terminal = new Set<AgentTaskStatus>(["COMPLETED", "FAILED", "CANCELLED", "BLOCKED"]);
@@ -59,7 +61,8 @@ export class AiExecutionService {
     }
     const resource = request.resource ?? (request.documentId ? { type: "DOCUMENT" as const, id: request.documentId } : undefined);
     const descriptor = this.handlers.descriptor(identity.identity.agentId, binding);
-    if (!resource || !descriptor?.inputSchema.safeParse({ projectId: request.projectId, resource }).success ||
+    if (!resource || !descriptor?.inputSchema.safeParse({ projectId: request.projectId, resource,
+      segmentId: request.segmentId, explicitExternalProcessingAuthorization: request.explicitExternalProcessingAuthorization }).success ||
       request.documentId && (resource.type !== "DOCUMENT" || request.documentId !== resource.id)) {
       throw new BadRequestException("Resource does not match the handler input schema.");
     }
@@ -70,11 +73,16 @@ export class AiExecutionService {
       agentVersionId: version.id, configurationSha256: version.configurationSha256,
       binding, projectId: request.projectId, documentId: resource.type === "DOCUMENT" ? resource.id : undefined,
       resource,
+      segmentId: request.segmentId,
+      explicitExternalProcessingAuthorization: request.explicitExternalProcessingAuthorization,
       idempotencyKey: request.idempotencyKey,
       requestHash: createHash("sha256").update(JSON.stringify({
         agentId: identity.identity.agentId, operationId: request.operationId,
         projectId: request.projectId, documentId: resource.type === "DOCUMENT" ? resource.id : undefined,
         versionId: version.id,
+        ...(request.segmentId ? { segmentId: request.segmentId } : {}),
+        ...(request.explicitExternalProcessingAuthorization !== undefined
+          ? { explicitExternalProcessingAuthorization: request.explicitExternalProcessingAuthorization } : {}),
         ...(resource.type !== "DOCUMENT" ? { resource } : {})
       })).digest("hex"),
       correlationId: randomUUID(), status: "CREATED", createdAt: now, updatedAt: now,
@@ -215,7 +223,8 @@ export class AiExecutionService {
   private resourceInput(task: AgentExecutionTask): LocalHandlerInput {
     const resource = task.resource ?? (task.documentId ? { type: "DOCUMENT" as const, id: task.documentId } : undefined);
     if (!resource) throw new ForbiddenException();
-    return { projectId: task.projectId, resource };
+    return { projectId: task.projectId, resource, segmentId: task.segmentId,
+      explicitExternalProcessingAuthorization: task.explicitExternalProcessingAuthorization };
   }
 
   private async resourceAccess(actor: AuthenticatedRequestContext, task: AgentExecutionTask) {

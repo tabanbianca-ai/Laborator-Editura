@@ -1408,6 +1408,13 @@ function validateAgentTaskResources(data, issues) {
     ["MANUSCRIPT", "author_manuscripts"], ["LINGUISTIC_SOURCE", "research_sources"]
   ]);
   for (const row of rowsFor(data, "ai_execution_records")) {
+    if (row.segmentId !== undefined && row.segmentId !== null) {
+      const segment = rowsFor(data, "document_segments").find((candidate) => candidate.id === row.segmentId);
+      if (!segment || segment.organizationId !== row.organizationId || segment.projectId !== row.projectId ||
+        segment.documentId !== row.documentId) {
+        issues.push(`data.ai_execution_records row ${row.id} has invalid linguistic segment reference`);
+      }
+    }
     if (row.resource === undefined || row.resource === null) continue;
     const resource = row.resource;
     const table = typeof resource.type === "string" ? references.get(resource.type) : undefined;
