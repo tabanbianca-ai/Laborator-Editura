@@ -30,6 +30,12 @@ This format remains accepted.
 
 ## Migration Requirements
 
+The explicit fresh/pending-only repair and forward-only compatibility procedure
+for historical 0006 is documented in [Migration 0006 Compatibility](migration-0006-compatibility.md).
+Do not rewrite or replay already-applied migration history. Direct execution of
+the archived 0006 index statement remains invalid; use the audited preparation
+procedure only when that migration is confirmed pending.
+
 Every migration must be:
 
 - Chronologically ordered.

@@ -19,8 +19,11 @@ export const databasePackageStatus: DatabasePackageStatus = {
     "0010_ai_agent_registry_versions_v1.sql",
     "0011_ai_execution_runtime_v1.sql",
     "0012_local_agent_handler_resources_v1.sql",
-    "0013_linguistic_agent_task_inputs_v1.sql"
+    "0013_linguistic_agent_task_inputs_v1.sql",
+    "0014_ai_financial_foundation_v1.sql",
+    "0015_qa_blocker_index_compatibility_v1.sql"
   ]
 };
 
 export * from "./runtime-database.js";
+export * from "./financial-persistence.js";
