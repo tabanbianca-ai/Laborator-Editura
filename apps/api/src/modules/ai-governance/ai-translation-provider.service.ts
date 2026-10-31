@@ -167,6 +167,7 @@ export class AiTranslationProviderService {
     provider: ProviderConfiguration,
     input: AiTranslationProposalInput
   ): Promise<ProviderResponse> {
+    this.requireFinancialDispatch();
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), this.timeoutMs());
 
@@ -192,6 +193,7 @@ export class AiTranslationProviderService {
     input: AiTranslationProposalInput,
     signal: AbortSignal
   ): Promise<ProviderResponse> {
+    this.requireFinancialDispatch();
     const response = await fetch(`${provider.baseUrl}/chat/completions`, {
       method: "POST",
       headers: {
@@ -223,6 +225,7 @@ export class AiTranslationProviderService {
     input: AiTranslationProposalInput,
     signal: AbortSignal
   ): Promise<ProviderResponse> {
+    this.requireFinancialDispatch();
     const response = await fetch(`${provider.baseUrl}/messages`, {
       method: "POST",
       headers: {
@@ -246,6 +249,10 @@ export class AiTranslationProviderService {
       inputTokens: this.readNumber(usage.input_tokens),
       outputTokens: this.readNumber(usage.output_tokens)
     });
+  }
+
+  private requireFinancialDispatch(): void {
+    throw new ServiceUnavailableException("Paid AI dispatch is blocked pending P0-C settlement and financial authorization.");
   }
 
   private systemInstruction(input: AiTranslationProposalInput): string {

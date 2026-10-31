@@ -33,8 +33,9 @@ test("AI governance module is registered with required authenticated admin endpo
   assert.match(appModule, /AiGovernanceModule/);
   assert.match(moduleSource, /imports:\s*\[AiTranslationProviderModule/u);
   assert.match(moduleSource, /exports:\s*\[AiTranslationProviderModule\]/u);
-  assert.match(providerModule, /providers:\s*\[runtimeDatabaseProvider, DatabaseAiGovernanceRepository, AiGovernanceService, AiTranslationProviderService\]/u);
-  assert.match(providerModule, /exports:\s*\[DatabaseAiGovernanceRepository, AiGovernanceService, AiTranslationProviderService\]/u);
+  assert.match(providerModule, /providers:\s*\[runtimeDatabaseProvider, DatabaseAiGovernanceRepository, AiGovernanceService, AiTranslationProviderService,/u);
+  assert.match(providerModule, /provide: "AI_SPENDING", inject: \[DatabaseAiGovernanceRepository\]/u);
+  assert.match(providerModule, /exports:\s*\[DatabaseAiGovernanceRepository, AiGovernanceService, AiTranslationProviderService, "AI_SPENDING"\]/u);
   assert.match(controller, /@Controller\("ai-governance"\)/);
   assert.match(controller, /@Get\("providers"\)/);
   assert.match(controller, /@Post\("providers\/:provider\/status"\)/);

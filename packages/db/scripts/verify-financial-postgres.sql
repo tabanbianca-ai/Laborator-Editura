@@ -58,3 +58,24 @@ BEGIN
     AND NOT c.convalidated) THEN RAISE EXCEPTION 'Financial restore has unvalidated constraints'; END IF;
 END;
 $$;
+
+-- P0-B is additive; P0-A-only backups remain verifiable without pretending to contain it.
+DO $$
+BEGIN
+  IF to_regclass('ai_budget_projection') IS NOT NULL THEN
+    IF NOT EXISTS(SELECT 1 FROM pg_class WHERE oid='ai_budget_projection'::regclass AND relrowsecurity AND relforcerowsecurity)
+      OR (SELECT count(*) FROM pg_trigger WHERE tgrelid='ai_budget_projection'::regclass
+        AND tgname IN ('financial_immutable','financial_no_truncate','ai_projection_accounts_valid') AND tgenabled IN ('O','A')) <> 3 THEN
+      RAISE EXCEPTION 'Budget projection protection missing';
+    END IF;
+    IF EXISTS(SELECT 1 FROM ai_budget_projection p CROSS JOIN unnest(p.account_ids) account_id
+      LEFT JOIN ai_budget_account a ON a.id=account_id AND a.organization_id=p.organization_id WHERE a.id IS NULL) THEN
+      RAISE EXCEPTION 'Budget projection contains missing or foreign accounts';
+    END IF;
+    IF NOT EXISTS(SELECT 1 FROM pg_trigger WHERE tgrelid='ai_cost_reservation'::regclass
+      AND tgname='ai_reservation_requires_projection' AND tgenabled IN ('O','A')) THEN
+      RAISE EXCEPTION 'Reservation projection gate missing';
+    END IF;
+  END IF;
+END;
+$$;

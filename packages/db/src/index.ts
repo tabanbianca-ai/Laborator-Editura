@@ -21,9 +21,12 @@ export const databasePackageStatus: DatabasePackageStatus = {
     "0012_local_agent_handler_resources_v1.sql",
     "0013_linguistic_agent_task_inputs_v1.sql",
     "0014_ai_financial_foundation_v1.sql",
-    "0015_qa_blocker_index_compatibility_v1.sql"
+    "0015_qa_blocker_index_compatibility_v1.sql",
+    "0016_ai_budget_projection_v1.sql"
   ]
 };
 
 export * from "./runtime-database.js";
 export * from "./financial-persistence.js";
+export * from "./ai-budget-reservations.js";
+export * from "./ai-budget-projection.js";

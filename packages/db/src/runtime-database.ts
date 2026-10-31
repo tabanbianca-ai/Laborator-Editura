@@ -1,6 +1,10 @@
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync, openSync, closeSync, unlinkSync } from "node:fs";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+
+const financialSourceContext = new AsyncLocalStorage<ReadonlyMap<string, symbol>>();
+const financialSourceOwners = new Map<string, symbol>();
 
 export const RUNTIME_DATABASE_BACKUP_FORMAT = "laborator-runtime-database-backup";
 export const RUNTIME_DATABASE_SCHEMA_VERSION = "1.0";
@@ -648,7 +652,49 @@ export class FileBackedRuntimeDatabase {
       join(process.cwd(), ".data", "laborator-runtime-db.json")
   ) {}
 
+  private acquireSnapshotWrite() {
+    mkdirSync(dirname(this.filePath), { recursive: true });
+    const path = `${resolve(this.filePath)}.snapshot-write.lock`;
+    let descriptor: number;
+    try { descriptor = openSync(path, "wx", 0o600); }
+    catch { throw new Error("Runtime snapshot is busy or requires lock recovery."); }
+    return () => { closeSync(descriptor); unlinkSync(path); };
+  }
+
+  private guardedWrite<T>(action: () => T): T {
+    const release = this.acquireSnapshotWrite();
+    try {
+      const financialPath = `${resolve(this.filePath)}.ai-financial-source.lock`;
+      const owner = financialSourceContext.getStore()?.get(financialPath);
+      if (existsSync(financialPath) && (!owner || owner !== financialSourceOwners.get(financialPath))) {
+        throw new Error("Financial policy source is busy or requires lock recovery.");
+      }
+      return action();
+    } finally { release(); }
+  }
+
+  /** Serializes policy evidence with every supported runtime writer, across processes. */
+  withFinancialSource<T>(action: () => T): T {
+    const unlockSnapshot = this.acquireSnapshotWrite();
+    const path = `${resolve(this.filePath)}.ai-financial-source.lock`;
+    let descriptor: number;
+    try { descriptor = openSync(path, "wx", 0o600); }
+    catch { throw new Error("Financial policy source is busy or requires lock recovery."); }
+    finally { unlockSnapshot(); }
+    const token = Symbol("financial-source-owner");
+    financialSourceOwners.set(path, token);
+    const release = () => { financialSourceOwners.delete(path); closeSync(descriptor); unlinkSync(path); };
+    let asynchronous = false;
+    try {
+      const paths = new Map(financialSourceContext.getStore()); paths.set(path, token);
+      const result = financialSourceContext.run(paths, action);
+      if (result instanceof Promise) { asynchronous = true; return result.finally(release) as T; }
+      return result;
+    } finally { if (!asynchronous) release(); }
+  }
+
   insert<T extends RuntimeDatabaseRow>(tableName: RuntimeDatabaseTableName, row: T): T {
+    return this.guardedWrite(() => {
     const snapshot = this.loadSnapshot();
     const table = this.table(snapshot, tableName);
 
@@ -659,9 +705,11 @@ export class FileBackedRuntimeDatabase {
     table.push(this.clone(row));
     this.persistSnapshot(snapshot);
     return this.clone(row);
+    });
   }
 
   upsert<T extends RuntimeDatabaseRow>(tableName: RuntimeDatabaseTableName, row: T): T {
+    return this.guardedWrite(() => {
     const snapshot = this.loadSnapshot();
     const table = this.table(snapshot, tableName);
     const index = table.findIndex((existing) => existing.id === row.id);
@@ -674,6 +722,7 @@ export class FileBackedRuntimeDatabase {
 
     this.persistSnapshot(snapshot);
     return this.clone(row);
+    });
   }
 
   select<T extends RuntimeDatabaseRow>(
@@ -710,7 +759,7 @@ export class FileBackedRuntimeDatabase {
   }
 
   clear(): void {
-    this.persistSnapshot(this.emptySnapshot());
+    this.guardedWrite(() => this.persistSnapshot(this.emptySnapshot()));
   }
 
   createBackup(): RuntimeDatabaseBackup {
@@ -732,7 +781,7 @@ export class FileBackedRuntimeDatabase {
     }
 
     const normalized = normalizeBackup(backup as RuntimeDatabaseBackup);
-    this.persistSnapshot(normalized.data);
+    this.guardedWrite(() => this.persistSnapshot(normalized.data));
     return normalized;
   }
 

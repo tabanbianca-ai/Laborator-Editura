@@ -23,6 +23,7 @@ const entries = [
   ["package.json", "package.json"],
   ["pnpm-lock.yaml", "pnpm-lock.yaml"],
   ["pnpm-workspace.yaml", "pnpm-workspace.yaml"],
+  ["patches", "patches"],
   ["turbo.json", "turbo.json"],
   ["tsconfig.base.json", "tsconfig.base.json"],
   ["README.md", "README.md"],

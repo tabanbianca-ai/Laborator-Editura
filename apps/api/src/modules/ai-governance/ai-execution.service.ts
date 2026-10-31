@@ -1,4 +1,5 @@
-import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException, Inject, Optional } from "@nestjs/common";
+import { type AiSpendingService } from "./ai-spending.service";
 import { createHash, randomUUID } from "node:crypto";
 import { z } from "zod";
 import { type AuthenticatedRequestContext } from "../auth/request-context.types";
@@ -38,8 +39,28 @@ export class AiExecutionService {
     private readonly handlers: AiHandlerRegistry,
     private readonly documents: DocumentsService,
     private readonly workspace: WorkspaceService,
-    private readonly workflow: WorkflowService
+    private readonly workflow: WorkflowService,
+    @Optional() @Inject("AI_SPENDING") private readonly spending?: AiSpendingService
   ) {}
+
+  async reserveSpending(actor: AuthenticatedRequestContext, taskId: string, input: unknown) {
+    const parsed = z.object({
+      explicitSpendingAuthorization: z.literal(true), tariffId: z.string().uuid(),
+      maximum: z.object({ units: z.string().regex(/^(0|[1-9][0-9]*)$/u), currency: z.string().regex(/^[A-Z]{3}$/u),
+        scale: z.number().int().min(0).max(9) }).strict(),
+      maximumInputTokens: z.string().regex(/^(0|[1-9][0-9]*)$/u), maximumOutputTokens: z.string().regex(/^(0|[1-9][0-9]*)$/u),
+      expiresAt: z.string().datetime(), idempotencyKey: z.string().min(1).max(120)
+    }).strict().safeParse(input);
+    if (!parsed.success) throw new BadRequestException("Explicit validated spending authorization required.");
+    if (!this.spending) throw new ForbiddenException("Financial reservation service unavailable.");
+    const task = this.get(actor, taskId);
+    if (task.userId !== actor.userId || task.status !== "CREATED") throw new ForbiddenException();
+    return this.spending.reserve(actor, task, parsed.data, async () => {
+      const current = this.get(actor, taskId);
+      if (current.status !== "CREATED") throw new ForbiddenException();
+      await this.authorize(actor, current);
+    });
+  }
 
   create(actor: AuthenticatedRequestContext, input: unknown) {
     this.assertActor(actor);
@@ -140,6 +161,9 @@ export class AiExecutionService {
     try {
       timeout = setTimeout(() => controller.abort(), this.handlers.descriptor(task.canonicalAgentId, task.binding)?.timeoutMs ?? 5000);
       const metadata = await this.authorize(actor, task);
+      if (this.handlers.descriptor(task.canonicalAgentId, task.binding)?.metadata.externalProcessing) {
+        throw new ForbiddenException("PAID_EXECUTION_DISABLED_PENDING_P0_C");
+      }
       this.assertConfiguration(actor, task);
       task = this.move(this.get(actor, taskId), "AUTHORIZED");
       if (task.status !== "AUTHORIZED") throw new ConflictException("Task authorization failed.");

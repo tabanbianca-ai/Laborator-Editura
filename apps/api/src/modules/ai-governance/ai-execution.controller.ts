@@ -23,4 +23,8 @@ export class AiExecutionController {
   cancel(@CurrentActor() actor: AuthenticatedRequestContext, @Param("id") id: string) {
     return this.runtime.cancel(actor, id);
   }
+  @Post(":id/reservation")
+  reserve(@CurrentActor() actor: AuthenticatedRequestContext, @Param("id") id: string, @Body() input: unknown) {
+    return this.runtime.reserveSpending(actor, id, input);
+  }
 }
