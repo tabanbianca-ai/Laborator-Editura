@@ -4,10 +4,11 @@ import { readFileSync, readdirSync, mkdtempSync } from "node:fs";
 import { createRequire } from "node:module";
 import { isAbsolute, join } from "node:path";
 import { tmpdir } from "node:os";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import test from "node:test";
 import ts from "typescript";
 import { prepareMigrationSource } from "../scripts/prepare-migration-source.mjs";
+import { loadFinancialSource } from "../../../apps/api/tests/helpers/load-financial-source.mjs";
 
 const adminUrl = process.env.LABORATOR_FINANCIAL_TEST_ADMIN_URL;
 const appUrl = process.env.LABORATOR_FINANCIAL_TEST_DATABASE_URL;
@@ -15,7 +16,7 @@ const pgModule = process.env.LABORATOR_FINANCIAL_TEST_PG_MODULE;
 const id = (number) => `00000000-0000-0000-0000-${String(number).padStart(12, "0")}`;
 const hash = "a".repeat(64);
 const financialTables = ["financial_operation", "ai_provider_tariff", "ai_budget_account", "ai_cost_reservation",
-  "ai_budget_allocation", "ai_provider_attempt", "ai_financial_reconciliation_event", "financial_journal", "financial_ledger_entry"];
+  "ai_budget_allocation", "ai_provider_attempt", "ai_financial_reconciliation_event", "financial_journal", "financial_ledger_entry", "ai_budget_projection"];
 
 function localUrl(value) {
   const url = new URL(value);
@@ -79,6 +80,7 @@ test("real PostgreSQL: financial transactions, real IAM/RLS, contention, immutab
     agent_version_id: id(35), configuration_sha256: hash, binding: "{}", project_id: id(4), document_id: null, resource: { type: "PROJECT", id: id(4) },
     idempotency_key: `fixture-${number}`, request_hash: hash, correlation_id: id(30), status: "CREATED" });
   for (const table of financialTables) await owner.query(`GRANT SELECT, INSERT, UPDATE ON ${table} TO "${app.username}"`);
+  await owner.query(`GRANT SELECT ON ai_execution_records TO "${app.username}"`);
   const role = (await application.query("SELECT rolsuper,rolbypassrls FROM pg_roles WHERE rolname=current_user")).rows[0];
   assert.deepEqual(role, { rolsuper: false, rolbypassrls: false });
 
@@ -97,7 +99,7 @@ test("real PostgreSQL: financial transactions, real IAM/RLS, contention, immutab
     requestSha256: hash, correlationId: id(30), sourceReference: "local:financial-test" });
   const reserve = (number, operation_id, execution_id) => ({ id: id(number), organization_id: id(1), operation_id,
     execution_id, project_id: id(4), agent_id: id(6), tariff_id: id(9), currency: "EUR", monetary_scale: 6,
-    maximum_units: "100", maximum_input_tokens: "20", maximum_output_tokens: "20", expires_at: "2099-01-01T00:00:00Z" });
+    maximum_units: "100", maximum_input_tokens: "20", maximum_output_tokens: "20", expires_at: "2099-01-01T00:00:00Z", projection_id: id(68) });
 
   await unit.transaction(context, [], async (client) => {
     assert.equal((await client.query("SELECT has_role('ADMIN') AS allowed")).rows[0].allowed, true);
@@ -106,6 +108,9 @@ test("real PostgreSQL: financial transactions, real IAM/RLS, contention, immutab
     for (const number of [10, 26]) await insert(client, "ai_budget_account", { id: id(number), organization_id: id(1), source_budget_id: id(number + 100), source_sha256: hash,
       scope_kind: "ORGANIZATION", currency: "EUR", monetary_scale: 6, limit_units: "1000", limit_tokens: "1000", opening_consumed_units: "0", opening_consumed_tokens: "0",
       period_start: "2020-01-01T00:00:00Z", period_end: "2099-01-01T00:00:00Z", approved_by: id(3) });
+    await insert(client, "ai_budget_projection", { id: id(68), organization_id: id(1), version: "1", source_sha256: hash,
+      account_ids: [id(10), id(26)], actor_id: id(3), correlation_id: id(30) });
+    await client.query("SELECT set_config('app.ai_budget_source_sha256',$1,true)", [hash]);
     await unit.claimOperation(client, context, operation(8, "RESERVE", "seed-reserve"));
     await insert(client, "ai_cost_reservation", reserve(11, id(8), id(7)));
     await insert(client, "ai_budget_allocation", { id: id(12), organization_id: id(1), reservation_id: id(11), budget_account_id: id(10), currency: "EUR", monetary_scale: 6, reserved_units: "100", reserved_tokens: "40" });
@@ -141,6 +146,7 @@ test("real PostgreSQL: financial transactions, real IAM/RLS, contention, immutab
     const hold = new Promise((resolve) => { unlock = resolve; });
     const command = operation(41, "RESERVE", "concurrent-reservation");
     const action = async (client) => {
+      await client.query("SELECT set_config('app.ai_budget_source_sha256',$1,true)", [hash]);
       const receipt = await unit.claimOperation(client, context, command);
       if (receipt.created) {
         await insert(client, "ai_cost_reservation", reserve(42, receipt.id, id(40)));
@@ -187,7 +193,189 @@ test("real PostgreSQL: financial transactions, real IAM/RLS, contention, immutab
     assert.equal((await owner.query("SELECT sealed FROM financial_journal WHERE id=$1", [id(20)])).rows[0].sealed, true);
   });
 
-  await t.test("pg_dump/pg_restore preserve all nine financial tables and pass the financial verifier", async () => {
+  await t.test("P0-B projection rejects duplicate, missing and foreign account references in PostgreSQL", async () => {
+    await insert(owner, "ai_budget_account", { id: id(98), organization_id: id(2), source_budget_id: id(198), source_sha256: hash,
+      scope_kind: "ORGANIZATION", currency: "EUR", monetary_scale: 6, limit_units: "1000", limit_tokens: "1000",
+      opening_consumed_units: "0", opening_consumed_tokens: "0", period_start: "2020-01-01T00:00:00Z",
+      period_end: "2099-01-01T00:00:00Z", approved_by: id(3) });
+    for (const accounts of [[id(10), id(10)], [id(10), id(999)], [id(10), id(98)], [id(10), null]]) {
+      await assert.rejects(unit.transaction(context, [], (client) => insert(client, "ai_budget_projection", {
+        id: randomUUID(), organization_id: id(1), version: "999", source_sha256: hash,
+        account_ids: accounts, actor_id: id(3), correlation_id: id(30)
+      })), /Invalid, missing or foreign/u);
+    }
+    assert.equal((await owner.query("SELECT count(*)::integer AS n FROM ai_budget_projection WHERE version=999")).rows[0].n, 0);
+  });
+
+  await t.test("P0-B: independent processes enforce overlapping budgets and durable idempotent holds", async () => {
+    const budgetModule = { exports: {} };
+    const budgetCompiled = ts.transpileModule(readFileSync(new URL("../src/ai-budget-reservations.ts", import.meta.url), "utf8"), {
+      compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 }
+    }).outputText;
+    new Function("require", "module", "exports", budgetCompiled)(
+      (name) => name === "./financial-persistence.js" ? module.exports : require(name), budgetModule, budgetModule.exports);
+    const reservations = new budgetModule.exports.PostgresAiBudgetReservations(unit);
+    await unit.transaction(context, [], (client) => insert(client, "ai_budget_account", {
+      id: id(60), organization_id: id(1), source_budget_id: id(160), source_sha256: hash,
+      scope_kind: "PROJECT", project_id: id(4), currency: "EUR", monetary_scale: 6,
+      limit_units: "300", limit_tokens: "120", opening_consumed_units: "0", opening_consumed_tokens: "0",
+      period_start: "2020-01-01T00:00:00Z", period_end: "2099-01-01T00:00:00Z", approved_by: id(3)
+    }));
+    for (const [number, scope, subject] of [[66, "USER", { user_id: id(3) }], [67, "AGENT", { agent_id: id(6) }]]) {
+      await unit.transaction(context, [], (client) => insert(client, "ai_budget_account", {
+        id: id(number), organization_id: id(1), source_budget_id: id(number + 100), source_sha256: hash,
+        scope_kind: scope, ...subject, currency: "EUR", monetary_scale: 6, limit_units: "300", limit_tokens: "120",
+        opening_consumed_units: "0", opening_consumed_tokens: "0", period_start: "2020-01-01T00:00:00Z",
+        period_end: "2099-01-01T00:00:00Z", approved_by: id(3)
+      }));
+    }
+    for (const number of [61, 62, 63]) await insert(owner, "ai_execution_records", {
+      id: id(number), organization_id: id(1), user_id: id(3), agent_id: id(6), canonical_agent_id: "translation-agent",
+      agent_version_id: id(35), configuration_sha256: hash, binding: "{}", project_id: id(4), document_id: null,
+      resource: { type: "PROJECT", id: id(4) }, idempotency_key: `p0b-${number}`, request_hash: hash,
+      correlation_id: id(30), status: "CREATED"
+    });
+    const projectionModule = { exports: {} };
+    const projectionCompiled = ts.transpileModule(readFileSync(new URL("../src/ai-budget-projection.ts", import.meta.url), "utf8"), {
+      compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 }
+    }).outputText;
+    new Function("require", "module", "exports", projectionCompiled)(
+      (name) => name === "./financial-persistence.js" ? module.exports : require(name), projectionModule, projectionModule.exports);
+    const projector = new projectionModule.exports.PostgresAiBudgetProjection(unit);
+    const rows = (await owner.query("SELECT * FROM ai_budget_account WHERE organization_id=$1 ORDER BY id", [context.organizationId])).rows;
+    const snapshot = { sourceSha256: "b".repeat(64), validUntil: new Date(Date.now()+300000).toISOString(), quotas: [{ scope: "ORGANIZATION", subjectId: null,
+      maximumUnits: "100", maximumTokens: null, runsPerDay: "100", runsPerMonth: "100", openingDayRuns: "0", openingMonthRuns: "0" }], accounts: rows.map((row) => ({
+      sourceBudgetId: row.source_budget_id, sourceSha256: row.source_sha256, scope: row.scope_kind,
+      subjectId: row.project_id ?? row.user_id ?? row.agent_id ?? null, currency: row.currency, scale: row.monetary_scale,
+      limitUnits: row.limit_units, limitTokens: row.limit_tokens, openingUnits: row.opening_consumed_units,
+      openingTokens: row.opening_consumed_tokens, periodStart: row.period_start.toISOString(), periodEnd: row.period_end.toISOString()
+    })) };
+    const projection = await projector.synchronize(context, snapshot, id(30));
+    await assert.rejects(projector.synchronize(context, { ...snapshot, validUntil: "2000-01-01T00:00:00Z" }, id(30)), /STALE_POLICY_SNAPSHOT/u);
+    assert.deepEqual(await projector.synchronize(context, snapshot, id(30)), projection);
+    const request = (number) => ({ context, executionId: id(number), projectId: id(4), agentId: id(6), tariffId: id(9),
+      agentVersionId: id(35), configurationSha256: hash,
+      idempotencyKey: `p0b-${number}`, correlationId: id(30), maximum: { units: "100", currency: "EUR", scale: 6 },
+      maximumInputTokens: "20", maximumOutputTokens: "20", expiresAt: new Date(Date.now() + 300000).toISOString(), projection });
+    const commands = [request(61), request(62)];
+    await assert.rejects(reservations.reserve({ ...request(63), projection: { id: id(68), sourceSha256: hash } }), /STALE_BUDGET_PROJECTION/u);
+    await assert.rejects(reservations.reserve({ ...request(63), maximum: { units: "101", currency: "EUR", scale: 6 } }), /QUOTA_EXHAUSTED/u);
+    await assert.rejects(reservations.reserve({ ...request(63), maximumInputTokens: "21" }), /BUDGET_EXHAUSTED/u);
+    await assert.rejects(reservations.reserve({ ...request(63), expiresAt: "2000-01-01T00:00:00Z" }), /INVALID_RESERVATION_EXPIRY/u);
+    await assert.rejects(reservations.reserve({ ...request(63), maximum: { units: "0", currency: "EUR", scale: 6 } }), /UNDERFUNDED_TARIFF/u);
+    await assert.rejects(reservations.reserve({ ...request(63), context: { ...context, actorId: id(36) } }));
+    const worker = `
+      const {Pool}=require(${JSON.stringify(pgModule)});
+      const first={exports:{}};new Function('require','module','exports',${JSON.stringify(compiled)})(require,first,first.exports);
+      const second={exports:{}};new Function('require','module','exports',${JSON.stringify(budgetCompiled)})
+        (n=>n==='./financial-persistence.js'?first.exports:require(n),second,second.exports);
+      const pool=new Pool({connectionString:${JSON.stringify(app.toString())}});
+      const engine=new second.exports.PostgresAiBudgetReservations(new first.exports.PostgresFinancialUnitOfWork(pool));
+      engine.reserve(JSON.parse(process.argv[1])).then(value=>console.log(JSON.stringify({value})),
+        error=>console.log(JSON.stringify({error:error.code||error.message}))).finally(()=>pool.end());`;
+    const run = (command) => new Promise((resolve, reject) => {
+      const child = spawn(process.execPath, ["-e", worker, JSON.stringify(command)], {
+        stdio: ["ignore", "pipe", "pipe"], timeout: 15000
+      });
+      let stdout = ""; let stderr = "";
+      child.stdout.on("data", (data) => { stdout += data; }); child.stderr.on("data", (data) => { stderr += data; });
+      child.on("error", reject); child.on("exit", (code) => {
+        if (code !== 0) reject(new Error(stderr)); else { try { resolve(JSON.parse(stdout)); } catch (error) { reject(error); } }
+      });
+    });
+    const outcomes = await Promise.all(commands.map(run));
+    assert.equal(outcomes.filter((result) => result.value).length, 1);
+    const winner = outcomes.findIndex((result) => result.value);
+    const loser = 1 - winner;
+    assert.ok(["40001", "AI_BUDGET_EXHAUSTED"].includes(outcomes[loser].error));
+    assert.deepEqual(await reservations.reserve(commands[winner]), outcomes[winner].value);
+    await assert.rejects(reservations.reserve(commands[loser]), /BUDGET_EXHAUSTED/u);
+    await assert.rejects(reservations.reserve({ ...commands[winner], maximumInputTokens: "19" }), /IDEMPOTENCY_CONFLICT/u);
+    await assert.rejects(reservations.reserve({ ...request(63), context: { ...context, organizationId: id(2) } }));
+    const held = outcomes[winner].value;
+    assert.equal((await owner.query("SELECT count(*)::integer AS n FROM ai_budget_allocation WHERE reservation_id=$1", [held.reservationId])).rows[0].n, 5);
+    const released = await reservations.releaseUndispatched(context, held.reservationId, "p0b-release", id(30));
+    assert.deepEqual(await reservations.releaseUndispatched(context, held.reservationId, "p0b-release", id(30)), released);
+    const second = await reservations.reserve(commands[loser]);
+    // A persisted attempt represents an uncertain provider outcome, even without a response.
+    await unit.transaction(context, [id(60)], async (client) => {
+      const op = await unit.claimOperation(client, context, operation(64, "DISPATCH", "p0b-uncertain-attempt"));
+      await insert(client, "ai_provider_attempt", { id: id(65), organization_id: id(1), reservation_id: second.reservationId,
+        operation_id: op.id, attempt_number: 1, provider: "FIXTURE", tariff_id: id(9), currency: "EUR", monetary_scale: 6,
+        maximum_units: "100", maximum_input_tokens: "20", maximum_output_tokens: "20", provider_idempotency_key: "p0b-attempt",
+        request_sha256: hash });
+    });
+    await assert.rejects(reservations.releaseUndispatched(context, second.reservationId, "p0b-cancel", id(30)), /REQUIRES_RECONCILIATION/u);
+    await assert.rejects(reservations.reserve(request(63)), /BUDGET_EXHAUSTED/u);
+    const reduced = { ...snapshot, sourceSha256: "c".repeat(64), accounts: snapshot.accounts.map((account) => ({ ...account, limitUnits: "0" })) };
+    const concurrentUpdate = await Promise.allSettled([
+      projector.synchronize(context, reduced, id(30)), reservations.reserve(request(63))
+    ]);
+    assert.equal(concurrentUpdate[0].status, "fulfilled");
+    assert.equal(concurrentUpdate[1].status, "rejected");
+    const latest = concurrentUpdate[0].value;
+    await assert.rejects(reservations.reserve(request(63)), /STALE_BUDGET_PROJECTION/u);
+    await assert.rejects(reservations.reserve({ ...request(63), projection: latest }), /BUDGET_EXHAUSTED/u);
+    await assert.rejects(projector.synchronize({ ...context, organizationId: id(2) }, snapshot, id(30)));
+    assert.equal((await owner.query("SELECT count(*)::integer AS n FROM ai_budget_projection WHERE organization_id=$1", [id(1)])).rows[0].n, 3);
+    const quotaProjection = await projector.synchronize(context, { ...snapshot, sourceSha256: "d".repeat(64),
+      quotas: [{ ...snapshot.quotas[0], runsPerDay: "0" }] }, id(30));
+    await assert.rejects(reservations.reserve({ ...request(63), projection: quotaProjection }), /QUOTA_EXHAUSTED/u);
+    t.diagnostic("P0-B independent process contention: one reservation committed; replay survived process exit; uncertain attempt retains all capacity");
+  });
+
+  await t.test("configured financial pool rejects superuser principals and accepts the isolated least-privilege role", async () => {
+    const { createFinancialPool } = loadFinancialSource("apps/api/src/modules/ai-governance/ai-financial-pool.ts");
+    const previous = process.env.AI_FINANCIAL_DATABASE_URL;
+    try {
+      process.env.AI_FINANCIAL_DATABASE_URL = app.toString();
+      const safe = createFinancialPool();
+      try { const client = await safe.connect(); client.release(); } finally { await safe.end(); }
+      process.env.AI_FINANCIAL_DATABASE_URL = admin.toString();
+      const unsafe = createFinancialPool();
+      try { await assert.rejects(unsafe.connect(), /UNSAFE_FINANCIAL_DATABASE_ROLE/u); } finally { await unsafe.end(); }
+    } finally {
+      if (previous === undefined) delete process.env.AI_FINANCIAL_DATABASE_URL; else process.env.AI_FINANCIAL_DATABASE_URL = previous;
+    }
+  });
+
+  await t.test("real Governance source to PostgreSQL spending service preserves authority and idempotency", async () => {
+    const { FileBackedRuntimeDatabase } = loadFinancialSource("packages/db/src/runtime-database.ts");
+    const { DatabaseAiGovernanceRepository } = loadFinancialSource("apps/api/src/modules/ai-governance/ai-governance.repository.ts");
+    const { AiSpendingService } = loadFinancialSource("apps/api/src/modules/ai-governance/ai-spending.service.ts");
+    const directory = mkdtempSync(join(tmpdir(), "financial-governance-integration-"));
+    const db = new FileBackedRuntimeDatabase(join(directory, "runtime.json"));
+    const governanceRepository = new DatabaseAiGovernanceRepository(db);
+    const now = new Date().toISOString();
+    await governanceRepository.createBudget({ id: id(90), organizationId: id(1), budgetScope: "ORGANIZATION",
+      amount: 1, currency: "EUR", period: "MONTHLY", humanApprovalRequired: true, createdBy: id(3), createdAt: now, updatedAt: now });
+    governanceRepository.saveAgentRegistry({ id: id(6), organizationId: id(1), canonicalAgentId: "translation-agent", enabled: true,
+      activeVersionId: id(35), createdBy: id(3), updatedBy: id(3) });
+    governanceRepository.saveAgentVersion({ id: id(35), organizationId: id(1), registryId: id(6), status: "ACTIVE",
+      approvedBy: id(3), activatedBy: id(3), configurationSha256: hash, validatedHandlerKeys: ["fixture"], bindings: [{ handlerKey: "fixture" }] });
+    const spending = new AiSpendingService(governanceRepository, { connect: () => pool.connect() });
+    const actor = { userId: id(3), organizationId: id(1), roles: ["ADMIN"], canonicalPermissions: ["platform.admin.manage"] };
+    const task = { id: id(63), organizationId: id(1), userId: id(3), projectId: id(4), agentId: id(6), agentVersionId: id(35),
+      canonicalAgentId: "translation-agent", correlationId: id(30), configurationSha256: hash, binding: { handlerKey: "fixture" } };
+    const quote = { tariffId: id(9), maximum: { units: "100", currency: "EUR", scale: 6 }, maximumInputTokens: "20",
+      maximumOutputTokens: "20", expiresAt: new Date(Date.now() + 300000).toISOString(), idempotencyKey: "source-to-pg-reserve" };
+    let checks = 0;
+    const authorize = async () => {
+      checks++;
+      await assert.rejects(governanceRepository.createBudget({ id: id(91), organizationId: id(1) }), /busy/u);
+    };
+    const first = await spending.reserve(actor, task, quote, authorize);
+    assert.deepEqual(await spending.reserve(actor, task, quote, authorize), first);
+    assert.equal(checks, 4);
+    assert.equal(db.select("ai_cost_audit_events").filter((event) => event.action === "AI_SPENDING_RESERVED").length, 2);
+    await assert.rejects(spending.reserve(actor, task, quote, async () => { throw new Error("NEED_TO_KNOW_REVOKED"); }), /REVOKED/u);
+    governanceRepository.saveAgentRegistry({ ...governanceRepository.findAgentRegistry(id(1), "translation-agent"), enabled: false });
+    await assert.rejects(spending.reserve(actor, task, quote, async () => {}), /Human-approved/u);
+    assert.equal(db.select("ai_cost_audit_events").filter((event) => event.action === "AI_SPENDING_DENIED").length, 2);
+    assert.equal((await owner.query("SELECT count(*)::integer AS n FROM ai_cost_reservation WHERE execution_id=$1", [id(63)])).rows[0].n, 1);
+  });
+
+  await t.test("pg_dump/pg_restore preserve financial tables and pass the financial verifier", async () => {
     const snapshot = async (client) => {
       const result = {};
       for (const table of financialTables) result[table] = (await client.query(`SELECT to_jsonb(t) AS row FROM ${table} t ORDER BY id`)).rows;
@@ -212,6 +400,6 @@ test("real PostgreSQL: financial transactions, real IAM/RLS, contention, immutab
       assert.equal((await owner.query("SELECT count(*)::integer AS n FROM ai_agent_registry WHERE enabled")).rows[0].n, 0);
       assert.equal((await owner.query("SELECT count(*)::integer AS n FROM ai_agent_configuration_versions WHERE status <> 'DRAFT'")).rows[0].n, 0);
     } finally { await verification.end(); }
-    t.diagnostic(`Financial archive=${archive}; SHA256=${digest}; all nine table snapshots match`);
+    t.diagnostic(`Financial archive=${archive}; SHA256=${digest}; all ${financialTables.length} table snapshots match`);
   });
 });

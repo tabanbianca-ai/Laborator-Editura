@@ -213,6 +213,26 @@ test("completed reports are protected after permissions or grants are revoked, i
   assert.equal((await h.runtime.execute(member, other.id)).status, "BLOCKED");
 });
 
+test("runtime reservation preparation requires explicit consent and rechecks Need-to-Know without running a handler", async (t) => {
+  const h = await harness(t);
+  const task = h.runtime.create(member, h.request("projects-agent", "reservation-contract"));
+  const input = { explicitSpendingAuthorization: true, tariffId: "00000000-0000-4000-8000-000000000009",
+    maximum: { units: "100", currency: "EUR", scale: 6 }, maximumInputTokens: "10", maximumOutputTokens: "10",
+    expiresAt: new Date(Date.now() + 60000).toISOString(), idempotencyKey: "reservation-contract" };
+  await assert.rejects(h.runtime.reserveSpending(member, task.id, { ...input, explicitSpendingAuthorization: false }));
+  await assert.rejects(h.runtime.reserveSpending(member, task.id, input), /unavailable/u);
+  let authorizations = 0;
+  // Runtime boundary adapter only; real financial concurrency is tested against PostgreSQL.
+  h.runtime.spending = { async reserve(_actor, _task, _quote, authorize) { await authorize(); authorizations++; return { outcome: "RESERVED" }; } };
+  assert.equal((await h.runtime.reserveSpending(member, task.id, input)).outcome, "RESERVED");
+  assert.equal(authorizations, 1);
+  const grant = h.db.select("workspace_need_to_know_grants")[0];
+  h.db.upsert("workspace_need_to_know_grants", { ...grant, status: "REVOKED" });
+  await assert.rejects(h.runtime.reserveSpending(member, task.id, input));
+  assert.equal(authorizations, 1);
+  assert.equal(h.runtime.get(member, task.id).status, "CREATED");
+});
+
 test("Documentation filters each linguistic source and agenda reports exclude other users' records", async (t) => {
   const h = await harness(t);
   const grant = h.db.select("workspace_need_to_know_grants")[0];
@@ -534,6 +554,8 @@ test("linguistic backup validators reject segment tenant and document mismatches
 
 test("FR to RO service/provider integration uses real glossary and TM with deterministic provider transport only", async (t) => {
   const h = await harness(t, true);
+  // Fake-transport contract, not production dispatch authorization.
+  h.linguisticServices.provider.requireFinancialDispatch = () => {};
   const keys = ["AI_EXTERNAL_PROCESSING_ENABLED", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"];
   const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
   const fetch = globalThis.fetch;
@@ -673,6 +695,8 @@ test("unauthorized Translation Memory is rejected before linguistic services con
 
 test("central translation provider retries fail safely without changing content or exposing credentials", async (t) => {
   const h = await harness(t, true);
+  // Keep retry/redaction coverage under deterministic fake transport only.
+  h.linguisticServices.provider.requireFinancialDispatch = () => {};
   const keys = ["AI_EXTERNAL_PROCESSING_ENABLED", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"];
   const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
   const fetch = globalThis.fetch;

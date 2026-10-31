@@ -109,6 +109,8 @@ test("AI translation requires platform and per-request external-processing autho
 test("OpenAI-backed FR to RO generation returns a pending human proposal and auditable metadata", async () => {
   const governance = governanceRecorder();
   const service = new AiTranslationProviderService(governance.service);
+  // Transport contract only. Production dispatch remains unconditionally blocked.
+  service.requireFinancialDispatch = () => {};
   const previousFetch = globalThis.fetch;
   let requestBody;
   globalThis.fetch = async (_url, init) => {
@@ -146,6 +148,8 @@ test("OpenAI-backed FR to RO generation returns a pending human proposal and aud
 test("provider errors are audited and fall back to Anthropic without weakening proposal controls", async () => {
   const governance = governanceRecorder();
   const service = new AiTranslationProviderService(governance.service);
+  // Exercise deterministic fake transport, never a live financial authorization.
+  service.requireFinancialDispatch = () => {};
   const previousFetch = globalThis.fetch;
   const urls = [];
   globalThis.fetch = async (url) => {
@@ -184,6 +188,23 @@ test("provider errors are audited and fall back to Anthropic without weakening p
   assert.equal(urls.filter((url) => url.includes("anthropic")).length, 1);
   assert.equal(governance.records.filter((record) => record.execution.status === "FAILED").length, 1);
   assert.equal(governance.records.at(-1).execution.status, "SUCCEEDED");
+});
+
+test("P0-B blocks provider I/O even with credentials, consent and successful governance", async () => {
+  const governance = governanceRecorder();
+  const service = new AiTranslationProviderService(governance.service);
+  const previousFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; throw new Error("External I/O forbidden"); };
+  try {
+    await withEnvironment({ AI_EXTERNAL_PROCESSING_ENABLED: "true", OPENAI_API_KEY: "fixture", ANTHROPIC_API_KEY: "fixture" }, async () => {
+      await assert.rejects(() => service.generateProposal(actor, input), /provider rejected/u);
+      await assert.rejects(() => service.executeOpenAi({}, input, new AbortController().signal), /P0-C/u);
+      await assert.rejects(() => service.executeAnthropic({}, input, new AbortController().signal), /P0-C/u);
+    });
+    assert.equal(calls, 0);
+    assert.equal(governance.records.filter((record) => record.execution.status === "SUCCEEDED").length, 0);
+  } finally { globalThis.fetch = previousFetch; }
 });
 
 test("governance denial fails closed before manuscript content reaches a provider", async () => {

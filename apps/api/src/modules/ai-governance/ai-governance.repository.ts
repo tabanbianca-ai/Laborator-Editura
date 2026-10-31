@@ -22,6 +22,23 @@ export class DatabaseAiGovernanceRepository implements AiGovernanceRepository {
     private readonly database: FileBackedRuntimeDatabase = getDefaultRuntimeDatabase()
   ) {}
 
+  async withFinancialSource<T>(action: (source: {
+    budgets: AiBudget[]; quotas: AiQuota[]; policies: AiCostPolicy[]; usage: AiUsageRecord[];
+    agents: AgentRegistryRecord[];
+  }) => Promise<T>, organizationId: string): Promise<T> {
+    return this.database.withFinancialSource(async () => {
+      return await action({
+        budgets: await this.listBudgets(organizationId), quotas: await this.listQuotas(organizationId),
+        policies: await this.listPolicies(organizationId), usage: await this.listUsageRecords(organizationId),
+        agents: this.database.selectForTenant<AgentRegistryRecord>("ai_agent_registry", organizationId)
+      });
+    });
+  }
+
+  private financialWrite<T>(action: () => T): T {
+    return this.database.withFinancialSource(action);
+  }
+
   findAgentRegistry(organizationId: string, canonicalAgentId: string): AgentRegistryRecord | null {
     return this.database.selectForTenant<AgentRegistryRecord>(
       "ai_agent_registry", organizationId,
@@ -39,7 +56,7 @@ export class DatabaseAiGovernanceRepository implements AiGovernanceRepository {
   }
 
   saveAgentRegistry(record: AgentRegistryRecord): AgentRegistryRecord {
-    return this.database.upsert("ai_agent_registry", record);
+    return this.financialWrite(() => this.database.upsert("ai_agent_registry", record));
   }
 
   listAgentVersions(organizationId: string, registryId: string): AgentConfigurationVersion[] {
@@ -49,20 +66,22 @@ export class DatabaseAiGovernanceRepository implements AiGovernanceRepository {
   }
 
   saveAgentVersion(version: AgentConfigurationVersion): AgentConfigurationVersion {
-    const current = this.database.findByIdForTenant<AgentConfigurationVersion>(
-      "ai_agent_configuration_versions", version.id, version.organizationId
-    );
-    const immutable = (row: AgentConfigurationVersion) => {
-      const copy: Record<string, unknown> = { ...row };
-      for (const key of ["status", "activatedBy", "activatedAt", "updatedBy", "updatedAt"]) delete copy[key];
-      return JSON.stringify(Object.entries(copy).sort(([a], [b]) => a.localeCompare(b)));
-    };
-    if (current && (current.status === "ACTIVE" ||
-      (current.status === "APPROVED" && (version.status !== "ACTIVE" ||
-        immutable(current) !== immutable(version))))) {
-      throw new ConflictException("Approved agent configuration is immutable.");
-    }
-    return this.database.upsert("ai_agent_configuration_versions", version);
+    return this.financialWrite(() => {
+      const current = this.database.findByIdForTenant<AgentConfigurationVersion>(
+        "ai_agent_configuration_versions", version.id, version.organizationId
+      );
+      const immutable = (row: AgentConfigurationVersion) => {
+        const copy: Record<string, unknown> = { ...row };
+        for (const key of ["status", "activatedBy", "activatedAt", "updatedBy", "updatedAt"]) delete copy[key];
+        return JSON.stringify(Object.entries(copy).sort(([a], [b]) => a.localeCompare(b)));
+      };
+      if (current && (current.status === "ACTIVE" ||
+        (current.status === "APPROVED" && (version.status !== "ACTIVE" ||
+          immutable(current) !== immutable(version))))) {
+        throw new ConflictException("Approved agent configuration is immutable.");
+      }
+      return this.database.upsert("ai_agent_configuration_versions", version);
+    });
   }
 
   async upsertProviderStatus(provider: AiProviderStatusRecord): Promise<AiProviderStatusRecord> {
@@ -85,7 +104,7 @@ export class DatabaseAiGovernanceRepository implements AiGovernanceRepository {
   }
 
   async createUsageRecord(record: AiUsageRecord): Promise<AiUsageRecord> {
-    return this.database.insert("ai_usage_records", record);
+    return this.financialWrite(() => this.database.insert("ai_usage_records", record));
   }
 
   async listUsageRecords(organizationId: string): Promise<AiUsageRecord[]> {
@@ -93,7 +112,7 @@ export class DatabaseAiGovernanceRepository implements AiGovernanceRepository {
   }
 
   async createBudget(budget: AiBudget): Promise<AiBudget> {
-    return this.database.insert("ai_budgets", budget);
+    return this.financialWrite(() => this.database.insert("ai_budgets", budget));
   }
 
   async findBudgetById(id: string, organizationId: string): Promise<AiBudget | null> {
@@ -105,7 +124,7 @@ export class DatabaseAiGovernanceRepository implements AiGovernanceRepository {
   }
 
   async createQuota(quota: AiQuota): Promise<AiQuota> {
-    return this.database.insert("ai_quotas", quota);
+    return this.financialWrite(() => this.database.insert("ai_quotas", quota));
   }
 
   async findQuotaById(id: string, organizationId: string): Promise<AiQuota | null> {
@@ -117,7 +136,7 @@ export class DatabaseAiGovernanceRepository implements AiGovernanceRepository {
   }
 
   async createPolicy(policy: AiCostPolicy): Promise<AiCostPolicy> {
-    return this.database.insert("ai_cost_policies", policy);
+    return this.financialWrite(() => this.database.insert("ai_cost_policies", policy));
   }
 
   async listPolicies(organizationId: string): Promise<AiCostPolicy[]> {
@@ -127,13 +146,13 @@ export class DatabaseAiGovernanceRepository implements AiGovernanceRepository {
   async createOverrideRequest(
     request: AiBudgetOverrideRequest
   ): Promise<AiBudgetOverrideRequest> {
-    return this.database.insert("ai_budget_override_requests", request);
+    return this.financialWrite(() => this.database.insert("ai_budget_override_requests", request));
   }
 
   async updateOverrideRequest(
     request: AiBudgetOverrideRequest
   ): Promise<AiBudgetOverrideRequest> {
-    return this.database.upsert("ai_budget_override_requests", request);
+    return this.financialWrite(() => this.database.upsert("ai_budget_override_requests", request));
   }
 
   async findOverrideRequestById(

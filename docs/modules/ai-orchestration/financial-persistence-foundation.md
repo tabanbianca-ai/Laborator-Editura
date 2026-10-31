@@ -1,6 +1,8 @@
 # Atomic AI Financial Persistence Foundation (P0-A)
 
 Status: local implementation; not connected to paid execution or customer billing.
+P0-B local reservation work and its unresolved operational gates are documented
+in [Atomic AI Budget Reservations](atomic-budget-reservations.md).
 Source baseline: `0589569947e676742dd96ec9c7eda597eef00374`.
 
 Real PostgreSQL validation initially found blockers in 0014 and historical 0006.
